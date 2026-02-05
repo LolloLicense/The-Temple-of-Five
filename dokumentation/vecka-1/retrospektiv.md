@@ -1,0 +1,1 @@
+Sammanfatta ert retrospektiv för veckan i detta dokument, eller infoga en skärmdump i repot på er retro.
