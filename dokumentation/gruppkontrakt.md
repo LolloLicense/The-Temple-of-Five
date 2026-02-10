@@ -1,9 +1,10 @@
 # Gruppkontrakt GRUPPNAMN
 
 ## Tidigare grupparbeteserfarenheter
-- Vilka är respektive gruppmedlems top 3 sämsta erfarenheter med grupparbeten? Vilka "negativa förväntningar" kommer ni in i detta med?
-
-> Exempel: Personer gör inte det dom har lovat inom utsatt tid, och säger att "dom jobbar på det", men det blir aldrig klart.
+- Vilka är respektive gruppmedlems top 3 sämsta erfarenheter med grupparbeten? Vilka "negativa förväntningar" kommer ni in i detta med? <br>
+- Person som ej tar sitt ansvar och gör sina uppgifter.
+- Teknika konflikter
+- Otydlig arbetsfördelning / Dålig kommunikation.
 
 > [!TIP]
 > Det är bra att få ur sig de negativa förväntningarna och att diskutera öppet kring tidigare erfarenheter. Ju öppnare ni är i er kommunikation nu, desto bättre grupparbete kommer ni att få. På en arbetsplats kanske man känner varandra redan och det finns andra "krav". Av någon anledning beter sig många annorlunda i en skolmiljö när det gäller grupparbeten :thinking:
@@ -14,7 +15,9 @@ Vilka dagar och tider jobbar vi gemensamt?
 Ni ska planera in:
 
 - Daily standup _varje vardag_. Det får gärna vara samma tid så att det är lätt att komma ihåg, men det är upp till gruppen att bestämma. Ni ska fylla i en loggbok dagligen med er daily.
+  11.00
 - Tid för backlog refining varje vecka (cirka 1 h).
+  
 - Tid för sprint planning varje vecka (cirka 1-2 h).
 - Tid för retrospektiv varje vecka (cirka 1 h).
 
