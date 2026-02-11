@@ -20,21 +20,21 @@ Dagens scrum master: Alexander Johansson 🧑‍🌾
 - **Jag behöver hjälp med**: Inget
 - **Idag har jag lärt mig**: Nej ingenting   
   
-  ## Louise
+## Louise
 - **Idag har jag**: Jobbat med moodboard för kommande projekt och även genererat ai bilder för detta.
 - **Dagens mål**: Installera Vite och Biome för vårt grupp-projekt.
 - **Ett problem jag har**: Inga
 - **Jag behöver hjälp med**: Nej
 - **Idag har jag lärt mig**: Wiggle-room i TS
 
-  ## Alexandra
+## Alexandra
 - **Idag har jag**: Moodboard, spåna idéer. 
 - **Dagens mål**: Mappstruktur i grupp-projektet
 - **Ett problem jag har**: Nej  
 - **Jag behöver hjälp med**: Nej
 - **Idag har jag lärt mig**: TypeScript är jobbigt
 
-  ## Alex
+## Alex
 - **Idag har jag**: Suttit med bank-appen och implementerat Interface 
 - **Dagens mål**: Göra klart bank-appen
 - **Ett problem jag har**: Inga problem just nu
