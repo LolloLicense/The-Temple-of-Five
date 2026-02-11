@@ -166,16 +166,19 @@ Vilken roll brukar varje gruppmedlem ta på sig i ett grupparbete? Vilken roll h
 ---
 
 👸 <b>Louise:</b> <br>
+
 Jag är sämre på att - göra en sak i taget / kasst tålamod.
 
 Bättre på - Figma / design , få saker gjort ( går ihop med mitt tålamod- vill bli klar)
 
 🧙‍♀️ <b>Alexandra:</b> <br>
+
 Bra på: Html och sass/css gillar struktur/design
 
 "Sämre" är jag på javscript och behöver hålla på med det ett längre tag innan man kan säga sig vara bra på de.  Behöver mer tid för att koda javascript
 
 🦸‍♂️ <b>Emil:</b> <br>
+
 Bra på: Javascript,html, css
 
 Dålig på att skapa egen grafik
@@ -194,7 +197,6 @@ git
 
 👩‍🚀 <b>Minai:</b> <br>
 
-Minai:
 Bra: Organiserad, Empantisk, Planering, Stöd.
 
 Dålig: Tar på mig för mycket, Grunderna sitter inte helt 100%
