@@ -1,5 +1,5 @@
 import './sass/style.scss';
-import { test2 } from './script/room1.ts';
+import { room1Function } from './script/room1.ts';
 
-console.log('Running imported test2 from main.ts');
-test2();
+console.log('Running room1Function imported from room1.ts');
+room1Function();

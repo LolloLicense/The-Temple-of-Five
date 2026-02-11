@@ -1,6 +1,6 @@
-import { test } from './utils.ts';
+import { testFunction } from './utils.ts';
 
-export function test2() {
-	console.log('Running imported test from room1.ts');
-	test();
+export function room1Function() {
+	console.log('Running testFunction imported from utils.ts');
+	testFunction();
 }
