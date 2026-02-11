@@ -205,9 +205,11 @@ Dålig: Tar på mig för mycket, Grunderna sitter inte helt 100%
 
 
 ## Scrum master 👩‍⚖️
-Fördela dagarna så jämt det går i gruppen och kom överens om vem som är scrum master.
-
-T.ex. om ni är 4 personer i gruppen så kan en person vara scrum master i 3 dagar, och sedan går turen över till nästa person.
+Alex: 11 feb - 16 feb  
+Emil: 4 mars - 9 mars
+Louise: 26 feb - 3 mars
+Minai: 16 feb - 19 feb
+Alexandra: 20feb - 25 feb 
 
 ## Kodstandard 😨
 - Hur skriver vi våra commit-meddelanden? Ska vi följa någon särskild standard (t.ex. Conventional Commits eller använda gitmoji).
