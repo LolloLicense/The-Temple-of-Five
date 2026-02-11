@@ -52,7 +52,7 @@ Vilka dagar och tider jobbar vi gemensamt?
 - Hur föredrar vi att jobba? Live-koda tillsammans? På egen hand? Ska vi göra kod-merges ihop? <br>
   <b> Beroende på uppgift. Live-codar tillsammans för globala regler. Vi kodar enskilt i separata filer för uppgifter som rör enskild. Merga till "developer-branch" innan commit till main, vilket vi gör tillsammans. </b> <br><br>
 - Vem ansvarar för att dokumentera daily standup i repot? (Rotera gärna denna roll med någon frekvens så att inte en person gör det enbart). <br>
-  <b> Vi rotererar dokumentations-rollen för var dag. </b> <br><br>
+  <b> Aktuell scrum-master ansvarar för anteckningar </b> <br><br>
 
 ## Personlighetstyper i gruppen :cowboy_hat_face: :partying_face: :exploding_head: :nerd_face: :clown_face:
 
@@ -215,13 +215,15 @@ Dålig: Tar på mig för mycket, Grunderna sitter inte helt 100%
 
 ---
 
-## Scrum master 👩‍⚖️
+## Scrum master schema 👩‍⚖️
 
-Alex: 11 feb - 16 feb  
-Emil: 4 mars - 9 mars
-Louise: 26 feb - 3 mars
-Minai: 16 feb - 19 feb
-Alexandra: 20feb - 25 feb
+<b>Alex</b>: 11 feb - 16 feb <br>
+<b>Minai</b>: 17 feb - 20 feb <br>
+<b>Alexandra</b>: 23 feb - 26 feb <br>
+<b>Louise</b>: 27 feb - 4 mars <br>
+<b>Emil</b>: 5 mars - 10 mars <br>
+
+Ny Scrum master väljs ut 10 mars
 
 ## Kodstandard 😨
 
@@ -239,6 +241,6 @@ Om ni vill ta upp någonting utöver det fördefinierade. Skriv gärna en egen r
 
 ## Underskrifter
 
-- [Förnamn Efternamn](https://github.com/ditt-github-användarnamn)
+- [Alexander Johansson](https://github.com/AlexJCodes)
 
 - [Emil Lychnell](https://github.com/elychnell)
