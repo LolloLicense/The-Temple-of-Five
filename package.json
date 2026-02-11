@@ -1,0 +1,16 @@
+{
+  "name": "fed25d-js-intro-grupparbete-the-pogo-stick-pioneers",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.3.14",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1"
+  }
+}
