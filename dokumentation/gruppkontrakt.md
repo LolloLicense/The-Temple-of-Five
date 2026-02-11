@@ -244,3 +244,5 @@ Om ni vill ta upp någonting utöver det fördefinierade. Skriv gärna en egen r
 - [Alexander Johansson](https://github.com/AlexJCodes)
 
 - [Emil Lychnell](https://github.com/elychnell)
+
+- [Louise Sverkström](https://github.com/LolloLicense)
