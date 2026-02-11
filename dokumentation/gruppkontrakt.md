@@ -248,3 +248,5 @@ Om ni vill ta upp någonting utöver det fördefinierade. Skriv gärna en egen r
 - [Louise Sverkström](https://github.com/LolloLicense)
 
 - [Minai Karlsson](https://github.com/minza-42)
+
+- [Alexandra Henriksson](https://github.com/xAlexCode)
