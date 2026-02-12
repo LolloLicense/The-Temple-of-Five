@@ -1,7 +1,9 @@
 import './sass/style.scss';
-import { startTimer, stopTimer } from './script/utils.ts';
-
+import { startTimer} from './script/utils.ts';
+//stoptimer används inte ännu
 
 
 console.log('Running testFunction imported from utils.ts');
-	startTimer(0);
+
+startTimer(0);
+

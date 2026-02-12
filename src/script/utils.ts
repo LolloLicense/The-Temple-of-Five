@@ -1,10 +1,12 @@
 
 let totalTime = 0;
 let roomTime = 0;
+
+let totalMinutes = 0;
+let roomMinutes = 0; 
+
 let totalTimerInterval: any;
 let roomTimerInterval: any;
-let totalMinutes = 0;
-let roomMinutes = 0;
 
 export function testFunction() {
 	console.log('Hello world from utils.ts');
@@ -12,9 +14,9 @@ export function testFunction() {
 
 export function startTimer(id: number): void {
 	if (id === 0) {
-		totalTimerInterval = setInterval( function() { timerTick(0) } , 1000);;
+		totalTimerInterval = setInterval( function() { timerTick(0) } , 1000); // om funktionen slutar funka testa setInterval(() => timerTick(0), 1000);
 	} else {
-		roomTimerInterval = setInterval( function() { timerTick(id) } , 1000);;
+		roomTimerInterval = setInterval( function() { timerTick(id) } , 1000); // om funktionen slutar funka testa setInterval(() => timerTick(id), 1000);
 	}
 }
 
@@ -37,10 +39,13 @@ function timerTick(id: number) {
 		console.log(`Total minutes: ${totalMinutes} minutes`);
 	} else {
 		roomTime++;
+		if (roomTime > 59) {
+			roomMinutes++;
+			roomTime = 0;
+		}
+		console.log(`Room minutes: ${roomMinutes} minutes`);
 		console.log(`Room time: ${roomTime} seconds`);
 	}
-
-
 
 }
 	
