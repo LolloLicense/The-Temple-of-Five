@@ -1,5 +1,7 @@
 import './sass/style.scss';
-import { room1Function } from './script/room1.ts';
+import { startTimer, stopTimer } from './script/utils.ts';
 
-console.log('Running room1Function imported from room1.ts');
-room1Function();
+
+
+console.log('Running testFunction imported from utils.ts');
+	startTimer(0);
