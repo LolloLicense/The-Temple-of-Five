@@ -1,5 +1,8 @@
 # Daily Standup: veckodag 2026-02-12
 
+<img width="3778" height="1884" alt="image" src="https://github.com/user-attachments/assets/124df60b-27ec-4cbc-9479-583556b18b92" />
+
+
 ---
 
 Dagens scrum master: Alexander Johansson 🧑‍🌾
