@@ -1,3 +1,3 @@
-export function test() {
+export function testFunction() {
 	console.log('Hello world from utils.ts');
 }
