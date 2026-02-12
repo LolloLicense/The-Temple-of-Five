@@ -4,6 +4,8 @@
 
 Vilka är respektive gruppmedlems top 3 sämsta erfarenheter med grupparbeten? Vilka "negativa förväntningar" kommer ni in i detta med? <br>
 
+Enhetligt beslut i gruppen:
+
 - <b>Person som ej tar sitt ansvar och gör sina uppgifter.</b>
 - <b>Tekniska konflikter.</b>
 - <b>Otydlig arbetsfördelning / Dålig kommunikation.</b>
