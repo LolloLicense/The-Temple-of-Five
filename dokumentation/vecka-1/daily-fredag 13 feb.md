@@ -1,5 +1,6 @@
 # Daily Standup: veckodag 2026-02-13
 
+<img width="2802" height="1794" alt="image" src="https://github.com/user-attachments/assets/76bd547c-2ee2-4e4c-a6aa-22f1b97b77ac" />
 
 
 ---
