@@ -1,5 +1,7 @@
 # Daily Standup: veckodag 2026-02-12
 
+Miro: <a>https://miro.com/app/board/uXjVGD_af74=/?share_link_id=396365481063</a>
+
 <img width="3778" height="1884" alt="image" src="https://github.com/user-attachments/assets/124df60b-27ec-4cbc-9479-583556b18b92" />
 
 
