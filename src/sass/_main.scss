@@ -1,0 +1,14 @@
+@use "var";
+
+//---------STYLING FOR GLOBAL ROOMS-----------//
+
+// LOGIN PAGE
+.login-page {
+  position: relative;
+  overflow: hidden;
+  svg {
+    position: absolute;
+    left: 50px;
+    top: 100px;
+  }
+}
