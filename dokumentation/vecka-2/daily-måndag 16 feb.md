@@ -1,4 +1,4 @@
-
+![daily monday 16 feb](image.png)
 
 ---
 
@@ -44,4 +44,4 @@ Dagens scrum master: Alexander Johansson 🧑‍🌾
 ### Övrigt: 
 
 Frånvarande: 
-Alexandra är hos veterinär med sin katt Doris
+Ingen
