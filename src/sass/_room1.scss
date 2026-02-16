@@ -1,6 +1,6 @@
-@use 'var';
+@use "var";
 
 /* Testing */
 body {
-	background-color: var.$clrMidBlue;
+  background-color: var.$clrMidBlue;
 }
