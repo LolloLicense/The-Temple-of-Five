@@ -23,7 +23,7 @@ Dagens scrum master: Alexander Johansson 🧑‍🌾
 - **Idag har jag lärt mig**: Nej.
   
 ## Louise
-- **Idag har jag**: Jag har satt mig in i gruppuppgiften - samt sammansltällt med moodboard
+- **Idag har jag**: Jag har satt mig in i gruppuppgiften - samt sammansltällt min moodboard
 - **Dagens mål**: Sätta tema, design och storyline så vi har något att jobba på
 - **Ett problem jag har**: Nej.
 - **Jag behöver hjälp med**: Nej inte just nu.
