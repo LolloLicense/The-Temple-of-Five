@@ -220,8 +220,8 @@ Dålig: Tar på mig för mycket, Grunderna sitter inte helt 100%
 ## Scrum master schema 👩‍⚖️
 
 <b>Alex</b>: 11 feb - 16 feb <br>
-<b>Minai</b>: 17 feb - 20 feb <br>
-<b>Alexandra</b>: 23 feb - 26 feb <br>
+<b>Alexandra</b>: 17 feb - 20 feb <br>
+<b>Minai</b>: 23 feb - 26 feb <br>
 <b>Louise</b>: 27 feb - 4 mars <br>
 <b>Emil</b>: 5 mars - 10 mars <br>
 
