@@ -119,6 +119,6 @@ const soundIconInactive: HTMLElement | null = document.querySelector("#soundIcon
       soundIconActive.classList.add("hidden");
     }
     audio = 0;
-  }
-
+} 
+    
 }
