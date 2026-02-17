@@ -11,17 +11,3 @@ $txFont: "Asimovian", Arial, sans-serif;
 /* Styling */
 $smallRadius: 10px;
 $bigRadius: 30px;
-
-/* */
-@mixin frostedGlass(
-  $text: #ecf5f1,
-  $bg: rgba(236, 245, 241, 0.14),
-  $blur: 12px,
-  $shadow: 0 10px 28px rgba(0, 0, 0, 0.25)
-) {
-  color: $text;
-  background: $bg;
-  backdrop-filter: blur($blur);
-  -webkit-backdrop-filter: blur($blur);
-  box-shadow: $shadow;
-}
