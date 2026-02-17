@@ -2,15 +2,15 @@
 
 /* Colors */
 $clrMidBlue: #021216;
-$textColor: #ECF5F1;
-
+$lightColor: #ecf5f1;
+$redColor: #9d0508;
 
 /*Typography*/
 $txFont: "Asimovian", Arial, sans-serif;
 
-
 /* Styling */
-$headerRadius: 10px;
+$smallRadius: 10px;
+$bigRadius: 30px;
 
 /* */
 @mixin frostedGlass(
