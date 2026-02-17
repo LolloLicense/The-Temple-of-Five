@@ -97,18 +97,28 @@ if (toggleSoundBtn) {
   });
 }
 
-function toggleSoundIcon(sound: number): void {
-  const soundIconActive: HTMLElement | null =
-    document.querySelector("#soundIconActive");
-  const soundIconInactive: HTMLElement | null =
-    document.querySelector("#soundIconInactive");
-
 function toggleSoundIcon(audio:number): void {
 const soundIconActive: HTMLElement | null = document.querySelector("#soundIconActive");
 const soundIconInactive: HTMLElement | null = document.querySelector("#soundIconInactive");
 
-if (audio === 0) {
-console.log(audio + ' Sound is on');
-if (soundIconActive) {
-soundIconActive.classList.remove('hidden');
+  if (audio === 0) {
+    console.log(audio + " Sound is on");
+    if (soundIconActive) {
+      soundIconActive.classList.remove("hidden");
+    }
+    if (soundIconInactive) {
+      soundIconInactive.classList.add("hidden");
+    }
+    audio = 1;
+  } else if (audio === 1) {
+    console.log(audio + " Sound is off");
+    if (soundIconInactive) {
+      soundIconInactive.classList.remove("hidden");
+    }
+    if (soundIconActive) {
+      soundIconActive.classList.add("hidden");
+    }
+    audio = 0;
+  }
+
 }
