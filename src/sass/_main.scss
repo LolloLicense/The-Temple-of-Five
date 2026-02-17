@@ -1,6 +1,10 @@
 @use "var";
 
 //---------STYLING FOR GLOBAL ROOMS-----------//
+.hidden {
+  display: none;
+}
+
 
 body {
   font-family: var.$txFont;
@@ -38,7 +42,7 @@ header {
   // Font
   font-size: 1.5rem;
   color: var.$lightColor;
-  light-transform: uppercase;
+  transform: uppercase;
   // ProgressBar
   .progress {
     .progressTrack {
