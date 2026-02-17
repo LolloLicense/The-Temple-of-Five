@@ -111,4 +111,7 @@ if (audio === 0) {
 console.log(audio + ' Sound is on');
 if (soundIconActive) {
 soundIconActive.classList.remove('hidden');
+ }
+ }
+}
 }
