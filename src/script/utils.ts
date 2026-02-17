@@ -95,7 +95,7 @@ toggleSoundBtn.addEventListener('click', function () { toggleSoundIcon(audio) } 
 }
 
 
-function toggleSoundIcon(sound:number): void {
+function toggleSoundIcon(audio:number): void {
 const soundIconActive: HTMLElement | null = document.querySelector("#soundIconActive");
 const soundIconInactive: HTMLElement | null = document.querySelector("#soundIconInactive");
 
