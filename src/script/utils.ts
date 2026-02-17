@@ -92,12 +92,11 @@ function timerTick(id: number): void {
 const toggleSoundBtn: HTMLElement | null =
   document.querySelector("#toggleSoundBtn");
 if (toggleSoundBtn) {
-  toggleSoundBtn.addEventListener("click", function () {
-    toggleSoundIcon(audio);
-  });
+  toggleSoundBtn.addEventListener("click", 
+    toggleSoundIcon);
 }
 
-function toggleSoundIcon(audio:number): void {
+function toggleSoundIcon(): void {
 const soundIconActive: HTMLElement | null = document.querySelector("#soundIconActive");
 const soundIconInactive: HTMLElement | null = document.querySelector("#soundIconInactive");
 
