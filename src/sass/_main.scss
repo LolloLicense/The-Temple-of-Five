@@ -9,7 +9,7 @@ body {
   font-family: var.$txFont;
 }
 // LOGIN PAGE
-.bg {
+.imageWrapper {
   position: relative;
 }
 .png {
@@ -17,7 +17,7 @@ body {
   height: 109px;
   position: absolute;
   left: 30%;
-  bottom: -50%;
+  bottom: 10%;
 }
 
 header {
