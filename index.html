@@ -14,6 +14,7 @@
     <title>the-pogo-stick-pioneers</title>
   </head>
   <body>
+    <!-- Site Header -->
     <header>
       <div class="progress" data-total="6" aria-label="Progress through rooms">
         <div
@@ -40,13 +41,14 @@
         >
       </div>
 
-      <div class="totalTimer visuallyHidden">
-        T: <span id="totalMinutesSpan">00</span>:<span id="totalSecondsSpan"
+      <div class="totalTimer">
+        Total time: <span id="totalMinutesSpan">00</span>:<span
+          id="totalSecondsSpan"
           >00</span
         >
       </div>
 
-      <div class="score">Score:<span id="scoreSpan">0</span></div>
+      <!-- <div class="score">Score:<span id="scoreSpan">0</span></div> -->
       <!-- Buttons -->
       <div class="headerBtns">
         <!-- Elements -->
@@ -71,7 +73,8 @@
         <!-- Sound-->
         <button id="toggleSoundBtn" class="toggleSoundBtn">
           <!-- Sound off -->
-          <svg id="soundIconInactive"
+          <svg
+            id="soundIconInactive"
             width="35"
             height="28"
             viewBox="0 0 39 32"
@@ -92,7 +95,9 @@
             />
           </svg>
           <!-- Sound on -->
-          <svg id="soundIconActive" class="hidden"
+          <svg
+            id="soundIconActive"
+            class="hidden"
             width="38"
             height="28"
             viewBox="0 0 43 32"
@@ -115,6 +120,7 @@
         </button>
       </div>
     </header>
+
     <main>
       <div id="app"></div>
       <!-- Login page -->
