@@ -5,17 +5,19 @@
   display: none;
 }
 
-
 body {
   font-family: var.$txFont;
 }
-
 // LOGIN PAGE
-.login-page {
-  img {
-    position: relative;
-    overflow: hidden;
-  }
+.imageWrapper {
+  position: relative;
+}
+.png {
+  width: 111px;
+  height: 109px;
+  position: absolute;
+  left: 30%;
+  bottom: 10%;
 }
 
 header {
