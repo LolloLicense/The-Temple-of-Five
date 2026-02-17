@@ -1,10 +1,12 @@
 /* Variables */
 
 /* Colors */
-$clrMidBlue: #147b94;
+$clrMidBlue: #021216;
+$textColor: #ECF5F1;
+
 
 /* */
-@mixin frosteGlass(
+@mixin frostedGlass(
   $text: #ecf5f1,
   $bg: rgba(236, 245, 241, 0.14),
   $blur: 12px,
