@@ -1,5 +1,1 @@
-
-
-export function room1Function() {
-	
-}
+export function room1Function() {}
