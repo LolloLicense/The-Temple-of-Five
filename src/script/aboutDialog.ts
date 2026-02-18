@@ -10,7 +10,6 @@ export function initAboutDialog(): void {
     closeBtn.addEventListener("click", () => dialog.close());
 
     dialog.addEventListener("click", (e) => {
-        const target = e.target as HTMLElement | null;
         if (e.target === dialog) dialog.close();
     });
 }
