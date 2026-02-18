@@ -14,7 +14,7 @@ console.log(dataJSON.menu.backgroundImg);
 console.log(dataJSON.menu.desc);
 */
 
-import {initAboutDialog} from "./script/aboutDialog.ts"
+import {initAboutDialog, aboutTabs} from "./script/aboutDialog.ts"
 
 startTimer(0);
 
@@ -47,37 +47,7 @@ if (welcomeSection) {
 welcomeSection.style.backgroundImage = `url("${dataJSON.menu.backgroundImg}")`;
 }
 
+// INITS
+aboutTabs();
 initAboutDialog();
-
-/* Room menu button event listeners
-These can be removed in the final product */
-
-const woodRoomBtn: HTMLElement | null = document.querySelector('#woodRoomBtn');
-if (woodRoomBtn) {
-woodRoomBtn.addEventListener('click', room1woodFunc);
-}
-
-const fireRoomBtn: HTMLElement | null = document.querySelector('#fireRoomBtn');
-if (fireRoomBtn) {
-fireRoomBtn.addEventListener('click', room2fireFunc);
-}
-
-const earthRoomBtn: HTMLElement | null = document.querySelector('#earthRoomBtn');
-if (earthRoomBtn) {
-earthRoomBtn.addEventListener('click', room3earthFunc);
-}
-
-const metalRoomBtn: HTMLElement | null = document.querySelector('#metalRoomBtn');
-if (metalRoomBtn) {
-metalRoomBtn.addEventListener('click', room4metalFunc);
-}
-
-const waterRoomBtn: HTMLElement | null = document.querySelector('#waterRoomBtn');
-if (waterRoomBtn) {
-waterRoomBtn.addEventListener('click', room5waterFunc);
-}
-
-const finalRoomBtn: HTMLElement | null = document.querySelector('#finalRoomBtn');
-if (finalRoomBtn) {
-finalRoomBtn.addEventListener('click', room6finalFunc);
-}
+>>>>>>> aecef1e4b1548cdb26404ac08ac0474bc62d8c63
