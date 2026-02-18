@@ -9,9 +9,17 @@
 body {
   font-family: var.$txFont;
 }
+button {
+  @include mix.button();
+}
 // LOGIN PAGE
 .imageWrapper {
   position: relative;
+  button {
+    position: absolute;
+    bottom: 20px;
+    left: 50px;
+  }
 }
 .png {
   width: 111px;
@@ -43,7 +51,7 @@ header {
   // Font
   font-size: 1.5rem;
   color: var.$lightColor;
-  transform: uppercase;
+  text-transform: uppercase;
   // ProgressBar
   .progress {
     .progressTrack {
