@@ -1,6 +1,8 @@
 import "./sass/style.scss";
 import { startTimer, stopTimer } from "./script/utils.ts";
+import { initSoundToggle } from "./audio/soundToggle";
 
+initSoundToggle();
 startTimer(0);
 
 console.log("Running startTimer(1) (room1) in 5 seconds");
@@ -19,6 +21,6 @@ document.body.addEventListener('click', showLogin);
 document.body.addEventListener('keydown', showLogin);
 
 function showLogin() {
-console.log('Showing login')
+  console.log('Showing login')
 
 }
