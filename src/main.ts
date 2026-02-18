@@ -1,12 +1,15 @@
 import "./sass/style.scss";
 import * as dataJSON from './data.json';
 import { startTimer, stopTimer } from "./script/utils.ts";
+
+/* Comment out for now, because of deploy
 import { room1woodFunc } from './script/room1wood.ts';
 import { room2fireFunc } from './script/room2fire.ts';
 import { room3earthFunc } from './script/room3earth.ts';
 import { room4metalFunc } from './script/room4metal.ts';
 import { room5waterFunc } from './script/room5water.ts';
 import { room6finalFunc } from './script/room6validate.ts';
+*/
 
 /* Test and example of JSON
 console.log(dataJSON.menu);
@@ -52,4 +55,4 @@ if (welcomeSection) {
 // INITS
 aboutTabs();
 initAboutDialog();
->>>>>>> aecef1e4b1548cdb26404ac08ac0474bc62d8c63
+
