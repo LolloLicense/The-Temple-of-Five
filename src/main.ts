@@ -1,5 +1,11 @@
 import "./sass/style.scss";
 import { startTimer, stopTimer } from "./script/utils.ts";
+import * as dataJSON from '/src/data.json';
+
+
+console.log(dataJSON.menu);
+console.log(dataJSON.menu.backgroundImg);
+console.log(dataJSON.menu.desc);
 
 startTimer(0);
 
@@ -15,10 +21,18 @@ setTimeout(function () {
   console.log("Both timers have been stopped");
 }, 65000);
 
+/* Used for triggering login on splash screen
+
 document.body.addEventListener('click', showLogin);
 document.body.addEventListener('keydown', showLogin);
 
 function showLogin() {
 console.log('Showing login')
 
+}
+*/
+
+const welcomeSection: HTMLElement | null = document.querySelector('#welcomePage');
+if (welcomeSection) {
+welcomeSection.style.backgroundImage = dataJSON.menu.backgroundImg;
 }

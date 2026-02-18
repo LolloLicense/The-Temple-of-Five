@@ -7,6 +7,11 @@
     "backgroundImg": "/images/login-page.jpg",
     "desc": "Text test"
 },
+"menu":{
+    "backgroundImg": "/images/landingpage.jpg",
+    "desc": "Text test"
+},
+
 "room1wood": {
     "backgroundImg": "/images/woodroom.jpg",
     "desc": "Text test",
