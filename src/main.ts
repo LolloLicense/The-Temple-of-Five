@@ -7,6 +7,8 @@ console.log(dataJSON.menu);
 console.log(dataJSON.menu.backgroundImg);
 console.log(dataJSON.menu.desc);
 
+import {initAboutDialog} from "./script/aboutDialog.ts"
+
 startTimer(0);
 
 console.log("Running startTimer(1) (room1) in 5 seconds");
@@ -30,9 +32,14 @@ function showLogin() {
 console.log('Showing login')
 
 }
+<<<<<<< HEAD
 */
 
 const welcomeSection: HTMLElement | null = document.querySelector('#welcomePage');
 if (welcomeSection) {
 welcomeSection.style.backgroundImage = dataJSON.menu.backgroundImg;
 }
+=======
+
+initAboutDialog();
+>>>>>>> aecef1e4b1548cdb26404ac08ac0474bc62d8c63
