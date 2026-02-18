@@ -122,21 +122,37 @@
     </header>
 
     <main>
-      <div id="app"></div>
       <!-- Login page -->
-      <section class="login-page">
+      <section class="loginPage">
         <div class="imageWrapper">
-          <img class="bg" src="/public/images/login-page.jpg" alt="" />
+          <img class="bg" src="/images/login-page.jpg" alt="" />
           <img class="png" src="/images/true-earth-glass-icon.png" alt="" />
         </div>
       </section>
-      <section>room 1</section>
-      <section>room 2</section>
-      <section>room 3</section>
-      <section>room 4</section>
-      <section>room 5</section>
-      <section>Game over</section>
-      <section>Win</section>
+      <!-- Welcome page with menu -->
+      <section id="welcomePage" class="welcomePage hidden">
+        Welcome
+      <div class="mainMenu">
+        <button class="woodRoomBtn">Wood</button>
+        <button class="fireRoomBtn">Fire</button>
+        <button class="earthRoomBtn">Earth</button>
+        <button class="metalRoomBtn">Metal</button>
+        <button class="waterRoomBtn">Water</button>
+        <button class="finalRoomBtn">Final</button>
+      </div>
+      </section>
+      <!-- Wood Room -->
+      <section id="room1Wood" class="room1Wood hidden">room 1</section>
+      <!-- Fire Room -->
+      <section id="room2Fire" class="room2Fire hidden">room 2</section>
+      <!-- Earth Room -->
+      <section id="room3Earth" class="room3Earth hidden">room 3</section>
+      <!-- Metal Room -->
+      <section id="room4Metal" class="room4Metal hidden">room 4</section>
+      <!-- Water Room -->
+      <section id="room5Water" class="room5Water hidden">room 5</section>
+      <!-- Game Over Room -->
+      <section id="finalRoom" class="finalRoom hidden">Game over</section>
     </main>
 
     <script type="module" src="/src/main.ts"></script>
