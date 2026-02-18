@@ -60,7 +60,7 @@ export function aboutTabs(): void {
         // keypad use a11y
         tab.focus(); 
     });
-    // let keybord arrow navigate change of tab
+    // let keybord arrow navigate change of tab not normal tab key
     tab.addEventListener("keydown", (e) => {
         // finds out what tab in on
         const currentIndex = tabs.indexOf(tab);
@@ -73,16 +73,10 @@ export function aboutTabs(): void {
         } else if (e.key === "ArrowLeft") {
             // one step back and looping "around" whit .length
             nextIndex = (currentIndex -1 + tabs.length) % tabs.length;
-        }
-        else if (e.key === "Home") {
-            // goes to first tab
-            nextIndex = 0;
-        }else if (e.key === "End") {
-            // goes to last tab
-            nextIndex = tabs.length -1;
-        }else {
+        } else {
             return;
         }
+     
         // preventing scroll mode for arrow keys
         e.preventDefault();
         // change the tab and panel visually

@@ -106,6 +106,9 @@ header {
     }
     .tabsTab:focus {
       outline: none;
+      text-decoration: underline;
+      text-decoration-thickness: 3 px;
+      text-underline-offset: 5px;
     }
     .tabsTab.currentTab,
     .tabsTab[aria-selected="true"] {
