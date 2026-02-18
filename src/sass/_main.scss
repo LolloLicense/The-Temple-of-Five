@@ -9,25 +9,10 @@
 body {
   font-family: var.$txFont;
 }
-.test-button {
-  @include mix.button();
-}
+// .test-button {
+//   @include mix.button();
+// }
 // LOGIN PAGE
-.imageWrapper {
-  position: relative;
-  button {
-    position: absolute;
-    bottom: 20px;
-    left: 50px;
-  }
-}
-.png {
-  width: 111px;
-  height: 109px;
-  position: absolute;
-  left: 30%;
-  bottom: 10%;
-}
 
 header {
   // Background style
@@ -81,4 +66,87 @@ header {
       border: none;
     }
   }
+}
+
+// DIALOG
+.aboutDialog {
+  margin: 0;
+  padding: 0;
+  border: none;
+  height: 100vw;
+  width: 100vw;
+  max-width: none;
+  max-height: none;
+
+  background-image: url("/public/images/about-image.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  color: var.$lightColor;
+
+  button {
+    background: transparent;
+    border: none;
+    color: var.$lightColor;
+    padding: 1.5rem;
+  }
+  .dialogInner {
+    margin: 3rem;
+    padding: 1.5rem 3rem 4rem 3rem;
+
+    @include mix.glass;
+  }
+  .tabs {
+    .tabsTab {
+      font-size: var.$fs-h5;
+      padding: 0 3rem 0 0;
+      border-radius: var.$smallRadius;
+      opacity: 0.4;
+    }
+    .tabsTab:focus {
+      outline: none;
+    }
+    .tabsTab.currentTab,
+    .tabsTab[aria-selected="true"] {
+      color: var.$lightColor;
+      opacity: 1;
+    }
+  }
+  .tabsPanel {
+    margin-top: 3rem;
+
+    h3 {
+      font-size: var.$fs-h3;
+    }
+    p {
+      font-size: var.$fs-h6;
+    }
+  }
+}
+
+/* Background image settings for each room */
+.welcomePage,
+.room1Wood,
+.room2Fire,
+.room3Earth,
+.room4Metal,
+.room5Water,
+.finalRoom {
+  height: 100vh;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* Temporary menu styling */
+.welcomePage .mainMenu {
+  position: relative;
+  top: 500px;
+  gap: 25px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }

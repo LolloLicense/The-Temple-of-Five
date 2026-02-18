@@ -1,0 +1,49 @@
+{
+"splash": {
+    "backgroundImg": "./images/landingpage.jpg",
+    "desc": "Text test"
+},
+"login": {
+    "backgroundImg": "./images/login-page.jpg",
+    "desc": "Text test"
+},
+"menu":{
+    "backgroundImg": "./images/landingpage.jpg",
+    "desc": "Text test"
+},
+
+"room1wood": {
+    "backgroundImg": "./images/woodroom.jpg",
+    "desc": "Text test",
+    "falseSign": "./images/false-wood-glass-icon.png",
+    "trueSign": "./images/true-wood-glass-icon.png"
+},
+"room2fire": {
+    "backgroundImg": "./images/fireroom.jpg",
+    "desc": "Text test",
+    "falseSign": "./images/false-fire-glass-icon.png",
+    "trueSign": "./images/true-fire-glass-icon.png"
+},
+"room3earth": {
+    "backgroundImg": "./images/earthroom.jpg",
+    "desc": "Text test",
+    "falseSign": "./images/false-earth-glass-icon.png",
+    "trueSign": "./images/true-earth-glass-icon.png"
+  },
+  "room4metal": {
+    "backgroundImg": "./images/metalroom.jpg",
+    "desc": "Text test",
+    "falseSign": "./images/false-metal-glass-icon.png",
+    "trueSign": "./images/true-metal-glass-icon.png"
+},
+  "room5water": {
+    "backgroundImg": "./images/waterroom.jpg",
+    "desc": "Text test",
+    "falseSign": "./images/false-water-glass-icon.png",
+    "trueSign": "./images/true-water-glass-icon.png"
+},
+  "room6validate": {
+    "backgroundImg": "./images/room-6.jpg",
+    "desc": "Text test"
+}
+}
