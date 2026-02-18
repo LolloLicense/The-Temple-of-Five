@@ -2,8 +2,8 @@
 // backgrund frosted glass
 
 @mixin glass(
-  $bg: rgba(207, 240, 243, 0.14),
-  $blur: 12px,
+  $bg: rgba(9, 49, 52, 0.2),
+  $blur: 15px,
   $shadow: 0 10px 28px rgba(0, 0, 0, 0.25),
   $radius: 10px,
   $border: 1px solid rgba(255, 255, 255, 0.18)

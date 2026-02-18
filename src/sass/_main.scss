@@ -75,8 +75,8 @@ header {
   margin: 0;
   padding: 0;
   border: none;
-  height: 100vw;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
   max-width: none;
   max-height: none;
 
@@ -101,7 +101,7 @@ header {
   }
   .tabs {
     .tabsTab {
-      font-size: var.$fs-h5;
+      font-size: var.$fs-h6;
       padding: 0 3rem 0 0;
       border-radius: var.$smallRadius;
       opacity: 0.4;
@@ -109,7 +109,7 @@ header {
     .tabsTab:focus {
       outline: none;
       text-decoration: underline;
-      text-decoration-thickness: 3 px;
+      text-decoration-thickness: 3px;
       text-underline-offset: 5px;
     }
     .tabsTab.currentTab,
@@ -122,7 +122,7 @@ header {
     margin-top: 3rem;
 
     h3 {
-      font-size: var.$fs-h3;
+      font-size: var.$fs-h4;
     }
     p {
       font-size: var.$fs-h6;
