@@ -9,7 +9,7 @@
 body {
   font-family: var.$txFont;
 }
-button {
+.test-button {
   @include mix.button();
 }
 // LOGIN PAGE
