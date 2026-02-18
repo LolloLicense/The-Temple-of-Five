@@ -1,5 +1,6 @@
 import "./sass/style.scss";
 import { startTimer, stopTimer } from "./script/utils.ts";
+import {initAboutDialog} from "./script/aboutDialog.ts"
 
 startTimer(0);
 
@@ -22,3 +23,5 @@ function showLogin() {
 console.log('Showing login')
 
 }
+
+initAboutDialog();
