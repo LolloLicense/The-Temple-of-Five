@@ -1,11 +1,18 @@
 import "./sass/style.scss";
+import * as dataJSON from './data.json';
 import { startTimer, stopTimer } from "./script/utils.ts";
-import * as dataJSON from '/src/data.json';
+import { room1woodFunc } from './script/room1wood.ts';
+import { room2fireFunc } from './script/room2fire.ts';
+import { room3earthFunc } from './script/room3earth.ts';
+import { room4metalFunc } from './script/room4metal.ts';
+import { room5waterFunc } from './script/room5water.ts';
+import { room6finalFunc } from './script/room6validate.ts';
 
-
+/* Test and example of JSON
 console.log(dataJSON.menu);
 console.log(dataJSON.menu.backgroundImg);
 console.log(dataJSON.menu.desc);
+*/
 
 import {initAboutDialog} from "./script/aboutDialog.ts"
 
@@ -32,14 +39,45 @@ function showLogin() {
 console.log('Showing login')
 
 }
-<<<<<<< HEAD
 */
+
 
 const welcomeSection: HTMLElement | null = document.querySelector('#welcomePage');
 if (welcomeSection) {
-welcomeSection.style.backgroundImage = dataJSON.menu.backgroundImg;
+welcomeSection.style.backgroundImage = `url("${dataJSON.menu.backgroundImg}")`;
 }
-=======
 
 initAboutDialog();
->>>>>>> aecef1e4b1548cdb26404ac08ac0474bc62d8c63
+
+/* Room menu button event listeners
+These can be removed in the final product */
+
+const woodRoomBtn: HTMLElement | null = document.querySelector('#woodRoomBtn');
+if (woodRoomBtn) {
+woodRoomBtn.addEventListener('click', room1woodFunc);
+}
+
+const fireRoomBtn: HTMLElement | null = document.querySelector('#fireRoomBtn');
+if (fireRoomBtn) {
+fireRoomBtn.addEventListener('click', room2fireFunc);
+}
+
+const earthRoomBtn: HTMLElement | null = document.querySelector('#earthRoomBtn');
+if (earthRoomBtn) {
+earthRoomBtn.addEventListener('click', room3earthFunc);
+}
+
+const metalRoomBtn: HTMLElement | null = document.querySelector('#metalRoomBtn');
+if (metalRoomBtn) {
+metalRoomBtn.addEventListener('click', room4metalFunc);
+}
+
+const waterRoomBtn: HTMLElement | null = document.querySelector('#waterRoomBtn');
+if (waterRoomBtn) {
+waterRoomBtn.addEventListener('click', room5waterFunc);
+}
+
+const finalRoomBtn: HTMLElement | null = document.querySelector('#finalRoomBtn');
+if (finalRoomBtn) {
+finalRoomBtn.addEventListener('click', room6finalFunc);
+}
