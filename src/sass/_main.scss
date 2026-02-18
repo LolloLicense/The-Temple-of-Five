@@ -1,7 +1,10 @@
 @use "var";
 @use "mixins" as mix;
 
-//---------STYLING FOR GLOBAL ROOMS-----------//
+//-----------------------------------------------------------
+//-------------------------Global styles---------------------
+//-----------------------------------------------------------
+
 .hidden {
   display: none;
 }
@@ -9,10 +12,6 @@
 body {
   font-family: var.$txFont;
 }
-// .test-button {
-//   @include mix.button();
-// }
-// LOGIN PAGE
 
 header {
   // Background style
@@ -68,7 +67,10 @@ header {
   }
 }
 
-// DIALOG
+//-----------------------------------------------------------
+//-------------------------Dialog----------------------------
+//-----------------------------------------------------------
+
 .aboutDialog {
   margin: 0;
   padding: 0;
@@ -127,8 +129,10 @@ header {
     }
   }
 }
+//-----------------------------------------------------------
+//-------Background image settings for each room ------------
+//-----------------------------------------------------------
 
-/* Background image settings for each room */
 .welcomePage,
 .room1Wood,
 .room2Fire,

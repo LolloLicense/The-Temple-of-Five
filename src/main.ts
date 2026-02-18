@@ -52,7 +52,10 @@ if (welcomeSection) {
   welcomeSection.style.backgroundImage = `url("${dataJSON.menu.backgroundImg}")`;
 }
 
-// INITS
+//-----------------------------------------------------------
+//-------------------------INITS-----------------------------
+//-----------------------------------------------------------
+
 aboutTabs();
 initAboutDialog();
 
