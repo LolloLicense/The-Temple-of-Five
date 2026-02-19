@@ -63,6 +63,10 @@ header {
     button {
       background: transparent;
       border: none;
+      padding: 0;
+    }
+    svg {
+      padding: 0;
     }
   }
 }
@@ -80,7 +84,7 @@ header {
   max-width: none;
   max-height: none;
 
-  background-image: url("/public/images/about-image.jpg");
+  background-image: url("/images/about-image.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -129,6 +133,7 @@ header {
     }
   }
 }
+
 //-----------------------------------------------------------
 //-------Background image settings for each room ------------
 //-----------------------------------------------------------
