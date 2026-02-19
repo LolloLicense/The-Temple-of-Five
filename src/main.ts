@@ -2,14 +2,46 @@ import "./sass/style.scss";
 import * as dataJSON from './data.json';
 import { startTimer, stopTimer } from "./script/utils.ts";
 
-/* Comment out for now, because of deploy
 import { room1woodFunc } from './script/room1wood.ts';
 import { room2fireFunc } from './script/room2fire.ts';
 import { room3earthFunc } from './script/room3earth.ts';
 import { room4metalFunc } from './script/room4metal.ts';
 import { room5waterFunc } from './script/room5water.ts';
 import { room6finalFunc } from './script/room6validate.ts';
-*/
+
+
+/* Event listeners for temporary menu
+(Remove when menu is to be removed) */
+const woodRoomBtn: HTMLElement | null = document.querySelector('#woodRoomBtn');
+if (woodRoomBtn) {
+  woodRoomBtn.addEventListener('click', room1woodFunc);
+}
+
+const fireRoomBtn: HTMLElement | null = document.querySelector('#fireRoomBtn');
+if (fireRoomBtn) {
+  fireRoomBtn.addEventListener('click', room2fireFunc);
+}
+
+const earthRoomBtn: HTMLElement | null = document.querySelector('#earthRoomBtn');
+if (earthRoomBtn) {
+  earthRoomBtn.addEventListener('click', room3earthFunc);
+}
+
+const metalRoomBtn: HTMLElement | null = document.querySelector('#metalRoomBtn');
+if (metalRoomBtn) {
+  metalRoomBtn.addEventListener('click', room4metalFunc);
+}
+
+const waterRoomBtn: HTMLElement | null = document.querySelector('#waterRoomBtn');
+if (waterRoomBtn) {
+  waterRoomBtn.addEventListener('click', room5waterFunc);
+}
+
+const finalRoomBtn: HTMLElement | null = document.querySelector('#finalRoomBtn');
+if (finalRoomBtn) {
+  finalRoomBtn.addEventListener('click', room6finalFunc);
+}
+
 
 /* Test and example of JSON
 console.log(dataJSON.menu);
