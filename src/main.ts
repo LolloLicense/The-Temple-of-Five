@@ -85,8 +85,23 @@ if (welcomeSection) {
 }
 
 //-----------------------------------------------------------
+//-------------------------Backpack toggle-------------------
+//-----------------------------------------------------------
+
+// Bara toggle just nu kolla vidare imorgon
+const itemListBtn = document.getElementById("itemListBtn")!;
+const itemDropdown = document.getElementById("itemDropdown")!;
+
+itemListBtn.addEventListener("click", (event) => {
+  event.stopPropagation();
+  itemDropdown.classList.toggle("hidden");
+});
+
+
+//-----------------------------------------------------------
 //-------------------------INITS-----------------------------
 //-----------------------------------------------------------
+
 
 aboutTabs();
 initAboutDialog();
