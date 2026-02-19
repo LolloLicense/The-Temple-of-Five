@@ -1,10 +1,10 @@
 import { isMuted } from "./soundToggle";
 
 /**
- * Hantera bakgrundsljud (BGM)
- * Hantera ljudeffekter (SFX)
- * Fade out / fade in mellan rum
- * soungToggle (muted default)
+ * Handle background music (BGM)
+ * Handle sound effects (SFX)
+ * Fade out / fade in between rooms
+ * soundToggle (muted by default)
  */
 
 type SoundConfig = {        // for JSON

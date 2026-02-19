@@ -1,28 +1,28 @@
 /* -------------------------------
-   Init (kallas centralt i main.ts)
+   Init (called centrally in main.ts)
 ---------------------------------- */
 
 export { initAudioManager } from "./audioManager";
 export { initSoundToggle } from "./soundToggle";
 
 /* -------------------------------
-   Används i rum.ts
+   Used in rum.ts
 ---------------------------------- */
 
 export { playBgm, playSfx } from "./audioManager";
 
 /* --------------------------------
-   Används centralt (game over etc)
+   Used centrally (game over, etc.).
 ----------------------------------- */
 
 export { stopAll } from "./audioManager";
 
 /* --------------------------------
-   Används globalt vid mute
+   Used globally for mute.
 ----------------------------------- */
 
 export { isMuted } from "./soundToggle";
 
 /* ------------------------------------------
-import { playBgm, playSfx } from "../audio"; <------- OBS! importera från index.ts, inte direkt från audioManager eller soundToggle. precis så som det står här.
+import { playBgm, playSfx } from "../audio"; <------- NOTE! Import from index.ts, not directly from audioManager or soundToggle. Exactly as written here.
 -------------------------------------------- */
