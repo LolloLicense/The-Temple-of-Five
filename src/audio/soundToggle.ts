@@ -1,11 +1,9 @@
+import { syncMutedFromToggle } from "./audioManager"
+
 let muted = true;   // mute as default
 
 export function isMuted(): boolean {    // returns the current state of muted
   return muted;
-}
-
-export function setMuted(nextMuted: boolean): void {   // sets the state of muted to the value of nextMuted
-  muted = nextMuted;
 }
 
 export function toggleMuted(): boolean {    // toggles the state of muted and returns the new state
@@ -15,29 +13,36 @@ export function toggleMuted(): boolean {    // toggles the state of muted and re
 
 export function initSoundToggle(): void {   // initializes the sound toggle button and its function
   const toggleSoundBtn =
-    document.querySelector<HTMLElement>("#toggleSoundBtn");
+    document.querySelector<HTMLButtonElement>("#toggleSoundBtn");
 
   const soundIconActive =
-    document.querySelector<HTMLElement>("#soundIconActive");
+    document.querySelector<SVGElement>("#soundIconActive");
 
   const soundIconInactive =
-    document.querySelector<HTMLElement>("#soundIconInactive");
+    document.querySelector<SVGElement>("#soundIconInactive");
 
   if (!toggleSoundBtn) return;
+
+  const btn = toggleSoundBtn;
 
   function renderSoundIcons(): void {   // if muted is true, add "hidden" class to soundIconActive; if muted is false, remove "hidden" class from soundIconActive
 
     soundIconActive?.classList.toggle("hidden", muted);
     soundIconInactive?.classList.toggle("hidden", !muted);
+
+    btn.setAttribute("aria-pressed", String(muted));
+    btn.setAttribute("aria-label", muted ? "Sound on" : "Sound off");
   }
 
   // Initial render (mute default)
   renderSoundIcons();
 
-  toggleSoundBtn.addEventListener("click", () => {    // when the toggleSoundBtn is clicked, toggle the state of muted and log the new state to the console, then update the sound icons
-    const next = toggleMuted();
+  toggleSoundBtn.addEventListener("click", async () => {    // when the toggleSoundBtn is clicked, toggle the state of muted and log the new state to the console, then update the sound icons
+    const nextMuted = toggleMuted();
 
-    console.log(`Sound is ${next ? "off" : "on"}`);
+    console.log(`Sound is ${nextMuted ? "off" : "on"}`);
+
+    await syncMutedFromToggle();   // sync the muted state with the audio manager
 
     renderSoundIcons();
   });
