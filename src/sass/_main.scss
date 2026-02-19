@@ -75,7 +75,7 @@ header {
 //-------------------------Dropdown style---------------------
 //-----------------------------------------------------------
 
-  #itemDropdown { 
+  .item-dropdown { 
     @include mix.glass(); // får inte mixin att fungera här kolla på det imorgon
     border-radius: var.$smallRadius;
     border: 2px solid var.$lightColor;
@@ -102,7 +102,7 @@ header {
     }
   }
 
-  #itemDropdown.hidden {
+  .item-dropdown.hidden {
     display: flex; // istället för display none så kan man få en fade out effekt
     opacity: 0;
     transform: translateY(-5px);
