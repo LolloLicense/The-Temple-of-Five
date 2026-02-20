@@ -1,1 +1,23 @@
 @use 'var';
+
+
+.room3Earth {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.room3Earth .gameDiv {
+    margin: 0 auto;
+    width: auto;
+    background: gray;
+    display: grid;
+    grid-template-columns: repeat(4, 175px);
+    grid-template-rows: repeat(4, 175px);
+}
+
+.room3Earth .gameDiv .slate {
+   border:  '1px solid #ccc';
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}

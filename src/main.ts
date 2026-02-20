@@ -1,47 +1,48 @@
 import "./sass/style.scss";
-import * as dataJSON from './data.json';
+import * as dataJSON from "./data.json";
+import { room1woodFunc } from "./script/room1wood.ts";
+import { room2fireFunc } from "./script/room2fire.ts";
+import { room3earthFunc } from "./script/room3earth.ts";
+import { room4metalFunc } from "./script/room4metal.ts";
+import { room5waterFunc } from "./script/room5water.ts";
+import { room6finalFunc } from "./script/room6validate.ts";
 import { startTimer, stopTimer } from "./script/utils.ts";
-
-import { room1woodFunc } from './script/room1wood.ts';
-import { room2fireFunc } from './script/room2fire.ts';
-import { room3earthFunc } from './script/room3earth.ts';
-import { room4metalFunc } from './script/room4metal.ts';
-import { room5waterFunc } from './script/room5water.ts';
-import { room6finalFunc } from './script/room6validate.ts';
-
 
 /* Event listeners for temporary menu
 (Remove when menu is to be removed) */
-const woodRoomBtn: HTMLElement | null = document.querySelector('#woodRoomBtn');
+const woodRoomBtn: HTMLElement | null = document.querySelector("#woodRoomBtn");
 if (woodRoomBtn) {
-  woodRoomBtn.addEventListener('click', room1woodFunc);
+  woodRoomBtn.addEventListener("click", room1woodFunc);
 }
 
-const fireRoomBtn: HTMLElement | null = document.querySelector('#fireRoomBtn');
+const fireRoomBtn: HTMLElement | null = document.querySelector("#fireRoomBtn");
 if (fireRoomBtn) {
-  fireRoomBtn.addEventListener('click', room2fireFunc);
+  fireRoomBtn.addEventListener("click", room2fireFunc);
 }
 
-const earthRoomBtn: HTMLElement | null = document.querySelector('#earthRoomBtn');
+const earthRoomBtn: HTMLElement | null =
+  document.querySelector("#earthRoomBtn");
 if (earthRoomBtn) {
-  earthRoomBtn.addEventListener('click', room3earthFunc);
+  earthRoomBtn.addEventListener("click", room3earthFunc);
 }
 
-const metalRoomBtn: HTMLElement | null = document.querySelector('#metalRoomBtn');
+const metalRoomBtn: HTMLElement | null =
+  document.querySelector("#metalRoomBtn");
 if (metalRoomBtn) {
-  metalRoomBtn.addEventListener('click', room4metalFunc);
+  metalRoomBtn.addEventListener("click", room4metalFunc);
 }
 
-const waterRoomBtn: HTMLElement | null = document.querySelector('#waterRoomBtn');
+const waterRoomBtn: HTMLElement | null =
+  document.querySelector("#waterRoomBtn");
 if (waterRoomBtn) {
-  waterRoomBtn.addEventListener('click', room5waterFunc);
+  waterRoomBtn.addEventListener("click", room5waterFunc);
 }
 
-const finalRoomBtn: HTMLElement | null = document.querySelector('#finalRoomBtn');
+const finalRoomBtn: HTMLElement | null =
+  document.querySelector("#finalRoomBtn");
 if (finalRoomBtn) {
-  finalRoomBtn.addEventListener('click', room6finalFunc);
+  finalRoomBtn.addEventListener("click", room6finalFunc);
 }
-
 
 /* Test and example of JSON
 console.log(dataJSON.menu);
@@ -49,17 +50,16 @@ console.log(dataJSON.menu.backgroundImg);
 console.log(dataJSON.menu.desc);
 */
 
-import { initAboutDialog, aboutTabs } from "./script/aboutDialog.ts"
 import { initSoundToggle } from "./audio/soundToggle";
-
+import { aboutTabs, initAboutDialog } from "./script/aboutDialog.ts";
 
 console.log("Running startTimer(1) (room1) in 5 seconds");
-setTimeout(function () {
+setTimeout(() => {
   startTimer(1);
 }, 5000);
 
 console.log("Stopping both timers in 65 seconds");
-setTimeout(function () {
+setTimeout(() => {
   stopTimer(0);
   stopTimer(1);
   console.log("Both timers have been stopped");
@@ -76,8 +76,8 @@ function showLogin() {
 }
 */
 
-
-const welcomeSection: HTMLElement | null = document.querySelector('#welcomePage');
+const welcomeSection: HTMLElement | null =
+  document.querySelector("#welcomePage");
 if (welcomeSection) {
   welcomeSection.style.backgroundImage = `url("${dataJSON.menu.backgroundImg}")`;
 }
@@ -95,11 +95,9 @@ itemListBtn.addEventListener("click", (event) => {
   itemDropdown.classList.toggle("is-open");
 });
 
-
 //-----------------------------------------------------------
 //-------------------------INITS-----------------------------
 //-----------------------------------------------------------
-
 
 aboutTabs();
 initAboutDialog();

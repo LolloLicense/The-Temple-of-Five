@@ -9,11 +9,11 @@ let roomTimerInterval: any;
 
 export function startTimer(id: number): void {
   if (id === 0) {
-    totalTimerInterval = setInterval(function () {
+    totalTimerInterval = setInterval(() => {
       timerTick(0);
     }, 1000); // om funktionen slutar funka testa setInterval(() => timerTick(0), 1000);
   } else {
-    roomTimerInterval = setInterval(function () {
+    roomTimerInterval = setInterval(() => {
       timerTick(id);
     }, 1000); // om funktionen slutar funka testa setInterval(() => timerTick(id), 1000);
   }
