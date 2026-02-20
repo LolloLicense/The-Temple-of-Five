@@ -1,4 +1,3 @@
-import { withBaseUrl } from "../script/utils";
 import { isMuted } from "./soundToggle";
 import type { SoundConfig } from "./types";
 
