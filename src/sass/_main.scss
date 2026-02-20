@@ -76,24 +76,20 @@ header {
 //-----------------------------------------------------------
 
 .item-dropdown {
-  @include mix.glass(); // får inte mixin att fungera här kolla på det imorgon
-  border-radius: var.$smallRadius;
-  border: 2px solid var.$lightColor;
-
-  position: absolute;
-  top: 80px;
-  right: 0;
-
+  @include mix.glass();
+  position: fixed;  
+  top: 105px;      
+  right: 5vw;        
   display: flex;
   flex-direction: row;
   gap: 0.5rem;
   padding: 0.5rem;
   z-index: 200;
   opacity: 0;
-
   transform: translateY(-5px);
   transition: opacity 0.25s ease, transform 0.25s ease;
   pointer-events: none;
+  border: 2px solid var.$lightColor;
 
   .artifact-slot {
     width: 40px;
