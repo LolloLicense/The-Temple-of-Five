@@ -1,3 +1,4 @@
+import { withBaseUrl } from "../script/utils";
 import { isMuted } from "./soundToggle";
 import type { SoundConfig } from "./types";
 
@@ -44,6 +45,9 @@ export function initAudioManager(configs: SoundConfig[]): void {
     sounds.set(cfg.id, audio); // add the audio element to the sounds Map with the id as the key
 
     targetVolumes.set(cfg.id, vol); // save the target volume in the targetVolumes Map
+
+    console.log("INIT AUDIO RUNNING");
+    console.log("Audio created:", cfg.id, cfg.src);
   }
 }
 
@@ -70,6 +74,8 @@ export async function syncMutedFromToggle(): Promise<void> {
     // if we are unmuting and there is a desired background music ID, start playing the background music for the current room
     await ensureCurrentRoomBgmIsPlaying(650); // fading in the bgm over 650ms when unmuting
   }
+
+  console.log("syncMutedFromToggle running");
 }
 
 /*--------------------------------------------------------
