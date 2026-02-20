@@ -50,7 +50,7 @@ console.log(dataJSON.menu.desc);
 */
 
 import { initAboutDialog, aboutTabs } from "./script/aboutDialog.ts"
-import { initAudio, initSoundToggle } from "./audio";
+import { initSoundToggle } from "./audio/soundToggle";
 
 
 console.log("Running startTimer(1) (room1) in 5 seconds");
@@ -92,7 +92,7 @@ const itemDropdown = document.getElementById("itemDropdown")!;
 
 itemListBtn.addEventListener("click", (event) => {
   event.stopPropagation();
-  itemDropdown.classList.toggle("hidden");
+  itemDropdown.classList.toggle("is-open");
 });
 
 
@@ -104,5 +104,4 @@ itemListBtn.addEventListener("click", (event) => {
 aboutTabs();
 initAboutDialog();
 initSoundToggle();
-initAudio();
 startTimer(0);

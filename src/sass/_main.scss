@@ -79,37 +79,34 @@ header {
     @include mix.glass(); // får inte mixin att fungera här kolla på det imorgon
     border-radius: var.$smallRadius;
     border: 2px solid var.$lightColor;
+
     position: absolute;
     top: 80px;
     right: 0;
+
     display: flex;
     flex-direction: row;
     gap: 0.5rem;
     padding: 0.5rem;
-    z-index: 10;
-
-    // Fade in
-    opacity: 1;
-    transform: translate(0);
+    z-index: 200;
+    opacity: 0;
+    
+    transform: translateY(-5px);
     transition: opacity 0.25s ease, transform 0.25s ease;
     pointer-events: auto;
     
     .artifact-slot { 
       width: 40px;
       height: 40px;
-      border-radius: var.$smallRadius;
-      border: 2px solid var.$lightColor; // för att se dem tomma platserna just nu tills svg/png är inlagda
     }
   }
 
-  .item-dropdown.hidden {
+  .item-dropdown.is-open {
     display: flex; // istället för display none så kan man få en fade out effekt
-    opacity: 0;
-    transform: translateY(-5px);
-    pointer-events: none;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
   }
-
-  
 
 //-----------------------------------------------------------
 //-------------------------Dialog----------------------------
