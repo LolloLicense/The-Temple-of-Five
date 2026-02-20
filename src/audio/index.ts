@@ -2,17 +2,17 @@
    Init (called centrally in main.ts)
 ---------------------------------- */
 
-export { initAudioManager } from "./audioManager";
+export { initAudio } from "./initAudio";
 export { initSoundToggle } from "./soundToggle";
 
 /* -------------------------------
-   Used in rum.ts
+   Used in room.ts
 ---------------------------------- */
 
 export { playBgm, playSfx } from "./audioManager";
 
 /* --------------------------------
-   Used centrally (game over, etc.).
+   Used centrally (game over, quit to main menu, etc.).
 ----------------------------------- */
 
 export { stopAll } from "./audioManager";

@@ -50,7 +50,7 @@ console.log(dataJSON.menu.desc);
 */
 
 import { initAboutDialog, aboutTabs } from "./script/aboutDialog.ts"
-import { initSoundToggle } from "./audio/soundToggle";
+import { initAudio, initSoundToggle } from "./audio";
 
 
 console.log("Running startTimer(1) (room1) in 5 seconds");
@@ -104,4 +104,5 @@ itemListBtn.addEventListener("click", (event) => {
 aboutTabs();
 initAboutDialog();
 initSoundToggle();
+initAudio();
 startTimer(0);

@@ -31,7 +31,7 @@ export function initSoundToggle(): void {   // initializes the sound toggle butt
     soundIconInactive?.classList.toggle("hidden", !muted);
 
     btn.setAttribute("aria-pressed", String(muted));
-    btn.setAttribute("aria-label", muted ? "Sound on" : "Sound off");
+    btn.setAttribute("aria-label", muted ? "Turn sound on" : "Turn sound off");
   }
 
   // Initial render (mute default)

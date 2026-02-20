@@ -1,1 +1,8 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/PLwZQtiP)
+
+Audioguide:
+
+- Alla ljudfiler ska ligga i public/audiofiles/
+- Alla paths ska byggas via withBaseUrl()
+- Rummen får endast använda playBgm() och playSfx()
+- Endast main.ts får anropa initAudio()

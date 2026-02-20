@@ -1,19 +1,5 @@
 import { isMuted } from "./soundToggle";
-
-/**
- * Handle background music (BGM)
- * Handle sound effects (SFX)
- * Fade out / fade in between rooms
- * soundToggle (muted by default)
- */
-
-type SoundConfig = {        // for JSON
-    id: string;     // id ex ("bgm_fire")
-    src: string;        // src is the file path to the sound file
-    kind: "bgm" | "sfx";        // kind is either "bgm" for background music or "sfx" for sound effects
-    loop?: boolean;     // loop is optional 
-    volume?: number;    // volume is a number between 0 and 1, where 0 is muted and 1 is full volume
-};
+import type { SoundConfig } from "./types";
 
 const sounds = new Map<string, HTMLAudioElement>();   // sounds is a Map that will store the audio elements, with the id as the key and the HTMLAudioElement as the value
 const targetVolumes = new Map<string, number>();    // Saving the volume seperately to be able to fade in and out without losing the original volume level
@@ -249,16 +235,16 @@ async function fadeIn(id: string, ms: number): Promise<void> {
     const steps = 20;       // number of steps in the fade in
     const stepMs = Math.max(16, Math.floor(ms / steps));        // smooth fade in, at least 16ms per step to avoid too many updates
 
-    for (let i = 0; i < steps; i++) {
+    for (let i = 0; i < steps; i++) {       // loop 20, check if fade aborted, await stepMs
         if (token !== fadeToken) return;
 
-        const t = (i + 1) / steps;
-        audio.volume = targetVol * t;
+        const t = (i + 1) / steps;      // t goes from 0.05 to 1 over the course of the loop, creating a smooth fade in effect
+        audio.volume = targetVol * t;   // set the volume of the audio element to the target volume multiplied by t, creating a fade in effect
 
         await sleep(stepMs);
     }
 
-    audio.volume = targetVol;
+    audio.volume = targetVol;       // ensure the volume is set to the target volume at the end of the fade in
 }
 
 /*--------------------------------------------------------
