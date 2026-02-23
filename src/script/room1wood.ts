@@ -40,13 +40,13 @@ export function room1woodFunc() {
     const MISTAKE_PENALTY = 4;
     const WOBBLEBALANCE = 1.5;
 
-  // ------------------------------
-  // DOM-refs
-  // ------------------------------
-  const slots = Array.from(
+    // ------------------------------
+    // DOM-refs
+    // ------------------------------
+    const slots = Array.from(
     woodSection.querySelectorAll<HTMLDivElement>(".slot"),
-  );
-  const keypad = woodSection.querySelector<HTMLDivElement>(".keypad");
+    );
+    const keypad = woodSection.querySelector<HTMLDivElement>(".keypad");
 
     const levelTextEl = woodSection.querySelector<HTMLSpanElement>("#levelText");
     const mistakesTextEl =
@@ -54,15 +54,15 @@ export function room1woodFunc() {
     const roomBalanceEl =
     woodSection.querySelector<HTMLDivElement>("#balanceFill");
 
-// guard if not HTML match and prevents errors for properties of null 
-if (
-  !keypad || slots.length !== SLOTS_PER_STAGE ||
-  !levelTextEl ||
-  !mistakesTextEl ||
-  !roomBalanceEl
-) {
-  throw new Error("Wood room DOM mismatch")
-}
+    // guard if not HTML match and prevents errors for properties of null 
+    if (
+      !keypad || slots.length !== SLOTS_PER_STAGE ||
+      !levelTextEl ||
+      !mistakesTextEl ||
+      !roomBalanceEl
+    ) {
+      throw new Error("Wood room DOM mismatch")
+  }
 
   // Make “safe” non-null variables AFTER guard
   // Now TypeScript knows these are always real elements (never null).
@@ -71,25 +71,25 @@ if (
   const balanceFill = roomBalanceEl;
 
 
-// Array with all my buttons class=key 0-9 & backspace
-const keyBtns = Array.from(
-  keypad.querySelectorAll<HTMLButtonElement>("button.key")
-);
+  // Array with all my buttons class=key 0-9 & backspace
+  const keyBtns = Array.from(
+    keypad.querySelectorAll<HTMLButtonElement>("button.key")
+  );
 
-// ------------------------------
-// STATE
-// ------------------------------
+  // ------------------------------
+  // STATE
+  // ------------------------------
 
-// levels (0-2)
-let currentLevelIndex = 0;
-// witch of the 6 inputs are we writing in atm (index 0-5)
-let activeSlotIndex = 0;
-// store string so we can compare digit to digit and compare to expectedStr
-let slotValues: string[] = Array(SLOTS_PER_STAGE).fill("");
-// Mistake counter state
-let mistakes = 0;
-// levels transition - letting player see the last digits before next level
-let isTransitioning = false;
+  // levels (0-2)
+  let currentLevelIndex = 0;
+  // witch of the 6 inputs are we writing in atm (index 0-5)
+  let activeSlotIndex = 0;
+  // store string so we can compare digit to digit and compare to expectedStr
+  let slotValues: string[] = Array(SLOTS_PER_STAGE).fill("");
+  // Mistake counter state
+  let mistakes = 0;
+  // levels transition - letting player see the last digits before next level
+  let isTransitioning = false;
 
   // ------------------------------
   // RENDER UI
@@ -105,26 +105,26 @@ let isTransitioning = false;
       slot.dataset.digits = String(expectedStr.length);
     });
   }
-  // HUD IN roomprogressbar
+    // HUD IN roomprogressbar
   function renderHUD(): void {
     levelText.textContent = `${currentLevelIndex + 1}/${LEVELS.length}`;
     mistakesText.textContent = String(mistakes);
 
     // Percent balance calc
 
-  // startmode 5% minimum
-  const MIN_START = 5;
-  // base calc on levels done 
-  const progressBase = MIN_START + (currentLevelIndex / LEVELS.length) * (100 - MIN_START); 
-  // penalty for number of mistakes 
-  const penalty = mistakes * MISTAKE_PENALTY;
-  // smooth wobble for the nerves ( Math.sin = value between -1 & 1)
-  const balanceWobble = Math.sin((currentLevelIndex + 1) * 2 + mistakes * 1.5) * WOBBLEBALANCE;
-  // calc for % in balancebar (Math.max = never returns value < 0 (Math.min always returns < 100))
-  const balancePercent = Math.max(0, Math.min(100, progressBase - penalty + balanceWobble)
-);
-balanceFill.style.width = `${balancePercent}%`
-}
+    // startmode 5% minimum
+    const MIN_START = 5;
+    // base calc on levels done 
+    const progressBase = MIN_START + (currentLevelIndex / LEVELS.length) * (100 - MIN_START); 
+    // penalty for number of mistakes 
+    const penalty = mistakes * MISTAKE_PENALTY;
+    // smooth wobble for the nerves ( Math.sin = value between -1 & 1)
+    const balanceWobble = Math.sin((currentLevelIndex + 1) * 2 + mistakes * 1.5) * WOBBLEBALANCE;
+    // calc for % in balancebar (Math.max = never returns value < 0 (Math.min always returns < 100))
+    const balancePercent = Math.max(0, Math.min(100, progressBase - penalty + balanceWobble)
+  );
+  balanceFill.style.width = `${balancePercent}%`
+  }
 
   function updtUI(): void {
     renderSlots();
@@ -135,92 +135,92 @@ balanceFill.style.width = `${balancePercent}%`
   // RESET HELPERS
   // ------------------------------
 
-// Delay helper - pause transition so player can se digits before next level
-function delayTransit(ms: number, after: () => void): void {
-  // block input so player dont spam buttons while transit
-  isTransitioning = true;
-  // wait ms , then run after
-  setTimeout(() =>{
-    after(); // run transit
-    isTransitioning = false; // un-block input
-  }, ms);
-}
-
-// reset inputs for current level
-function resetLevelInput (): void {
-  slotValues = Array(SLOTS_PER_STAGE).fill("")
-  activeSlotIndex = 0;
-}
-
-// reset room
-
-
-// ------------------------------
-// LOGICS
-// ------------------------------
-
-//
-
-// add number in active slot as string
-function pushDigit(digit: string): void {
-  // If we are currently delaying a transition, ignore clicks/keys
-  if (isTransitioning) return;
-  // controls how many digits a slot should have ( 1 , 2 or 3)
-  const expectedStr = String(LEVELS[currentLevelIndex][activeSlotIndex]);
-  // only expected amout of digits allowed
-  if (slotValues[activeSlotIndex].length >= expectedStr.length) return;
-  // add number in current slot
-  slotValues[activeSlotIndex] += digit;
-  // if slot is full - move to next slot 
-  if (slotValues[activeSlotIndex].length === expectedStr.length) {
-    advanceOrValidateLevel();
-  }  
-  //Upd UI to show all state changes
-  updtUI();
-}
-
-// when slot full - move on or validate and advance
-function advanceOrValidateLevel(): void {
-  if (activeSlotIndex < SLOTS_PER_STAGE -1) {
-    activeSlotIndex++
-    return;
+  // Delay helper - pause transition so player can se digits before next level
+  function delayTransit(ms: number, after: () => void): void {
+    // block input so player dont spam buttons while transit
+    isTransitioning = true;
+    // wait ms , then run after
+    setTimeout(() =>{
+      after(); // run transit
+      isTransitioning = false; // un-block input
+    }, ms);
   }
-  // last input filled - validate level
-  validateLevel();
-}
 
-// Level validation 
-function validateLevel(): void {
-  const expectedLevel = LEVELS[currentLevelIndex].map(String);
-  //compare slots value to expected value
-  const levelOk = slotValues.every((value, i) => value === expectedLevel[i]);
+  // reset inputs for current level
+  function resetLevelInput (): void {
+    slotValues = Array(SLOTS_PER_STAGE).fill("")
+    activeSlotIndex = 0;
+  }
 
-  if (!levelOk) {
-    // failing level & count/add mistakes +1
-    mistakes++;
-    // play level untill finnished
-    resetLevelInput();
-    // resets level 
+  // reset room
+
+
+  // ------------------------------
+  // LOGICS
+  // ------------------------------
+
+  //
+
+  // add number in active slot as string
+  function pushDigit(digit: string): void {
+    // If we are currently delaying a transition, ignore clicks/keys
+    if (isTransitioning) return;
+    // controls how many digits a slot should have ( 1 , 2 or 3)
+    const expectedStr = String(LEVELS[currentLevelIndex][activeSlotIndex]);
+    // only expected amout of digits allowed
+    if (slotValues[activeSlotIndex].length >= expectedStr.length) return;
+    // add number in current slot
+    slotValues[activeSlotIndex] += digit;
+    // if slot is full - move to next slot 
+    if (slotValues[activeSlotIndex].length === expectedStr.length) {
+      advanceOrValidateLevel();
+    }  
+    //Upd UI to show all state changes
     updtUI();
-    return;
-  }
-  // if level completed - move on to next and clear inputs
-  if (currentLevelIndex < LEVELS.length -1) {
-    // small pause for player UI
-    delayTransit(700, () =>{
-      //After pause - move on to next level
-      currentLevelIndex++;
-      // clear slots
-      resetLevelInput();
-      // re-render UI for next level
-      updtUI();
-    });
-    return;
   }
 
-  // all levels completed 
-  ifRoomCompleted();
-}
+  // when slot full - move on or validate and advance
+  function advanceOrValidateLevel(): void {
+    if (activeSlotIndex < SLOTS_PER_STAGE -1) {
+      activeSlotIndex++
+      return;
+    }
+    // last input filled - validate level
+    validateLevel();
+  }
+
+  // Level validation 
+  function validateLevel(): void {
+    const expectedLevel = LEVELS[currentLevelIndex].map(String);
+    //compare slots value to expected value
+    const levelOk = slotValues.every((value, i) => value === expectedLevel[i]);
+
+    if (!levelOk) {
+      // failing level & count/add mistakes +1
+      mistakes++;
+      // play level untill finnished
+      resetLevelInput();
+      // resets level 
+      updtUI();
+      return;
+    }
+    // if level completed - move on to next and clear inputs
+    if (currentLevelIndex < LEVELS.length -1) {
+      // small pause for player UI
+      delayTransit(700, () =>{
+        //After pause - move on to next level
+        currentLevelIndex++;
+        // clear slots
+        resetLevelInput();
+        // re-render UI for next level
+        updtUI();
+      });
+      return;
+    }
+
+      // all levels completed 
+      ifRoomCompleted();
+  }
 
   // Backspace button
   function backspace(): void {
@@ -241,17 +241,17 @@ function validateLevel(): void {
 
   // WORK IN PROGRESS
 
-function ifRoomCompleted(): void {
-  // reportRoomResult({ roomId: "wood", success: true, artifactId: "wood_true" })
-// goToNextRoom();
-balanceFill.style.width = "100%";
-//ONLY TEST
-alert("WOOD chamber complete!");
-currentLevelIndex = 0;
-mistakes = 0;
-resetLevelInput();
-updtUI(); 
-}
+  function ifRoomCompleted(): void {
+    // reportRoomResult({ roomId: "wood", success: true, artifactId: "wood_true" })
+  // goToNextRoom();
+  balanceFill.style.width = "100%";
+  //ONLY TEST
+  alert("WOOD chamber complete!");
+  currentLevelIndex = 0;
+  mistakes = 0;
+  resetLevelInput();
+  updtUI(); 
+  }
 
 // function ifRoomFailed(): void {
 //   // SEND TO NEXT ROOM WITH WRONG ELEMENT
