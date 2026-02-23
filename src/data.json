@@ -59,8 +59,6 @@
   "room5water": {
     "backgroundImg": "./images/waterroom.jpg",
     "bgmId": "bgm_water",
-    "falseSign": "./images/false-water-glass-icon.png",
-    "trueSign": "./images/true-water-glass-icon.png",
     "timeLimitMinutes": 5,
     "timeLimitSeconds": 0,
     "desc": {

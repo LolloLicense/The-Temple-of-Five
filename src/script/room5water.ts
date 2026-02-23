@@ -1,5 +1,6 @@
 import * as dataJSON from "../data.json";
 import { playBgm } from "../audio";
+import { renderRoomDesc } from "./roomDesc";
 
 // ── TYPES ──────────────────────────────────────────────────────────────────
 
@@ -130,7 +131,7 @@ function injectHTML(section: HTMLElement): void {
       </div><!-- /w-puzzle -->
 
       <!-- Bottom lore bar -->
-      <div id="roomDesc" class="w-lore-bar"></div>
+      <div id="roomDesc" class="roomDesc"></div>
 
     </div><!-- /w-chamber -->
 
@@ -586,42 +587,18 @@ export function room5waterFunc(): void {
 
   section.style.backgroundImage = `url("${dataJSON.room5water.backgroundImg}")`;
   section.classList.remove("hidden");
+  
+    // Inject HTML into the section
+    injectHTML(section);
+
+  renderRoomDesc(section, dataJSON.room5water.desc);
 
   // Reset state (safe to call multiple times if room is replayed)
   solved         = false;
   secondsElapsed = 0;
   focusedCell    = [0, 0];
   stopTimer();
-
-
-  // Inject HTML into the section
-  injectHTML(section);
-
-  // Build #roomDesc dynamically from data.json (mirrors room1wood pattern)
-  const roomDesc = section.querySelector<HTMLDivElement>("#roomDesc");
-  if (roomDesc) {
-    const descText    = dataJSON.room5water.desc.text;
-    const falseSignUrl = dataJSON.room5water.falseSign;
-    const trueSignUrl  = dataJSON.room5water.trueSign;
-
-    roomDesc.replaceChildren();
-
-    const leftIcon = document.createElement("img");
-    leftIcon.className = "leftIcon";
-    leftIcon.src = falseSignUrl;
-    leftIcon.alt = "";
-
-    const p = document.createElement("p");
-    p.className = "descText";
-    p.textContent = descText;
-
-    const rightIcon = document.createElement("img");
-    rightIcon.className = "rightIcon";
-    rightIcon.src = trueSignUrl;
-    rightIcon.alt = "";
-
-    roomDesc.append(leftIcon, p, rightIcon);
-  }
+  
   spawnBubbles(section);
 
   // Start background music immediately when entering the room
