@@ -1,21 +1,29 @@
-let totalSeconds = 0;
-let roomSeconds = 0;
+import * as dataJSON from "../data.json";
 
 let totalMinutes = 0;
-let roomMinutes = 0;
+let totalSeconds = 0;
 
-let totalTimerInterval: any;
-let roomTimerInterval: any;
+let roomMinutes = 0;
+let roomSeconds = 0;
+
+let roomTimeLimitMinutes = 0; 
+let roomTimeLimitSeconds = 0;
+
+let totalTimerInterval: number;
+let roomTimerInterval: number;
 
 export function startTimer(id: number): void {
   if (id === 0) {
     totalTimerInterval = setInterval(() => {
       timerTick(0);
-    }, 1000); // om funktionen slutar funka testa setInterval(() => timerTick(0), 1000);
+    }, 1000);
   } else {
     roomTimerInterval = setInterval(() => {
       timerTick(id);
-    }, 1000); // om funktionen slutar funka testa setInterval(() => timerTick(id), 1000);
+    }, 1000);
+
+    setTimeLimits(id);
+
   }
 }
 
@@ -28,6 +36,7 @@ export function stopTimer(id: number): void {
 }
 
 function timerTick(id: number): void {
+  
   const totalMinutesSpan: HTMLElement | null =
     document.querySelector("#totalMinutesSpan");
   const totalSecondsSpan: HTMLElement | null =
@@ -41,7 +50,7 @@ function timerTick(id: number): void {
     totalSeconds++;
     if (totalSecondsSpan) {
       if (totalSeconds < 10) {
-        totalSecondsSpan.innerHTML = ("0" + totalSeconds) as unknown as string;
+        totalSecondsSpan.innerHTML = `0${totalSeconds}` as unknown as string;
       } else {
         totalSecondsSpan.innerHTML = totalSeconds as unknown as string;
       }
@@ -50,7 +59,7 @@ function timerTick(id: number): void {
       totalMinutes++;
       totalSeconds = 0;
       if (totalSecondsSpan) {
-        totalSecondsSpan.innerHTML = ("0" + totalSeconds) as unknown as string;
+        totalSecondsSpan.innerHTML = `0${totalSeconds}` as unknown as string;
       }
       if (totalMinutesSpan) {
         if (totalMinutes > 9) {
@@ -61,31 +70,104 @@ function timerTick(id: number): void {
         }
       }
     }
-  } else {
-    roomSeconds++;
+  } else { // If this is a room timer
+    roomSeconds--;
     if (roomSecondsSpan) {
       if (roomSeconds < 10) {
-        roomSecondsSpan.innerHTML = ("0" + roomSeconds) as unknown as string;
+        roomSecondsSpan.innerHTML = `0${roomSeconds}` as unknown as string;
       } else {
         roomSecondsSpan.innerHTML = roomSeconds as unknown as string;
       }
     }
-    if (roomSeconds > 59) {
-      roomMinutes++;
-      roomSeconds = 0;
+    if (roomSeconds < 1) {
+      roomSeconds = 59;
+      roomMinutes--;
       if (roomSecondsSpan) {
-        roomSecondsSpan.innerHTML = ("0" + roomSeconds) as unknown as string;
+        roomSecondsSpan.innerHTML = roomSeconds as unknown as string;
+        if (roomMinutes < 0) {
+        roomSecondsSpan.innerHTML = `00`;
+        }
       }
       if (roomMinutesSpan) {
-        if (totalMinutes > 9) {
+        if (roomMinutes > 9) {
           roomMinutesSpan.innerHTML = roomMinutes as unknown as string;
         } else {
-          roomMinutesSpan.innerHTML = ("0" + roomMinutes) as unknown as string;
+          roomMinutesSpan.innerHTML = `0${roomMinutes}` as unknown as string;
+        }
+        if (roomMinutes < 0) {
+          roomMinutesSpan.innerHTML = `00`;
+          console.log('TIME IS UP!');
+          stopTimer(id);
         }
       }
     } // IF minute END
   } // outer else END
 } // timerTick END
+
+
+function setTimeLimits (id:number) {
+
+  const roomMinutesSpan: HTMLElement | null =
+    document.querySelector("#roomMinutesSpan");
+  const roomSecondsSpan: HTMLElement | null =
+    document.querySelector("#roomSecondsSpan");
+
+switch (id) { // switch on room id (ex: 1 = wood)
+      case 1: // Wood
+      roomTimeLimitMinutes = dataJSON.room1wood.timeLimitMinutes; //Get minutes from JSON
+      if (dataJSON.room1wood.timeLimitSeconds > 0) { // include seconds IF JSON seconds are not 0
+      roomTimeLimitSeconds = dataJSON.room1wood.timeLimitSeconds // Set seconds from JSON
+      }
+      break;
+      case 2: // Fire
+      roomTimeLimitMinutes = dataJSON.room2fire.timeLimitMinutes; //Get minutes from JSON
+      if (dataJSON.room2fire.timeLimitSeconds > 0) { // include seconds IF JSON seconds are not 0
+      roomTimeLimitSeconds = dataJSON.room2fire.timeLimitSeconds // Set seconds from JSON
+      }
+      break;
+      case 3: // Earth
+      roomTimeLimitMinutes = dataJSON.room3earth.timeLimitMinutes; //Get minutes from JSON
+      if (dataJSON.room3earth.timeLimitSeconds > 0) { // include seconds IF JSON seconds are not 0
+      roomTimeLimitSeconds = dataJSON.room3earth.timeLimitSeconds // Set seconds from JSON
+      }
+      break;
+      case 4: // Metal
+      roomTimeLimitMinutes = dataJSON.room4metal.timeLimitMinutes; //Get minutes from JSON
+      if (dataJSON.room4metal.timeLimitSeconds > 0) { // include seconds IF JSON seconds are not 0
+      roomTimeLimitSeconds = dataJSON.room4metal.timeLimitSeconds // Set seconds from JSON
+      }
+      break;
+      case 5: // Water
+      roomTimeLimitMinutes = dataJSON.room5water.timeLimitMinutes; //Get minutes from JSON
+      if (dataJSON.room5water.timeLimitSeconds > 0) { // include seconds IF JSON seconds are not 0
+      roomTimeLimitSeconds = dataJSON.room5water.timeLimitSeconds // Set seconds from JSON
+      }
+      break;
+} // Switch END
+
+/* Setting and printing out the time limits for the room in header */
+
+roomSeconds = roomTimeLimitSeconds; //Set timer seconds to limit
+roomMinutes = roomTimeLimitMinutes; //Set timer minutes to limit
+
+/* Minutes */
+if (roomMinutesSpan) {
+  if (roomMinutes < 10) {
+roomMinutesSpan.innerHTML = `0${roomMinutes}` as unknown as string;
+  } else {
+roomMinutesSpan.innerHTML = roomMinutes as unknown as string;
+}
+}
+/* Seconds */
+if (roomSecondsSpan) {
+  if (roomSeconds < 10) {
+roomSecondsSpan.innerHTML = `0${roomSeconds}` as unknown as string;
+} else {
+roomSecondsSpan.innerHTML = roomSeconds as unknown as string;
+}
+}
+
+} // setTimeLimits END
 
 /**
  * Clean path for audio files and prepend base URL from Vite config. Because the audio files are located in the public folder, which is served at the root of the project.
@@ -95,3 +177,4 @@ export function withBaseUrl(path: string): string {
   const cleanPath = path.startsWith("/") ? path.slice(1) : path;
   return `${import.meta.env.BASE_URL}${cleanPath}`;
 }
+

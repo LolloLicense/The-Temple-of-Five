@@ -26,5 +26,3 @@ export function room2fireFunc(): void {
   console.log("Hello from the fire room");
   console.log("Calling playBgm with:", bgmId);
 }
-
-

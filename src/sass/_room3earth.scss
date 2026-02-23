@@ -7,16 +7,19 @@
     justify-content: center;
 }
 .room3Earth .gameDiv {
+    background-image: url('/images/earthBackground.jpg');
     margin: 0 auto;
     width: auto;
-    background: gray;
+    border:  1px solid var.$lightColor;
+    border-radius: var.$smallRadius;
     display: grid;
     grid-template-columns: repeat(4, 175px);
     grid-template-rows: repeat(4, 175px);
 }
 
 .room3Earth .gameDiv .slate {
-   border:  '1px solid #ccc';
+color: white;
+   //border:  1px solid var.$lightColor;
    display: flex;
    align-items: center;
    justify-content: center;
