@@ -18,7 +18,7 @@
   }
 
   .slots {
-    margin-block: 4rem;
+    margin-block: 5rem;
     display: flex;
     gap: 3rem;
     justify-content: center;
@@ -49,10 +49,10 @@
     display: flex;
     justify-content: space-between;
     gap: 6rem;
-    padding: 1rem 2rem;
+    padding: 0.5rem 2rem;
     font-size: var.$fs-h6;
-
     @include mix.glass();
+    border: 2px solid var.$lightColor;
 
     .balance {
       display: flex;
@@ -63,7 +63,7 @@
       width: 180px;
       height: 15px;
       border-radius: 999px;
-      border: 2.5px solid rgba(236, 245, 241, 0.7);
+      border: 2px solid var.$lightColor;
       overflow: hidden;
     }
     .balanceFill {

@@ -44,17 +44,18 @@ export function room1woodFunc() {
   roomDesc.replaceChildren();
 
   //creating elements for DESC div
+
   // LEFT icon
   const leftIcon = document.createElement("img");
   leftIcon.className = "leftIcon";
   leftIcon.src = falseSignUrl;
   leftIcon.alt = "";
-  
+  // P DescText
   const p = document.createElement("p");
   p.className = ("descText");
   p.textContent = descText;
   
-  
+  //RIGHT icon
   const rightIcon = document.createElement("img");
   leftIcon.className = "rightIcon";
   rightIcon.src = trueSignUrl;
@@ -63,32 +64,32 @@ export function room1woodFunc() {
   roomDesc.append(leftIcon, p, rightIcon);
 
   // Levels = 3 levels/ stages. Each level contains 6 fibenacci numbers
-    // [] = Outer array Levels [] = Inner array
-    const LEVELS: number[][] = [
-      [0, 1, 1, 2, 3, 5],
-      [8, 13, 21, 34, 55, 89],
-      [144, 233, 377, 610, 987, 1597],
-    ];
-    // numer of "inputboxes"
-    const SLOTS_PER_STAGE = 6;
-    // In Room Balance
-    const MISTAKE_PENALTY = 4;
-    const WOBBLEBALANCE = 1.5;
+  // [] = Outer array Levels [] = Inner array
+  const LEVELS: number[][] = [
+    [0, 1, 1, 2, 3, 5],
+    [8, 13, 21, 34, 55, 89],
+    [144, 233, 377, 610, 987, 1597],
+  ];
+  // numer of "inputboxes"
+  const SLOTS_PER_STAGE = 6;
+  // In Room Balance
+  const MISTAKE_PENALTY = 4;
+  const WOBBLEBALANCE = 1.5;
 
-    // ------------------------------
-    // DOM-refs
-    // ------------------------------
+  // ------------------------------
+  // DOM-refs
+  // ------------------------------
 
-    const slots = Array.from(
-    woodSection.querySelectorAll<HTMLDivElement>(".slot"),
-    );
-    const keypad = woodSection.querySelector<HTMLDivElement>(".keypad");
+  const slots = Array.from(
+  woodSection.querySelectorAll<HTMLDivElement>(".slot"),
+  );
+  const keypad = woodSection.querySelector<HTMLDivElement>(".keypad");
 
-    const levelTextEl = woodSection.querySelector<HTMLSpanElement>("#levelText");
-    const mistakesTextEl =
-    woodSection.querySelector<HTMLSpanElement>("#mistakesText");
-    const roomBalanceEl =
-    woodSection.querySelector<HTMLDivElement>("#balanceFill");
+  const levelTextEl = woodSection.querySelector<HTMLSpanElement>("#levelText");
+  const mistakesTextEl =
+  woodSection.querySelector<HTMLSpanElement>("#mistakesText");
+  const roomBalanceEl =
+  woodSection.querySelector<HTMLDivElement>("#balanceFill");
 
     // guard if not HTML match and prevents errors for properties of null 
     if (
@@ -98,7 +99,7 @@ export function room1woodFunc() {
       !roomBalanceEl
     ) {
       throw new Error("Wood room DOM mismatch")
-  }
+      }
 
   // Make “safe” non-null variables AFTER guard
   const levelText = levelTextEl;
@@ -187,14 +188,9 @@ export function room1woodFunc() {
     activeSlotIndex = 0;
   }
 
-  // reset room
-
-
   // ------------------------------
   // LOGICS
   // ------------------------------
-
-  //
 
   // add number in active slot as string
   function pushDigit(digit: string): void {
@@ -261,17 +257,22 @@ export function room1woodFunc() {
   function backspace(): void {
     // If we are currently delaying a transition, ignore backspace too
     if (isTransitioning) return;
-    // if the input/ slot have content - remove last digit.
+    // Case 1 : if the input/ slot have content - remove last digit.
     if (slotValues[activeSlotIndex].length > 0) {
       slotValues[activeSlotIndex] = slotValues[activeSlotIndex].slice(0, -1);
       updtUI();
       return;
     }
-    // if empty slot - backspace once more
+    // case 2: if empty slot - backspace once more 
     if (activeSlotIndex > 0) {
       activeSlotIndex--;
       updtUI();
     }
+
+    if (slotValues[activeSlotIndex].length > 0) {
+      slotValues[activeSlotIndex] = slotValues[activeSlotIndex].slice(0, -1);
+    }
+    updtUI();
   }
 
   // WORK IN PROGRESS
@@ -334,6 +335,8 @@ keypad.addEventListener("keydown", (e) => {
     const target = e.target as HTMLElement;
     const btn = target.closest<HTMLButtonElement>("button.key");
     if (!btn) return;
+
+    btn.focus();
 
     const digit = btn.dataset.key;
     const action = btn.dataset.action;

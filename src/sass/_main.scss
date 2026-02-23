@@ -110,13 +110,15 @@ header {
 .roomDesc {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 1.5rem;
   position: absolute;
   bottom: 2rem;
   left: 50%;
   transform: translateX(-50%);
-  max-width: 1000px;
-  font-size: 1.2rem;
+  width: 1200px;
+  font-size: var.$fs-h6;
+  text-align: center;
 
   img {
     width: 112px;
