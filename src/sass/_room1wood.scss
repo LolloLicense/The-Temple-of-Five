@@ -12,14 +12,36 @@
     color: var.$lightColor;
     padding: 0.5rem;
     font-size: var.$fs-h4;
+    width: 3rem;
     @include mix.glass();
   }
 
   .slots {
+    margin-block: 4rem;
     display: flex;
     gap: 3rem;
     justify-content: center;
     margin-top: 3rem;
+
+    .slot {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0.5rem;
+      font-size: var.$fs-h5;
+      width: 3rem;
+      height: 4rem;
+      @include mix.glass();
+    }
+    .slot[data-digits="2"] {
+      width: 3.8rem;
+    }
+    .slot[data-digits="3"] {
+      width: 4.5rem;
+    }
+    .slot[data-digits="4"] {
+      width: 5.5rem;
+    }
   }
 
   .inRoombar {
@@ -27,6 +49,7 @@
     justify-content: space-between;
     gap: 6rem;
     padding: 1rem 2rem;
+    font-size: var.$fs-h6;
 
     @include mix.glass();
 
@@ -37,9 +60,9 @@
     }
     .balanceBar {
       width: 180px;
-      height: 10px;
+      height: 15px;
       border-radius: 999px;
-      border: 2px solid rgba(236, 245, 241, 0.7);
+      border: 2.5px solid rgba(236, 245, 241, 0.7);
       overflow: hidden;
     }
     .balanceFill {

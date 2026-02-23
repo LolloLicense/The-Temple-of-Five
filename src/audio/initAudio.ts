@@ -8,6 +8,13 @@ export function initAudio(): void {
       id: "bgm_fire", // same id as in data.json **IMPORTANT**
       src: withBaseUrl("/audiofiles/bgm_fire.mp3"),
       kind: "bgm",
+      volume: 0.2,
+    },
+    {
+      id: "bgm_wood", // same id as in data.json **IMPORTANT**
+      src: withBaseUrl("/audiofiles/bgm_wood.mp3"),
+      kind: "bgm",
+      volume: 0.2,
     },
     {
       id: "bgm_water",

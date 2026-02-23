@@ -1,6 +1,10 @@
 import * as dataJSON from "../data.json";
+//import { startTimer, stopTimer } from "./script/utils.ts";
+import { startTimer } from "./utils.ts";
 
 export function room3earthFunc() {
+  startTimer(3); // Start timer for room 3
+
   /* Hide the welcome page (menu)
    This can be removed when we remove the menu */
   const welcomePage: HTMLElement | null =

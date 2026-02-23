@@ -6,7 +6,8 @@ import { room3earthFunc } from "./script/room3earth.ts";
 import { room4metalFunc } from "./script/room4metal.ts";
 import { room5waterFunc } from "./script/room5water.ts";
 import { room6finalFunc } from "./script/room6validate.ts";
-import { startTimer, stopTimer } from "./script/utils.ts";
+//import { startTimer, stopTimer } from "./script/utils.ts";
+import { startTimer } from "./script/utils.ts";
 
 /* Event listeners for temporary menu
 (Remove when menu is to be removed) */
@@ -44,26 +45,8 @@ if (finalRoomBtn) {
   finalRoomBtn.addEventListener("click", room6finalFunc);
 }
 
-/* Test and example of JSON
-console.log(dataJSON.menu);
-console.log(dataJSON.menu.backgroundImg);
-console.log(dataJSON.menu.desc);
-*/
-
 import { initAudio, initSoundToggle } from "./audio";
 import { aboutTabs, initAboutDialog } from "./script/aboutDialog.ts";
-
-console.log("Running startTimer(1) (room1) in 5 seconds");
-setTimeout(() => {
-  startTimer(1);
-}, 5000);
-
-console.log("Stopping both timers in 65 seconds");
-setTimeout(() => {
-  stopTimer(0);
-  stopTimer(1);
-  console.log("Both timers have been stopped");
-}, 65000);
 
 /* Used for triggering login on splash screen
 
@@ -86,7 +69,7 @@ if (welcomeSection) {
 //-------------------------Backpack toggle-------------------
 //-----------------------------------------------------------
 
-// Bara toggle just nu kolla vidare imorgon
+// Just nu finns bara toggle, Behövs ytterligare funktion för att lägga till artifakterna i ryggsäcken och visa dem. Ska finnas 2 för varje rum, en rätt och en fel. Samt en tom placeholder.
 const itemListBtn = document.getElementById("itemListBtn")!;
 const itemDropdown = document.getElementById("itemDropdown")!;
 
