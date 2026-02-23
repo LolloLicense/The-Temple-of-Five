@@ -58,10 +58,13 @@
   },
   "room5water": {
     "backgroundImg": "./images/waterroom.jpg",
+    "bgmId": "bgm_water",
+    "falseSign": "./images/false-water-glass-icon.png",
+    "trueSign": "./images/true-water-glass-icon.png",
     "timeLimitMinutes": 5,
     "timeLimitSeconds": 0,
     "desc": {
-      "text": "Text test",
+      "text": "The sacred pipes of the Water Chamber lie broken and tangled. Only when the flow runs pure and unbroken from source to vessel will the ancient symbol reveal itself. Rotate the pipe segments. Restore the flow. Let the water find its way. The temple rewards those who move with purpose.",
       "falseSign": "./images/false-water-glass-icon.png",
       "trueSign": "./images/true-water-glass-icon.png"
     }

@@ -130,16 +130,7 @@ function injectHTML(section: HTMLElement): void {
       </div><!-- /w-puzzle -->
 
       <!-- Bottom lore bar -->
-      <div class="w-lore-bar">
-        <span class="w-lore-symbol w-lore-symbol--left" aria-hidden="true">亂</span>
-        <p class="w-lore-text">
-          The sacred pipes of the Water Chamber lie broken and tangled. Only when the
-          flow runs pure and unbroken from source to vessel will the ancient symbol reveal
-          itself. Rotate the pipe segments. Restore the flow. Let the water find its way. The
-          temple rewards those who move with purpose.
-        </p>
-        <span class="w-lore-symbol w-lore-symbol--right" aria-hidden="true">水</span>
-      </div>
+      <div id="roomDesc" class="w-lore-bar"></div>
 
     </div><!-- /w-chamber -->
 
@@ -605,6 +596,32 @@ export function room5waterFunc(): void {
 
   // Inject HTML into the section
   injectHTML(section);
+
+  // Build #roomDesc dynamically from data.json (mirrors room1wood pattern)
+  const roomDesc = section.querySelector<HTMLDivElement>("#roomDesc");
+  if (roomDesc) {
+    const descText    = dataJSON.room5water.desc.text;
+    const falseSignUrl = dataJSON.room5water.falseSign;
+    const trueSignUrl  = dataJSON.room5water.trueSign;
+
+    roomDesc.replaceChildren();
+
+    const leftIcon = document.createElement("img");
+    leftIcon.className = "leftIcon";
+    leftIcon.src = falseSignUrl;
+    leftIcon.alt = "";
+
+    const p = document.createElement("p");
+    p.className = "descText";
+    p.textContent = descText;
+
+    const rightIcon = document.createElement("img");
+    rightIcon.className = "rightIcon";
+    rightIcon.src = trueSignUrl;
+    rightIcon.alt = "";
+
+    roomDesc.append(leftIcon, p, rightIcon);
+  }
   spawnBubbles(section);
 
   // Start background music immediately when entering the room
