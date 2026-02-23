@@ -473,10 +473,7 @@ function calcScore(): number {
 
 // ── HELPERS ────────────────────────────────────────────────────────────────
 
-function updateProgress(pct: number): void {
-  // Hooks into the shared progress bar in index.html header if needed
-  // Individual room progress can be tracked here
-}
+// Removed unused updateProgress function
 
 function setStatus(msg: string, type = ""): void {
   const el = document.getElementById("w-status");
@@ -640,13 +637,12 @@ function startChamber(): void {
 // ── CHECK FLOW ─────────────────────────────────────────────────────────────
 
 function handleCheck(): void {
-  const { flowPath, sinkReached } = checkFlow(currentGrid);
+  const { sinkReached } = checkFlow(currentGrid);
   renderGrid();
 
   if (sinkReached) {
     solvePuzzle();
   } else {
-    const pct = Math.round((flowPath.size / 15) * 80);
     setStatus("The water cannot find its way to the vessel yet. Keep adjusting the pipes.", "error");
     announce("Flow incomplete. The vessel is not yet filled.");
   }
