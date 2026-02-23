@@ -1,1 +1,462 @@
 @use 'var';
+@use 'mixins' as mix;
+
+// ── ROOM 5 — WATER ────────────────────────────────────────────────────────
+// ── ROOM 5 — WATER ───────────────────────────────────────────────────────
+.room5Water {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var.$lightColor;
+  font-family: var.$txFont;
+
+  // ── CHAMBER WRAPPER ─────────────────────────────────────────────────
+  .w-chamber {
+    width: 100%;
+    max-width: 750px;
+    padding: 130px 1.5rem 4rem; // 130px top = clear the fixed header
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  // ── HEADER ────────────────────────────────────────────────────────────
+  .w-header {
+      // Kept for structural parity with other rooms (fixed navbar area)
+    width: 100%;
+  }
+
+  // ── ROOM HEADING (title + subtitle, below the fixed header) ───────────
+  .w-heading {
+    text-align: center;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(var.$lightColor, 0.25);
+    width: 100%;
+  }
+
+  .w-symbol {
+    font-size: var.$fs-h2;
+    display: block;
+    filter: drop-shadow(0 0 16px #5dade2);
+    animation: w-symbolPulse 3s ease-in-out infinite;
+  }
+
+  @keyframes w-symbolPulse {
+    0%, 100% { filter: drop-shadow(0 0 10px #5dade2); }
+    50%       { filter: drop-shadow(0 0 26px #85c1e9); }
+  }
+
+  .w-title {
+    font-size: var.$fs-h3;
+    color: var.$lightColor;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin: 0.35rem 0 0.2rem;
+  }
+
+  .w-subtitle {
+    font-size: var.$fs-body;
+    color: rgba(var.$lightColor, 0.7);
+    font-style: italic;
+  }
+
+  // ── PANELS ────────────────────────────────────────────────────────────
+  .w-panel {
+    @include mix.glass();
+    width: 100%;
+    padding: 1.75rem 2rem;
+    color: var.$lightColor;
+
+    h2 {
+      font-size: var.$fs-h6;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+      color: var.$lightColor;
+    }
+
+    p {
+      font-size: var.$fs-body;
+      line-height: 1.75;
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  .w-lore {
+    border-left: 3px solid #86a2b4;
+    padding-left: 1.1rem;
+    margin: 1rem 0;
+    font-style: italic;
+    color: rgba(var.$lightColor, 0.8);
+    line-height: 1.8;
+  }
+
+  // ── INTRO / PUZZLE VISIBILITY ──────────────────────────────────────────
+  .w-intro {
+    display: none; // Intro removed — kept for legacy compatibility
+  }
+
+  .w-puzzle {
+    display: none;
+    display: flex;
+    flex-direction: column;
+    row-gap: 1.2rem; // mellanrum mellan panelerna
+
+    &.active {
+      display: flex;
+    }
+  }
+
+  .w-instruction {
+    font-style: italic;
+    color: rgba(var.$lightColor, 0.75);
+    text-align: center;
+    margin-bottom: 0.5rem; // Less space below the instruction
+    font-size: var.$fs-body;
+    line-height: 1.7;
+  }
+
+  // ── PIPE GRID ─────────────────────────────────────────────────────────
+  .w-grid-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    margin-top: 1.2rem; // Move the grid down so the instruction sits closer to the top
+  }
+
+  .pipe-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 60px);
+    grid-template-rows: repeat(5, 60px);
+    gap: 4px;
+    padding: 12px;
+    @include mix.glass($bg: rgba(9, 49, 52, 0.6));
+    position: relative;
+
+    &::before {
+      content: "SOURCE";
+      position: absolute;
+      top: -1.4rem;
+      left: 12px;
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      color: #5dade2;
+      font-family: var.$txFont;
+    }
+
+    &::after {
+      content: "VESSEL";
+      position: absolute;
+      bottom: -1.4rem;
+      right: 12px;
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      color: #c9a84c;
+      font-family: var.$txFont;
+    }
+  }
+
+  // ── PIPE CELL ─────────────────────────────────────────────────────────
+  .pipe-cell {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    @include mix.glass($bg: rgba(9, 49, 52, 0.4), $radius: var.$smallRadius);
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    user-select: none;
+
+    &:hover,
+    &:focus {
+      background: rgba(41, 128, 185, 0.45);
+      outline: 3px solid var.$lightColor;
+      outline-offset: 2px;
+      transform: scale(1.05);
+      z-index: 2;
+    }
+
+    &.fixed {
+      cursor: default;
+      background: rgba(2, 18, 22, 0.7);
+
+      &:hover {
+        transform: none;
+        outline: none;
+      }
+    }
+
+    &.active-flow {
+      background: rgba(41, 128, 185, 0.65);
+      box-shadow: 0 0 10px rgba(93, 173, 226, 0.55);
+
+      .pipe-svg path,
+      .pipe-svg line {
+        stroke: #85c1e9;
+      }
+    }
+
+    &.source {
+      background: rgba(41, 128, 185, 0.8);
+      box-shadow: 0 0 14px #5dade2;
+    }
+
+    &.sink {
+      background: rgba(201, 168, 76, 0.25);
+      border-color: #c9a84c;
+
+      &.filled {
+        background: rgba(201, 168, 76, 0.6);
+        box-shadow: 0 0 14px #c9a84c;
+      }
+    }
+  }
+
+  .pipe-svg {
+    width: 44px;
+    height: 44px;
+    stroke: rgba(var.$lightColor, 0.45);
+    fill: none;
+    stroke-width: 4;
+    stroke-linecap: round;
+    transition: stroke 0.2s;
+  }
+
+  // ── CONTROLS ──────────────────────────────────────────────────────────
+  .w-controls {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+
+  .w-btn {
+    @include mix.button();
+    font-size: var.$fs-body;
+
+    &--primary {
+      border-color: #5dade2;
+    }
+
+    &--gold {
+      border-color: #c9a84c;
+      color: var.$clrMidBlue;
+      background: rgba(201, 168, 76, 0.75);
+    }
+
+    &--ghost {
+      background: transparent;
+      border: 1px solid rgba(var.$lightColor, 0.3);
+      box-shadow: none;
+    }
+  }
+
+  // ── STATUS / KEYBOARD HINT ─────────────────────────────────────────────
+  .w-status {
+    text-align: center;
+    min-height: 1.4rem;
+    font-style: italic;
+    color: rgba(var.$lightColor, 0.75);
+    margin-top: 0.6rem;
+    font-size: var.$fs-body;
+    line-height: 1.5;
+    transition: color 0.3s;
+
+    &.success-msg { color: #e8d07a; }
+    &.error-msg   { color: var.$redColor; }
+  }
+
+  .w-kbd-hint {
+    text-align: center;
+    font-size: 0.8rem;
+    color: rgba(var.$lightColor, 0.5);
+    margin-top: 0.6rem;
+  }
+
+  .w-kbd {
+    display: inline-block;
+    @include mix.glass($bg: rgba(9, 49, 52, 0.5), $radius: 4px);
+    padding: 1px 6px;
+    font-family: monospace;
+    font-size: 0.82em;
+    color: var.$lightColor;
+  }
+
+  // ── TIME WARNING ──────────────────────────────────────────────────────
+  .w-time-warning {
+    display: none;
+    width: 100%;
+    text-align: center;
+    margin-top: 1rem; // Space between the game and the warning text (reduced)
+    padding: 0.55rem 1rem;
+    background: rgba(var.$redColor, 0.15);
+    border: 1px solid rgba(var.$redColor, 0.4);
+    border-radius: var.$smallRadius;
+    color: var.$redColor;
+    font-style: italic;
+    font-size: var.$fs-body;
+    animation: w-pulseWarning 2s ease infinite;
+
+    &.visible { display: block; }
+  }
+
+  @keyframes w-pulseWarning {
+    0%, 100% { opacity: 1;    }
+    50%       { opacity: 0.55; }
+  }
+
+  // ── ARTIFACT BOX ──────────────────────────────────────────────────────
+  .w-artifact {
+    display: none;
+    width: 100%;
+    text-align: center;
+    padding: 0.9rem 1rem;
+    @include mix.glass();
+    border: 2px solid #c9a84c;
+    animation: w-artifactReveal 0.5s ease-out;
+
+    &.visible { display: block; }
+
+    &.wrong {
+      border-color: rgba(var.$lightColor, 0.3);
+
+      .w-artifact-glyph {
+        filter: drop-shadow(0 0 10px rgba(var.$lightColor, 0.3)) grayscale(0.6);
+      }
+
+      .w-artifact-name {
+        color: rgba(var.$lightColor, 0.5);
+      }
+    }
+  }
+
+  @keyframes w-artifactReveal {
+    from { opacity: 0; transform: scale(0.9) translateY(18px); }
+    to   { opacity: 1; transform: scale(1)   translateY(0);    }
+  }
+
+  .w-artifact-glyph {
+    font-size: 2.2rem; // mindre storlek
+    display: block;
+    animation: w-artifactFloat 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 12px #c9a84c);
+    margin-bottom: 0.2rem;
+  }
+
+  @keyframes w-artifactFloat {
+    0%, 100% { transform: translateY(0);    }
+    50%       { transform: translateY(-9px); }
+  }
+
+  .w-artifact-name {
+    font-size: 1.1rem; // mindre namn
+    color: var.$lightColor;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    margin: 0.2rem 0 0.15rem;
+  }
+
+  .w-artifact-desc {
+    font-style: italic;
+    color: rgba(var.$lightColor, 0.8);
+    font-size: 0.95rem;
+    line-height: 1.4;
+    margin-bottom: 0.2rem;
+  }
+
+  .w-artifact-hint {
+    margin-top: 0.85rem;
+    padding: 0.65rem;
+    background: rgba(var.$redColor, 0.1);
+    border: 1px solid rgba(var.$redColor, 0.3);
+    border-radius: var.$smallRadius;
+    font-size: var.$fs-body;
+    color: rgba(var.$lightColor, 0.75);
+    font-style: italic;
+  }
+
+  .w-artifact-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1.1rem;
+  }
+
+  // ── BUBBLES (decorative, spawned by JS) ───────────────────────────────
+  .bubble {
+    position: fixed;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle at 35% 35%,
+      rgba(var.$lightColor, 0.25),
+      rgba(41, 128, 185, 0.1)
+    );
+    border: 1px solid rgba(var.$lightColor, 0.15);
+    animation: w-bubbleRise linear infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @keyframes w-bubbleRise {
+    0%   { transform: translateY(100vh) translateX(0)    scale(0.8); opacity: 0;   }
+    10%  {                                                             opacity: 0.5; }
+    90%  {                                                             opacity: 0.25;}
+    100% { transform: translateY(-10vh) translateX(30px) scale(1.1); opacity: 0;   }
+  }
+
+  // ── BOTTOM LORE BAR ───────────────────────────────────────────────────
+  .w-lore-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    gap: 1.25rem;
+  }
+
+  .w-lore-symbol {
+    font-size: 2.8rem;
+    line-height: 1;
+    flex-shrink: 0;
+    color: rgba(var.$lightColor, 0.55);
+    filter: drop-shadow(0 0 8px rgba(93, 173, 226, 0.45));
+    font-family: serif;
+  }
+
+  .w-lore-text {
+    flex: 1;
+    text-align: center;
+    font-size: var.$fs-body;
+    font-style: italic;
+    color: rgba(var.$lightColor, 0.75);
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  // ── RESPONSIVE ────────────────────────────────────────────────────────
+  @media (max-width: 480px) {
+    .pipe-grid {
+      grid-template-columns: repeat(5, 50px);
+      grid-template-rows: repeat(5, 50px);
+    }
+
+    .pipe-cell {
+      width: 50px;
+      height: 50px;
+    }
+
+    .pipe-svg {
+      width: 36px;
+      height: 36px;
+    }
+  }
+}

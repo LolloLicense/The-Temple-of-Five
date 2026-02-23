@@ -9,6 +9,11 @@ export function initAudio(): void {
       src: withBaseUrl("/audiofiles/bgm_fire.mp3"),
       kind: "bgm",
     },
+    {
+      id: "bgm_water",
+      src: withBaseUrl("/audiofiles/bgm_water.mp3"),
+      kind: "bgm",
+    },
     // Fill in your rooms below:
   ];
 
