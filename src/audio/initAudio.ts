@@ -17,10 +17,10 @@ export function initAudio(): void {
       volume: 0.2,
     },
     {
-      id: "bgm_metal",
+      id: "bgm_metal", // same id as in data.json **IMPORTANT**
       src: withBaseUrl("/audiofiles/bgm_metal.mp3"),
       kind: "bgm",
-      volume: 0.2,
+      volume: 0.6,
     },
     {
       id: "bgm_water",
