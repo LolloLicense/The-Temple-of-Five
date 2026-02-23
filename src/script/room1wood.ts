@@ -43,6 +43,7 @@ export function room1woodFunc() {
     // ------------------------------
     // DOM-refs
     // ------------------------------
+
     const slots = Array.from(
     woodSection.querySelectorAll<HTMLDivElement>(".slot"),
     );
@@ -65,7 +66,6 @@ export function room1woodFunc() {
   }
 
   // Make “safe” non-null variables AFTER guard
-  // Now TypeScript knows these are always real elements (never null).
   const levelText = levelTextEl;
   const mistakesText = mistakesTextEl;
   const balanceFill = roomBalanceEl;
