@@ -1,5 +1,6 @@
 import * as dataJSON from "../data.json";
 import { playBgm } from "../audio";
+import { renderRoomDesc } from "./roomDesc";
 
 export function room1woodFunc() {
   /* Hide the welcome page (menu)
@@ -10,58 +11,66 @@ export function room1woodFunc() {
     welcomePage.classList.add("hidden");
   }
 
+  //----------------------------------------------------------
+  //----------------------SETUP ROOM DOM----------------------
+  //----------------------------------------------------------
+
   /* Play the background music for woodroom */
   const bgmId = dataJSON.room1wood.bgmId;
   if (bgmId) {
     void playBgm(bgmId, 650); // play the background music for the wood room, with a fade-in duration of 650ms
   }
 
-  /* Sets the background for the room and shows room section */
   const woodSection: HTMLElement | null = document.querySelector("#room1Wood");
   if (!woodSection) {
     return;
   }
   woodSection.style.backgroundImage = `url("${dataJSON.room1wood.backgroundImg}")`;
   woodSection.classList.remove("hidden");
-
+  // Prevent adding event listeners twice if player re-enters the room
   if (woodSection.dataset.woodInit === "true") return;
   woodSection.dataset.woodInit = "true";
 
-  // ------------------------------
-  // DESCSECTION FOR WOODROOM
-  // ------------------------------
+  // render desc from JSON into <div id="roomDesc">
+renderRoomDesc(woodSection, dataJSON.room1wood.desc);
 
-  // locate wrapper for roomDesc
-  const roomDesc = woodSection.querySelector<HTMLDivElement>("#roomDesc");
-  if (!roomDesc) throw new Error("Missing #roomDesc in wood room")
+  //----------------------------------------------------------
+  //--------------------ROOM DESCRIPTION-----------------------
+  //-----------------------------------------------------------
 
-  //Desc Data from json 
-  const descText = dataJSON.room1wood.desc.text;
-  const falseSignUrl = dataJSON.room1wood.falseSign;
-  const trueSignUrl = dataJSON.room1wood.trueSign;
+  // // locate wrapper for roomDesc
+  // const roomDesc = woodSection.querySelector<HTMLDivElement>("#roomDesc");
+  // if (!roomDesc) throw new Error("Missing #roomDesc in wood room")
 
-  // clear wrapper - avois dubble if re-entering room
-  roomDesc.replaceChildren();
+  // //Desc Data from json 
+  // const descText = dataJSON.room1wood.desc.text;
+  // const falseSignUrl = dataJSON.room1wood.falseSign;
+  // const trueSignUrl = dataJSON.room1wood.trueSign;
 
-  //creating elements for DESC div
+  // // clear wrapper - avois dubble if re-entering room
+  // roomDesc.replaceChildren();
 
-  // LEFT icon
-  const leftIcon = document.createElement("img");
-  leftIcon.className = "leftIcon";
-  leftIcon.src = falseSignUrl;
-  leftIcon.alt = "";
-  // P DescText
-  const p = document.createElement("p");
-  p.className = ("descText");
-  p.textContent = descText;
+  // //creating elements for DESC div
+
+  // // LEFT icon
+  // const leftIcon = document.createElement("img");
+  // leftIcon.src = falseSignUrl;
+  // leftIcon.alt = "";
+  // // P DescText
+  // const p = document.createElement("p");
+  // p.className = "descText";
+  // p.textContent = descText;
   
-  //RIGHT icon
-  const rightIcon = document.createElement("img");
-  leftIcon.className = "rightIcon";
-  rightIcon.src = trueSignUrl;
-  rightIcon.alt = "";
+  // //RIGHT icon
+  // const rightIcon = document.createElement("img");
+  // rightIcon.src = trueSignUrl;
+  // rightIcon.alt = "";
 
-  roomDesc.append(leftIcon, p, rightIcon);
+  // roomDesc.append(leftIcon, p, rightIcon);
+
+  //-----------------------------------------------------------
+  //----------------------CONFIG / RULES-----------------------
+  //-----------------------------------------------------------
 
   // Levels = 3 levels/ stages. Each level contains 6 fibenacci numbers
   // [] = Outer array Levels [] = Inner array
@@ -76,9 +85,9 @@ export function room1woodFunc() {
   const MISTAKE_PENALTY = 4;
   const WOBBLEBALANCE = 1.5;
 
-  // ------------------------------
-  // DOM-refs
-  // ------------------------------
+  //-----------------------------------------------------------
+  //-------------------------DOM-------------------------------
+  //-----------------------------------------------------------
 
   const slots = Array.from(
   woodSection.querySelectorAll<HTMLDivElement>(".slot"),
@@ -91,15 +100,14 @@ export function room1woodFunc() {
   const roomBalanceEl =
   woodSection.querySelector<HTMLDivElement>("#balanceFill");
 
-    // guard if not HTML match and prevents errors for properties of null 
-    if (
-      !keypad || slots.length !== SLOTS_PER_STAGE ||
-      !levelTextEl ||
-      !mistakesTextEl ||
-      !roomBalanceEl
-    ) {
-      throw new Error("Wood room DOM mismatch")
-      }
+  // guard if not HTML match and prevents errors for properties of null 
+  if (
+    !keypad || slots.length !== SLOTS_PER_STAGE ||
+    !levelTextEl ||
+    !mistakesTextEl ||
+    !roomBalanceEl) {
+    throw new Error("Wood room DOM mismatch")
+    }
 
   // Make “safe” non-null variables AFTER guard
   const levelText = levelTextEl;
@@ -112,9 +120,9 @@ export function room1woodFunc() {
     keypad.querySelectorAll<HTMLButtonElement>("button.key")
   );
 
-  // ------------------------------
-  // STATE
-  // ------------------------------
+  //-----------------------------------------------------------
+  //-------------------------STATE-----------------------------
+  //-----------------------------------------------------------
 
   // levels (0-2)
   let currentLevelIndex = 0;
@@ -127,9 +135,10 @@ export function room1woodFunc() {
   // levels transition - letting player see the last digits before next level
   let isTransitioning = false;
 
-  // ------------------------------
-  // RENDER UI
-  // ------------------------------
+
+  //-----------------------------------------------------------
+  //-------------------------RENDER UI-------------------------
+  //-----------------------------------------------------------
 
   function renderSlots(): void {
     // writing the soltsvalue to input
@@ -159,7 +168,7 @@ export function room1woodFunc() {
     // calc for % in balancebar (Math.max = never returns value < 0 (Math.min always returns < 100))
     const balancePercent = Math.max(0, Math.min(100, progressBase - penalty + balanceWobble)
   );
-  balanceFill.style.width = `${balancePercent}%`
+  balanceFill.style.width = `${balancePercent}%`;
   }
 
   function updtUI(): void {
@@ -167,11 +176,11 @@ export function room1woodFunc() {
     renderHUD();
   }
 
-  // ------------------------------
-  // RESET HELPERS
-  // ------------------------------
+  //-----------------------------------------------------------
+  //-------------------------HELPERS---------------------------
+  //-----------------------------------------------------------
 
-  // Delay helper - pause transition so player can se digits before next level
+  // Delay helper - pause transition so player can see all digits before next level
   function delayTransit(ms: number, after: () => void): void {
     // block input so player dont spam buttons while transit
     isTransitioning = true;
@@ -188,9 +197,9 @@ export function room1woodFunc() {
     activeSlotIndex = 0;
   }
 
-  // ------------------------------
-  // LOGICS
-  // ------------------------------
+  //-----------------------------------------------------------
+  //-------------------------LOGICS----------------------------
+  //-----------------------------------------------------------
 
   // add number in active slot as string
   function pushDigit(digit: string): void {
@@ -263,10 +272,9 @@ export function room1woodFunc() {
       updtUI();
       return;
     }
-    // case 2: if empty slot - backspace once more 
+    // case 2: if empty slot 
     if (activeSlotIndex > 0) {
       activeSlotIndex--;
-      updtUI();
     }
 
     if (slotValues[activeSlotIndex].length > 0) {
@@ -296,9 +304,9 @@ export function room1woodFunc() {
 //   // goToNextRoom();
 // }
 
-  // ------------------------------
-  // Key clicks
-  // ------------------------------
+  //-----------------------------------------------------------
+  //-------------------------KEY EVENTS------------------------
+  //-----------------------------------------------------------
 
 // listen to keydown (not document)
 // 1: Arrowkeys controls focus when player tabed down to keypad

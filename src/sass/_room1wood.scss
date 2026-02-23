@@ -9,12 +9,16 @@
   position: relative;
   color: var.$lightColor;
 
-  .key {
-    color: var.$lightColor;
-    padding: 0.5rem;
-    font-size: var.$fs-h4;
-    width: 3rem;
-    @include mix.glass();
+  .keypad {
+    display: flex;
+    gap: 1rem;
+    .key {
+      color: var.$lightColor;
+      padding: 0.5rem;
+      font-size: var.$fs-h4;
+      width: 3rem;
+      @include mix.glass();
+    }
   }
 
   .slots {

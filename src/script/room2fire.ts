@@ -1,5 +1,6 @@
 import { playBgm } from "../audio";
 import * as dataJSON from "../data.json";
+import { renderRoomDesc } from "./roomDesc";
 
 export function room2fireFunc(): void {
   /* Hide the welcome page (menu)
@@ -12,10 +13,10 @@ export function room2fireFunc(): void {
 
   /* Sets the background for the room and shows room section */
   const fireSection: HTMLElement | null = document.querySelector("#room2Fire");
-  if (fireSection) {
+  if (!fireSection) return;
     fireSection.style.backgroundImage = `url("${dataJSON.room2fire.backgroundImg}")`;
     fireSection.classList.remove("hidden");
-  }
+    renderRoomDesc(fireSection, dataJSON.room2fire.desc);
 
   /* Play the background music for the fire room */
   const bgmId = dataJSON.room2fire.bgmId;
