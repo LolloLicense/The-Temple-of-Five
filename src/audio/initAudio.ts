@@ -8,6 +8,7 @@ export function initAudio(): void {
       id: "bgm_fire", // same id as in data.json **IMPORTANT**
       src: withBaseUrl("/audiofiles/bgm_fire.mp3"),
       kind: "bgm",
+      volume: 0.2,
     },
     // Fill in your rooms below:
   ];
