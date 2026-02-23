@@ -1,3 +1,4 @@
+import { playBgm } from "../audio";
 import * as dataJSON from "../data.json";
 
 export function room4metalFunc() {
@@ -15,6 +16,12 @@ export function room4metalFunc() {
   if (metalSection) {
     metalSection.style.backgroundImage = `url("${dataJSON.room4metal.backgroundImg}")`;
     metalSection.classList.remove("hidden");
+  }
+
+   // Spela bakgrundsmusiken för metallrummet
+  const bgmId = dataJSON.room4metal.bgmId;
+  if (bgmId) {
+    void playBgm(bgmId, 650); // Spela bakgrundsmusiken för rummet med fade in på 650ms
   }
 
   console.log("Hello from the metal room");

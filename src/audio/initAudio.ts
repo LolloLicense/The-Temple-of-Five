@@ -17,10 +17,17 @@ export function initAudio(): void {
       volume: 0.2,
     },
     {
+      id: "bgm_metal",
+      src: withBaseUrl("/audiofiles/bgm_metal.mp3"),
+      kind: "bgm",
+      volume: 0.2,
+    },
+    {
       id: "bgm_water",
       src: withBaseUrl("/audiofiles/bgm_water.mp3"),
       kind: "bgm",
     },
+
     // Fill in your rooms below:
   ];
 

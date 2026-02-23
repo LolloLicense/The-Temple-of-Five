@@ -47,6 +47,7 @@
   },
   "room4metal": {
     "backgroundImg": "./images/metalroom.jpg",
+    "bgmId": "bgm_metal",
     "timeLimitMinutes": 5,
     "timeLimitSeconds": 0,
     "desc": {
