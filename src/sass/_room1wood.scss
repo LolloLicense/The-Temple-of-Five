@@ -1,3 +1,42 @@
 @use "var";
+@use "mixins" as mix;
 
+.room1Wood {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
 
+.slots {
+  display: flex;
+  gap: 3rem;
+  justify-content: center;
+  margin-top: 3rem;
+}
+
+.inRoombar {
+  display: flex;
+  justify-content: space-between;
+  @include mix.glass();
+
+  .balance {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .balanceBar {
+    width: 180px;
+    height: 10px;
+    border-radius: 999px;
+    border: 2px solid rgba(236, 245, 241, 0.7);
+    overflow: hidden;
+  }
+  .balanceFill {
+    height: 100%;
+    width: 0%;
+    background: #ff9f1c;
+    border-radius: 999px;
+    transition: width 200ms ease;
+  }
+}

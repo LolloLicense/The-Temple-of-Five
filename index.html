@@ -161,13 +161,14 @@
       </div>
     </header>
 
-	<div id="itemDropdown" class="item-dropdown">
-        <div class="artifact-slot empty"></div> <!--- Ge två klasser för div hållaren-->
-        <div class="artifact-slot empty"></div>
-        <div class="artifact-slot empty"></div>
-        <div class="artifact-slot empty"></div>
-        <div class="artifact-slot empty"></div>
-      </div>
+    <div id="itemDropdown" class="item-dropdown">
+      <div class="artifact-slot empty"></div>
+      <!--- Ge två klasser för div hållaren-->
+      <div class="artifact-slot empty"></div>
+      <div class="artifact-slot empty"></div>
+      <div class="artifact-slot empty"></div>
+      <div class="artifact-slot empty"></div>
+    </div>
 
     <main>
       <!-- Login page -->
@@ -184,7 +185,85 @@
         </div>
       </section>
       <!-- Wood Room -->
-      <section id="room1Wood" class="room1Wood hidden">room 1</section>
+      <section id="room1Wood" class="room1Wood hidden">
+        <!-- Keypad -->
+        <div class="keypad" role="group" aria-label="Numeric keypad">
+          <button class="key" type="button" data-key="0">0</button>
+          <button class="key" type="button" data-key="1">1</button>
+          <button class="key" type="button" data-key="2">2</button>
+          <button class="key" type="button" data-key="3">3</button>
+          <button class="key" type="button" data-key="4">4</button>
+          <button class="key" type="button" data-key="5">5</button>
+          <button class="key" type="button" data-key="6">6</button>
+          <button class="key" type="button" data-key="7">7</button>
+          <button class="key" type="button" data-key="8">8</button>
+          <button class="key" type="button" data-key="9">9</button>
+
+          <button
+            class="key keyBackspace"
+            type="button"
+            data-action="back"
+            aria-label="backspace button"
+          >
+            <svg
+              aria-hidden="true"
+              width="35"
+              height="35"
+              viewBox="0 0 35 35"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.0854 13.0813C15.8781 12.8881 15.6038 12.7829 15.3205 12.7879C15.0371 12.7929 14.7668 12.9077 14.5664 13.1081C14.366 13.3085 14.2512 13.5788 14.2462 13.8622C14.2412 14.1455 14.3464 14.4198 14.5396 14.6271L17.4125 17.5L14.5396 20.3729C14.4321 20.4731 14.3459 20.5938 14.2862 20.728C14.2264 20.8622 14.1942 21.007 14.1916 21.1538C14.189 21.3007 14.2161 21.4466 14.2711 21.5828C14.3261 21.719 14.408 21.8427 14.5118 21.9465C14.6157 22.0504 14.7394 22.1323 14.8756 22.1873C15.0118 22.2423 15.1577 22.2693 15.3045 22.2667C15.4514 22.2641 15.5962 22.232 15.7304 22.1722C15.8645 22.1124 15.9853 22.0262 16.0854 21.9188L18.9583 19.0459L21.8313 21.9188C22.0386 22.112 22.3128 22.2172 22.5962 22.2122C22.8795 22.2072 23.1499 22.0924 23.3503 21.892C23.5507 21.6916 23.6655 21.4212 23.6705 21.1379C23.6755 20.8545 23.5703 20.5803 23.3771 20.3729L20.5042 17.5L23.3771 14.6271C23.5703 14.4198 23.6755 14.1455 23.6705 13.8622C23.6655 13.5788 23.5507 13.3085 23.3503 13.1081C23.1499 12.9077 22.8795 12.7929 22.5962 12.7879C22.3128 12.7829 22.0386 12.8881 21.8313 13.0813L18.9583 15.9542L16.0854 13.0813Z"
+                fill="#ECF5F1"
+              />
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M31.0917 6.75796C29.9746 5.6715 28.5614 5.19171 26.8144 4.96275C25.111 4.73962 22.9323 4.73962 20.1746 4.73962H16.1962C14.6169 4.73962 13.3554 4.73962 12.3229 4.83587C11.2583 4.93504 10.3542 5.14212 9.50103 5.6015C8.64645 6.06233 7.98436 6.70108 7.32811 7.53233C6.69666 8.33587 6.02728 9.37858 5.19166 10.6794L4.13728 12.323C3.4402 13.408 2.86999 14.2946 2.48207 15.0675C2.07666 15.874 1.82291 16.6425 1.82291 17.5015C1.82291 18.3605 2.07666 19.129 2.48207 19.9369C2.86999 20.7098 3.4402 21.595 4.13728 22.68L5.19166 24.3221C6.02728 25.623 6.69666 26.6657 7.32957 27.4692C7.98436 28.3005 8.64645 28.9392 9.50249 29.4C10.3542 29.8594 11.2569 30.0665 12.3229 30.1657C13.3554 30.2619 14.6169 30.2619 16.1962 30.2619H20.1746C22.9323 30.2619 25.111 30.2619 26.8144 30.0388C28.5614 29.8098 29.9746 29.33 31.0902 28.2436C32.2102 27.1542 32.7089 25.7673 32.9467 24.0523C33.1771 22.3898 33.1771 20.2636 33.1771 17.5861V17.4169C33.1771 14.7394 33.1771 12.6146 32.9467 10.9507C32.7104 9.23567 32.2102 7.85025 31.0902 6.75942M20.0929 6.92858C22.9483 6.92858 24.9842 6.9315 26.5285 7.13275C28.0452 7.33108 28.9231 7.70442 29.5633 8.32858C30.1992 8.94546 30.5769 9.78837 30.7796 11.2511C30.9852 12.7473 30.9881 14.7205 30.9881 17.5015C30.9881 20.2825 30.9852 22.2557 30.7796 23.7519C30.5769 25.2146 30.1992 26.0561 29.5633 26.6759C28.9231 27.2986 28.0452 27.6719 26.5285 27.8702C24.9827 28.073 22.9483 28.0744 20.0929 28.0744H16.2473C14.6037 28.0744 13.4444 28.0744 12.5242 27.9869C11.6273 27.9038 11.041 27.7463 10.5379 27.4736C10.0362 27.2038 9.58999 26.8071 9.04603 26.1144C8.48603 25.4042 7.87353 24.4519 7.00145 23.0942L6.00832 21.5484C5.27186 20.4007 4.76582 19.6117 4.43624 18.954C4.11686 18.3196 4.00895 17.8967 4.00895 17.5015C4.00895 17.1063 4.11686 16.6834 4.43624 16.049C4.76582 15.3927 5.27186 14.6023 6.00832 13.4546L6.99999 11.9088C7.87353 10.5525 8.48749 9.59879 9.04603 8.88858C9.59145 8.19587 10.0377 7.79921 10.5379 7.52942C11.041 7.25671 11.6273 7.09921 12.5242 7.01462C13.4429 6.93004 14.6037 6.92858 16.2473 6.92858H20.0929Z"
+                fill="#ECF5F1"
+              />
+            </svg>
+          </button>
+        </div>
+        <!-- Input slots -->
+        <div class="slots" aria-label="Input slots">
+          <!-- 6 slots = 1 1 2 3 5 8 -->
+          <div class="slot" data-slot="0" aria-hidden="true"></div>
+          <div class="slot" data-slot="1" aria-hidden="true"></div>
+          <div class="slot" data-slot="2" aria-hidden="true"></div>
+          <div class="slot" data-slot="3" aria-hidden="true"></div>
+          <div class="slot" data-slot="4" aria-hidden="true"></div>
+          <div class="slot" data-slot="5" aria-hidden="true"></div>
+        </div>
+        <!-- In room balance -->
+        <div class="inRoombar" aria-label="Room status">
+          <!-- Levels -->
+          <div class="inRoombarProgress" aria-label="Level progress">
+            <span>Level:</span>
+            <span id="levelText">1/3</span>
+          </div>
+          <!-- Mistakecounter -->
+          <div class="inroomBarMistakes" aria-label="Mistakes">
+            Mistakes: <span id="mistakesText">0</span>
+          </div>
+          <!-- In room balance -->
+          <div class="balance">
+            <span class="blanaceLabel">Balance:</span>
+
+            <div
+              class="balanceBar"
+              role="progressbar"
+              aria-label="Progressbar"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-valuenow="0"
+            >
+              <div id="balanceFill" class="balanceFill"></div>
+            </div>
+          </div>
+        </div>
+      </section>
       <!-- Fire Room -->
       <section id="room2Fire" class="room2Fire hidden">room 2</section>
       <!-- Earth Room -->
