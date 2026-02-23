@@ -12,14 +12,36 @@
     color: var.$lightColor;
     padding: 0.5rem;
     font-size: var.$fs-h4;
+    width: 3rem;
     @include mix.glass();
   }
 
   .slots {
+    margin-block: 4rem;
     display: flex;
     gap: 3rem;
     justify-content: center;
     margin-top: 3rem;
+
+    .slot {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0.5rem;
+      font-size: var.$fs-h4;
+      width: 3rem;
+      height: 4rem;
+      @include mix.glass();
+    }
+    .slot[data-digits="2"] {
+      width: 3.8rem;
+    }
+    .slot[data-digits="3"] {
+      width: 4.4rem;
+    }
+    .slot[data-digits="4"] {
+      width: 5rem;
+    }
   }
 
   .inRoombar {
