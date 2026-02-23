@@ -69,7 +69,7 @@ if (welcomeSection) {
 //-------------------------Backpack toggle-------------------
 //-----------------------------------------------------------
 
-// Bara toggle just nu kolla vidare imorgon
+// Just nu finns bara toggle, Behövs ytterligare funktion för att lägga till artifakterna i ryggsäcken och visa dem. Ska finnas 2 för varje rum, en rätt och en fel. Samt en tom placeholder.
 const itemListBtn = document.getElementById("itemListBtn")!;
 const itemDropdown = document.getElementById("itemDropdown")!;
 
