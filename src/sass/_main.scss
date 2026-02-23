@@ -77,14 +77,14 @@ header {
 
 .item-dropdown {
   @include mix.glass();
-  position: fixed;  
-  top: 105px;      
-  right: 5vw;        
+  position: fixed;
+  top: 105px;
+  right: 5vw;
   display: flex;
   flex-direction: row;
   gap: 0.5rem;
   padding: 0.5rem;
-  z-index: 10; // Vi får ändra senare 
+  z-index: 10; // Vi får ändra senare
   opacity: 0;
   transform: translateY(-5px);
   transition: opacity 0.25s ease, transform 0.25s ease;
@@ -101,6 +101,27 @@ header {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
+}
+
+//-----------------------------------------------------------
+//-------------------------Room Desc-------------------------
+//-----------------------------------------------------------
+
+.roomDesc {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 1000px;
+  font-size: 1.2rem;
+
+  img {
+    width: 112px;
+    height: 110px;
+  }
 }
 
 //-----------------------------------------------------------

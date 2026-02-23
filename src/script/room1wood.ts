@@ -27,6 +27,41 @@ export function room1woodFunc() {
   if (woodSection.dataset.woodInit === "true") return;
   woodSection.dataset.woodInit = "true";
 
+  // ------------------------------
+  // DESCSECTION FOR WOODROOM
+  // ------------------------------
+
+  // locate wrapper for roomDesc
+  const roomDesc = woodSection.querySelector<HTMLDivElement>("#roomDesc");
+  if (!roomDesc) throw new Error("Missing #roomDesc in wood room")
+
+  //Desc Data from json 
+  const descText = dataJSON.room1wood.desc.text;
+  const falseSignUrl = dataJSON.room1wood.falseSign;
+  const trueSignUrl = dataJSON.room1wood.trueSign;
+
+  // clear wrapper - avois dubble if re-entering room
+  roomDesc.replaceChildren();
+
+  //creating elements for DESC div
+  // LEFT icon
+  const leftIcon = document.createElement("img");
+  leftIcon.className = "leftIcon";
+  leftIcon.src = falseSignUrl;
+  leftIcon.alt = "";
+  
+  const p = document.createElement("p");
+  p.className = ("descText");
+  p.textContent = descText;
+  
+  
+  const rightIcon = document.createElement("img");
+  leftIcon.className = "rightIcon";
+  rightIcon.src = trueSignUrl;
+  rightIcon.alt = "";
+
+  roomDesc.append(leftIcon, p, rightIcon);
+
   // Levels = 3 levels/ stages. Each level contains 6 fibenacci numbers
     // [] = Outer array Levels [] = Inner array
     const LEVELS: number[][] = [
