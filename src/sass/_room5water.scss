@@ -291,8 +291,8 @@
     display: none;
     width: 100%;
     text-align: center;
-    margin-top: 1rem; // Space between the game and the warning text (reduced)
-    padding: 0.55rem 1rem;
+    margin-top: 0.05rem; // Nästan inget avstånd ovanför varningen
+    padding: 0.07rem 0.3rem; // Minimalt med padding runt texten
     background: rgba(var.$redColor, 0.15);
     border: 1px solid rgba(var.$redColor, 0.4);
     border-radius: var.$smallRadius;

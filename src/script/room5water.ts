@@ -125,53 +125,7 @@ function injectHTML(section: HTMLElement): void {
           ⚠ The temple senses hesitation. The water grows restless — impurity may follow...
         </div>
 
-        <!--
-          BUG FIX: Both artifact panels are now visually identical.
-          The true artifact (水 or 亂) is silently saved to localStorage.
-          The player will not know which one they received until the final altar (room 6).
-        -->
 
-        <!-- Artifact panel: correct (shown when solved within time limit) -->
-        <div
-          class="w-artifact"
-          id="w-artifact-correct"
-          aria-live="polite"
-          aria-labelledby="w-artifact-correct-name"
-        >
-          <span class="w-artifact-glyph" aria-hidden="true">水</span>
-          <p class="w-artifact-name" id="w-artifact-correct-name">An Ancient Artifact</p>
-          <p class="w-artifact-desc">
-            The vessel hums with hidden power. Its true nature is veiled,
-            awaiting the final altar.
-          </p>
-          <div class="w-artifact-actions">
-            <button class="w-btn w-btn--gold" id="w-complete-correct-btn">
-              Continue →
-            </button>
-          </div>
-        </div>
-
-
-        <!-- Artifact panel: wrong (shown when solved too slowly) -->
-        <!-- Intentionally identical in appearance to the correct panel — mystery preserved -->
-        <div
-          class="w-artifact"
-          id="w-artifact-wrong"
-          aria-live="polite"
-          aria-labelledby="w-artifact-wrong-name"
-        >
-          <span class="w-artifact-glyph" aria-hidden="true">亂</span>
-          <p class="w-artifact-name" id="w-artifact-wrong-name">An Ancient Artifact</p>
-          <p class="w-artifact-desc">
-            The vessel hums with hidden power. Its true nature is veiled,
-            awaiting the final altar.
-          </p>
-          <div class="w-artifact-actions">
-            <button class="w-btn w-btn--gold" id="w-complete-wrong-btn">
-              Continue →
-            </button>
-          </div>
-        </div>
 
       </div><!-- /w-puzzle -->
 
@@ -495,23 +449,6 @@ function solvePuzzle(): void {
   // until they reach the final altar in room 6.
   const artifact          = isCorrectArtifact ? "水" : "亂";
 
-  setStatus("The vessel fills with water. An ancient artifact is revealed...", "");
-
-  // Hide both artifact panels first
-  document.getElementById("w-artifact-correct")?.classList.remove("visible");
-  document.getElementById("w-artifact-wrong")?.classList.remove("visible");
-
-  // Show the appropriate panel — both look identical to the player
-  if (isCorrectArtifact) {
-    const box = document.getElementById("w-artifact-correct");
-    box?.classList.add("visible");
-    box?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  } else {
-    const box = document.getElementById("w-artifact-wrong");
-    box?.classList.add("visible");
-    box?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  }
-
   announce(`Puzzle solved. Score: ${score} points.`);
   document.getElementById("w-time-warning")?.classList.remove("visible");
 
@@ -530,6 +467,11 @@ function solvePuzzle(): void {
   } catch {
     // storage unavailable
   }
+
+  // Navigate directly to room 6 (finalRoom) without showing any text or artifact panel
+  import("./room6validate").then(({ room6finalFunc }) => {
+    room6finalFunc();
+  });
 }
 
 // ── RESET ──────────────────────────────────────────────────────────────────
@@ -641,19 +583,6 @@ function handleCheck(): void {
   }
 }
 
-// ── DISPATCH COMPLETE ──────────────────────────────────────────────────────
-// Hooks into whatever the rest of the game uses to advance rooms.
-// Update the completeRoom call to match your main.ts implementation.
-
-function dispatchComplete(artifact: string): void {
-  const score = calcScore();
-  announce("An ancient artifact claimed. Proceeding.");
-
-  // TODO: replace with your group's actual room-complete handler from main.ts
-  // e.g. completeRoom("water", artifact, score, secondsElapsed);
-  console.log("Room complete:", { artifact, score, time: secondsElapsed });
-}
-
 // ── EXPORTED ROOM FUNCTION ─────────────────────────────────────────────────
 
 export function room5waterFunc(): void {
@@ -684,14 +613,6 @@ export function room5waterFunc(): void {
   // Wire up buttons
   document.getElementById("w-check-btn")?.addEventListener("click", handleCheck);
   document.getElementById("w-reset-btn")?.addEventListener("click", resetPuzzle);
-
-  document.getElementById("w-complete-correct-btn")?.addEventListener("click", () => {
-    dispatchComplete("水");
-  });
-
-  document.getElementById("w-complete-wrong-btn")?.addEventListener("click", () => {
-    dispatchComplete("亂");
-  });
   
   setupKeyboard();
 
