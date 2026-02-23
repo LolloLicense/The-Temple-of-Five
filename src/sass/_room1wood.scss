@@ -6,37 +6,48 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-}
+  color: var.$lightColor;
 
-.slots {
-  display: flex;
-  gap: 3rem;
-  justify-content: center;
-  margin-top: 3rem;
-}
+  .key {
+    color: var.$lightColor;
+    padding: 0.5rem;
+    font-size: var.$fs-h4;
+    @include mix.glass();
+  }
 
-.inRoombar {
-  display: flex;
-  justify-content: space-between;
-  @include mix.glass();
-
-  .balance {
+  .slots {
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    gap: 3rem;
+    justify-content: center;
+    margin-top: 3rem;
   }
-  .balanceBar {
-    width: 180px;
-    height: 10px;
-    border-radius: 999px;
-    border: 2px solid rgba(236, 245, 241, 0.7);
-    overflow: hidden;
-  }
-  .balanceFill {
-    height: 100%;
-    width: 0%;
-    background: #ff9f1c;
-    border-radius: 999px;
-    transition: width 200ms ease;
+
+  .inRoombar {
+    display: flex;
+    justify-content: space-between;
+    gap: 6rem;
+    padding: 1rem 2rem;
+
+    @include mix.glass();
+
+    .balance {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .balanceBar {
+      width: 180px;
+      height: 10px;
+      border-radius: 999px;
+      border: 2px solid rgba(236, 245, 241, 0.7);
+      overflow: hidden;
+    }
+    .balanceFill {
+      height: 100%;
+      width: 0%;
+      background: #ff9f1c;
+      border-radius: 999px;
+      transition: width 200ms ease;
+    }
   }
 }
