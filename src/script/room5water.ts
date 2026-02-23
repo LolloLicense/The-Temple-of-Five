@@ -77,13 +77,6 @@ let SINK_ENTRY_DIR:  Direction = "W";
 function injectHTML(section: HTMLElement): void {
   section.innerHTML = `
     <div class="w-chamber">
-
-      <!-- Room heading -->
-      <div class="w-heading">
-        <h1 class="w-title">Chamber of Water</h1>
-        <p class="w-subtitle">Liú Shuǐ — The Way of Flowing Water</p>
-      </div>
-
       <!-- Puzzle panel (shown immediately) -->
       <div id="w-puzzle" class="w-puzzle active">
         <div class="w-panel">
