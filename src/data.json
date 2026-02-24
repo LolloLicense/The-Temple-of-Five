@@ -37,6 +37,11 @@
     "backgroundImg": "./images/earthroom.jpg",
     "bgmId": "bgm_earth",
     "sfxId": "sfx_click",
+    "sfx2Id": "sfx_shortSlide",
+    "sfx3Id": "sfx_midSlide",
+    "sfx4Id": "sfx_midSlide2",
+    "sfx5Id": "sfx_longSlide",
+    
     "timeLimitMinutes": 0,
     "timeLimitSeconds": 5,
     "desc": {

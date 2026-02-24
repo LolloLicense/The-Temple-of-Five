@@ -4,10 +4,13 @@ import { startTimer, TimeIsUp } from "./utils.ts";
 import { renderRoomDesc } from "./roomDesc";
 import { playBgm, playSfx } from "../audio";
 
-let timerCheckInterval: number;
+
 
 
 export function room3earthFunc() {
+
+let timerCheckInterval: number;
+
   startTimer(3); // Start timer for room 3
 
   /* Hide the welcome page (menu)
@@ -30,16 +33,7 @@ export function room3earthFunc() {
 
   console.log("Hello from the earth room");
 
-  const bgmId = dataJSON.room3earth.bgmId;
-  if (bgmId) {
-    void playBgm(bgmId, 650); // play the background music for the fire room, with a fade-in duration of 650ms
-  }
-
-
- const sfxId = dataJSON.room3earth.sfxId;
-  if (sfxId) {
-    void playSfx(sfxId); // play the background music for the fire room, with a fade-in duration of 650ms
-  }
+  
 
   type Cell = number | string | null;
   type Grid = Cell[][];
@@ -89,4 +83,47 @@ timerCheckInterval = setInterval(timerCheck, 1000);
 
 function timerCheck():void {
 console.log(TimeIsUp);
+}
+
+function audioHandler (audio:string) {
+const bgmId = dataJSON.room3earth.bgmId;
+const sfxId = dataJSON.room3earth.sfxId;
+const sfx2Id = dataJSON.room3earth.sfx2Id;
+const sfx3Id = dataJSON.room3earth.sfx3Id;
+const sfx4Id = dataJSON.room3earth.sfx4Id;
+const sfx5Id = dataJSON.room3earth.sfx5Id;
+
+switch (audio) {
+case 'bgm':
+  if (bgmId) {
+    void playBgm(bgmId, 650); // play the background music for the fire room, with a fade-in duration of 650ms
+  }
+  break;
+  case 'click':
+  if (sfxId) {
+    void playSfx(sfxId); // play the click sound effect
+  }
+  break;
+  case 'shortSlide':
+  if (sfx2Id) {
+    void playSfx(sfx2Id); // play the shortSlide sound effect
+  }
+  break;
+  case 'midSlide':
+  if (sfx3Id) {
+    void playSfx(sfx3Id); // play the midSlide sound effect
+  }
+  break;
+  case 'midSlide2':
+  if (sfx4Id) {
+    void playSfx(sfx4Id); // play the midSlide2 sound effect
+  }
+  break;
+  case 'longSlide':
+  if (sfx5Id) {
+    void playSfx(sfx5Id); // play the longSlide sound effect
+  }
+  break;
+}
+
 }
