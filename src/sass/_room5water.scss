@@ -6,6 +6,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
+  padding-top: 8vh;
+  min-height: 100vh;
   color: var.$lightColor;
   font-family: var.$txFont;
 
@@ -13,7 +16,7 @@
   .w-chamber {
     width: 100%;
     max-width: 750px;
-    padding: 130px 1.5rem 4rem; // 130px top = clear the fixed header
+    padding: 100px 1.5rem 4rem; // 100px top = clear the fixed header
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -270,29 +273,14 @@
     &.error-msg   { color: var.$redColor; }
   }
 
-  .w-kbd-hint {
-    text-align: center;
-    font-size: 0.8rem;
-    color: rgba(var.$lightColor, 0.5);
-    margin-top: 0.6rem;
-  }
-
-  .w-kbd {
-    display: inline-block;
-    @include mix.glass($bg: rgba(9, 49, 52, 0.5), $radius: 4px);
-    padding: 1px 6px;
-    font-family: monospace;
-    font-size: 0.82em;
-    color: var.$lightColor;
-  }
-
   // ── TIME WARNING ──────────────────────────────────────────────────────
   .w-time-warning {
     display: none;
     width: 100%;
     text-align: center;
-    margin-top: 0.05rem; // Nästan inget avstånd ovanför varningen
-    padding: 0.07rem 0.3rem; // Minimalt med padding runt texten
+    margin-top: 0.6rem;
+    margin-bottom: 0.25rem;
+    padding: 0.4rem 0.75rem;
     background: rgba(var.$redColor, 0.15);
     border: 1px solid rgba(var.$redColor, 0.4);
     border-radius: var.$smallRadius;
