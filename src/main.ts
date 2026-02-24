@@ -6,6 +6,7 @@ import { room3earthFunc } from "./script/room3earth.ts";
 import { room4metalFunc } from "./script/room4metal.ts";
 import { room5waterFunc } from "./script/room5water.ts";
 import { room6finalFunc } from "./script/room6validate.ts";
+import { gameOverRoomFunc } from "./script/gameOverRoom.ts";
 //import { startTimer, stopTimer } from "./script/utils.ts";
 import { startTimer } from "./script/utils.ts";
 
@@ -43,6 +44,11 @@ const finalRoomBtn: HTMLElement | null =
   document.querySelector("#finalRoomBtn");
 if (finalRoomBtn) {
   finalRoomBtn.addEventListener("click", room6finalFunc);
+}
+const gameOverRoomBtn: HTMLElement | null =
+  document.querySelector("#gameOverRoomBtn");
+if (gameOverRoomBtn) {
+  gameOverRoomBtn.addEventListener("click", gameOverRoomFunc);
 }
 
 import { initAudio, initSoundToggle } from "./audio";

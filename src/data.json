@@ -69,6 +69,12 @@
   },
   "room6validate": {
     "backgroundImg": "./images/room-6.jpg",
-    "desc": { "text": "Text test" }
+    "desc": {
+      "text": "Restore the balance. Have you gathered the right elements? Place theme where they belong, wrong element? The gate stays sealed and balance is off.",
+      "trueSign": "./images/backpack-icon.png"
+    }
+  },
+  "gameOverRoom": {
+    "backgroundImg": "./images/game-over.jpg"
   }
 }

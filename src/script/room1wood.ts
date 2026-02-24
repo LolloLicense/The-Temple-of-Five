@@ -1,8 +1,12 @@
 import * as dataJSON from "../data.json";
 import { playBgm } from "../audio";
 import { renderRoomDesc } from "./roomDesc";
+//import { startTimer, stopTimer } from "./script/utils.ts";
+import { startTimer } from "./utils.ts";
 
 export function room1woodFunc() {
+  startTimer(1); // Start timer for room 3
+
   /* Hide the welcome page (menu)
    This can be removed when we remove the menu */
   const welcomePage: HTMLElement | null =
@@ -32,7 +36,7 @@ export function room1woodFunc() {
   woodSection.dataset.woodInit = "true";
 
   // render desc from JSON into <div id="roomDesc">
-renderRoomDesc(woodSection, dataJSON.room1wood.desc);
+  renderRoomDesc(woodSection, dataJSON.room1wood.desc);
 
   //----------------------------------------------------------
   //--------------------ROOM DESCRIPTION-----------------------
