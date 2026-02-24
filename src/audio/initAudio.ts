@@ -27,7 +27,18 @@ export function initAudio(): void {
       src: withBaseUrl("/audiofiles/bgm_water.mp3"),
       kind: "bgm",
     },
-
+    {
+      id: "bgm_earth",
+      src: withBaseUrl("/audiofiles/bgm_earth.mp3"),
+      kind: "bgm",
+      volume: 0.5,
+    },
+    {
+    id: "sfx_click",
+    src: withBaseUrl("/audiofiles/sfx_click.mp3"),
+    kind: "sfx",
+    volume: 0.4,
+  },
     // Fill in your rooms below:
   ];
 

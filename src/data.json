@@ -35,10 +35,12 @@
   },
   "room3earth": {
     "backgroundImg": "./images/earthroom.jpg",
+    "bgmId": "bgm_earth",
+    "sfxId": "sfx_click",
     "timeLimitMinutes": 0,
     "timeLimitSeconds": 5,
     "desc": {
-      "text": "Text test",
+      "text": "TESTING TESTING LASER LASER LASER",
       "falseSign": "./images/false-earth-glass-icon.png",
       "trueSign": "./images/true-earth-glass-icon.png"
     }
