@@ -1,5 +1,7 @@
 import * as dataJSON from "../data.json";
 
+//let localStorage: Array = [];
+
 let totalMinutes = 0;
 let totalSeconds = 0;
 
@@ -12,6 +14,11 @@ let roomTimeLimitSeconds = 0;
 let totalTimerInterval: number;
 let roomTimerInterval: number;
 
+
+
+
+export let TimeIsUp = false
+
 export function startTimer(id: number): void {
   if (id === 0) {
     totalTimerInterval = setInterval(() => {
@@ -21,9 +28,9 @@ export function startTimer(id: number): void {
     roomTimerInterval = setInterval(() => {
       timerTick(id);
     }, 1000);
-
     setTimeLimits(id);
-
+  
+    //window.localStorage.setItem(`room${id}`, { roomMinutes, roomSeconds })
   }
 }
 
@@ -32,6 +39,8 @@ export function stopTimer(id: number): void {
     clearInterval(totalTimerInterval);
   } else {
     clearInterval(roomTimerInterval);
+    TimeIsUp = true;
+
   }
 }
 
@@ -96,7 +105,6 @@ function timerTick(id: number): void {
         }
         if (roomMinutes < 0) {
           roomMinutesSpan.innerHTML = `00`;
-          console.log('TIME IS UP!');
           stopTimer(id);
         }
       }

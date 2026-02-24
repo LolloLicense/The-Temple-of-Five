@@ -35,10 +35,17 @@
   },
   "room3earth": {
     "backgroundImg": "./images/earthroom.jpg",
+    "bgmId": "bgm_earth",
+    "sfxId": "sfx_click",
+    "sfx2Id": "sfx_shortSlide",
+    "sfx3Id": "sfx_midSlide",
+    "sfx4Id": "sfx_midSlide2",
+    "sfx5Id": "sfx_longSlide",
+    
     "timeLimitMinutes": 0,
     "timeLimitSeconds": 5,
     "desc": {
-      "text": "Text test",
+      "text": "TESTING TESTING LASER LASER LASER",
       "falseSign": "./images/false-earth-glass-icon.png",
       "trueSign": "./images/true-earth-glass-icon.png"
     }
@@ -49,7 +56,7 @@
     "timeLimitMinutes": 3,
     "timeLimitSeconds": 0,
     "desc": {
-      "text": "Steel remember every misstake. The universe mechanisms don't forgive it and respondes to rhytm & order. Enter the sequence to unlock the element of metal.",
+      "text": "Steel remembers every mistake. The universe's mechanisms answer only to rhythm and order. It does not reward errors. Observe the sequence. Repeat it to unlock the element of metal.",
       "falseSign": "./images/false-metal-glass-icon.png",
       "trueSign": "./images/true-metal-glass-icon.png"
     }
@@ -73,6 +80,7 @@
     }
   },
   "gameOverRoom": {
+    "bgmId": "bgm_game_over",
     "backgroundImg": "./images/game-over.jpg"
   }
 }

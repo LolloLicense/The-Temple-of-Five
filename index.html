@@ -115,7 +115,9 @@
         </button>
       </div>
     </section>
-    <!-- Wood Room -->
+    <!----------------------------->
+    <!--------- Wood Room --------->
+    <!----------------------------->
     <section id="room1Wood" class="room1Wood hidden">
       <!-- Keypad -->
       <div class="keypad" role="group" aria-label="Numeric keypad">
@@ -192,6 +194,192 @@
       <div class="roomDesc" id=""></div>
     </section>
     <!-- Game Over Room -->
+    <!-- Fireflies layer (decorative) -->
+    <div class="woodParticles" aria-hidden="true"></div>
+    <!-- Room description -->
+    <div class="roomDesc" id=""></div>
+    </section>
+
+    <!------------------------------------------------------------------->
+    <!---------------------------- Fire Room ---------------------------->
+    <!------------------------------------------------------------------->
+
+    <section id="room2Fire" class="room room2Fire hidden" aria-label="Fire room">
+
+      <!------------- FIRE ROOM UI ------------->
+      <div class="room2FireUi">
+
+        <!--------------- ELEMENTS --------------->
+        <div class="keypad" role="group" aria-label="Elements">
+
+          <!-- AIR -->
+          <button type="button" class="key fireKey" data-fire-pick="A" aria-label="Air (A)">
+            <svg class="fireKey__icon" viewBox="0 0 52 43" fill="none" aria-hidden="true" focusable="false"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M38.9792 11.4789C39.65 10.833 40.4681 10.3603 41.3627 10.1019C42.2573 9.84337 43.2014 9.80684 44.1133 9.99543C45.0252 10.184 45.8773 10.592 46.596 11.1842C47.3147 11.7763 47.8782 12.5347 48.2378 13.3936C48.5974 14.2526 48.7422 15.1863 48.6596 16.1138C48.577 17.0413 48.2697 17.9347 47.764 18.7167C47.2584 19.4987 46.5698 20.1456 45.7578 20.6015C44.9459 21.0574 44.035 21.3085 43.1042 21.333H3"
+                stroke="#FED7AA" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+              <path
+                d="M20.4167 4.37455C20.9476 3.83304 21.6046 3.43173 22.3288 3.20661C23.053 2.98148 23.8217 2.93957 24.5661 3.08463C25.3104 3.22969 26.0072 3.55719 26.5938 4.03776C27.1805 4.51834 27.6387 5.13698 27.9275 5.83823C28.2162 6.53948 28.3265 7.30142 28.2483 8.05575C28.1701 8.81008 27.906 9.53322 27.4796 10.1604C27.0532 10.7875 26.4779 11.299 25.8051 11.6491C25.1324 11.9992 24.3833 12.1769 23.625 12.1662H3"
+                stroke="#FED7AA" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+              <path
+                d="M27.2917 38.2914C27.8226 38.8329 28.4796 39.2342 29.2038 39.4593C29.928 39.6845 30.6967 39.7264 31.4411 39.5813C32.1854 39.4362 32.8822 39.1088 33.4688 38.6282C34.0555 38.1476 34.5137 37.529 34.8025 36.8277C35.0912 36.1265 35.2015 35.3645 35.1233 34.6102C35.0451 33.8559 34.781 33.1327 34.3546 32.5056C33.9282 31.8784 33.3529 31.3669 32.6801 31.0168C32.0074 30.6667 31.2583 30.4891 30.5 30.4997H3"
+                stroke="#FED7AA" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+
+            <span class="fireKey__text">A = Air</span>
+          </button>
+
+          <!-- TIMBER -->
+          <button type="button" class="key fireKey" data-fire-pick="T" aria-label="Timber (T)">
+            <svg class="fireKey__icon" viewBox="0 0 44 48" fill="none" aria-hidden="true" focusable="false"
+              xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+              <path
+                d="M7.27979 8.47222C7.27979 10.0562 8.7899 11.5752 11.4779 12.6952C14.1659 13.8152 17.8117 14.4444 21.6131 14.4444C25.4146 14.4444 29.0603 13.8152 31.7483 12.6952C34.4363 11.5752 35.9465 10.0562 35.9465 8.47222C35.9465 6.88829 34.4363 5.36923 31.7483 4.24922C29.0603 3.12921 25.4146 2.5 21.6131 2.5C17.8117 2.5 14.1659 3.12921 11.4779 4.24922C8.7899 5.36923 7.27979 6.88829 7.27979 8.47222Z"
+                stroke="#491C01" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+              <path
+                d="M35.9464 8.47217V19.5232C36.6399 19.2091 37.419 19.1383 38.1578 19.3222C38.8965 19.5062 39.5515 19.9341 40.0167 20.5367C40.4819 21.1393 40.7301 21.8813 40.721 22.6425C40.712 23.4037 40.4463 24.1396 39.9669 24.731L39.7352 24.989L35.9464 28.7777V38.3333C35.9464 42.1794 29.8786 45.3208 22.27 45.5H21.6131C13.6963 45.5 7.27974 42.2917 7.27974 38.3333V33.5555L3.49096 29.7667C2.93062 29.2071 2.5847 28.4685 2.51363 27.6797C2.44257 26.891 2.65087 26.1024 3.10215 25.4517C3.55343 24.8009 4.219 24.3294 4.98259 24.1195C5.74618 23.9096 6.55924 23.9747 7.27974 24.3033V8.47217M16.8353 25.1944V28.7777M26.3908 33.5555V35.9444"
+                stroke="#491C01" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+
+            <span class="fireKey__text">T = timber</span>
+          </button>
+
+          <!-- FLAME -->
+          <button type="button" class="key fireKey" data-fire-pick="F" aria-label="Flame (F)">
+            <svg class="fireKey__icon" viewBox="0 0 39 50" fill="none" aria-hidden="true" focusable="false"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M11.0208 29.3542C12.5403 29.3542 13.9975 28.7506 15.072 27.6761C16.1464 26.6017 16.75 25.1445 16.75 23.625C16.75 20.4625 15.6042 19.0417 14.4583 16.75C12.0017 11.839 13.945 7.45958 19.0417 3C20.1875 8.72917 23.625 14.2292 28.2083 17.8958C32.7917 21.5625 35.0833 25.9167 35.0833 30.5C35.0833 32.6066 34.6684 34.6926 33.8622 36.6389C33.0561 38.5851 31.8744 40.3536 30.3848 41.8432C28.8952 43.3328 27.1268 44.5144 25.1805 45.3206C23.2343 46.1267 21.1483 46.5417 19.0417 46.5417C16.935 46.5417 14.849 46.1267 12.9028 45.3206C10.9565 44.5144 9.1881 43.3328 7.69849 41.8432C6.20889 40.3536 5.02727 38.5851 4.2211 36.6389C3.41493 34.6926 3 32.6066 3 30.5C3 27.8577 3.99229 25.2429 5.29167 23.625C5.29167 25.1445 5.89527 26.6017 6.9697 27.6761C8.04413 28.7506 9.50136 29.3542 11.0208 29.3542Z"
+                stroke="#F97316" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+
+            <span class="fireKey__text">F = flame</span>
+          </button>
+
+          <!-- EMBER -->
+          <button type="button" class="key fireKey" data-fire-pick="E" aria-label="Ember (E)">
+            <svg class="fireKey__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true" focusable="false"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M23.625 3L19.2433 16.3215C19.0191 17.0032 18.6379 17.6228 18.1304 18.1304C17.6228 18.6379 17.0032 19.0191 16.3215 19.2433L3 23.625L16.3215 28.0067C17.0032 28.2309 17.6228 28.6121 18.1304 29.1196C18.6379 29.6272 19.0191 30.2468 19.2433 30.9285L23.625 44.25L28.0067 30.9285C28.2309 30.2468 28.6121 29.6272 29.1196 29.1196C29.6272 28.6121 30.2468 28.2309 30.9285 28.0067L44.25 23.625L30.9285 19.2433C30.2468 19.0191 29.6272 18.6379 29.1196 18.1304C28.6121 17.6228 28.2309 17.0032 28.0067 16.3215L23.625 3Z"
+                stroke="#DC2626" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+
+            <span class="fireKey__text">E = ember</span>
+          </button>
+
+          <!-- STONE -->
+          <button type="button" class="key fireKey" data-fire-pick="S" aria-label="Stone (S)">
+            <svg class="fireKey__icon" viewBox="0 0 43 40" fill="none" aria-hidden="true" focusable="false"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M12.6716 6.21421L2.21719 17.1454C0.793857 18.6324 0.000169875 20.6052 0 22.6563V34.6651C0 36.08 0.566293 37.437 1.5743 38.4375C2.58231 39.4379 3.94946 40 5.375 40H25.7624C24.2547 39.5732 22.6717 39.1037 21.0915 38.6049C17.3774 37.4313 13.6041 36.0709 10.7366 34.6491C9.31219 33.9422 8.041 33.1847 7.10844 32.3871C6.235 31.6322 5.375 30.6053 5.375 29.3302C5.375 26.7055 7.44706 25.2277 9.6105 24.3608C11.8223 23.4725 14.7114 22.9684 17.4741 22.5523L19.1565 22.3015C21.3737 21.9788 23.4458 21.6747 25.1389 21.2452C26.1924 20.9785 26.995 20.686 27.5469 20.3676C28.0978 20.0476 28.2268 19.7968 28.2591 19.6714C28.2967 19.5221 28.2967 19.2527 27.9312 18.7565C27.5549 18.2461 26.9117 17.6593 26.0016 16.996C24.8352 16.1451 23.4404 15.3048 21.9542 14.4086C21.0834 13.8804 20.1804 13.3363 19.2694 12.7548C16.9366 11.2743 14.534 9.55118 13.3031 7.55327C13.0412 7.13262 12.8293 6.68328 12.6716 6.21421ZM36.4344 40L36.2544 39.96C36.0376 39.9066 35.7276 39.8337 35.3245 39.7413C30.8127 38.662 26.3382 37.4343 21.9085 36.0602C18.232 34.8999 14.6146 33.5928 11.9379 32.2644C10.5941 31.5976 9.55406 30.9574 8.86606 30.3705C8.12969 29.733 8.0625 29.3863 8.0625 29.3302C8.0625 28.4393 8.68869 27.6071 10.6156 26.8335C12.4969 26.0786 15.0849 25.6118 17.8799 25.1877C18.4049 25.1077 18.937 25.0294 19.4763 24.953C21.7042 24.6275 23.9618 24.2968 25.8027 23.8326C26.9476 23.5392 28.0333 23.1765 28.9041 22.6696C29.7748 22.1628 30.5891 21.4213 30.8659 20.317C31.1696 19.1166 30.7316 18.039 30.1027 17.1827C29.4819 16.3398 28.5735 15.5636 27.5926 14.8487C26.3429 13.9364 24.7599 12.9788 23.1904 12.0292C22.3596 11.5332 21.5353 11.0264 20.7179 10.5088C18.3476 9.00169 16.4636 7.56927 15.5929 6.16086C15.1871 5.49934 15.0554 4.92584 15.1306 4.38702C15.1871 3.98423 15.3752 3.49876 15.8132 2.92793L16.6276 2.07701C17.2553 1.42083 18.0109 0.898289 18.8486 0.541216C19.6863 0.184142 20.5884 0 21.5 0C22.4116 0 23.3137 0.184142 24.1514 0.541216C24.9891 0.898289 25.7447 1.42083 26.3724 2.07701L40.7855 17.148C42.2066 18.6342 42.9992 20.6047 43 22.6536V34.6651C43 36.08 42.4337 37.437 41.4257 38.4375C40.4177 39.4379 39.0505 40 37.625 40H36.4344Z"
+                fill="#382D2D" />
+            </svg>
+
+            <span class="fireKey__text">S = stone</span>
+          </button>
+
+          <!-- WATER -->
+          <button type="button" class="key fireKey" data-fire-pick="W" aria-label="Water (W)">
+            <svg class="fireKey__icon" viewBox="0 0 43 51" fill="none" aria-hidden="true" focusable="false"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M21.4884 3L34.5772 16.1841C37.1657 18.7897 38.9288 22.1101 39.6436 25.7253C40.3584 29.3404 39.9928 33.0878 38.5929 36.4936C37.1931 39.8994 34.8219 42.8105 31.7793 44.8586C28.7367 46.9068 25.1595 48 21.5 48C17.8405 48 14.2633 46.9068 11.2207 44.8586C8.17812 42.8105 5.80694 39.8994 4.40708 36.4936C3.00721 33.0878 2.64156 29.3404 3.35637 25.7253C4.07118 22.1101 5.83434 18.7897 8.42282 16.1841L21.4884 3Z"
+                stroke="#60A5FA" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+
+            <span class="fireKey__text">W = water</span>
+          </button>
+
+        </div>
+
+        <!---------------------------------------------->
+        <!--------------- TS SLOTS BELOW --------------->
+        <!---------------------------------------------->
+
+        <div class="slots fireSlots" id="fireSlots" role="group" aria-label="Sequence slots"></div>
+
+        <!--------------- PROGRESSBAR --------------->
+
+        <div class="inRoombar fireInRoombar" aria-label="Progress">
+          <!-- Level (TS uppdaterar 1 / 4) -->
+          <div class="progressItem">
+            <span class="progressLabel">Level:</span>
+            <span class="progressValue" id="fireLevelValue">1 / 4</span>
+          </div>
+
+          <!-- Mistakes -->
+          <div class="progressItem">
+            <span class="progressLabel">Mistakes:</span>
+            <span class="progressValue" id="fireMistakes">0</span>
+          </div>
+
+          <!-- Balance bar (TS control width + aria-valuenow) -->
+          <div class="balance">
+            <span class="progressLabel">Balance</span>
+
+            <div class="balanceBar" role="progressbar" aria-label="Balance" aria-valuemin="0" aria-valuemax="100"
+              aria-valuenow="0">
+              <div class="balanceFill" id="fireBalanceFill"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!---------------------------------------------->
+      <!---------------RoomDesc below ---------------->
+      <!---------------------------------------------->
+
+      <div class="roomDesc" id="fireRoomDesc"></div>
+    </section>
+
+    <!------------------------------------------------------------------->
+    <!--------------------------- Earth Room ---------------------------->
+    <!------------------------------------------------------------------->
+    <section id="room3Earth" class="room3Earth hidden">
+      <div id="gameDiv" class="gameDiv"></div>
+      <div id="roomDesc" class="roomDesc"></div>
+    </section>
+
+    <!------------------------------------------------------------------->
+    <!--------------------------- Metal Room ---------------------------->
+    <!------------------------------------------------------------------->
+    <section id="room4Metal" class="room4Metal hidden">
+      <div class="metalContainer">
+        <div id="colorSignal"></div>
+        <div id="feedback"></div>
+
+        <div class="colorSlots">
+          <div class="colorSlot1"></div>
+          <div class="colorSlot2"></div>
+          <div class="colorSlot3"></div>
+          <div class="colorSlot4"></div>
+          <div class="colorSlot5"></div>
+        </div>
+      </div>
+
+      <div class="roomDesc" id=""></div> <!--room description from json-->
+    </section>
+
+    <!------------------------------------------------------------------->
+    <!--------------------------- Water Room ---------------------------->
+    <!------------------------------------------------------------------->
+    <section id="room5Water" class="room5Water hidden">
+      <div class="roomDesc" id=""></div>
+    </section>
+
+    <!------------------------------------------------------------------->
+    <!--------------------------- Final Room ---------------------------->
+    <!------------------------------------------------------------------->
+    <section id="finalRoom" class="finalRoom hidden">
+      <div class="roomDesc" id=""></div>
+    </section>
+
+    <!------------------------------------------------------------------->
+    <!----------------------- Game Over Room ---------------------------->
+    <!------------------------------------------------------------------->
     <section id="gameOverRoom" class="gameOverRoom hidden">
       <div class="gameOverHeading">
         <h2>Balance is distorted</h2>
@@ -208,7 +396,9 @@
     </section>
   </main>
 
-  <!-- About dialog -->
+  <!------------------------------------------------------------------->
+  <!------------------------- About dialog ---------------------------->
+  <!------------------------------------------------------------------->
   <dialog id="aboutDialog" class="aboutDialog" aria-labelledby="dialogTitle">
     <button type="button" class="modalClose" id="closeAbout" aria-label="Close and go back to landningpage">
       <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">

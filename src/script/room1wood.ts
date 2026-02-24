@@ -31,12 +31,41 @@ export function room1woodFunc() {
   }
   woodSection.style.backgroundImage = `url("${dataJSON.room1wood.backgroundImg}")`;
   woodSection.classList.remove("hidden");
+
+  // fireflie animation 
+  const particlesWrap = woodSection.querySelector<HTMLDivElement>(".woodParticles");
+  if (particlesWrap && particlesWrap.childElementCount === 0) {
+    // pervents adding amout after re-entering room
+    for (let i = 0; i < 12; i++) {
+      const particle = document.createElement("div");
+      particle.className = "woodParticle";
+
+      // size of fireflies
+      const size = 2 + Math.random() * 6; // 2px – 8px
+      particle.style.width = `${size}px`;
+      particle.style.height = `${size}px`;
+
+      // start position
+      particle.style.left = `${Math.random() * 100}%`;
+      particle.style.top = `${60 + Math.random() * 40}%`; // start lower part of screen
+
+      // animation speed + delay
+      const floatSeconds = 6 + Math.random() * 10; // 6–16s
+      const flickerSeconds = 1.5 + Math.random() * 2.5; // 1.5–4s
+      particle.style.animationDuration = `${floatSeconds}s, ${flickerSeconds}s`;
+      particle.style.animationDelay = `${Math.random() * 4}s, ${Math.random() * 2}s`;
+
+      particlesWrap.appendChild(particle);
+    }
+  }
+
   // Prevent adding event listeners twice if player re-enters the room
   if (woodSection.dataset.woodInit === "true") return;
   woodSection.dataset.woodInit = "true";
 
   // render desc from JSON into <div id="roomDesc">
   renderRoomDesc(woodSection, dataJSON.room1wood.desc);
+  
 
   //-----------------------------------------------------------
   //----------------------CONFIG / RULES-----------------------
@@ -54,6 +83,7 @@ export function room1woodFunc() {
   // In Room Balance
   const MISTAKE_PENALTY = 4;
   const WOBBLEBALANCE = 1.5;
+
 
   //-----------------------------------------------------------
   //-------------------------DOM-------------------------------
@@ -181,12 +211,16 @@ export function room1woodFunc() {
     if (slotValues[activeSlotIndex].length >= expectedStr.length) return;
     // add number in current slot
     slotValues[activeSlotIndex] += digit;
+      //Upd UI to show all state changes
+      updtUI();
     // if slot is full - move to next slot 
     if (slotValues[activeSlotIndex].length === expectedStr.length) {
       advanceOrValidateLevel();
     }  
-    //Upd UI to show all state changes
+    //RENDER AGAIN because advanceOrValidateLevel() changes state
+    // (activeSlotIndex++ or new level / reset)
     updtUI();
+ 
   }
 
   // when slot full - move on or validate and advance
@@ -256,15 +290,36 @@ export function room1woodFunc() {
   // WORK IN PROGRESS
 
   function ifRoomCompleted(): void {
-    // reportRoomResult({ roomId: "wood", success: true, artifactId: "wood_true" })
-  // goToNextRoom();
-  balanceFill.style.width = "100%";
-  //ONLY TEST
-  alert("WOOD chamber complete!");
-  currentLevelIndex = 0;
-  mistakes = 0;
-  resetLevelInput();
-  updtUI(); 
+    // Block input while we show the final state + delay
+    isTransitioning = true;
+  
+    // 1) Render the very last digit + final UI state
+    updtUI();
+
+    if(mistakes === 0) {
+      balanceFill.style.width = "100%"
+    }
+  
+    // 2) Delay so the player can SEE the final digit (before alert blocks the browser)
+    setTimeout(() => {
+      // 3) Wait 2 animation frames to guarantee the UI is painted before alert
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          alert("WOOD chamber complete!");
+  
+          // 4) Reset after OK
+          currentLevelIndex = 0;
+          mistakes = 0;
+          resetLevelInput();
+  
+          // Allow input again
+          isTransitioning = false;
+  
+          // Re-render for fresh start
+          updtUI();
+        });
+      });
+    }, 1200);
   }
 
 // function ifRoomFailed(): void {

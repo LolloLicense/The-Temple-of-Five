@@ -1,5 +1,5 @@
 @use 'var';
-
+@use "mixins" as mix;
 
 .room3Earth {
     display: flex;
@@ -13,8 +13,8 @@
     border:  1px solid var.$lightColor;
     border-radius: var.$smallRadius;
     display: grid;
-    grid-template-columns: repeat(4, 175px);
-    grid-template-rows: repeat(4, 175px);
+    grid-template-columns: repeat(4, 150px);
+    grid-template-rows: repeat(4, 150px);
 }
 
 .room3Earth .gameDiv .slate {
@@ -24,3 +24,19 @@ color: white;
    align-items: center;
    justify-content: center;
 }
+
+.room3Earth .roomDesc {
+    @include mix.glass();
+    width: 40vw;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+/*
+.room3Earth .roomDesc .leftIcon {
+
+}
+.room3Earth .roomDesc .rightIcon {
+
+}
+*/
