@@ -1,7 +1,11 @@
 import { playBgm } from "../audio";
 import * as dataJSON from "../data.json";
+//import { startTimer, stopTimer } from "./script/utils.ts";
+import { startTimer } from "./utils.ts";
 
 export function room4metalFunc() {
+   startTimer(4); // Start timer for room 4
+
   /* Hide the welcome page (menu)
    This can be removed when we remove the menu */
   const welcomePage: HTMLElement | null =
