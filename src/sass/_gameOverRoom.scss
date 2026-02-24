@@ -1,2 +1,40 @@
 @use "var";
 @use "mixins" as mix;
+
+.gameOverRoom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  .gameOverHeading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 2.5rem;
+    color: var.$lightColor;
+
+    h2 {
+      font-size: var.$fs-h1;
+      text-transform: uppercase;
+      margin: 0;
+    }
+    p {
+      font-size: var.$fs-h4;
+      max-width: 900px;
+      text-align: center;
+      margin: 0;
+    }
+  }
+
+  .gameOverCtaBtns {
+    margin-top: 5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2.5rem;
+  }
+  button {
+    @include mix.button();
+  }
+}
