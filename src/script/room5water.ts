@@ -99,12 +99,15 @@ function injectHTML(section: HTMLElement): void {
             </div>
           </div>
 
-          <!-- Keyboard hint -->
-          <p class="w-kbd-hint" aria-hidden="true">
-            <kbd class="w-kbd">↑ ↓ ← →</kbd> navigate &nbsp;·&nbsp;
-            <kbd class="w-kbd">Enter</kbd> / <kbd class="w-kbd">Space</kbd> rotate &nbsp;·&nbsp;
-            <kbd class="w-kbd">R</kbd> reset
-          </p>
+          <!-- Time warning (shown at 60 s) -->
+          <div
+            class="w-time-warning"
+            id="w-time-warning"
+            role="alert"
+            aria-live="assertive"
+          >
+            ⚠ The temple senses hesitation. The water grows restless — impurity may follow...
+          </div>
 
           <!-- Status -->
           <p id="w-status" class="w-status" role="status" aria-live="polite"></p>
@@ -114,16 +117,6 @@ function injectHTML(section: HTMLElement): void {
             <button class="w-btn w-btn--ghost" id="w-reset-btn">↺ Reset Pipes</button>
             <button class="w-btn w-btn--gold"  id="w-check-btn">Check Flow</button>
           </div>
-        </div>
-
-        <!-- Time warning (shown at 75 s) -->
-        <div
-          class="w-time-warning"
-          id="w-time-warning"
-          role="alert"
-          aria-live="assertive"
-        >
-          ⚠ The temple senses hesitation. The water grows restless — impurity may follow...
         </div>
 
 
