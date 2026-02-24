@@ -48,10 +48,10 @@
   "room4metal": {
     "backgroundImg": "./images/metalroom.jpg",
     "bgmId": "bgm_metal",
-    "timeLimitMinutes": 5,
+    "timeLimitMinutes": 3,
     "timeLimitSeconds": 0,
     "desc": {
-      "text": "Text test",
+      "text": "Steel remember every misstake. The universe mechanisms don't forgive it and respondes to rhytm & order. Enter the sequence to unlock the element of metal.",
       "falseSign": "./images/false-metal-glass-icon.png",
       "trueSign": "./images/true-metal-glass-icon.png"
     }
@@ -75,6 +75,7 @@
     }
   },
   "gameOverRoom": {
+    "bgmId": "bgm_game_over",
     "backgroundImg": "./images/game-over.jpg"
   }
 }

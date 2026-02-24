@@ -181,12 +181,16 @@ export function room1woodFunc() {
     if (slotValues[activeSlotIndex].length >= expectedStr.length) return;
     // add number in current slot
     slotValues[activeSlotIndex] += digit;
+      //Upd UI to show all state changes
+      updtUI();
     // if slot is full - move to next slot 
     if (slotValues[activeSlotIndex].length === expectedStr.length) {
       advanceOrValidateLevel();
     }  
-    //Upd UI to show all state changes
+    //RENDER AGAIN because advanceOrValidateLevel() changes state
+    // (activeSlotIndex++ or new level / reset)
     updtUI();
+ 
   }
 
   // when slot full - move on or validate and advance
@@ -256,15 +260,36 @@ export function room1woodFunc() {
   // WORK IN PROGRESS
 
   function ifRoomCompleted(): void {
-    // reportRoomResult({ roomId: "wood", success: true, artifactId: "wood_true" })
-  // goToNextRoom();
-  balanceFill.style.width = "100%";
-  //ONLY TEST
-  alert("WOOD chamber complete!");
-  currentLevelIndex = 0;
-  mistakes = 0;
-  resetLevelInput();
-  updtUI(); 
+    // Block input while we show the final state + delay
+    isTransitioning = true;
+  
+    // 1) Render the very last digit + final UI state
+    updtUI();
+
+    if(mistakes === 0) {
+      balanceFill.style.width = "100%"
+    }
+  
+    // 2) Delay so the player can SEE the final digit (before alert blocks the browser)
+    setTimeout(() => {
+      // 3) Wait 2 animation frames to guarantee the UI is painted before alert
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          alert("WOOD chamber complete!");
+  
+          // 4) Reset after OK
+          currentLevelIndex = 0;
+          mistakes = 0;
+          resetLevelInput();
+  
+          // Allow input again
+          isTransitioning = false;
+  
+          // Re-render for fresh start
+          updtUI();
+        });
+      });
+    }, 1200);
   }
 
 // function ifRoomFailed(): void {

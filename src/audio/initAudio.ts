@@ -38,7 +38,13 @@ export function initAudio(): void {
     src: withBaseUrl("/audiofiles/sfx_click.mp3"),
     kind: "sfx",
     volume: 0.4,
-  },
+    },
+    {
+      id: "bgm_game_over",
+      src: withBaseUrl("/audiofiles/bgm_gameover.mp3"),
+      kind: "bgm",
+    },
+
     // Fill in your rooms below:
   ];
 
