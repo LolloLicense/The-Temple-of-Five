@@ -5,7 +5,7 @@ import { renderRoomDesc } from "./roomDesc";
 import { startTimer } from "./utils.ts";
 
 export function room1woodFunc() {
-  startTimer(1); // Start timer for room 3
+  startTimer(1); // Start timer for room 1
 
   /* Hide the welcome page (menu)
    This can be removed when we remove the menu */
@@ -37,40 +37,6 @@ export function room1woodFunc() {
 
   // render desc from JSON into <div id="roomDesc">
   renderRoomDesc(woodSection, dataJSON.room1wood.desc);
-
-  //----------------------------------------------------------
-  //--------------------ROOM DESCRIPTION-----------------------
-  //-----------------------------------------------------------
-
-  // // locate wrapper for roomDesc
-  // const roomDesc = woodSection.querySelector<HTMLDivElement>("#roomDesc");
-  // if (!roomDesc) throw new Error("Missing #roomDesc in wood room")
-
-  // //Desc Data from json 
-  // const descText = dataJSON.room1wood.desc.text;
-  // const falseSignUrl = dataJSON.room1wood.falseSign;
-  // const trueSignUrl = dataJSON.room1wood.trueSign;
-
-  // // clear wrapper - avois dubble if re-entering room
-  // roomDesc.replaceChildren();
-
-  // //creating elements for DESC div
-
-  // // LEFT icon
-  // const leftIcon = document.createElement("img");
-  // leftIcon.src = falseSignUrl;
-  // leftIcon.alt = "";
-  // // P DescText
-  // const p = document.createElement("p");
-  // p.className = "descText";
-  // p.textContent = descText;
-  
-  // //RIGHT icon
-  // const rightIcon = document.createElement("img");
-  // rightIcon.src = trueSignUrl;
-  // rightIcon.alt = "";
-
-  // roomDesc.append(leftIcon, p, rightIcon);
 
   //-----------------------------------------------------------
   //----------------------CONFIG / RULES-----------------------

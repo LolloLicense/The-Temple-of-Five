@@ -14,8 +14,6 @@
   "room1wood": {
     "backgroundImg": "./images/woodroom.jpg",
     "bgmId": "bgm_wood",
-    "falseSign": "./images/false-wood-glass-icon.png",
-    "trueSign": "./images/true-wood-glass-icon.png",
     "timeLimitMinutes": 5,
     "timeLimitSeconds": 0,
     "desc": {
