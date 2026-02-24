@@ -22,24 +22,18 @@ export function room4metalFunc() {
   if (bgmId) {
     void playBgm(bgmId, 650); // Spela bakgrundsmusiken för metallrummet med fade in på 650ms
   }
-
   //-------------------------------------------------------------------------------------------------------------------------------------
   //-------------------------------------------------------------- Dom setup ------------------------------------------------------------
   //-------------------------------------------------------------------------------------------------------------------------------------
-  /**
-   * Hämtar sektionen för metallrummet
-   * Om den inte finns, avbryt funktionen för att undvika fel
-  */
-
-  const metalSection: HTMLElement | null =
-    document.querySelector("#room4Metal");
-  if (!metalSection) {
+  const metalSection: HTMLElement | null = document.querySelector("#room4Metal"); // Hämtar sektionen för metallrummet
+  if (!metalSection) { // Om den inte finns, avbryt funktionen för att undvika fel
    return;
   }
- metalSection.style.backgroundImage = `url("${dataJSON.room4metal.backgroundImg}")`; // Sätter bakgrundsbilden för metallrummet från JSON-data
- metalSection.classList.remove("hidden"); // Visar rummet, tar bort .hidden klassen
 
- renderRoomDesc(metalSection, dataJSON.room4metal.desc);  // Renderar rummets beskrivning från JSON -> <div id="roomdesc">
+  metalSection.style.backgroundImage = `url("${dataJSON.room4metal.backgroundImg}")`; // Sätter bakgrundsbilden för metallrummet från JSON-data
+  metalSection.classList.remove("hidden"); // Visar rummet, tar bort .hidden klassen
+
+  renderRoomDesc(metalSection, dataJSON.room4metal.desc);  // Renderar rummets beskrivning från JSON -> <div id="roomdesc">
 
   console.log("Hello from the metal room"); // Loggar ett meddelande i konsolen för att bekräfta att funktionen körs
 }
