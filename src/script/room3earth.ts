@@ -33,7 +33,10 @@ let timerCheckInterval: number;
 
   console.log("Hello from the earth room");
 
-  
+  audioHandler ('bgm');
+  audioHandler ('click');
+  audioHandler ('click');
+  audioHandler ('click');
 
   type Cell = number | string | null;
   type Grid = Cell[][];
