@@ -73,6 +73,7 @@
     }
   },
   "gameOverRoom": {
+    "bgmId": "bgm_game_over",
     "backgroundImg": "./images/game-over.jpg"
   }
 }

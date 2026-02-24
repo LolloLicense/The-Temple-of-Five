@@ -27,6 +27,11 @@ export function initAudio(): void {
       src: withBaseUrl("/audiofiles/bgm_water.mp3"),
       kind: "bgm",
     },
+    {
+      id: "bgm_game_over",
+      src: withBaseUrl("/audiofiles/bgm_gameover.mp3"),
+      kind: "bgm",
+    },
 
     // Fill in your rooms below:
   ];

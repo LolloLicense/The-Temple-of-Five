@@ -1,4 +1,5 @@
 import * as dataJSON from "../data.json";
+import { playBgm } from "../audio";
 
 export function gameOverRoomFunc() {
   /* Hide the welcome page (menu)
@@ -7,6 +8,11 @@ export function gameOverRoomFunc() {
     document.querySelector("#welcomePage");
   if (welcomePage) {
     welcomePage.classList.add("hidden");
+  }
+  // bgm music
+  const bgmId = dataJSON.gameOverRoom.bgmId;
+  if (bgmId) {
+    void playBgm(bgmId, 650); // play the background music for the wood room, with a fade-in duration of 650ms
   }
 
   /* Sets the background for the room and shows room section */

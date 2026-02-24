@@ -56,7 +56,7 @@
     padding: 0.5rem 2rem;
     font-size: var.$fs-h6;
     @include mix.glass();
-    border: 2px solid var.$lightColor;
+    border: 1px solid var.$lightColor;
 
     .balance {
       display: flex;
