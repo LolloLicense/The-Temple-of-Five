@@ -416,7 +416,7 @@
 
           <button type="button" class="tabsTab" role="tab" id="tabHowto" aria-selected="false"
             aria-controls="panelHowto" tabindex="-1">
-            How to
+            Controls
           </button>
 
           <button type="button" class="tabsTab" role="tab" id="tabDev" aria-selected="false" aria-controls="panelDev"
@@ -452,13 +452,48 @@
 
           <p>Restore the balance — or leave with nothing.</p>
         </section>
-
         <section class="tabsPanel" role="tabpanel" id="panelFeatures" aria-labelledby="tabFeatures" hidden>
           <p>Features</p>
         </section>
 
         <section class="tabsPanel" role="tabpanel" id="panelHowto" aria-labelledby="tabHowto" hidden>
-          <p>How to</p>
+          <div class="tabsPannelScroll">
+            <h3>Controls</h3>
+
+            <h4>Room 1 — Wood</h4>
+            <p>Your text here</p>
+
+            <hr class="controls-divider" />
+
+            <h4>Room 2 — Fire</h4>
+            <p>Your text here</p>
+
+            <hr class="controls-divider" />
+
+            <h4>Room 3 — Earth</h4>
+            <p>Your text here</p>
+
+            <hr class="controls-divider" />
+
+            <h4>Room 4 — Metal</h4>
+            <p>Your text here</p>
+
+            <hr class="controls-divider" />
+
+            <h4>Room 5 — Water</h4>
+            <p>
+              <kbd>↑ ↓ ← →</kbd> Navigate between pipe segments<br />
+              <kbd>Enter</kbd> / <kbd>Space</kbd> Rotate the focused pipe<br />
+              <kbd>R</kbd> Reset all pipes to a new scrambled state<br />
+              Use the <strong>Check Flow</strong> button to test your solution, or <strong>Reset Pipes</strong> to start
+              over.
+            </p>
+
+            <hr class="controls-divider" />
+
+            <h4>Room 6 — Final Altar</h4>
+            <p>Your text here</p>
+          </div>
         </section>
 
         <section class="tabsPanel" role="tabpanel" id="panelDev" aria-labelledby="tabDev" hidden>
@@ -467,7 +502,6 @@
       </div>
     </div>
   </dialog>
-
   <script type="module" src="/src/main.ts"></script>
 </body>
 
