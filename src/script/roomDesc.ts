@@ -13,7 +13,7 @@ export interface IRoomDesc {
    */
   export function renderRoomDesc(sectionEl: HTMLElement, desc: IRoomDesc): void {
     // Find the wrapper i just this room section 
-    const roomDescEl = sectionEl.querySelector<HTMLDivElement>("#roomDesc");
+    const roomDescEl = sectionEl.querySelector<HTMLDivElement>(".roomDesc");
     if (!roomDescEl) throw new Error("Missing #roomDesc in this room section");
   
     // Clear so no duplicates

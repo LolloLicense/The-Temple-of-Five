@@ -36,5 +36,6 @@
   }
   button {
     @include mix.button();
+    font-size: var.$fs-h6;
   }
 }
