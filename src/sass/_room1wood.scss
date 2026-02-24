@@ -1,6 +1,10 @@
 @use "var";
 @use "mixins" as mix;
 
+//<!----------------------------->
+//<!--------- Wood Room --------->
+//<!----------------------------->
+
 .room1Wood {
   display: flex;
   justify-content: center;
@@ -8,6 +12,46 @@
   flex-direction: column;
   position: relative;
   color: var.$lightColor;
+
+  .woodParticles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+    .woodParticle {
+      position: absolute;
+      border-radius: 999px;
+
+      // “glow”
+      background: rgba(255, 220, 120, 0.9);
+      box-shadow: 0 0 10px rgba(255, 220, 120, 0.6);
+
+      opacity: 0.8;
+
+      animation-name: floatUp, flicker;
+      animation-timing-function: linear, ease-in-out;
+      animation-iteration-count: infinite, infinite;
+    }
+    @keyframes floatUp {
+      from {
+        transform: translateY(20px);
+      }
+      to {
+        transform: translateY(-110vh);
+      }
+    }
+
+    @keyframes flicker {
+      0%,
+      100% {
+        opacity: 0.15;
+      }
+      50% {
+        opacity: 0.9;
+      }
+    }
+  }
 
   .keypad {
     display: flex;
