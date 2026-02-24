@@ -311,22 +311,52 @@
 
       <div class="roomDesc" id="fireRoomDesc"></div>
     </section>
-    <!-- Earth Room -->
+
+    <!------------------------------------------------------------------->
+    <!--------------------------- Earth Room ---------------------------->
+    <!------------------------------------------------------------------->
     <section id="room3Earth" class="room3Earth hidden">
       <div id="gameDiv" class="gameDiv"></div>
       <div id="roomDesc" class="roomDesc"></div>
     </section>
-    <!-- Metal Room -->
-    <section id="room4Metal" class="room4Metal hidden">room 4</section>
-    <!-- Water Room -->
+
+    <!------------------------------------------------------------------->
+    <!--------------------------- Metal Room ---------------------------->
+    <!------------------------------------------------------------------->
+      <section id="room4Metal" class="room4Metal hidden">
+        <div class="metalContainer">
+          <div id="colorSignal"></div>
+          <div id="feedback"></div>
+
+          <div class="colorSlots">
+            <div class="colorSlot1"></div>
+            <div class="colorSlot2"></div>
+            <div class="colorSlot3"></div>
+            <div class="colorSlot4"></div>
+            <div class="colorSlot5"></div>
+          </div>
+        </div>
+        
+        <div class="roomDesc" id=""></div> <!--room description from json-->
+      </section>
+
+    <!------------------------------------------------------------------->
+    <!--------------------------- Water Room ---------------------------->
+    <!------------------------------------------------------------------->
     <section id="room5Water" class="room5Water hidden">
       <div class="roomDesc" id=""></div>
     </section>
-    <!-- Final Room -->
+
+    <!------------------------------------------------------------------->
+    <!--------------------------- Final Room ---------------------------->
+    <!------------------------------------------------------------------->
     <section id="finalRoom" class="finalRoom hidden">
       <div class="roomDesc" id=""></div>
     </section>
-    <!-- Game Over Room -->
+
+    <!------------------------------------------------------------------->
+    <!----------------------- Game Over Room ---------------------------->
+    <!------------------------------------------------------------------->
     <section id="gameOverRoom" class="gameOverRoom hidden">
       <div class="gameOverHeading">
         <h2>Balance is distorted</h2>
@@ -343,7 +373,9 @@
     </section>
   </main>
 
-  <!-- About dialog -->
+  <!------------------------------------------------------------------->
+  <!------------------------- About dialog ---------------------------->
+  <!------------------------------------------------------------------->
   <dialog id="aboutDialog" class="aboutDialog" aria-labelledby="dialogTitle">
     <button type="button" class="modalClose" id="closeAbout" aria-label="Close and go back to landningpage">
       <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
