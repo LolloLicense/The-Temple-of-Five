@@ -1,14 +1,14 @@
 import "./sass/style.scss";
 import * as dataJSON from "./data.json";
-import { room1woodFunc } from "./script/room1wood.ts";
-import { room2fireFunc } from "./script/room2fire.ts";
-import { room3earthFunc } from "./script/room3earth.ts";
-import { room4metalFunc } from "./script/room4metal.ts";
-import { room5waterFunc } from "./script/room5water.ts";
-import { room6finalFunc } from "./script/room6validate.ts";
-import { gameOverRoomFunc } from "./script/gameOverRoom.ts";
+import { room1woodFunc } from "./rooms/1wood/room1wood.ts";
+import { room2fireFunc } from "./rooms/2fire/room2fire.ts";
+import { room3earthFunc } from "./rooms/3earth/room3earth.ts";
+import { room4metalFunc } from "./rooms/4metal/room4metal.ts";
+import { room5waterFunc } from "./rooms/5water/room5water.ts";
+import { room6finalFunc } from "./rooms/final/room6validate.ts";
+import { gameOverRoomFunc } from "./rooms/gameover/gameOverRoom.ts";
 //import { startTimer, stopTimer } from "./script/utils.ts";
-import { startTimer } from "./script/utils.ts";
+import { startTimer } from "./script/helper/utils.ts";
 
 /* Event listeners for temporary menu
 (Remove when menu is to be removed) */
@@ -52,7 +52,7 @@ if (gameOverRoomBtn) {
 }
 
 import { initAudio, initSoundToggle } from "./audio";
-import { aboutTabs, initAboutDialog } from "./script/aboutDialog.ts";
+import { aboutTabs, initAboutDialog } from "./script/helper/aboutDialog.ts";
 
 /* Used for triggering login on splash screen
 

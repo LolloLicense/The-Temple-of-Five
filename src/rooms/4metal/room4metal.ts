@@ -1,8 +1,8 @@
-import * as dataJSON from "../data.json";
-import { playBgm } from "../audio";
-import { renderRoomDesc } from "./roomDesc";
+import * as dataJSON from "../../data.json";
+import { playBgm } from "../../audio/index.ts";
+import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
 //import { startTimer, stopTimer } from "./script/utils.ts";
-import { startTimer } from "./utils.ts";
+import { startTimer } from "../../script/helper/utils.ts";
 
 export function room4metalFunc() {
    startTimer(4); // Starta timer for room 4

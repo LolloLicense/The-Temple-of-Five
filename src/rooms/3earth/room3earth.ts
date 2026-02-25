@@ -1,8 +1,8 @@
-import * as dataJSON from "../data.json";
+import * as dataJSON from "../../data.json";
 //import { startTimer, stopTimer } from "./script/utils.ts";
-import { startTimer, TimeIsUp } from "./utils.ts";
-import { renderRoomDesc } from "./roomDesc";
-import { playBgm, playSfx } from "../audio";
+import { startTimer, TimeIsUp } from "../../script/helper/utils.ts";
+import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
+import { playBgm, playSfx } from "../../audio/index.ts";
 
 export function room3earthFunc() {
 

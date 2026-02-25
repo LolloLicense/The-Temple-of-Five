@@ -1,4 +1,4 @@
-import { withBaseUrl } from "../script/utils";
+import { withBaseUrl } from "../script/helper/utils";
 import { initAudioManager } from "./audioManager";
 import type { SoundConfig } from "./types";
 

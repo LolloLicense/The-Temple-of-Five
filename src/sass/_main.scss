@@ -104,6 +104,40 @@ header {
 }
 
 //-----------------------------------------------------------
+//----------------In-room progressbar -----------------------
+//-----------------------------------------------------------
+
+.inRoombar {
+  display: flex;
+  justify-content: space-between;
+  gap: 6rem;
+  padding: 0.5rem 2rem;
+  font-size: var.$fs-h6;
+  @include mix.glass();
+  border: 1px solid var.$lightColor;
+
+  .balance {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .balanceBar {
+    width: 180px;
+    height: 15px;
+    border-radius: 999px;
+    border: 2px solid var.$lightColor;
+    overflow: hidden;
+  }
+  .balanceFill {
+    height: 100%;
+    width: 0%;
+    background: #ff9f1c;
+    border-radius: 999px;
+    transition: width 200ms ease;
+  }
+}
+
+//-----------------------------------------------------------
 //-------------------------Room Desc-------------------------
 //-----------------------------------------------------------
 
@@ -151,10 +185,10 @@ header {
     background: transparent;
     border: none;
     color: var.$lightColor;
-    padding: 1.5rem;
+    padding: 1.5rem 1.5rem 0.5rem 2rem;
   }
   .dialogInner {
-    margin: 3rem;
+    margin: 0.5rem 2rem;
     padding: 1.5rem 3rem 4rem 3rem;
 
     @include mix.glass;
@@ -195,17 +229,17 @@ header {
       line-height: 1.8;
     }
 
-    &#panelHowto {
+    &.panelControls {
+      .controlsGrid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1.5rem;
+      }
       h4 {
-        font-size: var.$fs-body;
+        font-size: var.$fs-h6;
       }
       p {
         font-size: var.$fs-body;
-      }
-      .controls-divider {
-        border: none;
-        border-top: 1px solid rgba(var.$lightColor, 0.15);
-        margin: 1.25rem 0;
       }
     }
   }

@@ -1,6 +1,6 @@
-import * as dataJSON from "../data.json";
-import { playBgm } from "../audio";
-import { renderRoomDesc } from "./roomDesc";
+import * as dataJSON from "../../data.json";
+import { playBgm } from "../../audio";
+import { renderRoomDesc } from "../../script/helper/roomDesc";
 
 // ── TYPES ──────────────────────────────────────────────────────────────────
 
@@ -454,9 +454,9 @@ function solvePuzzle(): void {
   }
 
   // Navigate directly to room 6 (finalRoom) without showing any text or artifact panel
-  import("./room6validate").then(({ room6finalFunc }) => {
+  /*import("./room6validate").then(({ room6finalFunc }) => {
     room6finalFunc();
-  });
+  });*/
 }
 
 // ── RESET ──────────────────────────────────────────────────────────────────
