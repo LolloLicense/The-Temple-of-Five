@@ -2,7 +2,7 @@
 
 Miro: <a>https://miro.com/app/board/uXjVGD_af74=/?share_link_id=396365481063</a>
 
-![daily monday 25 feb](image2.png)
+![daily monday 25 feb](image-2.png)
 
 ---
 
