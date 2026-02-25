@@ -4,9 +4,6 @@ import { startTimer, TimeIsUp } from "./utils.ts";
 import { renderRoomDesc } from "./roomDesc";
 import { playBgm, playSfx } from "../audio";
 
-
-
-
 export function room3earthFunc() {
 
 let timerCheckInterval: number;
@@ -35,8 +32,10 @@ let timerCheckInterval: number;
 
   audioHandler ('bgm');
   audioHandler ('click');
-  audioHandler ('click');
-  audioHandler ('click');
+  audioHandler ('shortSlide');
+  audioHandler ('midSlide');
+  audioHandler ('midSlide2');
+  audioHandler ('longSlide');
 
   type Cell = number | string | null;
   type Grid = Cell[][];
@@ -88,7 +87,7 @@ function timerCheck():void {
 console.log(TimeIsUp);
 }
 
-function audioHandler (audio:string) {
+function audioHandler (audio:string):void {
 const bgmId = dataJSON.room3earth.bgmId;
 const sfxId = dataJSON.room3earth.sfxId;
 const sfx2Id = dataJSON.room3earth.sfx2Id;
@@ -97,7 +96,7 @@ const sfx4Id = dataJSON.room3earth.sfx4Id;
 const sfx5Id = dataJSON.room3earth.sfx5Id;
 
 switch (audio) {
-case 'bgm':
+  case 'bgm':
   if (bgmId) {
     void playBgm(bgmId, 650); // play the background music for the fire room, with a fade-in duration of 650ms
   }
