@@ -531,10 +531,16 @@
       <!--------------------------- Metal Room ---------------------------->
       <!------------------------------------------------------------------->
       <section id="room4Metal" class="room4Metal hidden">
+        
         <div class="metalContainer">
-          <div id="colorSignal"></div>
-          <div id="feedback"></div>
-
+        
+          <!-- Färgsignal -->
+          <div id="colorSignal" class="colorSignal"></div>
+          
+          <!-- Meddelande rätt/fel -->
+          <div id="feedback" class="feedback"></div>
+          
+          <!-- Slots för färger -->
           <div class="colorSlots">
             <div class="colorSlot1"></div>
             <div class="colorSlot2"></div>
@@ -542,10 +548,24 @@
             <div class="colorSlot4"></div>
             <div class="colorSlot5"></div>
           </div>
+          
+          <!-- Sekvens och misstagsräknare -->
+          <div class="inRoombar" aria-label="Room status">
+            <!-- Sekvens -->
+             <div class="inRoombarProgress" aria-label="Level progress"> 
+              <span>Sequence:</span>
+              <span id="levelText">1/3</span>
+            </div>
+            <!-- Misstag -->
+            <div class="inroomBarMistakes" aria-label="Mistakes">
+              <span>Mistakes:</span> 
+              <span id="mistakesText">0</span>
+            </div>
+          </div>
         </div>
 
-        <div class="roomDesc" id=""></div>
-        <!--room description from json-->
+        <!-- Innehåll från JSON-->
+        <div class="roomDesc"></div> 
       </section>
 
       <!------------------------------------------------------------------->
