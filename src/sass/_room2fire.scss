@@ -2,6 +2,125 @@
 @use "mixins" as mix;
 
 .room2Fire {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
   position: relative;
   color: var.$lightColor;
+
+  .room2FireUi {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 18px;
+    width: min(980px, 94vw);
+  }
+
+  /* Keypad rad */
+  .keypad {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  /* Buttons */
+  .fireKey {
+    @include mix.glass();
+    color: var.$lightColor;
+
+    width: 92px;
+    height: 92px;
+    padding: 10px;
+
+    border-radius: 12px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    cursor: pointer;
+  }
+
+  /* SVG - SAME SIZE */
+  .fireKey__icon {
+    width: 44px;
+    height: 44px;
+    display: block;
+  }
+
+  .fireKey__text {
+    font-size: 12px;
+    line-height: 1.1;
+    opacity: 0.9;
+    white-space: nowrap;
+  }
+
+  /* Slots (TS render) */
+  .fireSlots {
+    margin-block: 3rem;
+
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    width: 100%;
+  }
+
+  .fireSlots .slot {
+    @include mix.glass();
+
+    width: 3rem;
+    height: 4rem;
+    padding: 0.5rem;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 12px;
+  }
+
+  /* Progress bar */
+  .fireInRoombar {
+    display: flex;
+    justify-content: space-between;
+    gap: 6rem;
+
+    padding: 0.5rem 2rem;
+    font-size: var.$fs-h6;
+
+    @include mix.glass();
+    border: 1px solid var.$lightColor;
+
+    .balance {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .balanceBar {
+      width: 180px;
+      height: 15px;
+      border-radius: 999px;
+      border: 2px solid var.$lightColor;
+      overflow: hidden;
+    }
+
+    .balanceFill {
+      height: 100%;
+      width: 0%;
+      background: #ff9f1c;
+      border-radius: 999px;
+      transition: width 200ms ease;
+    }
+  }
 }
