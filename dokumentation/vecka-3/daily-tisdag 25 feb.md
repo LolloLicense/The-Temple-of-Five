@@ -42,7 +42,7 @@ Dagens scrum master: Minai Karlsson 👩‍🚀
 
 ## Alex
 
-- **Idag har jag**: Gjort klart index-strukturen och stylingen. Har suttit mycket med merge-konflikter (främst åt Alle och Lollo)
+- **Idag har jag**: Gjort klart index-strukturen och stylingen. Har suttit mycket med merge-konflikter.
 - **Dagens mål**: Börja testa vissa TypeScript-funktioner och rendera mina inputs
 - **Ett problem jag har**: Inga problem just nu
 - **Jag behöver hjälp med**: Ingen hjälp behövs
