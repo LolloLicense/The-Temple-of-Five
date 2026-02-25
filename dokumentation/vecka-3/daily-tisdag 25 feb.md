@@ -10,11 +10,11 @@ Dagens scrum master: Minai Karlsson 👩‍🚀
 
 ## Emil
 
-- **Idag har jag**:
-- **Dagens mål**:
-- **Ett problem jag har**:
-- **Jag behöver hjälp med**:
-- **Idag har jag lärt mig**:
+- **Idag har jag**: Lagt in ljud i Earth rummet.
+- **Dagens mål**: Fortsätta med rummet.
+- **Ett problem jag har**: Inga problem
+- **Jag behöver hjälp med**: Ingen hjälp behövs
+- **Idag har jag lärt mig**: Att det är dyrt med veterinär
 
 ## Minai
 
