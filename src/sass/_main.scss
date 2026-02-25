@@ -104,6 +104,40 @@ header {
 }
 
 //-----------------------------------------------------------
+//----------------In-room progressbar -----------------------
+//-----------------------------------------------------------
+
+.inRoombar {
+  display: flex;
+  justify-content: space-between;
+  gap: 6rem;
+  padding: 0.5rem 2rem;
+  font-size: var.$fs-h6;
+  @include mix.glass();
+  border: 1px solid var.$lightColor;
+
+  .balance {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .balanceBar {
+    width: 180px;
+    height: 15px;
+    border-radius: 999px;
+    border: 2px solid var.$lightColor;
+    overflow: hidden;
+  }
+  .balanceFill {
+    height: 100%;
+    width: 0%;
+    background: #ff9f1c;
+    border-radius: 999px;
+    transition: width 200ms ease;
+  }
+}
+
+//-----------------------------------------------------------
 //-------------------------Room Desc-------------------------
 //-----------------------------------------------------------
 
