@@ -648,9 +648,9 @@
               type="button"
               class="tabsTab"
               role="tab"
-              id="tabHowto"
+              id="tabControls"
               aria-selected="false"
-              aria-controls="panelHowto"
+              aria-controls="panelControls"
               tabindex="-1"
             >
               Controls
@@ -670,6 +670,7 @@
           </div>
 
           <!-- Panels -->
+          <!-- Story -->
           <section
             class="tabsPanel"
             role="tabpanel"
@@ -701,6 +702,7 @@
 
             <p>Restore the balance — or leave with nothing.</p>
           </section>
+          <!-- Features -->
           <section
             class="tabsPanel"
             role="tabpanel"
@@ -710,53 +712,62 @@
           >
             <p>Features</p>
           </section>
-
+          <!-- Controls -->
           <section
-            class="tabsPanel panelHowto"
+            class="tabsPanel panelControls"
             role="tabpanel"
-            id="panelHowto"
-            aria-labelledby="tabHowto"
+            id="panelControls"
+            aria-labelledby="Controls"
             hidden
           >
             <div class="tabsPannelScroll">
-              <h3>Controls</h3>
+              <h3>Temple Key Commands</h3>
 
-              <h4>Room 1 — Wood</h4>
-              <p>Your text here</p>
+              <div class="controlsGrid">
+                <article class="controlsCard">
+                  <h4>1: Wood Chamber</h4>
+                  <p>
+                    <kbd>← →</kbd> Navigate between number keys<br />
+                    <kbd>Enter</kbd> to use the focused number key<br />
+                    After 6 inputs, your sequence is validated automatically.
+                  </p>
+                </article>
 
-              <hr class="controls-divider" />
+                <article class="controlsCard">
+                  <h4>2: Fire Chamber</h4>
+                  <p>Your text here</p>
+                </article>
 
-              <h4>Room 2 — Fire</h4>
-              <p>Your text here</p>
+                <article class="controlsCard">
+                  <h4>3: Earth Chamber</h4>
+                  <p>Your text here</p>
+                </article>
 
-              <hr class="controls-divider" />
+                <article class="controlsCard">
+                  <h4>4: Metal Chamber</h4>
+                  <p>Your text here</p>
+                </article>
 
-              <h4>Room 3 — Earth</h4>
-              <p>Your text here</p>
+                <article class="controlsCard">
+                  <h4>5: Water Chamber</h4>
+                  <p>
+                    <kbd>↑ ↓ ← →</kbd> Navigate between pipe segments<br />
+                    <kbd>Enter</kbd> / <kbd>Space</kbd> Rotate the focused
+                    pipe<br />
+                    <kbd>R</kbd> Reset all pipes to a new scrambled state<br />
+                    Use the <strong>Check Flow</strong> button to test your
+                    solution, or <strong>Reset Pipes</strong> to start over.
+                  </p>
+                </article>
 
-              <hr class="controls-divider" />
-
-              <h4>Room 4 — Metal</h4>
-              <p>Your text here</p>
-
-              <hr class="controls-divider" />
-
-              <h4>Room 5 — Water</h4>
-              <p>
-                <kbd>↑ ↓ ← →</kbd> Navigate between pipe segments<br />
-                <kbd>Enter</kbd> / <kbd>Space</kbd> Rotate the focused pipe<br />
-                <kbd>R</kbd> Reset all pipes to a new scrambled state<br />
-                Use the <strong>Check Flow</strong> button to test your
-                solution, or <strong>Reset Pipes</strong> to start over.
-              </p>
-
-              <hr class="controls-divider" />
-
-              <h4>Room 6 — Final Altar</h4>
-              <p>Your text here</p>
+                <article class="controlsCard">
+                  <h4>6: Altar Chamber</h4>
+                  <p>Your text here</p>
+                </article>
+              </div>
             </div>
           </section>
-
+          <!-- Dev -->
           <section
             class="tabsPanel"
             role="tabpanel"

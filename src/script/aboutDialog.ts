@@ -17,31 +17,31 @@ export function aboutTabs(): void {
   // Tabs
   const tabStory = document.querySelector<HTMLButtonElement>("#tabStory");
   const tabFeatures = document.querySelector<HTMLButtonElement>("#tabFeatures");
-  const tabHowto = document.querySelector<HTMLButtonElement>("#tabHowto");
+  const tabControls = document.querySelector<HTMLButtonElement>("#tabControls");
   const tabDev = document.querySelector<HTMLButtonElement>("#tabDev");
 
   //Panels
   const panelStory = document.querySelector<HTMLElement>("#panelStory");
   const panelFeatures = document.querySelector<HTMLElement>("#panelFeatures");
-  const panelHowto = document.querySelector<HTMLElement>("#panelHowto");
+  const panelControls = document.querySelector<HTMLElement>("#panelControls");
   const panelDev = document.querySelector<HTMLElement>("#panelDev");
 
   // making sure it extist
   if (
     !tabStory ||
     !tabFeatures ||
-    !tabHowto ||
+    !tabControls ||
     !tabDev ||
     !panelStory ||
     !panelFeatures ||
-    !panelHowto ||
+    !panelControls ||
     !panelDev
   ) {
     return;
   }
 
-  const tabs = [tabStory, tabFeatures, tabHowto, tabDev];
-  const panels = [panelStory, panelFeatures, panelHowto, panelDev];
+  const tabs = [tabStory, tabFeatures, tabControls, tabDev];
+  const panels = [panelStory, panelFeatures, panelControls, panelDev];
 
   // Active tab  shows active panel
 
