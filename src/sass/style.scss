@@ -1,10 +1,10 @@
 @use "reset";
 @use "var";
-@use "room1wood";
-@use "room2fire";
-@use "room3earth";
-@use "room4metal";
-@use "room5water";
-@use "room6validate";
-@use "gameOverRoom";
+@use "../rooms/1wood/room1wood";
+@use "../rooms/2fire/room2fire";
+@use "../rooms/3earth/room3earth";
+@use "../rooms/4metal/room4metal";
+@use "../rooms/5water/room5water";
+@use "../rooms/final/room6validate";
+@use "../rooms/gameover/gameOverRoom";
 @use "main";

@@ -1,6 +1,6 @@
-import { playBgm } from "../audio";
-import * as dataJSON from "../data.json";
-import { renderRoomDesc } from "./roomDesc";
+import { playBgm } from "../../audio";
+import * as dataJSON from "../../data.json";
+import { renderRoomDesc } from "../../script/helper/roomDesc";
 
 /**
  * Hides welcome page - sets the background for the fire room - shows the fire room section - plays the background music for the fire room

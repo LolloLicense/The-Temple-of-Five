@@ -1,4 +1,4 @@
-import * as dataJSON from "../data.json";
+import * as dataJSON from "../../data.json";
 
 export function room6finalFunc() {
   /* Hide the welcome page (menu)

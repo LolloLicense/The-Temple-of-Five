@@ -1,5 +1,5 @@
-@use "var";
-@use "mixins" as mix;
+@use "../../sass/var";
+@use "../../sass/mixins" as mix;
 
 .gameOverRoom {
   display: flex;

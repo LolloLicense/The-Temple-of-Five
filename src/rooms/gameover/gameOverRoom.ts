@@ -1,5 +1,5 @@
-import * as dataJSON from "../data.json";
-import { playBgm } from "../audio";
+import * as dataJSON from "../../data.json";
+import { playBgm } from "../../audio";
 
 export function gameOverRoomFunc() {
   /* Hide the welcome page (menu)

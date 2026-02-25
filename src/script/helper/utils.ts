@@ -1,4 +1,4 @@
-import * as dataJSON from "../data.json";
+import * as dataJSON from "../../data.json";
 
 //let localStorage: Array = [];
 
