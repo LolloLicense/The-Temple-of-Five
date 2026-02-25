@@ -36,4 +36,6 @@ export function room4metalFunc() {
   renderRoomDesc(metalSection, dataJSON.room4metal.desc);  // Renderar rummets beskrivning från JSON -> <div id="roomdesc">
 
   console.log("Hello from the metal room"); // Loggar ett meddelande i konsolen för att bekräfta att funktionen körs
+
+  
 }
