@@ -6,15 +6,29 @@
     flex-direction: column;
     justify-content: center;
 }
+
+.room3Earth .gameBoard {
+margin: 0 auto;
+background-image: url('/images/earthRoom/tilesBackground.png');
+width: 674px;
+height: 674px;
+position: relative;
+bottom: 36px;
+border:  1px solid var.$lightColor;
+    border-radius: var.$smallRadius;
+}
+
+
 .room3Earth .gameDiv {
-    background-image: url('/images/earthBackground.jpg');
     margin: 0 auto;
     width: auto;
-    border:  1px solid var.$lightColor;
-    border-radius: var.$smallRadius;
+    top: 33px;
+    left: 30px;
+    gap: 14px;
+    position: relative;
     display: grid;
-    grid-template-columns: repeat(4, 150px);
-    grid-template-rows: repeat(4, 150px);
+    grid-template-columns: repeat(4, 142px);
+    grid-template-rows: repeat(4, 142px);
 }
 
 .room3Earth .gameDiv .slate {
@@ -24,6 +38,68 @@ color: white;
    align-items: center;
    justify-content: center;
 }
+
+.room3Earth .gameDiv .slate1 {
+background-image: url('/images/earthRoom/Slate1.jpg');
+}
+
+.room3Earth .gameDiv .slate2 {
+background-image: url('/images/earthRoom/Slate2.jpg');
+}
+
+.room3Earth .gameDiv .slate3 {
+background-image: url('/images/earthRoom/Slate3.jpg');
+}
+
+.room3Earth .gameDiv .slate4 {
+background-image: url('/images/earthRoom/Slate4.jpg');
+}
+
+.room3Earth .gameDiv .slate5 {
+background-image: url('/images/earthRoom/Slate5.jpg');
+}
+
+.room3Earth .gameDiv .slate6 {
+background-image: url('/images/earthRoom/Slate6.jpg');
+}
+
+.room3Earth .gameDiv .slate7 {
+background-image: url('/images/earthRoom/Slate7.jpg');
+}
+
+.room3Earth .gameDiv .slate8 {
+background-image: url('/images/earthRoom/Slate8.jpg');
+}
+
+.room3Earth .gameDiv .slate9 {
+background-image: url('/images/earthRoom/Slate9.jpg');
+}
+
+.room3Earth .gameDiv .slate10 {
+background-image: url('/images/earthRoom/Slate10.jpg');
+}
+
+.room3Earth .gameDiv .slate11 {
+background-image: url('/images/earthRoom/Slate11.jpg');
+}
+
+.room3Earth .gameDiv .slate12 {
+background-image: url('/images/earthRoom/Slate12.jpg');
+}
+
+.room3Earth .gameDiv .slate13 {
+background-image: url('/images/earthRoom/Slate13.jpg');
+}
+
+.room3Earth .gameDiv .slate14 {
+background-image: url('/images/earthRoom/Slate14.jpg');
+}
+
+.room3Earth .gameDiv .slate15 {
+background-image: url('/images/earthRoom/Slate15.jpg');
+}
+
+
 
 .room3Earth .roomDesc {
     @include mix.glass();

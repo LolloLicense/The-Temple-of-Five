@@ -6,7 +6,9 @@ import { playBgm, playSfx } from "../../audio/index.ts";
 
 export function room3earthFunc() {
 
-let timerCheckInterval: number;
+// @ts-ignore
+let timerCheckInterval: number; 
+timerCheckInterval = setInterval(timerCheck, 1000);
 
   startTimer(3); // Start timer for room 3
 
@@ -37,18 +39,22 @@ let timerCheckInterval: number;
   audioHandler ('midSlide2');
   audioHandler ('longSlide');
 
+  /*
   type Cell = number | string | null;
   type Grid = Cell[][];
 
+  
   const createGrid = (size: number = 4): Grid => {
     return Array.from({ length: size }, () => Array(size).fill("slate"));
   };
 
   const gameBoard = createGrid(4);
   console.log(gameBoard);
+  */
 
   const gameDiv: HTMLElement | null = document.querySelector("#gameDiv");
   if (gameDiv) {
+
     /*
 for (let i=0; i < gameBoard.length; i++) {
 for (let x=0; x < gameBoard[i].length; x++) {
@@ -60,31 +66,34 @@ gameDiv.innerHTML = `<div class="gameSlate"></div>`;
 } // i loop END
 gameDiv.innerHTML = gameDiv.innerHTML + `</div>`;
 */
-  } // IF gameDiv
 
   const generateVisualGrid = (containerId: string, size: number = 4): void => {
     const container = document.getElementById(containerId);
-
+    let count:number = 1
     if (!container) return;
     for (let i = 0; i < size * size; i++) {
       const cell = document.createElement("div");
       cell.classList.add("slate");
+      cell.classList.add(`slate${count}`);
       // Optional: Add coordinates or IDs
       cell.textContent = `${Math.floor(i / size)},${i % size}`;
-
       container.appendChild(cell);
+      count++
     }
   };
 
   generateVisualGrid("gameDiv");
+  } // IF gameDiv
 
-timerCheckInterval = setInterval(timerCheck, 1000);
+
 
 } // room3earthFunc END
 
 
 function timerCheck():void {
-console.log(TimeIsUp);
+  if (TimeIsUp) {
+console.log('Time has now expired!');
+  }
 }
 
 function audioHandler (audio:string):void {
