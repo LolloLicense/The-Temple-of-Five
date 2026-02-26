@@ -5,9 +5,8 @@
   "login": {
     "backgroundImg": "./images/login-page.jpg"
   },
-  "menu": {
-    "backgroundImg": "./images/landingpage.jpg",
-    "desc": { "text": "Text test" }
+  "welcome": {
+    "backgroundImg": "./images/landingpage.jpg"
   },
   "room1wood": {
     "backgroundImg": "./images/woodroom.jpg",
