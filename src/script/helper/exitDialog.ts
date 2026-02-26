@@ -5,9 +5,9 @@ export function initExitDialog(): void {
     const dialog = document.querySelector<HTMLDialogElement>("#exitDialog");
     if(!dialog) return;
     // find the stuff inside dialog
-    const textEl = dialog?.querySelector<HTMLElement>(".exitDialogText");
+    const textEl = dialog.querySelector<HTMLElement>(".exitDialogText");
     // Exit btn in gameHeader
-    const leaveBtn = dialog?.querySelector<HTMLButtonElement>('[data-action="leaveRoom"]');
+    const leaveBtn = dialog.querySelector<HTMLButtonElement>('[data-action="leaveRoom"]');
 
     // eventlistener to exitBtns in both headers
     document.addEventListener("click", (e) => {
@@ -18,7 +18,7 @@ export function initExitDialog(): void {
         if (!openBtn) return;
 
         // see what mode the button has (type ExitMode & data-set in html)
-        const mode = (openBtn.dataset.exitMode) ?? "welcome";
+        const mode = (openBtn.dataset.exitMode as ExitMode) ?? "welcome";
         // show the correct content in dialog depending on ExitMode
         if(mode === "welcome") {
             // in welcome-mode only logout option

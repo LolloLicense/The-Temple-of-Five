@@ -7,10 +7,15 @@ import { room4metalFunc } from "./rooms/4metal/room4metal.ts";
 import { room5waterFunc } from "./rooms/5water/room5water.ts";
 import { room6finalFunc } from "./rooms/final/room6validate.ts";
 import { gameOverRoomFunc } from "./rooms/gameover/gameOverRoom.ts";
+import { initAudio, initSoundToggle } from "./audio";
+import { aboutTabs, initAboutDialog } from "./script/helper/aboutDialog.ts";
 //import { startTimer, stopTimer } from "./script/utils.ts";
 import { startTimer } from "./script/helper/utils.ts";
 // LOGIN
 import { initLoginFlow } from "./script/helper/loginFlow";
+// Exit dialog
+import { initExitDialog } from "./script/helper/exitDialog";
+
 
 
 /* Event listeners for temporary menu
@@ -54,8 +59,7 @@ if (gameOverRoomBtn) {
   gameOverRoomBtn.addEventListener("click", gameOverRoomFunc);
 }
 
-import { initAudio, initSoundToggle } from "./audio";
-import { aboutTabs, initAboutDialog } from "./script/helper/aboutDialog.ts";
+
 
 
 //-----------------------------------------------------------
@@ -76,6 +80,7 @@ itemListBtn.addEventListener("click", (event) => {
 //-----------------------------------------------------------
 
 initLoginFlow();
+initExitDialog();
 aboutTabs();
 initAboutDialog();
 initSoundToggle();

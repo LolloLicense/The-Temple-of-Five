@@ -6,6 +6,24 @@ import { startTimer } from "../../script/helper/utils.ts";
 import { showGameHeader } from "../../script/helper/gameHeader.ts";
 
 
+//-----------------------------------------------------------
+//----------------------CONFIG / RULES-----------------------
+//-----------------------------------------------------------
+
+// Levels = 3 levels/ stages. Each level contains 6 fibenacci numbers
+// [] = Outer array Levels [] = Inner array
+const LEVELS: number[][] = [
+  [0, 1, 1, 2, 3, 5],
+  [8, 13, 21, 34, 55, 89],
+  [144, 233, 377, 610, 987, 1597],
+];
+// numer of "inputboxes"
+const SLOTS_PER_STAGE = 6;
+// In Room Balance
+const MISTAKE_PENALTY = 4;
+const WOBBLEBALANCE = 1.5;
+
+
 export function room1woodFunc() {
   showGameHeader();
   startTimer(1); // Start timer for room 1
@@ -22,78 +40,62 @@ export function room1woodFunc() {
   //----------------------SETUP ROOM DOM----------------------
   //----------------------------------------------------------
 
-  /* Play the background music for woodroom */
-  const bgmId = dataJSON.room1wood.bgmId;
-  if (bgmId) {
-    void playBgm(bgmId, 650); // play the background music for the wood room, with a fade-in duration of 650ms
-  }
+
 
   const woodSection: HTMLElement | null = document.querySelector("#room1Wood");
-  if (!woodSection) {
-    return;
-  }
+    if (!woodSection) {
+      return;
+    }
+
   woodSection.style.backgroundImage = `url("${dataJSON.room1wood.backgroundImg}")`;
   woodSection.classList.remove("hidden");
 
+  /* Play the background music for woodroom */
+  const bgmId = dataJSON.room1wood.bgmId;
+    if (bgmId) {
+      void playBgm(bgmId, 650); // play the background music for the wood room, with a fade-in duration of 650ms
+    }
   // fireflie animation 
   const particlesWrap = woodSection.querySelector<HTMLDivElement>(".woodParticles");
-  if (particlesWrap && particlesWrap.childElementCount === 0) {
-    // pervents adding amout after re-entering room
-    for (let i = 0; i < 12; i++) {
-      const particle = document.createElement("div");
-      particle.className = "woodParticle";
+    if (particlesWrap && particlesWrap.childElementCount === 0) {
+      // pervents adding amout after re-entering room
+      for (let i = 0; i < 12; i++) {
+        const particle = document.createElement("div");
+        particle.className = "woodParticle";
 
-      // size of fireflies
-      const size = 2 + Math.random() * 6; // 2px – 8px
-      particle.style.width = `${size}px`;
-      particle.style.height = `${size}px`;
+        // size of fireflies
+        const size = 2 + Math.random() * 6; // 2px – 8px
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
 
-      // start position
-      particle.style.left = `${Math.random() * 100}%`;
-      particle.style.top = `${60 + Math.random() * 40}%`; // start lower part of screen
+        // start position
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${60 + Math.random() * 40}%`; // start lower part of screen
 
-      // animation speed + delay
-      const floatSeconds = 6 + Math.random() * 10; // 6–16s
-      const flickerSeconds = 1.5 + Math.random() * 2.5; // 1.5–4s
-      particle.style.animationDuration = `${floatSeconds}s, ${flickerSeconds}s`;
-      particle.style.animationDelay = `${Math.random() * 4}s, ${Math.random() * 2}s`;
+        // animation speed + delay
+        const floatSeconds = 6 + Math.random() * 10; // 6–16s
+        const flickerSeconds = 1.5 + Math.random() * 2.5; // 1.5–4s
+        particle.style.animationDuration = `${floatSeconds}s, ${flickerSeconds}s`;
+        particle.style.animationDelay = `${Math.random() * 4}s, ${Math.random() * 2}s`;
 
-      particlesWrap.appendChild(particle);
+        particlesWrap.appendChild(particle);
+      }
     }
-  }
 
-  // Prevent adding event listeners twice if player re-enters the room
-  if (woodSection.dataset.woodInit === "true") return;
-  woodSection.dataset.woodInit = "true";
+    // Prevent adding event listeners twice if player re-enters the room
+    if (woodSection.dataset.woodInit === "true") return;
+    woodSection.dataset.woodInit = "true";
 
   // render desc from JSON into <div id="roomDesc">
   renderRoomDesc(woodSection, dataJSON.room1wood.desc);
   
 
   //-----------------------------------------------------------
-  //----------------------CONFIG / RULES-----------------------
-  //-----------------------------------------------------------
-
-  // Levels = 3 levels/ stages. Each level contains 6 fibenacci numbers
-  // [] = Outer array Levels [] = Inner array
-  const LEVELS: number[][] = [
-    [0, 1, 1, 2, 3, 5],
-    [8, 13, 21, 34, 55, 89],
-    [144, 233, 377, 610, 987, 1597],
-  ];
-  // numer of "inputboxes"
-  const SLOTS_PER_STAGE = 6;
-  // In Room Balance
-  const MISTAKE_PENALTY = 4;
-  const WOBBLEBALANCE = 1.5;
-
-
-  //-----------------------------------------------------------
   //-------------------------DOM-------------------------------
   //-----------------------------------------------------------
 
   const slots = Array.from(
-  woodSection.querySelectorAll<HTMLDivElement>(".slot"),
+    woodSection.querySelectorAll<HTMLDivElement>(".slot"),
   );
   const keypad = woodSection.querySelector<HTMLDivElement>(".keypad");
 
@@ -171,7 +173,7 @@ export function room1woodFunc() {
     // calc for % in balancebar (Math.max = never returns value < 0 (Math.min always returns < 100))
     const balancePercent = Math.max(0, Math.min(100, progressBase - penalty + balanceWobble)
   );
-  balanceFill.style.width = `${balancePercent}%`;
+    balanceFill.style.width = `${balancePercent}%`;
   }
 
   function updtUI(): void {

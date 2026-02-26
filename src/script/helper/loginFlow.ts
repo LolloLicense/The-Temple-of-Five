@@ -27,9 +27,9 @@ export function initLoginFlow(): void {
     // --- RESET START STATE 
     const pages = [splashSection, loginSection, welcomeSection];
     pages.forEach((p) => {
-    p.classList.add("hidden");
-    p.classList.remove("isVisible");
-    });
+        p.classList.add("hidden");
+        p.classList.remove("isVisible");
+        });
     // show splash directly
     splashSection.classList.remove("hidden");
 
