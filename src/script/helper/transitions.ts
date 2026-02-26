@@ -10,7 +10,7 @@
 //-----------------------------------------------------------
 let currentPage: HTMLElement | null = null;
 
-export function setCurrentPage(page: HTMLElement): void {
+function setCurrentPage(page: HTMLElement): void {
   currentPage = page;
 }
 
@@ -57,12 +57,10 @@ export function transitSections(
   ): void {
     // Show next page
     to.classList.remove("hidden");
-  
+    setCurrentPage(to);
     // start fade-in on nex page
     requestAnimationFrame(() => {
-      to.classList.add(visibleClass);
-  
-      setCurrentPage(to);
+      to.classList.add(visibleClass); 
       //start fade-out on current page
       requestAnimationFrame(() => {
         from.classList.remove(visibleClass);

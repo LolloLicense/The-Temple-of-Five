@@ -1,8 +1,8 @@
 import * as dataJSON from "../../data.json";
+import { getUserName, saveUserName, isLoggedIn, setLoggedIn, logoutUser } from "./storage";
+import { transitSections, showSection, revealSplashHeading, getCurrentPage } from "./transitions";
+import { hideGameHeader } from "./gameHeader";
 
-import { getUserName, saveUserName, isLoggedIn, setLoggedIn } from "./storage";
-
-import { transitSections, showSection, revealSplashHeading } from "./transitions";
 
 export function initLoginFlow(): void {
 
@@ -16,6 +16,64 @@ export function initLoginFlow(): void {
 
     if(!splashSection || !loginSection || !welcomeSection) return;
 
+    // When user logges in : show welcome: Unsername
+    const welcomeNameEl = welcomeSection.querySelector<HTMLElement>(".userNameValue");
+
+    function renderWelcomeName(): void {
+    const name = getUserName();
+        if (welcomeNameEl) {
+            welcomeNameEl.textContent = name ? name : "";
+        }
+    }
+
+
+    //-----------------------------------------------------------
+    //------------------ LOGOUT STUFF ---------------------------
+    //-----------------------------------------------------------
+    
+    document.addEventListener("exit:logout", () => {
+        // Login state is false now
+        logoutUser();
+
+        // return to spalshpage after logout and clear inputs i exitdialog
+        const input = document.querySelector<HTMLInputElement>("#userName");
+            if (input) input.value = "";
+
+        hideGameHeader();
+        // change page
+        let fromPage = getCurrentPage() ?? welcomeSection;
+            // fade to splashpage after logging out and then the normal flow
+            if (fromPage !== splashSection) {
+            transitSections(fromPage, splashSection, 1200);
+            } else {
+            showSection(splashSection);
+            }
+            
+        revealSplashHeading(600);
+         window.setTimeout(() => {
+            transitSections(splashSection, loginSection, 2000);
+        }, 4000);
+    });
+
+    //-----------------------------------------------------------
+    //------------------ LEAVE ROOM STUFF -----------------------
+    //-----------------------------------------------------------
+
+    document.addEventListener("exit:leaveRoom", () => {
+        // Hide the in-game header when leaving a room
+        hideGameHeader();
+
+        // Find what’s currently visible
+        let fromPage = getCurrentPage();
+        if (!fromPage || fromPage === welcomeSection) {
+          fromPage = document.querySelector<HTMLElement>("main > section:not(.hidden)") ?? welcomeSection;
+        } if (fromPage === welcomeSection) { // Avoid fading welcome -> welcome
+          showSection(welcomeSection);
+          return;
+        }
+        //Always land on welcomepage
+        transitSections(fromPage, welcomeSection, 1200);
+      });
     //-----------------------------------------------------------
     //--------------- background img from json ------------------
     //-----------------------------------------------------------
@@ -40,6 +98,7 @@ export function initLoginFlow(): void {
     const savedUser = getUserName();
     // if user has logged in befor and not logged out 
     if (isLoggedIn() && savedUser) {
+        renderWelcomeName();
         showSection(welcomeSection);
         return;
     }
@@ -62,6 +121,7 @@ export function initLoginFlow(): void {
     //-----------------------------------------------------------
     //------------------ LOGIN SUBMIT ---------------------------
     //-----------------------------------------------------------
+
     const form = document.querySelector<HTMLFormElement>("#loginForm");
     const input = document.querySelector<HTMLInputElement>("#userName")
 
@@ -75,6 +135,8 @@ export function initLoginFlow(): void {
 
             saveUserName(name);
             setLoggedIn(true);
+            // updt to welcome: name
+            renderWelcomeName();
 
             // When logged in -- show welcomepage
             transitSections(loginSection, welcomeSection, 1200);

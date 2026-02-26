@@ -19,6 +19,7 @@ export function initExitDialog(): void {
 
         // see what mode the button has (type ExitMode & data-set in html)
         const mode = (openBtn.dataset.exitMode as ExitMode) ?? "welcome";
+        console.log("openExitDialog clicked. mode =", mode, "openBtn =", openBtn);
         // show the correct content in dialog depending on ExitMode
         if(mode === "welcome") {
             // in welcome-mode only logout option
@@ -45,14 +46,13 @@ export function initExitDialog(): void {
         }
         if (action === "logout") {
             dialog.close();
-
             document.dispatchEvent(new CustomEvent("exit:logout"));
             return;
         }
 
         if ( action === "leaveRoom") {
             dialog.close();
-
+            console.log("leave room")
             document.dispatchEvent(new CustomEvent("exit:leaveRoom"));
             return;
         }
