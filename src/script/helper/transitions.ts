@@ -76,7 +76,7 @@ export function transitSections(
   }
 
 //-----------------------------------------------------------
-//-------------- Splash heading fade in---------------
+//-------------- Splash heading fade in----------------------
 //-----------------------------------------------------------
 
 export function revealSplashHeading(delayMs = 200): void {
