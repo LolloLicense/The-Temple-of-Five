@@ -1,6 +1,10 @@
 import * as dataJSON from "../../data.json";
 import { playBgm } from "../../audio";
 import { renderRoomDesc } from "../../script/helper/roomDesc";
+import {
+  startTimer as startSharedTimer,
+  stopTimer  as stopSharedTimer,
+} from "../../script/helper/utils";
 
 // ── TYPES ──────────────────────────────────────────────────────────────────
 
@@ -366,11 +370,13 @@ function focusCellEl(r: number, c: number): void {
 }
 
 // ── TIMER ──────────────────────────────────────────────────────────────────
+// The header countdown display is handled by the shared timer in utils.ts.
+// This internal timer only tracks secondsElapsed for score and the 60 s warning.
 
 function startTimer(): void {
   timerInterval = setInterval(() => {
     secondsElapsed++;
-    updateTimerDisplay();
+    checkWarning();
   }, 1000);
 }
 
@@ -381,17 +387,8 @@ function stopTimer(): void {
   }
 }
 
-function updateTimerDisplay(): void {
-  const m  = Math.floor(secondsElapsed / 60).toString().padStart(2, "0");
-  const s  = (secondsElapsed % 60).toString().padStart(2, "0");
-
-  // Update the shared header room timer from index.html
-  const minSpan = document.getElementById("roomMinutesSpan");
-  const secSpan = document.getElementById("roomSecondsSpan");
-  if (minSpan) minSpan.textContent = m;
-  if (secSpan) secSpan.textContent = s;
-
-  if (secondsElapsed === 60) { // 1 minute
+function checkWarning(): void {
+  if (secondsElapsed === 60) {
     document.getElementById("w-time-warning")?.classList.add("visible");
     announce("Warning: the temple grows impatient. Solve quickly or the artifact may be impure.");
   }
@@ -427,6 +424,7 @@ function solvePuzzle(): void {
   if (solved) return;
   solved = true;
   stopTimer();
+  stopSharedTimer(5);
 
   const score             = calcScore();
   const isCorrectArtifact = secondsElapsed <= ARTIFACT_THRESHOLD;
@@ -535,7 +533,8 @@ function startChamber(): void {
 
   initGrid();
   renderGrid();
-  startTimer();
+  startTimer();        // internal: tracks secondsElapsed for score + warning
+  startSharedTimer(5); // shared: drives the header countdown display
 
 
   setTimeout(() => {
@@ -591,6 +590,7 @@ export function room5waterFunc(): void {
   secondsElapsed = 0;
   focusedCell    = [0, 0];
   stopTimer();
+  stopSharedTimer(5);
   
   spawnBubbles(section);
 

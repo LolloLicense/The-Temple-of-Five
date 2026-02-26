@@ -7,7 +7,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding-top: 8vh;
+  padding-top: clamp(2vh, 5vh, 8vh); // scales fluidly across all desktop screen sizes
   min-height: 100vh;
   color: var.$lightColor;
   font-family: var.$txFont;
@@ -16,16 +16,16 @@
   .w-chamber {
     width: 100%;
     max-width: 750px;
-    padding: 100px 1.5rem 4rem; // 100px top = clear the fixed header
+    padding: clamp(60px, 8vh, 100px) 1.5rem clamp(2rem, 4vh, 4rem); // top clears fixed header, scales with viewport height
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1.5rem;
+    gap: clamp(0.75rem, 1.5vh, 1.5rem); // gap between panels scales with screen height
   }
 
   // ── HEADER ────────────────────────────────────────────────────────────
   .w-header {
-      // Kept for structural parity with other rooms (fixed navbar area)
+    // Kept for structural parity with other rooms (fixed navbar area)
     width: 100%;
   }
 
@@ -67,7 +67,7 @@
   .w-panel {
     @include mix.glass();
     width: 100%;
-    padding: 1.75rem 2rem;
+    padding: clamp(1rem, 2vh, 1.75rem) 2rem; // vertical padding scales with screen height
     color: var.$lightColor;
 
     h2 {
@@ -96,14 +96,14 @@
 
   // ── INTRO / PUZZLE VISIBILITY ──────────────────────────────────────────
   .w-intro {
-    display: none; // Intro removed — kept for legacy compatibility
+    display: none; // intro removed — kept for legacy compatibility
   }
 
   .w-puzzle {
     display: none;
     display: flex;
     flex-direction: column;
-    row-gap: 1.2rem; // mellanrum mellan panelerna
+    row-gap: 1.2rem; // spacing between panels
 
     &.active {
       display: flex;
@@ -114,7 +114,7 @@
     font-style: italic;
     color: rgba(var.$lightColor, 0.75);
     text-align: center;
-    margin-bottom: 0.5rem; // Less space below the instruction
+    margin-bottom: 0.5rem;
     font-size: var.$fs-body;
     line-height: 1.7;
   }
@@ -125,8 +125,8 @@
     flex-direction: column;
     align-items: center;
     gap: 1rem;
-    margin-bottom: 1.5rem;
-    margin-top: 1.2rem; // Move the grid down so the instruction sits closer to the top
+    margin-bottom: clamp(0.75rem, 1.5vh, 1.5rem);
+    margin-top: clamp(0.5rem, 1.2vh, 1.2rem); // pushes grid down so instruction sits closer to top
   }
 
   .pipe-grid {
@@ -234,7 +234,7 @@
     gap: 1rem;
     justify-content: center;
     flex-wrap: wrap;
-    margin-top: 1rem;
+    margin-top: clamp(0.5rem, 1vh, 1rem);
   }
 
   .w-btn {
@@ -264,7 +264,7 @@
     min-height: 1.4rem;
     font-style: italic;
     color: rgba(var.$lightColor, 0.75);
-    margin-top: 0.6rem;
+    margin-top: clamp(0.3rem, 0.6vh, 0.6rem);
     font-size: var.$fs-body;
     line-height: 1.5;
     transition: color 0.3s;
@@ -278,7 +278,7 @@
     display: none;
     width: 100%;
     text-align: center;
-    margin-top: 0.6rem;
+    margin-top: clamp(0.3rem, 0.6vh, 0.6rem);
     margin-bottom: 0.25rem;
     padding: 0.4rem 0.75rem;
     background: rgba(var.$redColor, 0.15);
@@ -302,7 +302,7 @@
     display: none;
     width: 100%;
     text-align: center;
-    padding: 0.9rem 1rem;
+    padding: clamp(0.6rem, 0.9vh, 0.9rem) 1rem;
     @include mix.glass();
     border: 2px solid #c9a84c;
     animation: w-artifactReveal 0.5s ease-out;
@@ -328,7 +328,7 @@
   }
 
   .w-artifact-glyph {
-    font-size: 2.2rem; // mindre storlek
+    font-size: 2.2rem;
     display: block;
     animation: w-artifactFloat 3s ease-in-out infinite;
     filter: drop-shadow(0 0 12px #c9a84c);
@@ -341,7 +341,7 @@
   }
 
   .w-artifact-name {
-    font-size: 1.1rem; // mindre namn
+    font-size: 1.1rem;
     color: var.$lightColor;
     text-transform: uppercase;
     letter-spacing: 0.14em;
@@ -372,7 +372,7 @@
     gap: 1rem;
     justify-content: center;
     flex-wrap: wrap;
-    margin-top: 1.1rem;
+    margin-top: clamp(0.6rem, 1.1vh, 1.1rem);
   }
 
   // ── BUBBLES (decorative, spawned by JS) ───────────────────────────────
