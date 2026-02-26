@@ -1,6 +1,6 @@
 import * as dataJSON from "../../data.json";
 
-import { getUserName, saveUserName, isLoggedIn, setLoggedIn, logoutUser } from "./storage";
+import { getUserName, saveUserName, isLoggedIn, setLoggedIn } from "./storage";
 
 import { transitSections, showSection, revealSplashHeading } from "./transitions";
 
@@ -25,7 +25,7 @@ export function initLoginFlow(): void {
     welcomeSection.style.backgroundImage = `url("${dataJSON.welcome.backgroundImg}")`
 
     // --- RESET START STATE 
-    const pages = [loginSection, welcomeSection];
+    const pages = [splashSection, loginSection, welcomeSection];
     pages.forEach((p) => {
     p.classList.add("hidden");
     p.classList.remove("isVisible");

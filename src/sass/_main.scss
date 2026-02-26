@@ -301,6 +301,9 @@ kbd {
   overflow: hidden;
 }
 
+.welcomePage {
+  z-index: 10;
+}
 /* Temporary menu styling */
 .welcomePage .mainMenu {
   position: relative;
@@ -362,6 +365,7 @@ kbd {
 //---------------------- LOGINPAGE --------------------------
 //-----------------------------------------------------------
 .loginPage {
+  z-index: 20;
   display: grid;
   place-items: center;
   .loginPlate {
