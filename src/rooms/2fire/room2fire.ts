@@ -162,6 +162,9 @@ export function room2fireFunc(): void {
     document.querySelector("#welcomePage");
   if (welcomePage) {
     welcomePage.classList.add("hidden");
+
+    const header = document.querySelector<HTMLElement>("#gameHeader");
+    header?.classList.remove("hidden");
   }
 
   startTimer(2); // Start the timer for the fire room
