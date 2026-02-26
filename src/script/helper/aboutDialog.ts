@@ -1,11 +1,17 @@
 export function initAboutDialog(): void {
-  const openBtn = document.querySelector<HTMLButtonElement>("#aboutBtn");
   const dialog = document.querySelector<HTMLDialogElement>("#aboutDialog");
   const closeBtn = document.querySelector<HTMLButtonElement>("#closeAbout");
 
-  if (!openBtn || !dialog || !closeBtn) return;
+  const openBtns = document.querySelectorAll<HTMLButtonElement>(
+    '[data-action="openAbout"]',
+  );
 
-  openBtn.addEventListener("click", () => dialog.showModal());
+  if (!dialog || !closeBtn || openBtns.length === 0) return;
+
+  openBtns.forEach((btn) => {
+    btn.addEventListener("click", () => dialog.showModal());
+  });
+
   closeBtn.addEventListener("click", () => dialog.close());
 
   dialog.addEventListener("click", (e) => {

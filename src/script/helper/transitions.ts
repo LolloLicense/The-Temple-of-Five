@@ -6,6 +6,19 @@
  */
 
 //-----------------------------------------------------------
+//------------------- Current page UI -----------------------
+//-----------------------------------------------------------
+let currentPage: HTMLElement | null = null;
+
+export function setCurrentPage(page: HTMLElement): void {
+  currentPage = page;
+}
+
+export function getCurrentPage(): HTMLElement | null {
+  return currentPage;
+}
+
+//-----------------------------------------------------------
 //--------------- Showing section with fade in --------------
 //-----------------------------------------------------------
 
@@ -16,6 +29,8 @@ export function showSection(section: HTMLElement, visibleClass = "isVisible"): v
     requestAnimationFrame(() => {
         section.classList.add(visibleClass);
     })
+    // keeping track of current active page
+    setCurrentPage(section);
 }
 
 //-----------------------------------------------------------
@@ -47,6 +62,7 @@ export function transitSections(
     requestAnimationFrame(() => {
       to.classList.add(visibleClass);
   
+      setCurrentPage(to);
       //start fade-out on current page
       requestAnimationFrame(() => {
         from.classList.remove(visibleClass);

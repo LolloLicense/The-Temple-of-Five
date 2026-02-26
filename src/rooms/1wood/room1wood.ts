@@ -3,8 +3,11 @@ import { playBgm } from "../../audio/index.ts";
 import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
 //import { startTimer, stopTimer } from "./script/utils.ts";
 import { startTimer } from "../../script/helper/utils.ts";
+import { showGameHeader } from "../../script/helper/gameHeader.ts";
+
 
 export function room1woodFunc() {
+  showGameHeader();
   startTimer(1); // Start timer for room 1
 
   /* Hide the welcome page (menu)

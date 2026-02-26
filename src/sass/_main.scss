@@ -11,7 +11,7 @@ main {
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 body {
@@ -19,7 +19,35 @@ body {
   background-color: black;
 }
 
-header {
+//-----------------------------------------------------------
+//-------------------------HEADERS---------------------------
+//-----------------------------------------------------------
+
+.welcomeHeader {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  padding: 1.5rem 3rem;
+  .welcomeCta {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    p {
+      color: var.$lightColor;
+      font-size: var.$fs-h5;
+      margin: 0;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+    button {
+      background-color: transparent;
+      border: none;
+      padding: 1rem;
+    }
+  }
+}
+.gameHeader {
   // Background style
   @include mix.glass();
   border: 2px solid var.$lightColor;
@@ -302,12 +330,12 @@ kbd {
 }
 
 .welcomePage {
-  z-index: 10;
+  z-index: 20;
 }
 /* Temporary menu styling */
 .welcomePage .mainMenu {
   position: relative;
-  top: 80%;
+  top: 70%;
   gap: 25px;
   margin: 0 auto;
   display: flex;
@@ -365,7 +393,7 @@ kbd {
 //---------------------- LOGINPAGE --------------------------
 //-----------------------------------------------------------
 .loginPage {
-  z-index: 20;
+  z-index: 10;
   display: grid;
   place-items: center;
   .loginPlate {
