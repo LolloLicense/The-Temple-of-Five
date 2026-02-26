@@ -1,0 +1,51 @@
+# Daily Standup: veckodag 2026-02-19
+
+Miro: <a>https://miro.com/app/board/uXjVGD_af74=/?share_link_id=396365481063</a>
+
+![daily monday 19 feb](image4.png)
+
+---
+
+Dagens scrum master:
+
+## Emil
+- **Idag har jag**: 
+- **Dagens mål**:  
+- **Ett problem jag har**: 
+- **Jag behöver hjälp med**: 
+- **Idag har jag lärt mig**: 
+
+## Minai
+- **Idag har jag**: 
+- **Dagens mål**: 
+- **Ett problem jag har**: 
+- **Jag behöver hjälp med**: 
+- **Idag har jag lärt mig**: 
+  
+## Louise
+- **Idag har jag**: 
+- **Dagens mål**: 
+- **Ett problem jag har**: 
+- **Jag behöver hjälp med**: 
+- **Idag har jag lärt mig**:
+
+## Alexandra
+- **Idag har jag**: 
+- **Dagens mål**: 
+- **Ett problem jag har**: 
+- **Jag behöver hjälp med**: 
+- **Idag har jag lärt mig**: 
+
+## Alex
+- **Idag har jag**:  
+- **Dagens mål**: 
+- **Ett problem jag har**: 
+- **Jag behöver hjälp med**: 
+- **Idag har jag lärt mig**: 
+
+---
+
+### Övrigt: 
+
+Frånvarande: 
+
