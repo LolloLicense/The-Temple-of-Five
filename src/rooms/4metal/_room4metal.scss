@@ -20,47 +20,13 @@
         
         //Färgsignalen som börjar med rött 
         .colorSignal { 
+            @include mix.glass();
             width: 70px;
             height: 70px;
-            background: #690505; //Ändra senare
+            
             transform: rotate(45deg);
             border: 1px solid var.$lightColor;
             border-radius: var.$smallRadius; 
-        }
-    }
-
-    // Meddelande rätt/fel jobba vidare på 
-    .feedback {
-        height: 1.8rem;
-        font-size: 1.2rem;  
-    }
-
-    //Spelaren väljer färgen i dessa slots
-    .colorSlots {        
-        @include mix.glass();
-        border: 2px solid var.$lightColor;
-        border-radius: var.$smallRadius;
-        padding: 1.5rem 2rem;
-        display: flex;
-        gap: 3rem;
-    }
-
-    .colorSlot1, .colorSlot2, .colorSlot3, .colorSlot4, .colorSlot5 {  
-        @include mix.glass();  
-        border: 1px solid var.$lightColor;
-        border-radius: var.$smallRadius;
-        width: 60px;
-        height: 60px;
-        cursor: pointer;
-        transition: box-shadow 0.3s, background 0.3s, transform 0.1s;
-        transform: rotate(45deg);
-
-        //Tydlig highlight på vald slot
-        &.is-active { 
-            outline: 4px solid #ffffff; 
-            outline-offset: 4px; 
-            transform: scale(1.1); 
-            box-shadow: 0 0 20px rgba(255,255,255,0.8); 
         }
 
         //Färger som är valbara i slotsen INTE FÄRDIGA ÄNNU, BARA FÖR TESTNING
@@ -87,6 +53,41 @@
         .steel {
             background: #708090;
             box-shadow: 0 0 10px #70809088;
+        }
+    }
+
+    // Meddelande rätt/fel jobba vidare på 
+    .feedback {
+        height: 1.8rem;
+        font-size: 1.2rem;  
+    }
+
+    //Spelaren väljer färgen i dessa slots
+    .colorSlots {        
+        @include mix.glass();
+        border: 2px solid var.$lightColor;
+        border-radius: var.$smallRadius;
+        padding: 1.5rem 2rem;
+        display: flex;
+        gap: 3rem;
+    }
+
+    .colorSlot1, .colorSlot2, .colorSlot3, .colorSlot4, .colorSlot5, .colorSlot6 {  
+        @include mix.glass();  
+        border: 1px solid var.$lightColor;
+        border-radius: var.$smallRadius;
+        width: 60px;
+        height: 60px;
+        cursor: pointer;
+        transition: box-shadow 0.3s, background 0.3s, transform 0.1s;
+        transform: rotate(45deg);
+
+        //Tydlig highlight på vald slot
+        &.is-active { 
+            outline: 4px solid #ffffff; 
+            outline-offset: 4px; 
+            transform: scale(1.1); 
+            box-shadow: 0 0 20px rgba(255,255,255,0.8); 
         }
     } 
 }
