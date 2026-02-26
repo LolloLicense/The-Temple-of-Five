@@ -1,18 +1,40 @@
 import { playBgm } from "../../audio";
 import * as dataJSON from "../../data.json";
 import { renderRoomDesc } from "../../script/helper/roomDesc";
+import { startTimer } from "../../script/helper/utils.ts";
 
 /**
  * FIRE ROOM (2)
  * 
- * Sequense puzzle and wordplay with 4 levels
- * The player choose elements trough a sequence of 4 keys, each key represents an element (Air, Timber, Flame, Ember, Stone, Water)
+ * Intro-text from JSON (shown 8 sec after entering the room)
+ * After into, show level instruction (stay until you're finished with the level, then show the next one) + fokus on the puzzle section
+ * 
+ * Sequense puzzle and wordplay with 4 levels - Keyboard + mouse klick
+ * The player choose elements trough a sequence of 3-5 keys, each key represents an element (Air, Timber, Flame, Ember, Stone, Water)
  * Fill the slots in the right order
  * When the last slot is filled - check if the sequence is correct.
  * Correct: Sucess glow (animation) + move on to the next level
  * Wrong: Shake + reset + mistakes counter
+ * 
+ * LEVELS:
+ * 
+ * Level 1: 4 empty slots (START THE FIRE)
+ * Level 2: 3 slots, 1 pre-filled with Flame (OVERHEAT)
+ * Level 3: 4 slots, 1 pre-filled with Stone (FADING FIRE)
+ * Level 4: 5 slots, 1 pre-filled with Flame (FINDING BALANCE)
+ * 
  */
 
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------- CONSTANS -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+const INTRO_MS = 8000; // Time in milliseconds before the intro text is shown (8 seconds)
+const FIRE_DESC_ID = "fireRoomDesc"; // The ID of the element where the fire room description will be rendered
+const FOCUS_CLASS = "is-focus"; // The class name used to indicate that the puzzle section is in focus
+
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------- TYPES AND LEVELS ---------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 /**
@@ -22,17 +44,17 @@ import { renderRoomDesc } from "../../script/helper/roomDesc";
 
 type FireKey = "A" | "T" | "F" | "E" | "S" | "W";
 
+interface FireLevel {
+  sequence: FireKey[]; // The correct sequence of keys for the level
+  prefilled?: FireKey;  // If the level contain a pre-filled slot
+}
+
 // Typeguard, only accepts the correct keyboard keys
 function isFireKey(k: string): k is FireKey {
   return k === "A" || k === "T" || k === "F" || k === "E" || k === "S" || k === "W";
 }
 
 // Config, level combo for keys
-
-interface FireLevel {
-  sequence: FireKey[]; // The correct sequence of keys for the level
-  prefilled?: FireKey;  // If the level contain a pre-filled slot
-}
 
 const LEVELS: FireLevel[] = [
   {
@@ -52,6 +74,83 @@ const LEVELS: FireLevel[] = [
   },
 ];
 
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------ LEVEL TEXTS INSTRUCTIONS ------------------------------------------------------------------ */
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+const FIRE_LEVEL_TEXT: string[] = [
+  `Awaken the Fire
+
+The temple is cold.
+The flame has not yet been born.
+Fire is born of substance.
+It must be awakened.
+It must be contained.
+And only then —
+given breath.`,
+
+  `The Wild Flame
+
+You have stirred the fire —
+but without discipline.
+It rages beyond its bounds.
+Do not feed it.
+Do not let it breathe again.
+Cool it —
+and bind it.`,
+
+  `The Fading Light
+
+Bound too tightly,
+fire cannot live.
+Give it substance.
+Let it breathe.
+Awaken it —
+but do not drown it again.`,
+
+  `The Discipline of Balance
+
+Fire that rages will destroy.
+Fire that dies is useless.
+
+A balanced flame is fed,
+given breath,
+restrained —
+and allowed to rest.
+Do not awaken it twice.
+Do not cool it.`,
+];
+
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------ DOM AND STATE ----------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+/**
+ * DOM references and state variables for the fire room, which will be used to manage the game logic and user interactions within the room.
+ * resetRoom() can be called to reset all state and DOM elements to their initial state when the player re-enters the room or restarts a level.
+ */
+
+let fireSection: HTMLElement | null = null;
+let fireSlots: HTMLElement | null = null;
+let descEl: HTMLElement | null = null;
+
+let keyButtons: HTMLButtonElement[] = [];
+
+let levelValueEl: HTMLElement | null = null;
+let mistakesEl: HTMLElement | null = null;
+let balanceBar: HTMLElement | null = null;
+let balanceFill: HTMLElement | null = null;
+
+/* STATE */
+let currentLevelIndex = 0;
+let attempt: FireKey[] = [];
+let mistakes = 0;
+let locked = false;
+
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------- ENTRY POINT ------------------------------------------------------------------------ */
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+
 /**
  * Hides welcome page - sets the background for the fire room - shows the fire room section - plays the background music for the fire room
  */
@@ -65,23 +164,332 @@ export function room2fireFunc(): void {
     welcomePage.classList.add("hidden");
   }
 
+  startTimer(2); // Start the timer for the fire room
+
   /* Sets the background for the room and shows room section */
-  const fireSection: HTMLElement | null = document.querySelector("#room2Fire");
+  fireSection = document.querySelector("#room2Fire");
   if (!fireSection) return;
+
   fireSection.style.backgroundImage = `url("${dataJSON.room2fire.backgroundImg}")`;
   fireSection.classList.remove("hidden");
-  renderRoomDesc(fireSection, dataJSON.room2fire.desc);
 
-  /* Play the background music for the fire room */
-  const bgmId = dataJSON.room2fire.bgmId;
+  renderRoomDesc(fireSection, dataJSON.room2fire.desc); // Render description from helper function, with text and icons from JSON
+
+  const bgmId = dataJSON.room2fire.bgmId; // Play the background music for the fire room
   if (bgmId) {
     void playBgm(bgmId, 650); // play the background music for the fire room, with a fade-in duration of 650ms
   }
+
+  const alreadyInit = fireSection.dataset.fireInit === "true";
+  fireSection.dataset.fireInit = "true";
+
+  casheDomOrThrow(); // Cashe DOM only once or throw error if missing
+
+  if (!alreadyInit) {
+    bindListenersOnce(); // Bind event listeners only once
+  }
+
+  // resetta ALLTID när du går in
+  resetRoom();
 
   console.log("Hello from the fire room");
   console.log("Calling playBgm with:", bgmId);
 }
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ------------------------------------------------------------- NEW SECTION ------------------------------------------------------------------------ */
+/* -------------------------------------------------------------- DOM SETUP ------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+function casheDomOrThrow(): void {
+  if (!fireSection) throw new Error("Fire room: fireSection missing");
+
+  fireSlots = fireSection.querySelector<HTMLElement>("#fireSlots");
+  keyButtons = Array.from(fireSection.querySelectorAll<HTMLButtonElement>(".fireKey"));
+
+  levelValueEl = fireSection.querySelector<HTMLElement>("#fireLevelValue");
+  mistakesEl = fireSection.querySelector<HTMLElement>("#fireMistakes");
+
+  balanceBar = fireSection.querySelector<HTMLElement>(".balanceBar");
+  balanceFill = fireSection.querySelector<HTMLElement>("#fireBalanceFill");
+
+  descEl =  // Try to find the description element using multiple selectors for flexibility, and assign it to descEl. If none of the selectors match, descEl will be null.
+    fireSection.querySelector<HTMLElement>(`#${FIRE_DESC_ID}`) ??
+    fireSection.querySelector<HTMLElement>(".roomDesc") ??
+    fireSection.querySelector<HTMLElement>("#roomDesc") ??
+    null;
+
+  if (  // Safeguard to ensure all necessary DOM elements are present, otherwise throw an error with a descriptive message about what is missing
+    !fireSlots ||
+    keyButtons.length === 0 ||
+    !levelValueEl ||
+    !mistakesEl ||
+    !balanceBar ||
+    !balanceFill ||
+    !descEl
+  ) {
+    throw new Error(  // If any DOM elements are missing, throw error with a message about what is missing
+      "Fire room DOM mismatch. Need: #fireSlots, .fireKey, #fireLevelValue, #fireMistakes, .balanceBar, #fireBalanceFill, #fireRoomDesc (or .roomDesc).",
+    );
+  }
+}
+
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------- LISTENERS ------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+/**
+ * Bind click event to the element buttons, only once to avoid double listeners.
+ * Only FireKeys
+ * Send to handlePick, game logic
+ */
+
+function bindListenersOnce(): void {
+  for (const btn of keyButtons) { // loop trough all key buttons from keypad
+    btn.addEventListener("click", () => {
+      const pick = btn.dataset.firePick; // get the value from HTML data-fire-pick
+      if (!pick) return;
+
+      const k = pick.toUpperCase(); // Convert the pick to uppercase to ensure it matches the FireKey
+      if (!isFireKey(k)) return;  // Only process keys that are valid FireKeys
+
+      handlePick(k);  // Send the picked key to the game logic handler
+    });
+  }
+
+  window.addEventListener("keydown", (e) => {
+    if (locked) return; // If the puzzle is locked, ignore keyboard input (for example while showing intro)
+
+    const k = e.key.toUpperCase();
+    if (!isFireKey(k)) return;
+
+    e.preventDefault(); // Prevent default behavior for the key press to avoid unintended side effects (like scrolling)
+
+    handlePick(k);
+  });
+}
+
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------- ROOM RESET ------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+
+function resetRoom(): void {  // reset state
+  currentLevelIndex = 0;
+  attempt = [];
+  mistakes = 0;
+
+
+  renderDesc(dataJSON.room2fire.desc.text); // Show intro from JSON / desc
+
+  locked = true;  // Locked input
+
+  createSlots();  // Prepare UI level 1, but input still locked
+  updateHUD();
+
+  fireSlots?.classList.remove(FOCUS_CLASS); // Fokus off until intro is done
+
+  window.setTimeout(() => { // After intro - Show level 1 instruction - release locked input and focus input
+    renderDesc(FIRE_LEVEL_TEXT[0] ?? "");
+    locked = false;
+
+
+    fireSlots?.classList.add(FOCUS_CLASS);
+
+    setActiveSlotClass();
+    updateHUD();
+  }, INTRO_MS);
+}
+
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------ DESCRIPTION ------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+function renderDesc(text: string): void {
+  if (!descEl) return;
+
+  descEl.replaceChildren(); // Clear description and write new text for levels
+
+  const p = document.createElement("p");
+  p.className = "descText";
+
+  p.textContent = text;
+
+  descEl.appendChild(p);
+}
+
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* --------------------------------------------------------- UI, HUD AND SLOTS ---------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+/**
+ * updateHUD() - Responsible for updating HUD, that'll be level text, misstakes, progress-bar
+ * createSlots() - Build the slot row in DOM for the actual level 
+ * setActiveSlotClass() - For better UX, marks the slot that has tp be filled in
+ * fillSlot () - Resposible for putting the right element in a certain slot
+ */
+
+function updateHUD(): void {
+  if (!levelValueEl || !mistakesEl || !balanceBar || !balanceFill) return;  // Fallback
+
+  const level = LEVELS[currentLevelIndex];  // get the levels array for the current level
+
+  levelValueEl.textContent = `${currentLevelIndex + 1} / ${LEVELS.length}` // Showing level 1 - 4, +1 because currentLevelIndex starts at 0.
+
+  mistakesEl.textContent = String(mistakes);  // Show mistakes as text. (string)
+
+  const totalSlots = level.sequence.length; // totalSlots = How many slots for the current level
+  const playerSlots = level.prefilled ? Math.max(0, totalSlots - 1) : totalSlots; // playerSlots = How many slots that has to be filled (example, prefilled = -1 that has to be filled)
+
+  const playerFilled = level.prefilled ? Math.max(0, attempt.length - 1) : attempt.length;  // playerFilled = How many slots that has been filled in
+
+  const progress = playerSlots === 0 ? 0 : playerFilled / playerSlots;  // If playerSlots = 0, put 0 to avoid division with 0
+  const percent = Math.round(progress * 100); // percent = progress in %, rounded to integer
+
+  balanceFill.style.width = `${percent}%`;  // Visual width styling on the progress bar
+  balanceBar.setAttribute("aria-valuenow", String(percent));  // For screen readers in percentages (bar)
+}
+
+function createSlots(): void {
+  if (!fireSlots) return; // Fallback
+
+  fireSlots.replaceChildren();  // Clears the old slots (we start from 0 in each level)
+
+  const level = LEVELS[currentLevelIndex];  // level =Get actual level
+  const total = level.sequence.length;  // total = how many slots to create (sequence)
+
+  for (let i = 0; i < total; i++) { // Loop, creates (total) div.slots with data index 
+    const slot = document.createElement("div");
+    slot.className = "slot";
+    slot.dataset.index = String(i);
+    slot.setAttribute("aria-hidden", "true"); // Decorative slots - that's why aria-hidden. However, return to check a11y later **IMPORTANT**
+    fireSlots.appendChild(slot);
+  }
+
+  attempt = []; // Reset attempt with new slots (new level, new inputs)
+
+  if (level.prefilled) {
+    attempt.push(level.prefilled);
+    fillSlot(0, level.prefilled); // if prefilled slot - make attempt.length 1 - activeIndex can point at the next slot automaticaly 
+
+    const first = fireSlots.querySelector<HTMLElement>('.slot[data-index="0"]');  // Mark slot 0 as locked (prefilled and not active) - CSS Styling.
+    first?.classList.add("is-locked");
+  }
+
+  setActiveSlotClass(); // Next slot active instead
+}
+
+function setActiveSlotClass(): void {
+  if (!fireSlots) return;
+
+  const slots = Array.from(fireSlots.querySelectorAll<HTMLElement>(".slot")); // slots = Fetch all the slots in the array so we can loop
+  const activeIndex = attempt.length; // activeIndex = example, attempt.length = 0, -> we have to fill in slot 0. If prefilled jump to next slot.
+
+  slots.forEach((s, i) => s.classList.toggle("is-active", i === activeIndex));  // Only the correct slot get index "is-active" - CSS styling
+}
+
+function fillSlot(slotIndex: number, key: FireKey): void {  // Fill the specified slot with FireKey (element)
+  if (!fireSlots) return;
+
+  const slotEl = fireSlots.querySelector<HTMLElement>(`.slot[data-index="${slotIndex}"]`);  // slotEl = find the correct slot bvased on the data index
+  if (!slotEl) return;
+
+
+  const btn = keyButtons.find((b) => b.dataset.firePick?.toUpperCase() === key);  // Find correct FireKey in "keypad", uppercase to match (example "A" "T"..)
+  const svg = btn?.querySelector("svg");  // Get the SVG from buttons
+
+  slotEl.replaceChildren();
+  if (svg) slotEl.appendChild(svg.cloneNode(true)); // cloneNode(true) = Clone the whole SVG tree - (This is because a DOM element cant be in two places at the same time) Cloning so we can show in button and slot.
+  else slotEl.textContent = key;  // Fallback
+
+  retriggerClass(slotEl, "just-filled");  // Re-trigger class so we can create an animation
+}
+
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------ GAME LOGIC -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+function handlePick(key: FireKey): void {
+  if (locked) return;
+
+  const level = LEVELS[currentLevelIndex];
+  const total = level.sequence.length;
+
+  if (attempt.length >= total) return;  // If already filled, ignore input
+
+  attempt.push(key);  // add input
+
+  fillSlot(attempt.length - 1, key) // Fill the correct slot in UI
+
+  setActiveSlotClass();
+  updateHUD();
+
+  if (attempt.length === total) {
+    void validateSequence();
+  }
+}
+
+async function validateSequence(): Promise<void> {
+  const expected = LEVELS[currentLevelIndex].sequence;
+
+  const ok =
+    attempt.length === expected.length &&
+    attempt.every((k, i) => k === expected[i]);
+
+  if (ok) {
+    locked = true;
+
+    if (fireSlots) retriggerClass(fireSlots, "is-success");
+    await wait(500);
+
+    locked = false;
+    nextLevel();
+    return;
+  }
+
+  locked = true;
+  mistakes += 1;
+  updateHUD();
+
+  if (fireSlots) retriggerClass(fireSlots, "is-wrong");
+  await wait(350);
+
+  resetAttempt();
+  locked = false;
+}
+
+function resetAttempt(): void {
+  createSlots();
+  updateHUD();
+}
+
+function nextLevel(): void {
+  if (currentLevelIndex >= LEVELS.length - 1) {
+    fireSection?.classList.add("room-complete");
+    return;
+  }
+
+  currentLevelIndex += 1;
+
+  renderDesc(FIRE_LEVEL_TEXT[currentLevelIndex] ?? "");
+
+  createSlots();
+  updateHUD();
+
+  if (fireSlots) retriggerClass(fireSlots, FOCUS_CLASS);
+}
+
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------- HELPERS ---------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+function wait(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function retriggerClass(el: HTMLElement, className: string): void {
+  el.classList.remove(className);
+
+  void el.offsetWidth;
+
+  el.classList.add(className);
+}

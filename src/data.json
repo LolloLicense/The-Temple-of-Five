@@ -25,7 +25,7 @@
     "timeLimitMinutes": 5,
     "timeLimitSeconds": 0,
     "desc": {
-      "text": "Text test",
+      "text": "You stand before the flame. It is not your enemy. It is not your servant. Fire answers only to discipline. Learn its laws - or be consumed by your own ignorance,",
       "falseSign": "./images/false-fire-glass-icon.png",
       "trueSign": "./images/true-fire-glass-icon.png"
     }
@@ -38,7 +38,6 @@
     "sfx3Id": "sfx_midSlide",
     "sfx4Id": "sfx_midSlide2",
     "sfx5Id": "sfx_longSlide",
-
     "timeLimitMinutes": 0,
     "timeLimitSeconds": 5,
     "desc": {
