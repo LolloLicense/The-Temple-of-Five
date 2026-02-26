@@ -9,6 +9,10 @@ import { room6finalFunc } from "./rooms/final/room6validate.ts";
 import { gameOverRoomFunc } from "./rooms/gameover/gameOverRoom.ts";
 //import { startTimer, stopTimer } from "./script/utils.ts";
 import { startTimer } from "./script/helper/utils.ts";
+//Import from storage 
+import { saveUserName, getUserName } from "./script/helper/storage.ts";
+// import for transitions
+import { showSection, transitSections, revealSplashHeading } from "./script/helper/transitions";
 
 /* Event listeners for temporary menu
 (Remove when menu is to be removed) */
@@ -72,6 +76,36 @@ if (welcomeSection) {
 }
 
 //-----------------------------------------------------------
+//-------------------------Splashflow------------------------
+//-----------------------------------------------------------
+
+const splashSection: HTMLElement | null =
+  document.querySelector("#splashPage");
+
+const loginSection: HTMLElement | null = 
+  document.querySelector("#loginPage")
+
+  // backgroundimg from json 
+  if (splashSection) {
+    splashSection.style.backgroundImage = `url("${dataJSON.splash.backgroundImg}")`;
+  }
+  if (loginSection) {
+    loginSection.style.backgroundImage = `url("${dataJSON.login.backgroundImg}")`;
+  }
+
+  if (splashSection) showSection(splashSection);
+  revealSplashHeading(200);
+
+
+  // after ... ms - hide splash and show login
+  window.setTimeout(() => {
+    if (splashSection && loginSection) {
+      transitSections(splashSection, loginSection, 2000);
+    }
+  }, 7000);
+
+
+//-----------------------------------------------------------
 //-------------------------Backpack toggle-------------------
 //-----------------------------------------------------------
 
@@ -93,3 +127,8 @@ initAboutDialog();
 initSoundToggle();
 initAudio();
 startTimer(0);
+
+
+// Local storage
+saveUserName("Lollo");
+console.log("Username:", getUserName());

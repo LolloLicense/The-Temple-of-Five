@@ -172,10 +172,56 @@
 
     <!-- Main content -->
     <main>
+      <!-- Splash -->
+      <section id="splashPage" class="splashPage page">
+        <div class="splashHeading">
+          <h1>Tempel of the five</h1>
+          <div class="symbols">
+            <span>木</span>
+            <span>火</span>
+            <span>火</span>
+            <span>金</span>
+            <span>水</span>
+          </div>
+        </div>
+      </section>
       <!-- Login page -->
-      <section class="loginPage"></section>
+      <section id="loginPage" class="loginPage page hidden">
+        <div class="loginPlate">
+          <div class="loginCta">
+            <figure>
+              <svg
+                width="53"
+                height="48"
+                viewBox="0 0 53 48"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M34.45 5.33333V24H18.55V5.33333H34.45ZM34.45 0H18.55C17.1444 0 15.7963 0.561903 14.8023 1.5621C13.8084 2.56229 13.25 3.91885 13.25 5.33333V29.3333H39.75V5.33333C39.75 3.91885 39.1916 2.56229 38.1977 1.5621C37.2037 0.561903 35.8556 0 34.45 0ZM53 18.6667H45.05V26.6667H53V18.6667ZM7.95 18.6667H0V26.6667H7.95V18.6667ZM47.7 32H5.3V48H10.6V37.3333H42.4V48H47.7V32Z"
+                  fill="#ECF5F1"
+                />
+              </svg>
+            </figure>
+            <h2 class="loginTilte">
+              Sign in to begin — the time has come to restore the balance.
+            </h2>
+          </div>
+          <form action="" class="loginForm">
+            <label for="UserName">Username</label>
+            <input
+              id="userName"
+              name="userName"
+              placeholder="Type a cool name..."
+              autocomplete="nickname"
+              type="text"
+            />
+            <button class="loginBtn" type="submit">Lets play</button>
+          </form>
+        </div>
+      </section>
       <!-- Welcome page with menu -->
-      <section id="welcomePage" class="welcomePage">
+      <section id="welcomePage" class="page welcomePage">
         <div class="mainMenu">
           <button id="woodRoomBtn" class="woodRoomBtn">Wood</button>
           <button id="fireRoomBtn" class="fireRoomBtn">Fire</button>
@@ -183,6 +229,7 @@
           <button id="metalRoomBtn" class="metalRoomBtn">Metal</button>
           <button id="waterRoomBtn" class="waterRoomBtn">Water</button>
           <button id="finalRoomBtn" class="finalRoomBtn">Final</button>
+          <button id="openLoginBtn" type="button">Login</button>
           <button id="gameOverRoomBtn" class="gameOverRoomBtn">
             Game Over
           </button>
@@ -522,7 +569,7 @@
 
       <section id="room3Earth" class="room3Earth hidden">
         <div id="gameBoard" class="gameBoard">
-        <div id="gameDiv" class="gameDiv"></div>
+          <div id="gameDiv" class="gameDiv"></div>
         </div>
         <div id="roomDesc" class="roomDesc"></div>
       </section>
@@ -531,15 +578,13 @@
       <!--------------------------- Metal Room ---------------------------->
       <!------------------------------------------------------------------->
       <section id="room4Metal" class="room4Metal hidden">
-        
         <div class="metalContainer">
-        
           <!-- Färgsignal -->
           <div id="colorSignal" class="colorSignal"></div>
-          
+
           <!-- Meddelande rätt/fel -->
           <div id="feedback" class="feedback"></div>
-          
+
           <!-- Slots för färger -->
           <div class="colorSlots">
             <div class="colorSlot1"></div>
@@ -549,24 +594,24 @@
             <div class="colorSlot5"></div>
             <div class="colorSlot6"></div>
           </div>
-          
+
           <!-- Sekvens och misstagsräknare -->
           <div class="inRoombar" aria-label="Room status">
             <!-- Sekvens -->
-             <div class="inRoombarProgress" aria-label="Level progress"> 
+            <div class="inRoombarProgress" aria-label="Level progress">
               <span>Level:</span>
               <span id="levelText">1/3</span>
             </div>
             <!-- Misstag -->
             <div class="inroomBarMistakes" aria-label="Mistakes">
-              <span>Mistakes:</span> 
+              <span>Mistakes:</span>
               <span id="mistakesText">0</span>
             </div>
           </div>
         </div>
 
         <!-- Innehåll från JSON-->
-        <div class="roomDesc"></div> 
+        <div class="roomDesc"></div>
       </section>
 
       <!------------------------------------------------------------------->

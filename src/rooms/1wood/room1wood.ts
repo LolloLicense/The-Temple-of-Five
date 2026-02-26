@@ -288,7 +288,6 @@ export function room1woodFunc() {
   }
 
   // WORK IN PROGRESS
-
   function ifRoomCompleted(): void {
     // Block input while we show the final state + delay
     isTransitioning = true;
@@ -322,12 +321,6 @@ export function room1woodFunc() {
     }, 1200);
   }
 
-// function ifRoomFailed(): void {
-//   // SEND TO NEXT ROOM WITH WRONG ELEMENT
-//   clearAll();
-//     // reportRoomResult({ roomId: "wood", success: false, artifactId: "wood_fake" })
-//   // goToNextRoom();
-// }
 
   //-----------------------------------------------------------
   //-------------------------KEY EVENTS------------------------
