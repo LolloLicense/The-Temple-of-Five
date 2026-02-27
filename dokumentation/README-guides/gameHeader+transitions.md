@@ -26,7 +26,7 @@ ____
 
 ⸻
 
-## 3  När du lämnar rummet (klar/fail/Exit → “Leave room”
+## 3  När du lämnar rummet (klar/fail/Exit → “Leave room”)
 •	Stäng headern:
 •	hideGameHeader();
 •	Byt tillbaka till welcomePage via fade:
