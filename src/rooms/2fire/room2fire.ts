@@ -8,6 +8,7 @@ import { showGameHeader, hideGameHeader } from "../../script/helper/gameHeader";
 /**
  * FIRE ROOM (2)
  * 
+ * testing testing
  * Intro-text from JSON (shown 8 sec after entering the room)
  * After into, show level instruction (stay until you're finished with the level, then show the next one) + fokus on the puzzle section
  * 
