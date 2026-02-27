@@ -5,14 +5,14 @@
  */
 
 export function showGameHeader(): void {
-    const gameHeader = document.querySelector<HTMLElement>("#gameHeader");
-    if (!gameHeader) return;
-    gameHeader.classList.remove("hidden");
+  const gameHeader = document.querySelector<HTMLElement>("#gameHeader");
+  if (!gameHeader) return;
+  gameHeader.classList.remove("hidden");
 }
 
 export function hideGameHeader(): void {
-    const gameHeader = document.querySelector<HTMLElement>("#gameHeader");
-    if(!gameHeader) return;
+  const gameHeader = document.querySelector<HTMLElement>("#gameHeader");
+  if (!gameHeader) return;
 
-    gameHeader.classList.add("hidden");
+  gameHeader.classList.add("hidden");
 }
