@@ -339,51 +339,60 @@ export function room1woodFunc() {
   //-------------------------KEY EVENTS------------------------
   //-----------------------------------------------------------
 
-  // listen to keydown (not document)
-  // 1: Arrowkeys controls focus when player tabed down to keypad
-  // 2: no risk of use for arrowkeys outside keypad
-  keypad.addEventListener("keydown", (e) => {
+  function handleKeypadClick(e: MouseEvent): void {
+    // any click inside keypad container
+    const target = e.target as HTMLElement | null;
+    if (!target) return;
+    // closest to find a button with .key
+    const btn = target.closest<HTMLButtonElement>("button.key");
+    if (!btn) return;
+    // move focus to the targeted btn
+    btn.focus();
+    // find the number assigned by data-key= i HTML
+    const digit = btn.dataset.key;
+    // find the assumed data-action assigned to btn data-action= i HTML
+    const action = btn.dataset.action;
+    // if the btn has a digit - include it to the game-logic
+    if (digit) pushDigit(digit);
+    // if the btn is the backspace button - run game backspace logic
+    if (action === "back") backspace();
+  }
+
+  function handleKeyDownEvent(e: KeyboardEvent): void {
+    // keypad btns i HTML gets action when focused on
     const active = document.activeElement as HTMLButtonElement | null;
     if (!active || !active.classList.contains("key")) return;
-
+    // what button is active atm
     const currentKeyIndex = keyBtns.indexOf(active);
     if (currentKeyIndex === -1) return;
 
-    let nextKeyIndex = currentKeyIndex;
-
-    // Right arrow key goes one step forward (+1) But never past last index
-    if (e.key === "ArrowRight")
-      nextKeyIndex = Math.min(currentKeyIndex + 1, keyBtns.length - 1);
-    // Left arrow key goes one step back (-1) but not futher than 0 index
-    if (e.key === "ArrowLeft") nextKeyIndex = Math.max(currentKeyIndex - 1, 0);
-
-    // enter to submit digit on keypad
+    // enterkey to submit digit on keypad as a click
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       active.click();
       return;
     }
-    if (nextKeyIndex !== currentKeyIndex) {
-      e.preventDefault();
-      keyBtns[currentKeyIndex].tabIndex = -1;
-      keyBtns[nextKeyIndex].tabIndex = 0;
-      keyBtns[nextKeyIndex].focus();
-    }
-  });
+    // Only arrows keys moves focus
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
 
-  keypad.addEventListener("click", (e) => {
-    const target = e.target as HTMLElement;
-    const btn = target.closest<HTMLButtonElement>("button.key");
-    if (!btn) return;
+    e.preventDefault();
+    // Calc for next focus position clamp-style
+    const nextKeyIndex =
+      e.key === "ArrowRight"
+        ? // Right arrow key goes one step forward (+1) But never past last index
+          Math.min(currentKeyIndex + 1, keyBtns.length - 1)
+        : // Left arrow key goes one step back (-1) but not futher than 0 index
+          Math.max(currentKeyIndex - 1, 0);
+    // if focus in on last and press arrow right - do nothing and vice versa
+    if (nextKeyIndex === currentKeyIndex) return;
+    // only one key is tabbable
+    keyBtns[currentKeyIndex].tabIndex = -1;
+    keyBtns[nextKeyIndex].tabIndex = 0;
+    keyBtns[nextKeyIndex].focus();
+  }
 
-    btn.focus();
-
-    const digit = btn.dataset.key;
-    const action = btn.dataset.action;
-
-    if (digit) pushDigit(digit);
-    if (action === "back") backspace();
-  });
+  keypad.addEventListener("click", handleKeypadClick);
+  keypad.addEventListener("keydown", handleKeyDownEvent);
 
   function initKeypadFocus(): void {
     // give one button at a time tabIndex 0. all others -0(not able to be tabbed to)
