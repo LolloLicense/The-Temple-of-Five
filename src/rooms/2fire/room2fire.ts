@@ -1,8 +1,8 @@
 import { playBgm } from "../../audio";
 import * as dataJSON from "../../data.json";
 import { renderRoomDesc } from "../../script/helper/roomDesc";
-import { startTimer } from "../../script/helper/utils.ts";
-import { transitSections, getCurrentPage } from "../../script/helper/transitions";
+import { startTimer, stopTimer } from "../../script/helper/utils.ts";
+import { transitSections, getCurrentPage, showSection } from "../../script/helper/transitions";
 import { showGameHeader, hideGameHeader } from "../../script/helper/gameHeader";
 
 /**
@@ -33,6 +33,8 @@ import { showGameHeader, hideGameHeader } from "../../script/helper/gameHeader";
 
 const INTRO_MS = 8000; // Time in milliseconds before the intro text is shown (8 seconds)
 const FOCUS_CLASS = "is-focus"; // The class name used to indicate that the puzzle section is in focus
+const SUCCESS_DELAY_MS = 500;
+const WRONG_DELAY_MS = 350;
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ---------------------------------------------------------- TYPES AND LEVELS ---------------------------------------------------------------------- */
@@ -147,6 +149,8 @@ let attempt: FireKey[] = [];
 let mistakes = 0;
 let locked = false;
 
+let listenersBound = false;
+
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------- ENTRY POINT ------------------------------------------------------------------------ */
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -161,17 +165,21 @@ export function room2fireFunc(): void {
 
   showGameHeader(); // Show header when entering fire room
 
+  fireSection.style.backgroundImage = `url("${dataJSON.room2fire.backgroundImg}")`; // Set background image from JSON
+
   // If transiting from Wood room or other sections
-  const from = getCurrentPage();
-  if (from) {
-    transitSections(from, fireSection, 600);
+  const fromPage =
+    getCurrentPage() ??
+    document.querySelector<HTMLElement>("main > section.page.isVisible");
+
+  // Change page with fade animation
+  if (fromPage && fromPage !== fireSection) {
+    transitSections(fromPage, fireSection, 1200);
   } else {
-    fireSection.classList.remove("hidden"); // Fallback
+    showSection(fireSection); // fallback first load - show room directly with showSection
   }
 
   startTimer(2); // Start the timer for the fire room
-
-  fireSection.style.backgroundImage = `url("${dataJSON.room2fire.backgroundImg}")`;
 
   const bgmId = dataJSON.room2fire.bgmId; // Play the background music for the fire room
   if (bgmId) {
@@ -180,8 +188,13 @@ export function room2fireFunc(): void {
 
   renderRoomDesc(fireSection, dataJSON.room2fire.desc); // Render description from helper function, with text and icons from JSON
 
-  cacheDom(); // Cashe DOM only once or throw error if missing
+  cacheDomOrThrow(); // Cashe DOM only once or throw error if missing
   bindListenersOnce(); // Bind event listeners only once
+
+  if (!listenersBound) {
+    bindListenersOnce();
+    listenersBound = true;
+  }
 
   // always a reset when entering
   resetRoom();
@@ -194,23 +207,32 @@ export function room2fireFunc(): void {
 /* -------------------------------------------------------------- DOM SETUP ------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 
-function cacheDom(): void {
-  if (!fireSection) return;
+function cacheDomOrThrow(): void {
+  if (!fireSection) throw new Error("Fire room: #room2Fire missing");
 
   fireSlots = fireSection.querySelector("#fireSlots");
   keyButtons = Array.from(
-    fireSection.querySelectorAll<HTMLButtonElement>(".fireKey")
+    fireSection.querySelectorAll<HTMLButtonElement>(".fireKey"),
   );
 
   levelValueEl = fireSection.querySelector("#fireLevelValue");
   mistakesEl = fireSection.querySelector("#fireMistakes");
+  balanceBar = fireSection.querySelector(".balanceBar");
   balanceFill = fireSection.querySelector("#fireBalanceFill");
 
-  if (!fireSlots || !levelValueEl || !mistakesEl || !balanceFill) {
-    throw new Error("Fire room DOM mismatch");
+  if (
+    !fireSlots ||
+    keyButtons.length === 0 ||
+    !levelValueEl ||
+    !mistakesEl ||
+    !balanceBar ||
+    !balanceFill
+  ) {
+    throw new Error(
+      "Fire room DOM mismatch. Need: #fireSlots, .fireKey, #fireLevelValue, #fireMistakes, .balanceBar, #fireBalanceFill",
+    );
   }
 }
-
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* -------------------------------------------------------------- LISTENERS ------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -224,6 +246,8 @@ function cacheDom(): void {
 function bindListenersOnce(): void {
   for (const btn of keyButtons) { // loop trough all key buttons from keypad
     btn.addEventListener("click", () => {
+      if (locked) return;
+
       const pick = btn.dataset.firePick; // get the value from HTML data-fire-pick
       if (!pick) return;
 
@@ -255,6 +279,9 @@ function resetRoom(): void {  // reset state
   currentLevelIndex = 0;
   attempt = [];
   mistakes = 0;
+
+  updateDescText(dataJSON.room2fire.desc.text);
+
   locked = true;  // Locked input
 
   createSlots();  // Prepare UI level 1, but input still locked
@@ -263,8 +290,7 @@ function resetRoom(): void {  // reset state
   fireSlots?.classList.remove(FOCUS_CLASS); // Fokus off until intro is done
 
   window.setTimeout(() => { // After intro - Show level 1 instruction - release locked input and focus input
-
-    updateDescText(FIRE_LEVEL_TEXT[0]);
+    updateDescText(FIRE_LEVEL_TEXT[0] ?? "");
 
     locked = false;
     fireSlots?.classList.add(FOCUS_CLASS);
@@ -412,7 +438,7 @@ async function validateSequence(): Promise<void> {
     locked = true;
 
     if (fireSlots) retriggerClass(fireSlots, "is-success");
-    await wait(500);
+    await wait(SUCCESS_DELAY_MS);
 
     locked = false;
     nextLevel();
@@ -424,7 +450,7 @@ async function validateSequence(): Promise<void> {
   updateHUD();
 
   if (fireSlots) retriggerClass(fireSlots, "is-wrong");
-  await wait(350);
+  await wait(WRONG_DELAY_MS);
 
   resetAttempt();
   locked = false;
@@ -449,6 +475,24 @@ function nextLevel(): void {
   updateHUD();
 
   if (fireSlots) retriggerClass(fireSlots, FOCUS_CLASS);
+}
+
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------ EXIT ROOM --------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+export function exitFireRoom(): void {
+  const welcomeSection = document.querySelector<HTMLElement>("#welcomePage");
+  const fromPage =
+    getCurrentPage() ??
+    document.querySelector<HTMLElement>("main > section.page.isVisible");
+
+  if (!welcomeSection || !fromPage) return;
+
+  stopTimer(2);
+
+  hideGameHeader();
+  transitSections(fromPage, welcomeSection, 1200);
 }
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
