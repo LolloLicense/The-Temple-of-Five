@@ -3,9 +3,11 @@ import { playBgm } from "../../audio/index.ts";
 import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
 //import { startTimer, stopTimer } from "./script/utils.ts";
 import { startTimer } from "../../script/helper/utils.ts";
+import { showGameHeader } from "../../script/helper/gameHeader.ts";
 
 export function room4metalFunc() {
-   startTimer(4); // Starta timer for room 4
+  showGameHeader(); // Visa headern med timer
+  startTimer(4); // Starta timer for room 4
 
   /* Gömmer välkomst sidan, kan tas bort senare*/
   const welcomePage: HTMLElement | null =
@@ -88,48 +90,80 @@ export function room4metalFunc() {
     }); 
   }
 
-  //-------------------------------------------------------------------------------------------------------------------------------------
-  //-------------------------------------------------------------- Spela sekvens/level ------------------------------------------------------------
-  //-------------------------------------------------------------------------------------------------------------------------------------
+  
+  //--------------------------------------------------------------------------------------------------------------------------------------
+  //-------------------------------------------------------------- Countdown -------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------------------------
   /**
-   *  Spela upp färgsekvensen för nuvarande level i signal elementet.
-   * Blockera användaren från att välja färg under sekvensens gång
-   * Varje färg visas statiskt under en kort tid innan nästa färg visas i arrayn.
-   * Detta
-   */ 
-  function playSequence() {
-    isPlayingSequence = true; // Sekvensen startar så blockeras användarens input
+   * Visar meddelande och räknar ned från 10 till 0
+   * När den är klar startas playSequence
+   */
 
-    feedback.textContent = "Watch closely, level booting..."; // Visa text direkt när funktionen körs
+  function startCountdown(next: () => void) {
+    let count = 10; // Start värde för nedräkningen 10 sek (Får prova oss fram)
+    feedback.textContent = `Booting sequence in ${count}...`; // Visar första nedräkningsmeddelandet innan timern startat
+    const timer = setInterval(() => { // Timer som körs varje sekund
+      count--; // Minskar nedräkningen med 1
+      
+      if (count > 0) { // Så länge nedräkning pågår uppdatera texten 
+        feedback.textContent = `Booting sequence in ${count}...`; 
+      } else { // När nedräkningen når 0 
+        clearInterval(timer); // Stoppas timern 
+        feedback.textContent = ""; // Texten rensas från skärmen 
+        next(); // kör playSequence
+      }
+    }, 1000); 
+  }
+  
+  //--------------------------------------------------------------------------------------------------------------------------------------
+  //-------------------------------------------------------- Visa färg/ rensa färg -------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------------------------
+  // Används för att visa och rensa färg i signal elementet
 
-    setTimeout(() => { //Fördröj uppspelning av sekvens så användaren hinner läsa beskrivning först
-      feedback.textContent = ""; // Ta bort text precis innan första färgen visas
-      const sequence = levelsMetal[currentLevel]; // Hämtar rätt sekvens för leveln
-      let index = 0; // Håller koll på vilken färg i sekvensen vi är på
-    
-
-      const interval = setInterval(() => { // Spela upp en färg med ett intervall
-      signal.className = "colorSignal " + colorsMetal[sequence[index]]; // Ändrar signalens klass för att visa rätt färg, ex colorsMetal[2] = "gold" så signalen får klassen "colorsignal gold"
-
-      index++; // Gå till nästa färg i sekvensen
-
-      if (index >= sequence.length) { // Om vi har spelat alla färger i sekvensen
-        clearInterval(interval); // Stoppa intervallet
-
-        setTimeout(() => { // Efter sista färgen visats vänta en kort stund och återställ signalen
-          signal.className = "colorSignal"; 
-
-          isPlayingSequence = false; // Sekvensen är klar, låt användaren börja välja färger i slotsen
-        }, 600); // Vänta en kort stund innan vi nollställer signalen så att spelaren hinner se den sista färgen
-      };
-    }, 900); // Spela en ny färg var 800ms, kan justeras för att göra det lättare/svårare
-  }, 5000); // Vänta 5 sek innan första färgen visas
+  function showColor(color: string) { // Visa en färg i singal elementet
+    signal.className = "colorSignal " + color; 
   }
 
+  function clearColor() { // Rensa färgen från signal elementet
+    signal.className = "colorSignal";
+  }
+  //--------------------------------------------------------------------------------------------------------------------------------------
+  //---------------------------------------------------------- Spela sekvens/level -------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------------------------
+  /**
+   * Spela upp färgsekvensen för nuvarande level i signal elementet.
+   * Blockera input för användaren under tiden.
+   * Visar en färg åt gången med paus emellan.
+   */ 
+
+  function playSequence() {
+    isPlayingSequence = true; // Blockerar användarens input under sekvensen
+    const sequence = levelsMetal[currentLevel]; // Hämtar rätt färgsekvens för leveln
+    let index = 0; // Startar första färgen i sekvensen
+
+    const interval = setInterval(() => { // Timer som visar en färg var 1000ms
+      showColor(colorsMetal[sequence[index]]); // Visar färg som motsvarar nuvarande index
+      index++; // Gå till nästa färg i sekvensen
+
+      if (index >= sequence.length) { // Om vi har visat alla färger 
+        clearInterval(interval); // Stoppa timern
+
+        setTimeout(() => { // Vänta lite innan vi rensar signalen
+          clearColor();
+          isPlayingSequence = false; // Sekvensen är klar, låt användaren börja välja färger i slotsen
+        }, 600); // Vänta 600 ms så sista färgen syns tydligt
+      };
+    }, 1000); 
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------------------------
+  //---------------------------------------------------------- Spel logik -------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------------------------
+
+
   renderSlots(); // Rendera slotsen för första gången när rummet laddas
-  playSequence(); //test
+  startCountdown(playSequence); // Starta coundown och sedan starta playsequence
  
 }
 
-// Byta ut timern till en nedräkningsbar? eller funkar text 
 //Anropa isplayingsequence i valideringen av rätt och fel

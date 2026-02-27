@@ -21,6 +21,7 @@ const LEVELS: number[][] = [
   [8, 13, 21, 34, 55, 89],
   [144, 233, 377, 610, 987, 1597],
 ];
+
 // numer of "inputboxes"
 const SLOTS_PER_STAGE = 6;
 // In Room Balance
@@ -58,6 +59,7 @@ export function room1woodFunc() {
   if (bgmId) {
     void playBgm(bgmId, 650); // play the background music for the wood room, with a fade-in duration of 650ms
   }
+
   // fireflie animation
   const particlesWrap =
     woodSection.querySelector<HTMLDivElement>(".woodParticles");
@@ -100,6 +102,7 @@ export function room1woodFunc() {
   const slots = Array.from(
     woodSection.querySelectorAll<HTMLDivElement>(".slot"),
   );
+
   const keypad = woodSection.querySelector<HTMLDivElement>(".keypad");
 
   const levelTextEl = woodSection.querySelector<HTMLSpanElement>("#levelText");
