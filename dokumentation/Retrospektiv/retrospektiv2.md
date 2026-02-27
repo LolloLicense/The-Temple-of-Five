@@ -18,12 +18,33 @@ Kunde inte göras första veckan då vi inte kommit så långt i det skedet.
 
 
 ## V2:
+![Retro-shot](/dokumentation/Retrospektiv/retrospektiv1.png)
 
+### Glad + Vind i seglen
+    • Gruppen upplever bra kommunikation och att vi kommer framåt varje dag.
+	• Att vi är positiva till uppgiften
+	• Att vi har planerat mycket och ägnat mycket tid åt det
+	• Vi är glada hur långt vi kommit hitills
+	• Bra sammanhållning och en bra grupp
+
+### Sad/Mad” + Ankare
+	• Lite strul med repot innan det var färdigt
+	• Att man vill ha mer förståelse och kunna mer trots den korta tiden vi hållt på med javascript och typescript
+	• Att vi inte inser våra begränsningar och har för höga krav på oss själva
+	• Mergekonflikter är ett återkommande tema
+
+### Isberg 
+    • Ser risker med att koppla ihop alla rum i projektet senare
+	• Ser även risker för framtida mergekonflikter och försvinnande av kod
+    
+
+### Förslag på konkreta actions 
+    • Kommunicera med varandra så fort det uppstår frågetecken eller problem med ex merge.
 
 
 ## V3:
 
-![Retro-shot](/dokumentation/Retrospektiv/Vecka-3.png)
+![Retro-shot](/dokumentation/Retrospektiv/retrospektiv2.png)
 
 ### Glad + Vind i seglen
 	•	Gruppen upplever bra kommunikation och att vi kommer framåt varje dag.
