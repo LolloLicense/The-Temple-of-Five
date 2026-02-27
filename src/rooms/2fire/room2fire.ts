@@ -82,9 +82,9 @@ const LEVELS: FireLevel[] = [
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 const FIRE_LEVEL_TEXT: string[] = [
-  `Awaken the Fire
+  `AWAKEN THE FIRE -
 
-The temple is cold.
+ The temple is cold.
 The flame has not yet been born.
 Fire is born of substance.
 It must be awakened.
@@ -92,9 +92,9 @@ It must be contained.
 And only then —
 given breath.`,
 
-  `The Wild Flame
+  `THE WILD FLAME -
 
-You have stirred the fire —
+ You have stirred the fire —
 but without discipline.
 It rages beyond its bounds.
 Do not feed it.
@@ -102,18 +102,18 @@ Do not let it breathe again.
 Cool it —
 and bind it.`,
 
-  `The Fading Light
+  `THE FADING LIGHT - 
 
-Bound too tightly,
+ Bound too tightly,
 fire cannot live.
 Give it substance.
 Let it breathe.
 Awaken it —
 but do not drown it again.`,
 
-  `The Discipline of Balance
+  `THE DISCIPLINE OF BALANCE -
 
-Fire that rages will destroy.
+ Fire that rages will destroy.
 Fire that dies is useless.
 
 A balanced flame is fed,
