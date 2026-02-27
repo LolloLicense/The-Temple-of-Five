@@ -1,6 +1,10 @@
 @use "../../sass/var";
 @use "../../sass/mixins" as mix;
 
+/* ==============================================================
+================= WRAPPER AND UI CONTAINER ======================
+================================================================= */
+
 .room2Fire {
   display: flex;
   justify-content: center;
@@ -21,7 +25,11 @@
     width: min(980px, 94vw);
   }
 
-  /* Keypad rad */
+  /* ==============================================================
+  ================= KEYPAD (ELEMENT BUTTONS) ======================
+  ================================================================= */
+
+  /* Keypad row */
   .keypad {
     display: flex;
     justify-content: center;
@@ -49,6 +57,23 @@
 
     border: 1px solid rgba(255, 255, 255, 0.18);
     cursor: pointer;
+
+    /* A11Y Focus when tabbing */
+    &:focus-visible {
+      outline: 2px solid rgba(255, 220, 160, 0.55);
+      outline-offset: 3px;
+    }
+
+    /* Hover effect */
+    @media (hover: hover) {
+      &:hover {
+        transform: translateY(-1px);
+      }
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
   }
 
   /* SVG - SAME SIZE */
@@ -64,6 +89,10 @@
     opacity: 0.9;
     white-space: nowrap;
   }
+
+  /* ==============================================================
+  ==================== SLOTS (TS RENDER) ==========================
+  ================================================================= */
 
   /* Slots (TS render) */
   .fireSlots {
@@ -87,40 +116,157 @@
     align-items: center;
 
     border-radius: 12px;
+
+    transition: transform 140ms ease, box-shadow 180ms ease, opacity 180ms ease;
+    will-change: transform;
   }
 
-  /* Progress bar - use global one for now, but can be customized later 
-  .fireInRoombar {
-    display: flex;
-    justify-content: space-between;
-    gap: 6rem;
+  /* ==============================================================
+  ================= STATE CLASSES (TS HOOKS) ======================
+  ================================================================= */
 
-    padding: 0.5rem 2rem;
-    font-size: var.$fs-h6;
-
-    @include mix.glass();
-    border: 1px solid var.$lightColor;
-
-    .balance {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+  /* Puls = “current slot” */
+  @keyframes slotPulse {
+    0% {
+      transform: scale(1);
+      box-shadow: 0 0 0 rgba(255, 160, 80, 0);
     }
 
-    .balanceBar {
-      width: 180px;
-      height: 15px;
-      border-radius: 999px;
-      border: 2px solid var.$lightColor;
-      overflow: hidden;
+    50% {
+      transform: scale(1.03);
+      box-shadow: 0 0 18px rgba(255, 160, 80, 0.22);
     }
 
-    .balanceFill {
-      height: 100%;
-      width: 0%;
-      background: #ff9f1c;
-      border-radius: 999px;
-      transition: width 200ms ease;
+    100% {
+      transform: scale(1);
+      box-shadow: 0 0 0 rgba(255, 160, 80, 0);
     }
-  } */
+  }
+
+  /* Pop = “filled slot” */
+  @keyframes slotPop {
+    0% {
+      transform: scale(1);
+    }
+
+    45% {
+      transform: scale(1.1);
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  /* Shake = "wrong input” */
+  @keyframes slotShake {
+    0% {
+      transform: translateX(0);
+    }
+
+    15% {
+      transform: translateX(-6px);
+    }
+
+    30% {
+      transform: translateX(6px);
+    }
+
+    45% {
+      transform: translateX(-5px);
+    }
+
+    60% {
+      transform: translateX(5px);
+    }
+
+    75% {
+      transform: translateX(-3px);
+    }
+
+    100% {
+      transform: translateX(0);
+    }
+  }
+
+
+  @keyframes slotGlow {
+    0% {
+      box-shadow: 0 0 0 rgba(255, 200, 120, 0);
+    }
+
+    40% {
+      box-shadow: 0 0 26px rgba(255, 200, 120, 0.35);
+    }
+
+    100% {
+      box-shadow: 0 0 0 rgba(255, 200, 120, 0);
+    }
+  }
+
+
+  @keyframes focusHalo {
+    0% {
+      box-shadow: 0 0 0 0 rgba(255, 160, 80, 0);
+    }
+
+    50% {
+      box-shadow: 0 0 0 4px rgba(255, 160, 80, 0.16);
+    }
+
+    100% {
+      box-shadow: 0 0 0 0 rgba(255, 160, 80, 0);
+    }
+  }
+
+
+
+  /* .is-active - focus slot “pulsating” */
+  .fireSlots .slot.is-active {
+    animation: slotPulse 900ms ease-in-out infinite;
+  }
+
+  /* .just-filled - slot “pop" when element is put in */
+  .fireSlots .slot.just-filled {
+    animation: slotPop 160ms ease-out;
+  }
+
+  /* .room-complete - no animation */
+  &.room-complete {
+    .room2FireUi.is-focus {
+      animation: none;
+      box-shadow: 0 0 0 3px rgba(255, 210, 140, 0.14);
+    }
+
+    .fireSlots .slot.is-active {
+      animation: none;
+    }
+  }
+
+  /* ==============================================================
+  ================= AMBIENCE EFFECT (EMBER) =======================
+  ================================================================= */
+
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .room2Fire {
+
+    /* stäng state-animationer */
+    .fireSlots .slot.is-active,
+    .fireSlots .slot.just-filled,
+    .fireSlots .slot.is-wrong,
+    .fireSlots .slot.is-success,
+    .room2FireUi.is-focus {
+      animation: none !important;
+      transition: none !important;
+    }
+
+    /* stäng ambience-animationer */
+    &::before,
+    &::after {
+      animation: none !important;
+    }
+  }
 }

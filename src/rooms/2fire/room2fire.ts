@@ -190,10 +190,9 @@ export function room2fireFunc(): void {
   renderRoomDesc(fireSection, dataJSON.room2fire.desc); // Render description from helper function, with text and icons from JSON
 
   cacheDomOrThrow(); // Cashe DOM only once or throw error if missing
-  bindListenersOnce(); // Bind event listeners only once
 
   if (!listenersBound) {
-    bindListenersOnce();
+    bindListenersOnce();  // Bind event listeners only once
     listenersBound = true;
   }
 
@@ -278,6 +277,7 @@ function bindListenersOnce(): void {
 
 function resetRoom(): void {  // reset state
   currentLevelIndex = 0;
+  applyLevelClass();
   attempt = [];
   mistakes = 0;
 
@@ -318,7 +318,32 @@ function updateDescText(text: string): void {
 }
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
-/* --------------------------------------------------------- UI, HUD AND SLOTS ---------------------------------------------------------------------- */
+/* ---------------------------------------------------------- EMBER ANIMATION ----------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+/**
+ * Apply ember intensity class on section depending on level
+ * Removes previous level classes before applying new one
+ */
+
+function applyLevelClass(): void {
+  if (!fireSection) return;
+
+  // remove old classes
+  fireSection.classList.remove(
+    "fire--l1",
+    "fire--l2",
+    "fire--l3",
+    "fire--l4",
+  );
+
+  // add actual level class
+  const levelClass = `fire--l${currentLevelIndex + 1}`;
+  fireSection.classList.add(levelClass);
+}
+
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------- UI / HUD --------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 /**
@@ -426,6 +451,8 @@ function handlePick(key: FireKey): void {
   if (attempt.length === total) {
     void validateSequence();
   }
+
+  console.log("handlePick", key, "time:", Date.now());
 }
 
 async function validateSequence(): Promise<void> {
@@ -469,6 +496,7 @@ function nextLevel(): void {
   }
 
   currentLevelIndex += 1;
+  applyLevelClass();
 
   updateDescText(FIRE_LEVEL_TEXT[currentLevelIndex] ?? "");
 
