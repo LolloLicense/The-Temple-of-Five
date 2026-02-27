@@ -1,7 +1,7 @@
 # Retrospektiv - The Pogo Stick Pioneers
 
 Vi kör retro i Miro – vårt gemensamma office space – för att få upp allt på bordet snabbt och tydligt. 
-![Miro](<a>https://miro.com/app/board/uXjVGD_af74=/?share_link_id=396365481063</a>)
+[Miro](https://miro.com/app/board/uXjVGD_af74=/?share_link_id=396365481063)
 
 - <b>Sailboat:</b> projektet som en båtresa. Vind = det som driver oss framåt, ankare = det som bromsar, isberg/risker = sånt som kan smälla senare om vi inte tar det i tid. 
 
