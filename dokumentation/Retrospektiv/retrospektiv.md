@@ -1,15 +1,17 @@
 # Retrospektiv - The Pogo Stick Pioneers
 
 Vi kör retro i Miro – vårt gemensamma office space – för att få upp allt på bordet snabbt och tydligt. 
+![Miro](<a>https://miro.com/app/board/uXjVGD_af74=/?share_link_id=396365481063</a>)
 
-    - Sailboat: projektet som en båtresa. Vind = det som driver oss framåt, ankare = det som bromsar, isberg/risker = sånt som kan smälla senare om vi inte tar det i tid. 
+- <b>Sailboat:</b> projektet som en båtresa. Vind = det som driver oss framåt, ankare = det som bromsar, isberg/risker = sånt som kan smälla senare om vi inte tar det i tid. 
 
-    -  Glad/Sad/Mad: snabb temperaturkoll på teamet. Vad gav energi, vad kändes segt och vad frustrerade?
+- <b>Glad/Sad/Mad:</b> snabb temperaturkoll på teamet. Vad gav energi, vad kändes segt och vad frustrerade?
 
 Efteråt klustrar vi lapparna, pratar igenom mönstren och plockar ut ett par konkreta grejer som kändes som det var gemensamma upplevelser. 
 
     - Veckans bugg: lite som veckan babe fast för våra älskade buggar 
 
+---
 
 ## V1:
 Kunde inte göras första veckan då vi inte kommit så långt i det skedet.
@@ -41,18 +43,19 @@ Kunde inte göras första veckan då vi inte kommit så långt i det skedet.
 	•	Att olika personer kan uppfatta logiken olika → risk för missförstånd om vi inte gör integrationen tydlig.
 
 ### Förslag på konkreta actions 
-	1.	Merge-rutin
+
+	1	Merge-rutin
 
 	    -	Alltid git pull innan man börjar jobba
-	    -	Små PR:ar ofta
+	    -	Små commit/push
 
-    2. Mötesstruktur som minskar lost-känslan
+    2  Mötesstruktur som minskar lost-känslan
 
         -   Avsluta möten med att tydligt assigna sig till olika issues / säga vad man gör osv
 
 	    -	Våga säga “stopp—kan vi ta det en gång till” utan prestige
 
-### 4.	Bryta ner riskerna
+	3	Bryta ner riskerna
 
 	    •	Skapa issues specifikt för valdiering & tie it together-grejer
 
