@@ -1,64 +1,68 @@
 type ExitMode = "welcome" | "room";
 
 export function initExitDialog(): void {
-    // find exitDialog
-    const dialog = document.querySelector<HTMLDialogElement>("#exitDialog");
-    if(!dialog) return;
-    // find the stuff inside dialog
-    const textEl = dialog.querySelector<HTMLElement>(".exitDialogText");
-    // Exit btn in gameHeader
-    const leaveBtn = dialog.querySelector<HTMLButtonElement>('[data-action="leaveRoom"]');
+  // find exitDialog
+  const dialog = document.querySelector<HTMLDialogElement>("#exitDialog");
+  if (!dialog) return;
+  // find the stuff inside dialog
+  const textEl = dialog.querySelector<HTMLElement>(".exitDialogText");
+  // Exit btn in gameHeader
+  const leaveBtn = dialog.querySelector<HTMLButtonElement>(
+    '[data-action="leaveRoom"]',
+  );
 
-    // eventlistener to exitBtns in both headers
-    document.addEventListener("click", (e) => {
-        const target = e.target as HTMLElement;
-    
-        // closest element that har "openExitDialog"
-        const openBtn = target.closest<HTMLElement>('[data-action="openExitDialog"]');
-        if (!openBtn) return;
+  // eventlistener to exitBtns in both headers
+  document.addEventListener("click", (e) => {
+    const target = e.target as HTMLElement;
 
-        // see what mode the button has (type ExitMode & data-set in html)
-        const mode = (openBtn.dataset.exitMode as ExitMode) ?? "welcome";
-        console.log("openExitDialog clicked. mode =", mode, "openBtn =", openBtn);
-        // show the correct content in dialog depending on ExitMode
-        if(mode === "welcome") {
-            // in welcome-mode only logout option
-            if (leaveBtn) leaveBtn.classList.add("hidden");
-            if (textEl) textEl.textContent = "Sure you want to log out?";
-        } else {
-            // in room-mode show both exit room & log out option
-            if (leaveBtn) leaveBtn.classList.remove("hidden");
-            if (textEl) textEl.textContent = "What do you want to do?"
-        }
-        dialog.showModal();
-    });
+    // closest element that har "openExitDialog"
+    const openBtn = target.closest<HTMLElement>(
+      '[data-action="openExitDialog"]',
+    );
+    if (!openBtn) return;
 
-    // Listening to click inside dialog
-    dialog.addEventListener("click", (e) => {
-        const target = e.target as HTMLElement;
-        const btn = target.closest<HTMLButtonElement>("button")
-        if (!btn) return;
-        //checking what action is clicked, data-action="logout" = action: logout
-        const action = btn.dataset.action;
-        if(action === "closeExitDialog") {
-            dialog.close();
-            return;
-        }
-        if (action === "logout") {
-            dialog.close();
-            document.dispatchEvent(new CustomEvent("exit:logout"));
-            return;
-        }
+    // see what mode the button has (type ExitMode & data-set in html)
+    const mode = (openBtn.dataset.exitMode as ExitMode) ?? "welcome";
+    console.log("openExitDialog clicked. mode =", mode, "openBtn =", openBtn);
+    // show the correct content in dialog depending on ExitMode
+    if (mode === "welcome") {
+      // in welcome-mode only logout option
+      if (leaveBtn) leaveBtn.classList.add("hidden");
+      if (textEl) textEl.textContent = "Sure you want to log out?";
+    } else {
+      // in room-mode show both exit room & log out option
+      if (leaveBtn) leaveBtn.classList.remove("hidden");
+      if (textEl) textEl.textContent = "What do you want to do?";
+    }
+    dialog.showModal();
+  });
 
-        if ( action === "leaveRoom") {
-            dialog.close();
-            console.log("leave room")
-            document.dispatchEvent(new CustomEvent("exit:leaveRoom"));
-            return;
-        }
-    });
-    // Close dialog 
-    dialog.addEventListener("close", () => {
-        // här kan du återställa text om du vill (valfritt)
-    });
+  // Listening to click inside dialog
+  dialog.addEventListener("click", (e) => {
+    const target = e.target as HTMLElement;
+    const btn = target.closest<HTMLButtonElement>("button");
+    if (!btn) return;
+    //checking what action is clicked, data-action="logout" = action: logout
+    const action = btn.dataset.action;
+    if (action === "closeExitDialog") {
+      dialog.close();
+      return;
+    }
+    if (action === "logout") {
+      dialog.close();
+      document.dispatchEvent(new CustomEvent("exit:logout"));
+      return;
+    }
+
+    if (action === "leaveRoom") {
+      dialog.close();
+      console.log("leave room");
+      document.dispatchEvent(new CustomEvent("exit:leaveRoom"));
+      return;
+    }
+  });
+  // Close dialog
+  dialog.addEventListener("close", () => {
+    // här kan du återställa text om du vill (valfritt)
+  });
 }

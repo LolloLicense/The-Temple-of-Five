@@ -49,3 +49,5 @@ Dagens scrum master:
 
 Frånvarande: 
 
+
+

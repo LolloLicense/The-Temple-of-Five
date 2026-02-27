@@ -1,10 +1,14 @@
-import * as dataJSON from "../../data.json";
 import { playBgm } from "../../audio/index.ts";
+import * as dataJSON from "../../data.json";
+import { showGameHeader } from "../../script/helper/gameHeader.ts";
 import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
+import {
+  getCurrentPage,
+  showSection,
+  transitSections,
+} from "../../script/helper/transitions.ts";
 //import { startTimer, stopTimer } from "./script/utils.ts";
 import { startTimer } from "../../script/helper/utils.ts";
-import { showGameHeader } from "../../script/helper/gameHeader.ts";
-
 
 //-----------------------------------------------------------
 //----------------------CONFIG / RULES-----------------------
@@ -23,72 +27,71 @@ const SLOTS_PER_STAGE = 6;
 const MISTAKE_PENALTY = 4;
 const WOBBLEBALANCE = 1.5;
 
-
 export function room1woodFunc() {
-  showGameHeader();
-  startTimer(1); // Start timer for room 1
-
-  /* Hide the welcome page (menu)
-   This can be removed when we remove the menu */
-  const welcomePage: HTMLElement | null =
-    document.querySelector("#welcomePage");
-  if (welcomePage) {
-    welcomePage.classList.add("hidden");
-  }
-
   //----------------------------------------------------------
   //----------------------SETUP ROOM DOM----------------------
   //----------------------------------------------------------
 
-
-
   const woodSection: HTMLElement | null = document.querySelector("#room1Wood");
-    if (!woodSection) {
-      return;
-    }
+  if (!woodSection) {
+    return;
+  }
 
   woodSection.style.backgroundImage = `url("${dataJSON.room1wood.backgroundImg}")`;
-  woodSection.classList.remove("hidden");
+  // Find the current visible page BEFORE switching
+  const fromPage =
+    getCurrentPage() ??
+    document.querySelector<HTMLElement>("main > section.page.isVisible");
+  if (fromPage && fromPage !== woodSection) {
+    // Fade from current page -> wood room
+    transitSections(fromPage, woodSection, 1200);
+  } else {
+    // Fallback (first load): just show the room
+    showSection(woodSection);
+  }
+
+  startTimer(1); // Start timer for room 1
+  showGameHeader();
 
   /* Play the background music for woodroom */
   const bgmId = dataJSON.room1wood.bgmId;
-    if (bgmId) {
-      void playBgm(bgmId, 650); // play the background music for the wood room, with a fade-in duration of 650ms
+  if (bgmId) {
+    void playBgm(bgmId, 650); // play the background music for the wood room, with a fade-in duration of 650ms
+  }
+  // fireflie animation
+  const particlesWrap =
+    woodSection.querySelector<HTMLDivElement>(".woodParticles");
+  if (particlesWrap && particlesWrap.childElementCount === 0) {
+    // pervents adding amout after re-entering room
+    for (let i = 0; i < 12; i++) {
+      const particle = document.createElement("div");
+      particle.className = "woodParticle";
+
+      // size of fireflies
+      const size = 2 + Math.random() * 6; // 2px – 8px
+      particle.style.width = `${size}px`;
+      particle.style.height = `${size}px`;
+
+      // start position
+      particle.style.left = `${Math.random() * 100}%`;
+      particle.style.top = `${60 + Math.random() * 40}%`; // start lower part of screen
+
+      // animation speed + delay
+      const floatSeconds = 6 + Math.random() * 10; // 6–16s
+      const flickerSeconds = 1.5 + Math.random() * 2.5; // 1.5–4s
+      particle.style.animationDuration = `${floatSeconds}s, ${flickerSeconds}s`;
+      particle.style.animationDelay = `${Math.random() * 4}s, ${Math.random() * 2}s`;
+
+      particlesWrap.appendChild(particle);
     }
-  // fireflie animation 
-  const particlesWrap = woodSection.querySelector<HTMLDivElement>(".woodParticles");
-    if (particlesWrap && particlesWrap.childElementCount === 0) {
-      // pervents adding amout after re-entering room
-      for (let i = 0; i < 12; i++) {
-        const particle = document.createElement("div");
-        particle.className = "woodParticle";
+  }
 
-        // size of fireflies
-        const size = 2 + Math.random() * 6; // 2px – 8px
-        particle.style.width = `${size}px`;
-        particle.style.height = `${size}px`;
-
-        // start position
-        particle.style.left = `${Math.random() * 100}%`;
-        particle.style.top = `${60 + Math.random() * 40}%`; // start lower part of screen
-
-        // animation speed + delay
-        const floatSeconds = 6 + Math.random() * 10; // 6–16s
-        const flickerSeconds = 1.5 + Math.random() * 2.5; // 1.5–4s
-        particle.style.animationDuration = `${floatSeconds}s, ${flickerSeconds}s`;
-        particle.style.animationDelay = `${Math.random() * 4}s, ${Math.random() * 2}s`;
-
-        particlesWrap.appendChild(particle);
-      }
-    }
-
-    // Prevent adding event listeners twice if player re-enters the room
-    if (woodSection.dataset.woodInit === "true") return;
-    woodSection.dataset.woodInit = "true";
+  // Prevent adding event listeners twice if player re-enters the room
+  if (woodSection.dataset.woodInit === "true") return;
+  woodSection.dataset.woodInit = "true";
 
   // render desc from JSON into <div id="roomDesc">
   renderRoomDesc(woodSection, dataJSON.room1wood.desc);
-  
 
   //-----------------------------------------------------------
   //-------------------------DOM-------------------------------
@@ -101,28 +104,29 @@ export function room1woodFunc() {
 
   const levelTextEl = woodSection.querySelector<HTMLSpanElement>("#levelText");
   const mistakesTextEl =
-  woodSection.querySelector<HTMLSpanElement>("#mistakesText");
+    woodSection.querySelector<HTMLSpanElement>("#mistakesText");
   const roomBalanceEl =
-  woodSection.querySelector<HTMLDivElement>("#balanceFill");
+    woodSection.querySelector<HTMLDivElement>("#balanceFill");
 
-  // guard if not HTML match and prevents errors for properties of null 
+  // guard if not HTML match and prevents errors for properties of null
   if (
-    !keypad || slots.length !== SLOTS_PER_STAGE ||
+    !keypad ||
+    slots.length !== SLOTS_PER_STAGE ||
     !levelTextEl ||
     !mistakesTextEl ||
-    !roomBalanceEl) {
-    throw new Error("Wood room DOM mismatch")
-    }
+    !roomBalanceEl
+  ) {
+    throw new Error("Wood room DOM mismatch");
+  }
 
   // Make “safe” non-null variables AFTER guard
   const levelText = levelTextEl;
   const mistakesText = mistakesTextEl;
   const balanceFill = roomBalanceEl;
 
-
   // Array with all my buttons class=key 0-9 & backspace
   const keyBtns = Array.from(
-    keypad.querySelectorAll<HTMLButtonElement>("button.key")
+    keypad.querySelectorAll<HTMLButtonElement>("button.key"),
   );
 
   //-----------------------------------------------------------
@@ -140,7 +144,6 @@ export function room1woodFunc() {
   // levels transition - letting player see the last digits before next level
   let isTransitioning = false;
 
-
   //-----------------------------------------------------------
   //-------------------------RENDER UI-------------------------
   //-----------------------------------------------------------
@@ -155,7 +158,7 @@ export function room1woodFunc() {
       slot.dataset.digits = String(expectedStr.length);
     });
   }
-    // HUD IN roomprogressbar
+  // HUD IN roomprogressbar
   function renderHUD(): void {
     levelText.textContent = `${currentLevelIndex + 1}/${LEVELS.length}`;
     mistakesText.textContent = String(mistakes);
@@ -164,15 +167,19 @@ export function room1woodFunc() {
 
     // startmode 5% minimum
     const MIN_START = 5;
-    // base calc on levels done 
-    const progressBase = MIN_START + (currentLevelIndex / LEVELS.length) * (100 - MIN_START); 
-    // penalty for number of mistakes 
+    // base calc on levels done
+    const progressBase =
+      MIN_START + (currentLevelIndex / LEVELS.length) * (100 - MIN_START);
+    // penalty for number of mistakes
     const penalty = mistakes * MISTAKE_PENALTY;
     // smooth wobble for the nerves ( Math.sin = value between -1 & 1)
-    const balanceWobble = Math.sin((currentLevelIndex + 1) * 2 + mistakes * 1.5) * WOBBLEBALANCE;
+    const balanceWobble =
+      Math.sin((currentLevelIndex + 1) * 2 + mistakes * 1.5) * WOBBLEBALANCE;
     // calc for % in balancebar (Math.max = never returns value < 0 (Math.min always returns < 100))
-    const balancePercent = Math.max(0, Math.min(100, progressBase - penalty + balanceWobble)
-  );
+    const balancePercent = Math.max(
+      0,
+      Math.min(100, progressBase - penalty + balanceWobble),
+    );
     balanceFill.style.width = `${balancePercent}%`;
   }
 
@@ -190,15 +197,15 @@ export function room1woodFunc() {
     // block input so player dont spam buttons while transit
     isTransitioning = true;
     // wait ms , then run after
-    setTimeout(() =>{
+    setTimeout(() => {
       after(); // run transit
       isTransitioning = false; // un-block input
     }, ms);
   }
 
   // reset inputs for current level
-  function resetLevelInput (): void {
-    slotValues = Array(SLOTS_PER_STAGE).fill("")
+  function resetLevelInput(): void {
+    slotValues = Array(SLOTS_PER_STAGE).fill("");
     activeSlotIndex = 0;
   }
 
@@ -216,29 +223,28 @@ export function room1woodFunc() {
     if (slotValues[activeSlotIndex].length >= expectedStr.length) return;
     // add number in current slot
     slotValues[activeSlotIndex] += digit;
-      //Upd UI to show all state changes
-      updtUI();
-    // if slot is full - move to next slot 
+    //Upd UI to show all state changes
+    updtUI();
+    // if slot is full - move to next slot
     if (slotValues[activeSlotIndex].length === expectedStr.length) {
       advanceOrValidateLevel();
-    }  
+    }
     //RENDER AGAIN because advanceOrValidateLevel() changes state
     // (activeSlotIndex++ or new level / reset)
     updtUI();
- 
   }
 
   // when slot full - move on or validate and advance
   function advanceOrValidateLevel(): void {
-    if (activeSlotIndex < SLOTS_PER_STAGE -1) {
-      activeSlotIndex++
+    if (activeSlotIndex < SLOTS_PER_STAGE - 1) {
+      activeSlotIndex++;
       return;
     }
     // last input filled - validate level
     validateLevel();
   }
 
-  // Level validation 
+  // Level validation
   function validateLevel(): void {
     const expectedLevel = LEVELS[currentLevelIndex].map(String);
     //compare slots value to expected value
@@ -249,14 +255,14 @@ export function room1woodFunc() {
       mistakes++;
       // play level untill finnished
       resetLevelInput();
-      // resets level 
+      // resets level
       updtUI();
       return;
     }
     // if level completed - move on to next and clear inputs
-    if (currentLevelIndex < LEVELS.length -1) {
+    if (currentLevelIndex < LEVELS.length - 1) {
       // small pause for player UI
-      delayTransit(700, () =>{
+      delayTransit(700, () => {
         //After pause - move on to next level
         currentLevelIndex++;
         // clear slots
@@ -267,8 +273,8 @@ export function room1woodFunc() {
       return;
     }
 
-      // all levels completed 
-      ifRoomCompleted();
+    // all levels completed
+    ifRoomCompleted();
   }
 
   // Backspace button
@@ -281,7 +287,7 @@ export function room1woodFunc() {
       updtUI();
       return;
     }
-    // case 2: if empty slot 
+    // case 2: if empty slot
     if (activeSlotIndex > 0) {
       activeSlotIndex--;
     }
@@ -296,29 +302,29 @@ export function room1woodFunc() {
   function ifRoomCompleted(): void {
     // Block input while we show the final state + delay
     isTransitioning = true;
-  
+
     // 1) Render the very last digit + final UI state
     updtUI();
 
-    if(mistakes === 0) {
-      balanceFill.style.width = "100%"
+    if (mistakes === 0) {
+      balanceFill.style.width = "100%";
     }
-  
+
     // 2) Delay so the player can SEE the final digit (before alert blocks the browser)
     setTimeout(() => {
       // 3) Wait 2 animation frames to guarantee the UI is painted before alert
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           alert("WOOD chamber complete!");
-  
+
           // 4) Reset after OK
           currentLevelIndex = 0;
           mistakes = 0;
           resetLevelInput();
-  
+
           // Allow input again
           isTransitioning = false;
-  
+
           // Re-render for fresh start
           updtUI();
         });
@@ -326,41 +332,41 @@ export function room1woodFunc() {
     }, 1200);
   }
 
-
   //-----------------------------------------------------------
   //-------------------------KEY EVENTS------------------------
   //-----------------------------------------------------------
 
-// listen to keydown (not document)
-// 1: Arrowkeys controls focus when player tabed down to keypad
-// 2: no risk of use for arrowkeys outside keypad
-keypad.addEventListener("keydown", (e) => {
-  const active = document.activeElement as HTMLButtonElement | null;
-  if (!active || ! active.classList.contains("key")) return;
+  // listen to keydown (not document)
+  // 1: Arrowkeys controls focus when player tabed down to keypad
+  // 2: no risk of use for arrowkeys outside keypad
+  keypad.addEventListener("keydown", (e) => {
+    const active = document.activeElement as HTMLButtonElement | null;
+    if (!active || !active.classList.contains("key")) return;
 
     const currentKeyIndex = keyBtns.indexOf(active);
     if (currentKeyIndex === -1) return;
 
     let nextKeyIndex = currentKeyIndex;
 
-  // Right arrow key goes one step forward (+1) But never past last index
-  if(e.key === "ArrowRight") nextKeyIndex = Math.min(currentKeyIndex +1, keyBtns.length -1);
-  // Left arrow key goes one step back (-1) but not futher than 0 index
-  if(e.key === "ArrowLeft") nextKeyIndex = Math.max(currentKeyIndex -1, 0);
+    // Right arrow key goes one step forward (+1) But never past last index
+    if (e.key === "ArrowRight")
+      nextKeyIndex = Math.min(currentKeyIndex + 1, keyBtns.length - 1);
+    // Left arrow key goes one step back (-1) but not futher than 0 index
+    if (e.key === "ArrowLeft") nextKeyIndex = Math.max(currentKeyIndex - 1, 0);
 
-  // enter to submit digit on keypad
-  if (e.key === "Enter" || e.key === " ") {
-    e.preventDefault();
-    active.click();
-    return; 
-  }
-  if (nextKeyIndex !== currentKeyIndex) {
-    e.preventDefault();
-    keyBtns[currentKeyIndex].tabIndex = -1;
-    keyBtns[nextKeyIndex].tabIndex = 0;
-    keyBtns[nextKeyIndex].focus();
-  }
-})
+    // enter to submit digit on keypad
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      active.click();
+      return;
+    }
+    if (nextKeyIndex !== currentKeyIndex) {
+      e.preventDefault();
+      keyBtns[currentKeyIndex].tabIndex = -1;
+      keyBtns[nextKeyIndex].tabIndex = 0;
+      keyBtns[nextKeyIndex].focus();
+    }
+  });
 
   keypad.addEventListener("click", (e) => {
     const target = e.target as HTMLElement;
@@ -376,11 +382,13 @@ keypad.addEventListener("keydown", (e) => {
     if (action === "back") backspace();
   });
 
-function initKeypadFocus(): void {
-  // give one button at a time tabIndex 0. all others -0(not able to be tabbed to)
-  // "roving tabIndex"
-  keyBtns.forEach((btn, i) => (btn.tabIndex = i === 0 ? 0 : -1));
-} 
+  function initKeypadFocus(): void {
+    // give one button at a time tabIndex 0. all others -0(not able to be tabbed to)
+    // "roving tabIndex"
+    keyBtns.forEach((btn, i) => {
+      btn.tabIndex = i === 0 ? 0 : -1;
+    });
+  }
 
   initKeypadFocus();
   updtUI();
