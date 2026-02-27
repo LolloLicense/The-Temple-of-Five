@@ -2,6 +2,8 @@ import { playBgm } from "../../audio";
 import * as dataJSON from "../../data.json";
 import { renderRoomDesc } from "../../script/helper/roomDesc";
 import { startTimer } from "../../script/helper/utils.ts";
+import { transitSections, getCurrentPage } from "../../script/helper/transitions";
+import { showGameHeader, hideGameHeader } from "../../script/helper/gameHeader";
 
 /**
  * FIRE ROOM (2)
@@ -30,7 +32,6 @@ import { startTimer } from "../../script/helper/utils.ts";
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 const INTRO_MS = 8000; // Time in milliseconds before the intro text is shown (8 seconds)
-const FIRE_DESC_ID = "fireRoomDesc"; // The ID of the element where the fire room description will be rendered
 const FOCUS_CLASS = "is-focus"; // The class name used to indicate that the puzzle section is in focus
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -132,7 +133,6 @@ Do not cool it.`,
 
 let fireSection: HTMLElement | null = null;
 let fireSlots: HTMLElement | null = null;
-let descEl: HTMLElement | null = null;
 
 let keyButtons: HTMLButtonElement[] = [];
 
@@ -156,43 +156,34 @@ let locked = false;
  */
 
 export function room2fireFunc(): void {
-  /* Hide the welcome page (menu)
-      This can be removed when we remove the menu */
-  const welcomePage: HTMLElement | null =
-    document.querySelector("#welcomePage");
-  if (welcomePage) {
-    welcomePage.classList.add("hidden");
+  fireSection = document.querySelector<HTMLElement>("#room2Fire");
+  if (!fireSection) return;
 
-    const header = document.querySelector<HTMLElement>("#gameHeader");
-    header?.classList.remove("hidden");
+  showGameHeader(); // Show header when entering fire room
+
+  // If transiting from Wood room or other sections
+  const from = getCurrentPage();
+  if (from) {
+    transitSections(from, fireSection, 600);
+  } else {
+    fireSection.classList.remove("hidden"); // Fallback
   }
 
   startTimer(2); // Start the timer for the fire room
 
-  /* Sets the background for the room and shows room section */
-  fireSection = document.querySelector("#room2Fire");
-  if (!fireSection) return;
-
   fireSection.style.backgroundImage = `url("${dataJSON.room2fire.backgroundImg}")`;
-  fireSection.classList.remove("hidden");
-
-  renderRoomDesc(fireSection, dataJSON.room2fire.desc); // Render description from helper function, with text and icons from JSON
 
   const bgmId = dataJSON.room2fire.bgmId; // Play the background music for the fire room
   if (bgmId) {
     void playBgm(bgmId, 650); // play the background music for the fire room, with a fade-in duration of 650ms
   }
 
-  const alreadyInit = fireSection.dataset.fireInit === "true";
-  fireSection.dataset.fireInit = "true";
+  renderRoomDesc(fireSection, dataJSON.room2fire.desc); // Render description from helper function, with text and icons from JSON
 
-  casheDomOrThrow(); // Cashe DOM only once or throw error if missing
+  cacheDom(); // Cashe DOM only once or throw error if missing
+  bindListenersOnce(); // Bind event listeners only once
 
-  if (!alreadyInit) {
-    bindListenersOnce(); // Bind event listeners only once
-  }
-
-  // resetta ALLTID när du går in
+  // always a reset when entering
   resetRoom();
 
   console.log("Hello from the fire room");
@@ -203,36 +194,20 @@ export function room2fireFunc(): void {
 /* -------------------------------------------------------------- DOM SETUP ------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 
-function casheDomOrThrow(): void {
-  if (!fireSection) throw new Error("Fire room: fireSection missing");
+function cacheDom(): void {
+  if (!fireSection) return;
 
-  fireSlots = fireSection.querySelector<HTMLElement>("#fireSlots");
-  keyButtons = Array.from(fireSection.querySelectorAll<HTMLButtonElement>(".fireKey"));
+  fireSlots = fireSection.querySelector("#fireSlots");
+  keyButtons = Array.from(
+    fireSection.querySelectorAll<HTMLButtonElement>(".fireKey")
+  );
 
-  levelValueEl = fireSection.querySelector<HTMLElement>("#fireLevelValue");
-  mistakesEl = fireSection.querySelector<HTMLElement>("#fireMistakes");
+  levelValueEl = fireSection.querySelector("#fireLevelValue");
+  mistakesEl = fireSection.querySelector("#fireMistakes");
+  balanceFill = fireSection.querySelector("#fireBalanceFill");
 
-  balanceBar = fireSection.querySelector<HTMLElement>(".balanceBar");
-  balanceFill = fireSection.querySelector<HTMLElement>("#fireBalanceFill");
-
-  descEl =  // Try to find the description element using multiple selectors for flexibility, and assign it to descEl. If none of the selectors match, descEl will be null.
-    fireSection.querySelector<HTMLElement>(`#${FIRE_DESC_ID}`) ??
-    fireSection.querySelector<HTMLElement>(".roomDesc") ??
-    fireSection.querySelector<HTMLElement>("#roomDesc") ??
-    null;
-
-  if (  // Safeguard to ensure all necessary DOM elements are present, otherwise throw an error with a descriptive message about what is missing
-    !fireSlots ||
-    keyButtons.length === 0 ||
-    !levelValueEl ||
-    !mistakesEl ||
-    !balanceBar ||
-    !balanceFill ||
-    !descEl
-  ) {
-    throw new Error(  // If any DOM elements are missing, throw error with a message about what is missing
-      "Fire room DOM mismatch. Need: #fireSlots, .fireKey, #fireLevelValue, #fireMistakes, .balanceBar, #fireBalanceFill, #fireRoomDesc (or .roomDesc).",
-    );
+  if (!fireSlots || !levelValueEl || !mistakesEl || !balanceFill) {
+    throw new Error("Fire room DOM mismatch");
   }
 }
 
@@ -280,10 +255,6 @@ function resetRoom(): void {  // reset state
   currentLevelIndex = 0;
   attempt = [];
   mistakes = 0;
-
-
-  renderDesc(dataJSON.room2fire.desc.text); // Show intro from JSON / desc
-
   locked = true;  // Locked input
 
   createSlots();  // Prepare UI level 1, but input still locked
@@ -292,14 +263,13 @@ function resetRoom(): void {  // reset state
   fireSlots?.classList.remove(FOCUS_CLASS); // Fokus off until intro is done
 
   window.setTimeout(() => { // After intro - Show level 1 instruction - release locked input and focus input
-    renderDesc(FIRE_LEVEL_TEXT[0] ?? "");
+
+    updateDescText(FIRE_LEVEL_TEXT[0]);
+
     locked = false;
-
-
     fireSlots?.classList.add(FOCUS_CLASS);
-
     setActiveSlotClass();
-    updateHUD();
+
   }, INTRO_MS);
 }
 
@@ -307,17 +277,17 @@ function resetRoom(): void {  // reset state
 /* ------------------------------------------------------------ DESCRIPTION ------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 
-function renderDesc(text: string): void {
-  if (!descEl) return;
+function updateDescText(text: string): void {
+  if (!fireSection) return;
 
-  descEl.replaceChildren(); // Clear description and write new text for levels
+  const textEl =
+    fireSection.querySelector<HTMLElement>(".roomDesc .descText");
 
-  const p = document.createElement("p");
-  p.className = "descText";
+  if (!textEl) {
+    throw new Error("Missing .descText (renderRoomDesc must run first)");
+  }
 
-  p.textContent = text;
-
-  descEl.appendChild(p);
+  textEl.textContent = text;
 }
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -473,7 +443,7 @@ function nextLevel(): void {
 
   currentLevelIndex += 1;
 
-  renderDesc(FIRE_LEVEL_TEXT[currentLevelIndex] ?? "");
+  updateDescText(FIRE_LEVEL_TEXT[currentLevelIndex] ?? "");
 
   createSlots();
   updateHUD();
