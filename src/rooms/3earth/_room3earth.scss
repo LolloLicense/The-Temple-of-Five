@@ -99,7 +99,14 @@ background-image: url('/images/earthRoom/Slate14.jpg');
 background-image: url('/images/earthRoom/Slate15.jpg');
 }
 
+.room3Earth .gameDiv .slate16 {
+background-image: url('/images/earthRoom/lavaSlate.jpg');
+}
 
+/* 
+-webkit-filter: grayscale(100%);
+filter: grayscale(100%);
+*/
 
 .room3Earth .roomDesc {
     @include mix.glass();
