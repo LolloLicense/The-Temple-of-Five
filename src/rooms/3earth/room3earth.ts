@@ -110,7 +110,8 @@ const lavaY:number = parseInt(emptySlate?.classList[2].substring(emptySlate?.cla
 console.log(lavaX);
 console.log(lavaY);
 
-const intPos:Point = { lavaX + lavaY }
+const stuff:any = { lavaX,lavaY }
+const intPos:Point = stuff;
 const directions:Point[] = getPossibleMoves(intPos)
 console.log(directions);
 }
