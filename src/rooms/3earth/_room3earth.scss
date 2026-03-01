@@ -15,7 +15,7 @@ height: 674px;
 position: relative;
 bottom: 36px;
 border:  1px solid var.$lightColor;
-    border-radius: var.$smallRadius;
+border-radius: var.$smallRadius;
 }
 
 
@@ -29,6 +29,12 @@ border:  1px solid var.$lightColor;
     display: grid;
     grid-template-columns: repeat(4, 142px);
     grid-template-rows: repeat(4, 142px);
+    transition: 300ms;
+    grid-template-areas:
+    "c00 c01 c02 c03"
+    "c10 c11 c12 c13"
+    "c20 c21 c22 c23"
+    "c30 c31 c32 c33";
 }
 
 .room3Earth .gameDiv .slate {
@@ -37,6 +43,9 @@ color: white;
    display: flex;
    align-items: center;
    justify-content: center;
+   -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
 }
 
 .room3Earth .gameDiv .slate1 {
@@ -101,6 +110,72 @@ background-image: url('/images/earthRoom/Slate15.jpg');
 
 .room3Earth .gameDiv .slate16 {
 background-image: url('/images/earthRoom/lavaSlate.jpg');
+display: none;
+}
+
+
+.room3Earth .gameDiv .c00 {
+grid-area: c00;
+}
+
+.room3Earth .gameDiv .c01 {
+grid-area: c01;
+}
+
+.room3Earth .gameDiv .c02 {
+grid-area: c02;
+}
+
+.room3Earth .gameDiv .c03 {
+grid-area: c03;
+}
+
+.room3Earth .gameDiv .c10 {
+grid-area: c10;
+}
+
+.room3Earth .gameDiv .c11 {
+grid-area: c11;
+}
+
+.room3Earth .gameDiv .c12 {
+grid-area: c12;
+}
+
+.room3Earth .gameDiv .c13 {
+grid-area: c13;
+}
+
+.room3Earth .gameDiv .c20 {
+grid-area: c20;
+}
+
+.room3Earth .gameDiv .c21 {
+grid-area: c21;
+}
+
+.room3Earth .gameDiv .c22 {
+grid-area: c22;
+}
+
+.room3Earth .gameDiv .c23 {
+grid-area: c23;
+}
+
+.room3Earth .gameDiv .c30 {
+grid-area: c30;
+}
+
+.room3Earth .gameDiv .c31 {
+grid-area: c31;
+}
+
+.room3Earth .gameDiv .c32 {
+grid-area: c32;
+}
+
+.room3Earth .gameDiv .c33 {
+grid-area: c33;
 }
 
 /* 

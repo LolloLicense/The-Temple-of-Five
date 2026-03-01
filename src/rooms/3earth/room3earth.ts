@@ -59,7 +59,7 @@ showGameHeader(); // Show game header
       const cell = document.createElement("div"); // Create a div for the slate
       cell.classList.add("slate"); // Add generic slate class for CSS
       cell.classList.add(`slate${count}`); // Add specific slate class for CSS
-      cell.classList.add(`${Math.floor(i / size)},${i % size}`);
+      cell.classList.add(`c${Math.floor(i / size)}${i % size}`); // Add initial coordinates class for slate.
       /* Pick one entry in array remove it and print it as cell text */
       cell.textContent = getFromArray(slateNumbersArray) as unknown as string; 
       container.appendChild(cell); // Add div to DOM
@@ -74,7 +74,6 @@ showGameHeader(); // Show game header
     //console.log(slates[i].textContent);
   }
 
-
   } // IF gameDiv
 
 } // room3earthFunc END
@@ -82,68 +81,92 @@ showGameHeader(); // Show game header
 function slateClick (slate:Element | null, count:number):void {
 console.log(`Slate ${count} was clicked!`);
 
-
-const possibleMoves:string[] = ['c2.3', 'c3.2']
-
+const currentSlate = document.querySelector(`.slate${count}`);
+const slateNumber:number = count;
 const emptySlate = document.querySelector('.slate16');
-console.log(emptySlate?.classList[2]);
-
-
-interface Point { x: number; y: number; }
-
-const getPossibleMoves = (currentPos: Point): Point[] => {
-  const directions = [
-    { x: 0, y: 1 }, { x: 0, y: -1 }, // Vertical
-    { x: 1, y: 0 }, { x: -1, y: 0 }, // Horizontal
-  ];
-
-  return directions
-    .map(dir => ({
-      x: currentPos.x + dir.x,
-      y: currentPos.y + dir.y
-    }))
-    .filter(move => isWithinBounds(move.x, move.y));
-};
-if (emptySlate) {
-const lavaX:number =  parseInt(emptySlate?.classList[2].substring(0,emptySlate?.classList[2].indexOf(',')));
-const lavaY:number = parseInt(emptySlate?.classList[2].substring(emptySlate?.classList[2].indexOf(',')+1));
-console.log(lavaX);
-console.log(lavaY);
-
-const stuff:any = { lavaX,lavaY }
-const intPos:Point = stuff;
-const directions:Point[] = getPossibleMoves(intPos)
-console.log(directions);
-}
-
-console.log();
-
-//[[0, 1], [0, -1], [1, 0], [-1, 0]]
 
 if (slate?.classList[2] === emptySlate?.classList[2]) {
   console.log('LavaSlate was clicked');
 }
 
+if (emptySlate && currentSlate) {
+const lavaX:number =  parseInt(emptySlate?.classList[2].substring(1,2));
+const lavaY:number = parseInt(emptySlate?.classList[2].substring(2));
+
+const currX:number =  parseInt(currentSlate?.classList[2].substring(1,2));
+const currY:number = parseInt(currentSlate?.classList[2].substring(2));
+
+const lavaPos:[x:number,y:number] = [lavaX,lavaY];
+const currentPos:[x:number,y:number] = [currX,currY];
+
+moveSlate(slateNumber, currentPos, lavaPos);
+}
 
 } // slateClick END
 
-const isWithinBounds = (x: number, y: number, size: number = 4): boolean => {
-  return x >= 0 && x < size && y >= 0 && y < size;
-};
+function moveSlate (slateNumber:number, currentPos:[x:number,y:number] , lavaPos:[x:number,y:number]):void {
+
+  //console.log(`currentPos: ${currentPos}`);
+  //console.log(`lavaPos: ${lavaPos}`);
+
+  const directions:[x:number,y:number][] = [
+    [ 0,1 ], [ 0,-1 ], // Vertical
+    [ 1,0 ], [ -1,0 ] // Horizontal
+  ];
+
+for (let i=0; i < directions.length; i++ ) {
+const [currX, currY] = currentPos;
+const [directX, directY] = directions[i];
+
+const dirX:number = currX + directX;
+const dirY:number = currY + directY;
+
+const dirPoint:[x:number,y:number] = [dirX,dirY];
+
+  if (matchTuples(dirPoint,lavaPos)) {
+    console.log('VALID SLATE!');
+
+    const slateToMove = document.querySelector(`.slate${slateNumber}`);
+    const lavaSlate = document.querySelector(`.slate16`);
+
+    console.log(slateToMove);
+    console.log(slateToMove?.classList[2]);
+   
+    console.log(lavaSlate);
+    console.log(lavaSlate?.classList[2]);
+
+    const oldSlateCord:string = slateToMove?.classList[2] as unknown as string;
+    const newSlateCord:string = lavaSlate?.classList[2] as unknown as string;
+
+    slateToMove?.classList.remove(oldSlateCord);
+    slateToMove?.classList.add(newSlateCord);
+    lavaSlate?.classList.remove(newSlateCord);
+    lavaSlate?.classList.add(oldSlateCord);
+
+  } // IF MATCHED END
+
+} // Loop END
+
+
+} //moveSlate END
+
+function matchTuples(expected:[number,number],actual:[number,number]): boolean {
+    return expected[0] === actual[0] && expected[1] === actual[1];
+}
 
 function timerCheck():void {
   if (TimeIsUp) {
 console.log('Time has now expired!');
-clearInterval(timerCheckInterval)
+clearInterval(timerCheckInterval) //TODO END ROOM WITH FAIL AND TRANSITION
   }
 }
 
 function getFromArray(arr: number[]): number {
-    // Generate random index based on current length
+    // Generate random index based on current array length
     const randomIndex = Math.floor(Math.random() * arr.length);
-    // Remove element at index and capture it
+    // Remove element at that index and capture it
     const [removedNumber] = arr.splice(randomIndex, 1);
-    // Return removed number
+    // Return the removed number
     return removedNumber;
 }
 
