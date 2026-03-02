@@ -201,11 +201,14 @@ export function room2fireFunc(): void {
     document.querySelector<HTMLElement>("main > section.page.isVisible");
 
   // Change page with fade animation
-  if (fromPage && fromPage !== fireSection) {
+  /*if (fromPage && fromPage !== fireSection) {
     transitSections(fromPage, fireSection, TRANSITION_MS);
   } else {
     showSection(fireSection); // fallback first load - show room directly with showSection
-  }
+  } */
+
+  fireSection.classList.remove("hidden");
+  fireSection.classList.add("isVisible"); // om ni använder isVisible-klassen
 
   stopTimeUpWatcher();  // No double watchers if re-entering the room
   startTimer(2); // Start the timer for the fire room
