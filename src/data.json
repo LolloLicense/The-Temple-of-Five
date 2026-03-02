@@ -38,8 +38,8 @@
     "sfx3Id": "sfx_midSlide",
     "sfx4Id": "sfx_midSlide2",
     "sfx5Id": "sfx_longSlide",
-    "timeLimitMinutes": 0,
-    "timeLimitSeconds": 5,
+    "timeLimitMinutes": 10,
+    "timeLimitSeconds": 0,
     "desc": {
       "text": "TESTING TESTING LASER LASER LASER",
       "falseSign": "./images/false-earth-glass-icon.png",
