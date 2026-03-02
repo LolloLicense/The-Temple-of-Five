@@ -8,16 +8,13 @@ let totalSeconds = 0;
 let roomMinutes = 0;
 let roomSeconds = 0;
 
-let roomTimeLimitMinutes = 0; 
+let roomTimeLimitMinutes = 0;
 let roomTimeLimitSeconds = 0;
 
 let totalTimerInterval: number;
 let roomTimerInterval: number;
 
-
-
-
-export let TimeIsUp = false
+export let TimeIsUp = false;
 
 export function startTimer(id: number): void {
   if (id === 0) {
@@ -25,11 +22,16 @@ export function startTimer(id: number): void {
       timerTick(0);
     }, 1000);
   } else {
+    clearInterval(roomTimerInterval);
+    // reset the stored time limit seconds so old rooms can't leak into new rooms
+    roomTimeLimitSeconds = 0;
+    // reset room "time up" flag every time a room starts
+    TimeIsUp = false;
+    setTimeLimits(id);
     roomTimerInterval = setInterval(() => {
       timerTick(id);
     }, 1000);
-    setTimeLimits(id);
-  
+
     //window.localStorage.setItem(`room${id}`, { roomMinutes, roomSeconds })
   }
 }
@@ -40,12 +42,10 @@ export function stopTimer(id: number): void {
   } else {
     clearInterval(roomTimerInterval);
     TimeIsUp = true;
-
   }
 }
 
 function timerTick(id: number): void {
-  
   const totalMinutesSpan: HTMLElement | null =
     document.querySelector("#totalMinutesSpan");
   const totalSecondsSpan: HTMLElement | null =
@@ -79,7 +79,8 @@ function timerTick(id: number): void {
         }
       }
     }
-  } else { // If this is a room timer
+  } else {
+    // If this is a room timer
     roomSeconds--;
     if (roomSecondsSpan) {
       if (roomSeconds < 10) {
@@ -94,7 +95,7 @@ function timerTick(id: number): void {
       if (roomSecondsSpan) {
         roomSecondsSpan.innerHTML = roomSeconds as unknown as string;
         if (roomMinutes < 0) {
-        roomSecondsSpan.innerHTML = `00`;
+          roomSecondsSpan.innerHTML = `00`;
         }
       }
       if (roomMinutesSpan) {
@@ -112,70 +113,85 @@ function timerTick(id: number): void {
   } // outer else END
 } // timerTick END
 
-
-function setTimeLimits (id:number) {
-
+function setTimeLimits(id: number) {
   const roomMinutesSpan: HTMLElement | null =
     document.querySelector("#roomMinutesSpan");
   const roomSecondsSpan: HTMLElement | null =
     document.querySelector("#roomSecondsSpan");
 
-switch (id) { // switch on room id (ex: 1 = wood)
-      case 1: // Wood
+  roomTimeLimitSeconds = 0; // reset seconds so old room seconds can't "stick"
+  roomSeconds = 0; // reset current seconds before applying new limit
+  // default seconds to 0 every time, so only rooms that set seconds override it
+  roomTimeLimitSeconds = 0;
+  switch (
+    id // switch on room id (ex: 1 = wood)
+  ) {
+    case 1: // Wood
       roomTimeLimitMinutes = dataJSON.room1wood.timeLimitMinutes; //Get minutes from JSON
-      if (dataJSON.room1wood.timeLimitSeconds > 0) { // include seconds IF JSON seconds are not 0
-      roomTimeLimitSeconds = dataJSON.room1wood.timeLimitSeconds // Set seconds from JSON
+      if (dataJSON.room1wood.timeLimitSeconds > 0) {
+        // include seconds IF JSON seconds are not 0
+        roomTimeLimitSeconds = dataJSON.room1wood.timeLimitSeconds; // Set seconds from JSON
       }
       break;
-      case 2: // Fire
+    case 2: // Fire
       roomTimeLimitMinutes = dataJSON.room2fire.timeLimitMinutes; //Get minutes from JSON
-      if (dataJSON.room2fire.timeLimitSeconds > 0) { // include seconds IF JSON seconds are not 0
-      roomTimeLimitSeconds = dataJSON.room2fire.timeLimitSeconds // Set seconds from JSON
+      if (dataJSON.room2fire.timeLimitSeconds > 0) {
+        // include seconds IF JSON seconds are not 0
+        roomTimeLimitSeconds = dataJSON.room2fire.timeLimitSeconds; // Set seconds from JSON
       }
       break;
-      case 3: // Earth
+    case 3: // Earth
       roomTimeLimitMinutes = dataJSON.room3earth.timeLimitMinutes; //Get minutes from JSON
-      if (dataJSON.room3earth.timeLimitSeconds > 0) { // include seconds IF JSON seconds are not 0
-      roomTimeLimitSeconds = dataJSON.room3earth.timeLimitSeconds // Set seconds from JSON
+      if (dataJSON.room3earth.timeLimitSeconds > 0) {
+        // include seconds IF JSON seconds are not 0
+        roomTimeLimitSeconds = dataJSON.room3earth.timeLimitSeconds; // Set seconds from JSON
       }
       break;
-      case 4: // Metal
+    case 4: // Metal
       roomTimeLimitMinutes = dataJSON.room4metal.timeLimitMinutes; //Get minutes from JSON
-      if (dataJSON.room4metal.timeLimitSeconds > 0) { // include seconds IF JSON seconds are not 0
-      roomTimeLimitSeconds = dataJSON.room4metal.timeLimitSeconds // Set seconds from JSON
+      if (dataJSON.room4metal.timeLimitSeconds > 0) {
+        // include seconds IF JSON seconds are not 0
+        roomTimeLimitSeconds = dataJSON.room4metal.timeLimitSeconds; // Set seconds from JSON
       }
       break;
-      case 5: // Water
+    case 5: // Water
       roomTimeLimitMinutes = dataJSON.room5water.timeLimitMinutes; //Get minutes from JSON
-      if (dataJSON.room5water.timeLimitSeconds > 0) { // include seconds IF JSON seconds are not 0
-      roomTimeLimitSeconds = dataJSON.room5water.timeLimitSeconds // Set seconds from JSON
+      if (dataJSON.room5water.timeLimitSeconds > 0) {
+        // include seconds IF JSON seconds are not 0
+        roomTimeLimitSeconds = dataJSON.room5water.timeLimitSeconds; // Set seconds from JSON
       }
       break;
-} // Switch END
+  } // Switch END
 
-/* Setting and printing out the time limits for the room in header */
+  /* Setting and printing out the time limits for the room in header */
 
-roomSeconds = roomTimeLimitSeconds; //Set timer seconds to limit
-roomMinutes = roomTimeLimitMinutes; //Set timer minutes to limit
+  roomSeconds = roomTimeLimitSeconds; //Set timer seconds to limit
+  roomMinutes = roomTimeLimitMinutes; //Set timer minutes to limit
 
-/* Minutes */
-if (roomMinutesSpan) {
-  if (roomMinutes < 10) {
-roomMinutesSpan.innerHTML = `0${roomMinutes}` as unknown as string;
-  } else {
-roomMinutesSpan.innerHTML = roomMinutes as unknown as string;
-}
-}
-/* Seconds */
-if (roomSecondsSpan) {
-  if (roomSeconds < 10) {
-roomSecondsSpan.innerHTML = `0${roomSeconds}` as unknown as string;
-} else {
-roomSecondsSpan.innerHTML = roomSeconds as unknown as string;
-}
-}
-
+  /* Minutes */
+  if (roomMinutesSpan) {
+    if (roomMinutes < 10) {
+      roomMinutesSpan.innerHTML = `0${roomMinutes}` as unknown as string;
+    } else {
+      roomMinutesSpan.innerHTML = roomMinutes as unknown as string;
+    }
+  }
+  /* Seconds */
+  if (roomSecondsSpan) {
+    if (roomSeconds < 10) {
+      roomSecondsSpan.innerHTML = `0${roomSeconds}` as unknown as string;
+    } else {
+      roomSecondsSpan.innerHTML = roomSeconds as unknown as string;
+    }
+  }
 } // setTimeLimits END
+export function getTotalTime(): { minutes: number; seconds: number } {
+  return { minutes: totalMinutes, seconds: totalSeconds };
+}
+
+export function getRoomTimeLeft(): { minutes: number; seconds: number } {
+  return { minutes: roomMinutes, seconds: roomSeconds };
+}
 
 /**
  * Clean path for audio files and prepend base URL from Vite config. Because the audio files are located in the public folder, which is served at the root of the project.
@@ -185,4 +201,3 @@ export function withBaseUrl(path: string): string {
   const cleanPath = path.startsWith("/") ? path.slice(1) : path;
   return `${import.meta.env.BASE_URL}${cleanPath}`;
 }
-

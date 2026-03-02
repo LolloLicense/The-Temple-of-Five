@@ -8,7 +8,10 @@ import {
   transitSections,
 } from "../../script/helper/transitions.ts";
 //import { startTimer, stopTimer } from "./script/utils.ts";
-import { startTimer } from "../../script/helper/utils.ts";
+import { startTimer, stopTimer, TimeIsUp } from "../../script/helper/utils.ts";
+import { setRoomResult } from "../../script/helper/storage.ts";
+import { showMsg } from "../../script/helper/showMsg.ts";
+import { room2fireFunc } from "../2fire/room2fire.ts";
 
 //-----------------------------------------------------------
 //----------------------CONFIG / RULES-----------------------
@@ -50,8 +53,6 @@ export function room1woodFunc() {
     // Fallback (first load): just show the room
     showSection(woodSection);
   }
-
-  startTimer(1); // Start timer for room 1
   showGameHeader();
 
   /* Play the background music for woodroom */
@@ -91,6 +92,23 @@ export function room1woodFunc() {
   // Prevent adding event listeners twice if player re-enters the room
   if (woodSection.dataset.woodInit === "true") return;
   woodSection.dataset.woodInit = "true";
+  // Start timer for room 1
+  startTimer(1);
+  // --- TIMEOUT WATCHER (room timer) -------------------------
+  // Poll TimeIsUp every 200ms. When it's true, we fail this room once.
+  let timeUpIntervalId: number | null = null;
+
+  function stopTimeUpWatcher(): void {
+    if (timeUpIntervalId !== null) {
+      window.clearInterval(timeUpIntervalId);
+      timeUpIntervalId = null;
+    }
+  }
+
+  timeUpIntervalId = window.setInterval(() => {
+    if (!TimeIsUp) return;
+    ifRoomFailed();
+  }, 200);
 
   // render desc from JSON into <div id="roomDesc">
   renderRoomDesc(woodSection, dataJSON.room1wood.desc);
@@ -108,6 +126,7 @@ export function room1woodFunc() {
   const levelTextEl = woodSection.querySelector<HTMLSpanElement>("#levelText");
   const mistakesTextEl =
     woodSection.querySelector<HTMLSpanElement>("#mistakesText");
+  const woodEl = woodSection;
   const roomBalanceEl =
     woodSection.querySelector<HTMLDivElement>("#balanceFill");
 
@@ -314,24 +333,68 @@ export function room1woodFunc() {
     }
 
     // 2) Delay so the player can SEE the final digit (before alert blocks the browser)
-    setTimeout(() => {
+    window.setTimeout(() => {
       // 3) Wait 2 animation frames to guarantee the UI is painted before alert
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          alert("WOOD chamber complete!");
+          stopTimeUpWatcher();
+          stopTimer(1);
+          // Save room result (used by progressbar + backpack later)
+          setRoomResult("wood", { status: "completed", artifact: "true" });
+          // show msg to player
+          showMsg("Well done — next chamber awaits", 1300);
+          window.setTimeout(() => {
+            // 4) Reset wood state
+            currentLevelIndex = 0;
+            mistakes = 0;
+            resetLevelInput();
 
-          // 4) Reset after OK
-          currentLevelIndex = 0;
-          mistakes = 0;
-          resetLevelInput();
+            // Allow input again wood is about to be hidden anyway
+            isTransitioning = false;
+            updtUI();
 
-          // Allow input again
-          isTransitioning = false;
-
-          // Re-render for fresh start
-          updtUI();
+            window.setTimeout(() => {
+              room2fireFunc();
+            }, 1250);
+          }, 1200);
         });
       });
+    }, 1200);
+  }
+
+  // Called when the room timer hits 0 (fail case)
+  function ifRoomFailed(): void {
+    stopTimeUpWatcher();
+    stopTimer(1);
+    // Block input so player can't keep interacting
+    isTransitioning = true;
+
+    // Update UI one last time (optional but nice)
+    updtUI();
+
+    // Save room result (used by progressbar + backpack later)
+    setRoomResult("wood", { status: "failed", artifact: "false" });
+
+    // Show fail message
+    showMsg("Time's up — next chamber awaits", 1300);
+
+    // Reset AFTER message is shown
+    window.setTimeout(() => {
+      currentLevelIndex = 0;
+      mistakes = 0;
+      resetLevelInput();
+
+      isTransitioning = false;
+      updtUI();
+
+      const fireSection = document.querySelector<HTMLElement>("#room2Fire");
+      if (!fireSection) return;
+
+      transitSections(woodEl, fireSection, 1200);
+
+      window.setTimeout(() => {
+        room2fireFunc();
+      }, 1250);
     }, 1200);
   }
 
