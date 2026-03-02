@@ -1,14 +1,16 @@
 import { playBgm } from "../../audio";
 import * as dataJSON from "../../data.json";
 import { renderRoomDesc } from "../../script/helper/roomDesc";
-import { startTimer, stopTimer } from "../../script/helper/utils.ts";
+import { startTimer, stopTimer, TimeIsUp } from "../../script/helper/utils.ts";
 import { transitSections, getCurrentPage, showSection } from "../../script/helper/transitions";
 import { showGameHeader, hideGameHeader } from "../../script/helper/gameHeader";
+import { showMsg } from "../../script/helper/showMsg";
+import { setRoomResult } from "../../script/helper/storage";
+
 
 /**
  * FIRE ROOM (2)
  * 
- * testing testing
  * Intro-text from JSON (shown 8 sec after entering the room)
  * After into, show level instruction (stay until you're finished with the level, then show the next one) + fokus on the puzzle section
  * 
@@ -36,6 +38,9 @@ const INTRO_MS = 8000; // Time in milliseconds before the intro text is shown (8
 const FOCUS_CLASS = "is-focus"; // The class name used to indicate that the puzzle section is in focus
 const SUCCESS_DELAY_MS = 500;
 const WRONG_DELAY_MS = 350;
+const TRANSITION_MS = 1200;
+const COMPLETE_MSG_MS = 1300;
+
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ---------------------------------------------------------- TYPES AND LEVELS ---------------------------------------------------------------------- */
@@ -151,6 +156,18 @@ let mistakes = 0;
 let locked = false;
 
 let listenersBound = false;
+let isTransitioning = false;
+
+/* TIMEOUT WATCHER - (Room timer) */
+
+let timeUpIntervalId: number | null = null;
+
+function stopTimeUpWatcher(): void {
+  if (timeUpIntervalId !== null) {
+    window.clearInterval(timeUpIntervalId);
+    timeUpIntervalId = null;
+  }
+}
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------- ENTRY POINT ------------------------------------------------------------------------ */
@@ -175,12 +192,19 @@ export function room2fireFunc(): void {
 
   // Change page with fade animation
   if (fromPage && fromPage !== fireSection) {
-    transitSections(fromPage, fireSection, 1200);
+    transitSections(fromPage, fireSection, TRANSITION_MS);
   } else {
     showSection(fireSection); // fallback first load - show room directly with showSection
   }
 
   startTimer(2); // Start the timer for the fire room
+
+  stopTimeUpWatcher(); // safety if re-enter
+
+  timeUpIntervalId = window.setInterval(() => {
+    if (!TimeIsUp) return;
+    ifRoomFailed();
+  }, 200);
 
   const bgmId = dataJSON.room2fire.bgmId; // Play the background music for the fire room
   if (bgmId) {
@@ -505,6 +529,88 @@ function nextLevel(): void {
 
   if (fireSlots) retriggerClass(fireSlots, FOCUS_CLASS);
 }
+
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------- COMPLETE / FAIL ROOM --------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+function ifRoomCompleted(): void {
+  // Block input while we show the final state + delay
+  isTransitioning = true;
+
+  // Render final UI state
+  updateHUD();
+
+  // Delay so the player can SEE the final state
+  window.setTimeout(() => {
+    // Wait 2 animation frames to guarantee the UI is painted
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        stopTimeUpWatcher();
+        stopTimer(2);
+
+        // Save room result (used by progressbar + backpack later)
+        setRoomResult("fire", { status: "completed", artifact: "true" });
+
+        // show msg to player
+        showMsg("Well done — next chamber awaits", COMPLETE_MSG_MS);
+
+        window.setTimeout(() => {
+          // Reset fire state
+          currentLevelIndex = 0;
+          attempt = [];
+          mistakes = 0;
+
+          // Rebuild UI to clean state (level 1 slots etc.)
+          applyLevelClass();
+          createSlots();
+          updateHUD();
+
+          // Allow input again (men resetRoom brukar intro-låsa; här håller vi det enkelt)
+          isTransitioning = false;
+
+          // OBS: vi navigerar INTE till nästa rum här.
+          // Nästa rum (earth) kommer ta ansvar i sin egen room-func.
+        }, COMPLETE_MSG_MS);
+      });
+    });
+  }, COMPLETE_MSG_MS);
+}
+
+// Called when the room timer hits 0 - fail case
+function ifRoomFailed(): void {
+  stopTimeUpWatcher();
+  stopTimer(2);
+
+  // Block input so player can't keep interacting
+  isTransitioning = true;
+
+  // Update UI one last time
+  updateHUD();
+
+  // Save room result - used by progressbar + backpack later
+  setRoomResult("fire", { status: "failed", artifact: "false" });
+
+  // Show fail message
+  showMsg("Time's up — next chamber awaits", MSG_MS);
+
+  // Reset AFTER message is shown
+  window.setTimeout(() => {
+    currentLevelIndex = 0;
+    attempt = [];
+    mistakes = 0;
+
+    applyLevelClass();
+    createSlots();
+    updateHUD();
+
+    isTransitioning = false;
+
+    // OBS: ingen navigation här heller.
+  }, COMPLETE_MSG_MS);
+}
+
+
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------ EXIT ROOM --------------------------------------------------------------------------- */
