@@ -66,6 +66,7 @@ body {
   font-size: 1.5rem;
   color: var.$lightColor;
   text-transform: uppercase;
+
   .gameHeaderNav {
     // FLEX
     display: flex;
@@ -74,6 +75,14 @@ body {
     align-items: center;
     padding: 0.5rem 2rem;
   }
+
+  .roomTimer span,
+  .totalTimer span {
+    display: inline-block;
+    width: 2ch;
+    text-align: right;
+  }
+
   // ProgressBar
   .progress {
     .progressTrack {
@@ -197,7 +206,7 @@ body {
 
   /* fade */
   opacity: 0;
-  transition: opacity 1200ms ease-in-out;
+  transition: opacity 2400ms ease-in-out;
 }
 
 .gameMsg.hidden {
@@ -363,7 +372,7 @@ kbd {
 
 .page {
   opacity: 0;
-  transition: opacity 1300ms ease;
+  transition: opacity 1200ms ease;
   pointer-events: none;
 }
 .page.isVisible {
