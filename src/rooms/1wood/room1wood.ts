@@ -37,10 +37,10 @@ export function room1woodFunc() {
   //----------------------SETUP ROOM DOM----------------------
   //----------------------------------------------------------
 
-  const woodSection: HTMLElement | null = document.querySelector("#room1Wood");
-  if (!woodSection) {
-    return;
-  }
+  const woodSection = document.querySelector<HTMLElement>("#room1Wood");
+  if (!woodSection) return;
+
+  const woodEl = woodSection;
 
   woodSection.style.backgroundImage = `url("${dataJSON.room1wood.backgroundImg}")`;
 
@@ -66,13 +66,6 @@ export function room1woodFunc() {
   //-----------------------------------------------------------
 
   // If we re-enter, clear previous watcher (prevents double fail triggers)
-  const prevWatcherId = woodSection.dataset.timeUpWatcherId;
-  if (prevWatcherId) window.clearInterval(Number(prevWatcherId));
-
-  // Start timer for room 1
-  startTimer(1);
-
-  //
   let timeUpIntervalId: number | null = null;
 
   function stopTimeUpWatcher(): void {
@@ -81,6 +74,11 @@ export function room1woodFunc() {
       timeUpIntervalId = null;
     }
   }
+
+  //Stop timer
+  stopTimeUpWatcher();
+  // Start timer for room 1
+  startTimer(1);
 
   timeUpIntervalId = window.setInterval(() => {
     if (!TimeIsUp) return;
@@ -339,53 +337,56 @@ export function room1woodFunc() {
   }
 
   //-----------------------------------------------------------
+  //--------------------- Go to next room ---------------------
+  //-----------------------------------------------------------
+
+  function goToNextRoom(nextSelector: string, nextRoomFunc: () => void): void {
+    const nextSection = document.querySelector<HTMLElement>(nextSelector);
+    if (!nextSection) return;
+
+    transitSections(woodEl, nextSection, TRANSITIONTIME);
+
+    window.setTimeout(() => {
+      nextRoomFunc();
+    }, TRANSITIONTIME);
+  }
+  //-----------------------------------------------------------
   //--------------------- ROOMCOMPLETE ------------------------
   //-----------------------------------------------------------
 
-  function goToFireRoom(): void {
-    const fireSection = document.querySelector<HTMLElement>("#room2Fire");
-    if (!fireSection) return;
-
-    // fade wood -> fire
-    transitSections(woodSection, fireSection, TRANSITIONTIME);
-
-    // starta nästa rum när fade är klar
-    window.setTimeout(() => {
-      room2fireFunc();
-    }, TRANSITIONTIME);
-  }
-
   function ifRoomCompleted(): void {
+    if (isTransitioning) return;
     // Block input while we show the final state + delay
     isTransitioning = true;
     //Render the very last digit + final UI state
     updtUI();
-
     if (mistakes === 0) balanceFill.style.width = "100%";
 
     // Wait 2 animation frames to guarantee the UI is painted before alert
+
+    stopTimeUpWatcher();
+    stopTimer(1);
+
+    // Save room result - used by progressbar + artifactholder later
+    setRoomResult("wood", { status: "completed", artifact: "true" });
+    // show msg to player
+    showMsg("Well done — next chamber awaits", TRANSITIONTIME);
+
     window.setTimeout(() => {
-      stopTimeUpWatcher();
-      stopTimer(1);
+      // Reset wood state
+      currentLevelIndex = 0;
+      mistakes = 0;
+      resetLevelInput();
+      // Allow input again wood is about to be hidden anyway
+      isTransitioning = false;
+      updtUI();
 
-      // Save room result - used by progressbar + artifactholder later
-      setRoomResult("wood", { status: "completed", artifact: "true" });
-      // show msg to player
-      showMsg("Well done — next chamber awaits", TRANSITIONTIME);
-
-      window.setTimeout(() => {
-        // Reset wood state
-        currentLevelIndex = 0;
-        mistakes = 0;
-        resetLevelInput();
-        // Allow input again wood is about to be hidden anyway
-        isTransitioning = false;
-        updtUI();
-        // go next room
-        goToFireRoom();
-      }, TRANSITIONTIME);
+      // go next room
+      goToNextRoom("#room2Fire", room2fireFunc);
+      room2fireFunc();
     }, TRANSITIONTIME);
   }
+
   //-----------------------------------------------------------
   //--------------------- ROOMFAIL ----------------------------
   //-----------------------------------------------------------
@@ -393,10 +394,11 @@ export function room1woodFunc() {
   // Called when the room timer hits 0
   function ifRoomFailed(): void {
     if (isTransitioning) return;
-    stopTimeUpWatcher();
-    stopTimer(1);
     // Block input so player can't keep interacting
     isTransitioning = true;
+    //timer stuff
+    stopTimeUpWatcher();
+    stopTimer(1);
     // Update UI one last time
     updtUI();
     // Save room result - used by progressbar + artifactholder later
@@ -412,8 +414,7 @@ export function room1woodFunc() {
 
       isTransitioning = false;
       updtUI();
-
-      goToFireRoom();
+      goToNextRoom("#room2Fire", room2fireFunc);
     }, TRANSITIONTIME);
   }
 
