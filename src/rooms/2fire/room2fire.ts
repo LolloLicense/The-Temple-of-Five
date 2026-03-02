@@ -6,6 +6,7 @@ import { transitSections, getCurrentPage, showSection } from "../../script/helpe
 import { showGameHeader, hideGameHeader } from "../../script/helper/gameHeader";
 import { showMsg } from "../../script/helper/showMsg";
 import { setRoomResult } from "../../script/helper/storage";
+import { room3earthFunc } from "../3earth/room3earth.ts";
 
 
 /**
@@ -169,6 +170,15 @@ function stopTimeUpWatcher(): void {
   }
 }
 
+let introTimeoutId: number | null = null;
+
+function stopIntroTimeout(): void {
+  if (introTimeoutId !== null) {
+    window.clearTimeout(introTimeoutId);
+    introTimeoutId = null;
+  }
+}
+
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------- ENTRY POINT ------------------------------------------------------------------------ */
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -197,9 +207,8 @@ export function room2fireFunc(): void {
     showSection(fireSection); // fallback first load - show room directly with showSection
   }
 
+  stopTimeUpWatcher();  // No double watchers if re-entering the room
   startTimer(2); // Start the timer for the fire room
-
-  stopTimeUpWatcher(); // safety if re-enter
 
   timeUpIntervalId = window.setInterval(() => {
     if (!TimeIsUp) return;
@@ -270,7 +279,7 @@ function cacheDomOrThrow(): void {
 function bindListenersOnce(): void {
   for (const btn of keyButtons) { // loop trough all key buttons from keypad
     btn.addEventListener("click", () => {
-      if (locked) return;
+      if (locked || isTransitioning) return;
 
       const pick = btn.dataset.firePick; // get the value from HTML data-fire-pick
       if (!pick) return;
@@ -283,7 +292,7 @@ function bindListenersOnce(): void {
   }
 
   window.addEventListener("keydown", (e) => {
-    if (locked) return; // If the puzzle is locked, ignore keyboard input (for example while showing intro)
+    if (locked || isTransitioning) return; // If the puzzle is locked, ignore keyboard input (for example while showing intro)
 
     const k = e.key.toUpperCase();
     if (!isFireKey(k)) return;
@@ -300,6 +309,7 @@ function bindListenersOnce(): void {
 
 
 function resetRoom(): void {  // reset state
+  stopIntroTimeout();
   currentLevelIndex = 0;
   applyLevelClass();
   attempt = [];
@@ -308,16 +318,18 @@ function resetRoom(): void {  // reset state
   updateDescText(dataJSON.room2fire.desc.text);
 
   locked = true;  // Locked input
+  isTransitioning = true;
 
   createSlots();  // Prepare UI level 1, but input still locked
   updateHUD();
 
   fireSlots?.classList.remove(FOCUS_CLASS); // Fokus off until intro is done
 
-  window.setTimeout(() => { // After intro - Show level 1 instruction - release locked input and focus input
+  introTimeoutId = window.setTimeout(() => { // After intro - Show level 1 instruction - release locked input and focus input
     updateDescText(FIRE_LEVEL_TEXT[0] ?? "");
 
     locked = false;
+    isTransitioning = false;
     fireSlots?.classList.add(FOCUS_CLASS);
     setActiveSlotClass();
 
@@ -458,7 +470,7 @@ function fillSlot(slotIndex: number, key: FireKey): void {  // Fill the specifie
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 function handlePick(key: FireKey): void {
-  if (locked) return;
+  if (locked || isTransitioning) return;
 
   const level = LEVELS[currentLevelIndex];
   const total = level.sequence.length;
@@ -515,7 +527,7 @@ function resetAttempt(): void {
 
 function nextLevel(): void {
   if (currentLevelIndex >= LEVELS.length - 1) {
-    fireSection?.classList.add("room-complete");
+    ifRoomCompleted();
     return;
   }
 
@@ -536,41 +548,45 @@ function nextLevel(): void {
 
 function ifRoomCompleted(): void {
   // Block input while we show the final state + delay
+  stopTimeUpWatcher();
+  stopIntroTimeout();
   isTransitioning = true;
+  locked = true;
 
   // Render final UI state
   updateHUD();
+  setActiveSlotClass();
 
   // Delay so the player can SEE the final state
   window.setTimeout(() => {
-    // Wait 2 animation frames to guarantee the UI is painted
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        stopTimeUpWatcher();
         stopTimer(2);
 
-        // Save room result (used by progressbar + backpack later)
+        // Save room result
         setRoomResult("fire", { status: "completed", artifact: "true" });
 
-        // show msg to player
+        // Show msg
         showMsg("Well done — next chamber awaits", COMPLETE_MSG_MS);
 
+        // Reset AFTER message is shown
         window.setTimeout(() => {
-          // Reset fire state
           currentLevelIndex = 0;
           attempt = [];
           mistakes = 0;
 
-          // Rebuild UI to clean state (level 1 slots etc.)
           applyLevelClass();
           createSlots();
           updateHUD();
+          setActiveSlotClass();
 
-          // Allow input again (men resetRoom brukar intro-låsa; här håller vi det enkelt)
           isTransitioning = false;
+          locked = false;
 
-          // OBS: vi navigerar INTE till nästa rum här.
-          // Nästa rum (earth) kommer ta ansvar i sin egen room-func.
+          // Next step = Earth room / earth is resposible for transition
+          window.setTimeout(() => {
+            room3earthFunc();
+          }, 1250);
         }, COMPLETE_MSG_MS);
       });
     });
@@ -581,18 +597,20 @@ function ifRoomCompleted(): void {
 function ifRoomFailed(): void {
   stopTimeUpWatcher();
   stopTimer(2);
+  stopIntroTimeout();
 
-  // Block input so player can't keep interacting
   isTransitioning = true;
+  locked = true;
 
   // Update UI one last time
   updateHUD();
+  setActiveSlotClass();
 
-  // Save room result - used by progressbar + backpack later
+  // Save room result
   setRoomResult("fire", { status: "failed", artifact: "false" });
 
   // Show fail message
-  showMsg("Time's up — next chamber awaits", MSG_MS);
+  showMsg("Time's up — next chamber awaits", COMPLETE_MSG_MS);
 
   // Reset AFTER message is shown
   window.setTimeout(() => {
@@ -603,10 +621,15 @@ function ifRoomFailed(): void {
     applyLevelClass();
     createSlots();
     updateHUD();
+    setActiveSlotClass();
 
     isTransitioning = false;
+    locked = false;
 
-    // OBS: ingen navigation här heller.
+    // Next step = Earth room
+    window.setTimeout(() => {
+      room3earthFunc();
+    }, 1250);
   }, COMPLETE_MSG_MS);
 }
 
@@ -624,10 +647,12 @@ export function exitFireRoom(): void {
 
   if (!welcomeSection || !fromPage) return;
 
+  stopTimeUpWatcher();
   stopTimer(2);
+  stopIntroTimeout();
 
   hideGameHeader();
-  transitSections(fromPage, welcomeSection, 1200);
+  transitSections(fromPage, welcomeSection, TRANSITION_MS);
 }
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
