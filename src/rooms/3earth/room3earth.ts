@@ -16,7 +16,7 @@ const slateNumbersArray: number[] = [
 let timerCheckInterval: number;
 const correctSlatesArr: number[] = [];
 
-export function room3earthFunc() {
+export function room3earthFunc(): void {
   /* Sets the background for the room and shows room section */
   const earthSection: HTMLElement | null =
     document.querySelector("#room3Earth");
@@ -47,11 +47,6 @@ export function room3earthFunc() {
   console.log("Hello from the earth room");
 
   audioHandler("bgm");
-  audioHandler("click");
-  audioHandler("shortSlide");
-  audioHandler("midSlide");
-  audioHandler("midSlide2");
-  audioHandler("longSlide");
 
   const gameDiv: HTMLElement | null = document.querySelector("#gameDiv");
   if (gameDiv) {
@@ -88,7 +83,7 @@ export function room3earthFunc() {
 
 function slateClick(slate: HTMLElement | null, count: number): void {
   console.log(`Slate ${count} was clicked!`);
-
+  //winner();
   const currentSlate = document.querySelector(`.slate${count}`);
   const slateNumber: number = count;
   const emptySlate = document.querySelector(".slate16");
@@ -133,9 +128,6 @@ function moveSlate(
     const dirPoint: [x: number, y: number] = [dirX, dirY];
 
     if (matchTuples(dirPoint, lavaPos)) {
-      console.log(`dirPoint = ${dirPoint}`);
-      console.log(`currentPos = ${currentPos}`);
-
       animateMove(currentPos, dirPoint);
 
       if (getRandomInt(1, 2) === 1) {
@@ -143,30 +135,26 @@ function moveSlate(
       } else {
         audioHandler("midSlide2");
       }
+      setTimeout(() => {
+        // Wait for animation to finish
+        const slateToMove: HTMLElement | null = document.querySelector(
+          `.slate${slateNumber}`,
+        );
+        const lavaSlate: HTMLElement | null =
+          document.querySelector(`.slate16`);
 
-      const slateToMove: HTMLElement | null = document.querySelector(
-        `.slate${slateNumber}`,
-      );
-      const lavaSlate: HTMLElement | null = document.querySelector(`.slate16`);
+        const oldSlateCord: string = slateToMove
+          ?.classList[2] as unknown as string;
+        const newSlateCord: string = lavaSlate
+          ?.classList[2] as unknown as string;
 
-      /*
-      console.log(slateToMove);
-      console.log(slateToMove?.classList[2]);
+        slateToMove?.classList.remove(oldSlateCord);
+        slateToMove?.classList.add(newSlateCord);
+        lavaSlate?.classList.remove(newSlateCord);
+        lavaSlate?.classList.add(oldSlateCord);
 
-      console.log(lavaSlate);
-      console.log(lavaSlate?.classList[2]);
-      */
-
-      const oldSlateCord: string = slateToMove
-        ?.classList[2] as unknown as string;
-      const newSlateCord: string = lavaSlate?.classList[2] as unknown as string;
-
-      slateToMove?.classList.remove(oldSlateCord);
-      slateToMove?.classList.add(newSlateCord);
-      lavaSlate?.classList.remove(newSlateCord);
-      lavaSlate?.classList.add(oldSlateCord);
-
-      checkSlateLock(slateToMove);
+        checkSlateLock(slateToMove);
+      }, 750); // setTimeout END (Wait for animation)
     } // IF MATCHED END
   } // Directions Loop END
 } //moveSlate END
@@ -174,7 +162,7 @@ function moveSlate(
 function animateMove(
   currentPos: [x: number, y: number],
   direction: [x: number, y: number],
-) {
+): void {
   let currentPosString: string = currentPos.toString();
   currentPosString = currentPosString.replace(",", "");
 
@@ -188,27 +176,29 @@ function animateMove(
     `.c${directionString}`,
   );
 
-  console.log("currentSlate:");
-  console.log(currentSlate);
-  console.log("toSlate:");
-  console.log(toSlate);
-
   const currentRect = currentSlate?.getBoundingClientRect();
   const toRect = toSlate?.getBoundingClientRect();
-  console.log(`currentRect.top = ${currentRect?.top}`);
-  console.log(`currentRect.left = ${currentRect?.left}`);
 
-  console.log(`toRect.top = ${toRect?.top}`);
-  console.log(`toRect.left = ${toRect?.left}`);
   if (currentRect && toRect) {
     const topCalc: number = toRect.top - currentRect.top;
     const leftCalc: number = toRect.left - currentRect.left;
-    console.log(`topCalc = ${currentRect?.top} - ${toRect?.top} = ${topCalc}`);
-    console.log(
-      `leftCalc = ${currentRect?.left} - ${toRect?.left} = ${leftCalc}`,
-    );
-    if (currentSlate) {
-      currentSlate.style.left = leftCalc.toString();
+    //console.log(`topCalc = ${currentRect?.top} - ${toRect?.top} = ${topCalc}`);
+    //console.log(`leftCalc = ${currentRect?.left} - ${toRect?.left} = ${leftCalc}`);
+    if (currentSlate && topCalc === 0) {
+      currentSlate.style.transition = `transform 750ms`;
+      currentSlate.style.transform = `translateX(${leftCalc.toString()}px)`;
+
+      setTimeout(() => {
+        currentSlate.style.transition = ``;
+        currentSlate.style.transform = ``;
+      }, 750); //Reset transition and transform after animation has finished
+    } else if (currentSlate && leftCalc === 0) {
+      currentSlate.style.transition = `transform 750ms`;
+      currentSlate.style.transform = `translateY(${topCalc.toString()}px)`;
+      setTimeout(() => {
+        currentSlate.style.transition = ``;
+        currentSlate.style.transform = ``;
+      }, 750); //Reset transition and transform after animation has finished
     }
   }
   // TODO SETUP FOR ANIMATIONS
@@ -219,7 +209,7 @@ function matchTuples(
   actual: [number, number],
 ): boolean {
   return expected[0] === actual[0] && expected[1] === actual[1];
-}
+} //matchTuples END
 
 function checkSlateLock(movedSlate: HTMLElement | null): void {
   const cord: string = movedSlate?.classList[2] as unknown as string;
@@ -276,10 +266,20 @@ function checkSlateLock(movedSlate: HTMLElement | null): void {
   console.log(correctSlatesArr);
   if (correctSlatesArr.length === 15) {
     console.log("WINNER WINNER CHICKEN DINNER!!!");
-  }
+    winner();
+  } // IF win END
 } //checkSlateLock END
 
-function checkTextContent(textContent: string, target: number) {
+function winner(): void {
+  const lavaSlate: HTMLElement | null = document.querySelector(".slate16");
+  if (lavaSlate) {
+    lavaSlate.classList.add("win");
+    lavaSlate.style.opacity = "1";
+    lavaSlate.style.filter = "grayscale(100%)";
+  } //IF lavaSlate END
+}
+
+function checkTextContent(textContent: string, target: number): void {
   const slateIndex: number = correctSlatesArr.indexOf(target);
   if (textContent === target.toString()) {
     audioHandler("click");
@@ -351,7 +351,7 @@ function audioHandler(audio: string): void {
   }
 } // Audio Handler END
 
-function getRandomInt(min: number, max: number) {
+function getRandomInt(min: number, max: number): number {
   const minCeiled = Math.ceil(min);
   const maxFloored = Math.floor(max);
   return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled);
