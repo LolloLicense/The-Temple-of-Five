@@ -1,145 +1,132 @@
 ## 1  Importera rätt saker i din room-fil (t.ex. room2fire.ts)
 
-`import { startTimer, stopTimer, TimeIsUp } from "../../script/helper/utils";`
-`import { setRoomResult } from "../../script/helper/storage";`
-`import { showMsg } from "../../script/helper/showMsg";`
+`import { startTimer, stopTimer, TimeIsUp } from "../../script/helper/utils.ts";`
+`import { setRoomResult } from "../../script/helper/storage.ts";`
+`import { showMsg } from "../../script/helper/showMsg.ts";`
+`import { transitSections, getCurrentPage, showSection } from "../../script/helper/transitions.ts";`
 
 om rummet ska kunns skicka vidare till nästkommande rum ex: 
-    `import { room3earthFunc } from "../3earth/room3earth";`
+    `import { roomNextFunc } from "../NEXT_ROOM_PATH/roomNextFile.ts";`
 
-## 2 få in timerfunktionerna 
+## 2 I början av roomXFunc() → gör “entry transition” korrekt
+ Detta ska ligga direkt efter att du hämtat din rum-section
 
-startTimer(1); denna låg i början innan ta bort och lägg in detta under play bg music:
+A)    const roomSection = document.querySelector<HTMLElement>("#DIN_SECTION_ID");
+    if (!roomSection) return;
 
-    // Prevent adding event listeners twice if player re-enters the room
+    roomSection.style.backgroundImage = `url("${dataJSON.DITT_RUM.backgroundImg}")`;
 
-    if (woodSection.dataset.woodInit === "true") return;
-    woodSection.dataset.woodInit = "true";
+B)  Transition in (eller fallback show) const TRASITIONTIME = 1300;
+    
+    const fromPage =
+    getCurrentPage() ??
+    document.querySelector<HTMLElement>("main > section.page.isVisible");
 
-    // Start timer for room 1
-    startTimer(1); 
+    if (fromPage && fromPage !== roomSection) {
+    transitSections(fromPage, roomSection, TRANSITIONTIME);
+    } else {
+    showSection(roomSection);
+    }
 
-    // --- TIMEOUT WATCHER (room timer) -------------------------
+## 3 Lägg in “init guard” men utan att stoppa entry   
 
-    // Poll TimeIsUp every 200ms. When it's true, we fail this room once.
+    const isFirstInit = roomSection.dataset.roomInit !== "true";
+    if (isFirstInit) roomSection.dataset.roomInit = "true";
 
-    let timeUpIntervalId: number | null = null;
+
+## 4 Timer + TimeIsUp watcher (minimalt & stabilt)
+
+Detta ska ligga efter init guard, innan ni börjar med resten av UI.
+
+     startTimer(ROOM_ID_NUMBER); Hittar ditt nr i jsonfilen
+
+     let timeUpIntervalId: number | null = null;
+
+B) Skapa watcher som triggar fail och undvik dubletter
 
     function stopTimeUpWatcher(): void {
-        if (timeUpIntervalId !== null) {
+    if (timeUpIntervalId !== null) {
         window.clearInterval(timeUpIntervalId);
         timeUpIntervalId = null;
-        }
+    }
     }
 
     timeUpIntervalId = window.setInterval(() => {
-        if (!TimeIsUp) return;
-        ifRoomFailed();
+    if (!TimeIsUp) return;
+    ifRoomFailed();
     }, 200);
 
-## 3 Lägg till en const för din section i DOM sektionen (om du har en)   
 
-    Ex: const woodEl = woodSection;
+## 5 Skapa två funktioner: ifRoomCompleted() och ifRoomFailed()
 
+A) 
+       
+     function ifRoomCompleted(): void {
+    // blockera dubbel-trigger
+    if (isTransitioning) return;
+    isTransitioning = true;
 
-## 4 function ifRoomCompleted():
+    // uppdatera UI sista gången (om ni vill)
+    updtUI?.();
 
-lägg till dina timeranrop samt show msg likt min :
+    stopTimeUpWatcher();
+    stopTimer(ROOM_ID_NUMBER);
 
-     // WORK IN PROGRESS
+    // spara att rummet är completed + rätt artefakt
+    setRoomResult("ROOM_ID_STRING", { status: "completed", artifact: "true" });
 
-    function ifRoomCompleted(): void {
-        // Block input while we show the final state + delay
-
-        isTransitioning = true;
-
-    // 1) Render the very last digit + final UI state
-    
-    updtUI();
-
-    if (mistakes === 0) {
-      balanceFill.style.width = "100%";
-    }
-
-    // 2) Delay so the player can SEE the final digit (before alert blocks the browser)
+    showMsg("Well done — next chamber awaits", TRANSITIONTIME);
 
     window.setTimeout(() => {
-      // 3) Wait 2 animation frames to guarantee the UI is painted before alert
-     
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          stopTimeUpWatcher();
-          stopTimer(1);
+        // resetta rums-state (om ni vill kunna re-run utan reload)
+        resetRoomState?.();
 
-          // Save room result (used by progressbar + backpack later)
+    // gör transition till nästa section
+    const nextSection = document.querySelector<HTMLElement>("#NEXT_SECTION_ID");
+    if (!nextSection) return;
 
-          setRoomResult("wood", { status: "completed", artifact: "true" });
-          
-          // show msg to player
-          showMsg("Well done — next chamber awaits", 1200);
-          window.setTimeout(() => {
-            // 4) Reset wood state
+    transitSections(roomSection, nextSection, TRANSITIONTIME);
 
-            currentLevelIndex = 0;
-            mistakes = 0;
-            resetLevelInput();
+    // starta nästa rum efter att fade är klar
+    window.setTimeout(() => {
+      roomNextFunc();
+    }, TRANSITIONTIME);
+    }, TRANSITIONTIME);
+    }
+    
+B) FAIL (mall)  
 
-            // Allow input again wood is about to be hidden anyway
-            
-            isTransitioning = false;
-            updtUI();
-
-            window.setTimeout(() => {
-              room2fireFunc();
-            }, 1250);
-          });
-        });
-      });
-    }, 1200);
-  }
-
-    // Called when the room timer hits 0 (fail case)
 
     function ifRoomFailed(): void {
-        stopTimeUpWatcher();
-        stopTimer(1);
-        // Block input so player can't keep interacting
+    if (isTransitioning) return;
+    isTransitioning = true;
 
-        isTransitioning = true;
+    updtUI?.();
 
-    // Update UI one last time (optional but nice)
+    stopTimeUpWatcher();
+    stopTimer(ROOM_ID_NUMBER);
 
-    updtUI();
+    // spara failed + fel artefakt
+    setRoomResult("ROOM_ID_STRING", { status: "failed", artifact: "false" });
 
-    // Save room result (used by progressbar + backpack later)
-
-    setRoomResult("wood", { status: "failed", artifact: "false" });
-
-    // Show fail message
-
-    showMsg("Time's up — next chamber awaits", 1200);
-
-    // Reset AFTER message is shown
-    
-    window.setTimeout(() => {
-      currentLevelIndex = 0;
-      mistakes = 0;
-      resetLevelInput();
-
-      isTransitioning = false;
-      updtUI();
-
-      // TODO: transition to next page-> fire room
-      const fireSection = document.querySelector<HTMLElement>("#room2Fire");
-    if (!fireSection) return;
-
-    transitSections(woodSection, fireSection, 1200);
+    showMsg("Time's up — next chamber awaits", TRANSITIONTIME);
 
     window.setTimeout(() => {
-        room2fireFunc();
-        }, 1250);
-            }, 1200);
+        resetRoomState?.();
+
+    const nextSection = document.querySelector<HTMLElement>("#NEXT_SECTION_ID");
+    if (!nextSection) return;
+
+    transitSections(roomSection, nextSection, TRANSITIONTIME);
+
+    window.setTimeout(() => {
+      roomNextFunc();
+    }, TRANSITIONTIME);
+    }, TRANSITIONTIME);
     }
 
+
+
+Alltså detta var super krångligt... kolla om detta ens funkar..
 
 

@@ -56,9 +56,18 @@ export function room1woodFunc() {
     showSection(woodSection);
   }
 
+  // Allow entering room every time (transition + header + timer)
+  // But only create heavy stuff once (particles + event listeners)
+  const isFirstInit = woodSection.dataset.woodInit !== "true";
+  if (isFirstInit) woodSection.dataset.woodInit = "true";
+
   //-----------------------------------------------------------
   //-------------------------TIMER SETUP-----------------------
   //-----------------------------------------------------------
+
+  // If we re-enter, clear previous watcher (prevents double fail triggers)
+  const prevWatcherId = woodSection.dataset.timeUpWatcherId;
+  if (prevWatcherId) window.clearInterval(Number(prevWatcherId));
 
   // Start timer for room 1
   startTimer(1);
@@ -77,6 +86,8 @@ export function room1woodFunc() {
     if (!TimeIsUp) return;
     ifRoomFailed();
   }, 200);
+
+  woodSection.dataset.timeUpWatcherId = String(timeUpIntervalId);
 
   //-----------------------------------------------------------
   //----------------------ROOM UI------------------------------
@@ -328,47 +339,47 @@ export function room1woodFunc() {
   }
 
   //-----------------------------------------------------------
-  //-------------------------FAIL / COMPLETE-------------------
+  //--------------------- ROOMCOMPLETE ------------------------
   //-----------------------------------------------------------
 
   function ifRoomCompleted(): void {
     // Block input while we show the final state + delay
     isTransitioning = true;
-
     //Render the very last digit + final UI state
     updtUI();
 
-    if (mistakes === 0) {
-      balanceFill.style.width = "100%";
-    }
+    if (mistakes === 0) balanceFill.style.width = "100%";
 
+    // Wait 2 animation frames to guarantee the UI is painted before alert
     window.setTimeout(() => {
-      // Wait 2 animation frames to guarantee the UI is painted before alert
+      stopTimeUpWatcher();
+      stopTimer(1);
+
+      // Save room result - used by progressbar + artifactholder later
+      setRoomResult("wood", { status: "completed", artifact: "true" });
+      // show msg to player
+      showMsg("Well done — next chamber awaits", TRANSITIONTIME);
+
       window.setTimeout(() => {
-        stopTimeUpWatcher();
-        stopTimer(1);
-        // Save room result - used by progressbar + artifactholder later
-        setRoomResult("wood", { status: "completed", artifact: "true" });
-        // show msg to player
-        showMsg("Well done — next chamber awaits", TRANSITIONTIME);
-
-        window.setTimeout(() => {
-          // Reset wood state
-          currentLevelIndex = 0;
-          mistakes = 0;
-          resetLevelInput();
-          // Allow input again wood is about to be hidden anyway
-          isTransitioning = false;
-          updtUI();
-          // go next room
-          room2fireFunc();
-        });
+        // Reset wood state
+        currentLevelIndex = 0;
+        mistakes = 0;
+        resetLevelInput();
+        // Allow input again wood is about to be hidden anyway
+        isTransitioning = false;
+        updtUI();
+        // go next room
+        room2fireFunc();
       }, TRANSITIONTIME);
-    });
+    }, TRANSITIONTIME);
   }
+  //-----------------------------------------------------------
+  //--------------------- ROOMFAIL ----------------------------
+  //-----------------------------------------------------------
 
-  // Called when the room timer hits 0 - fail case
+  // Called when the room timer hits 0
   function ifRoomFailed(): void {
+    if (isTransitioning) return;
     stopTimeUpWatcher();
     stopTimer(1);
     // Block input so player can't keep interacting
@@ -450,8 +461,7 @@ export function room1woodFunc() {
   }
 
   // Prevent adding event listeners twice if player re-enters the room
-  if (woodSection.dataset.woodInit !== "true") {
-    woodSection.dataset.woodInit = "true";
+  if (isFirstInit) {
     keypad.addEventListener("click", handleKeypadClick);
     keypad.addEventListener("keydown", handleKeyDownEvent);
   }
