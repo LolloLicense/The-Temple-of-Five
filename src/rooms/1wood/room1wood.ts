@@ -390,11 +390,6 @@ export function room1woodFunc() {
       isTransitioning = false;
       updtUI();
 
-      const fireSection = document.querySelector<HTMLElement>("#room2Fire");
-      if (!fireSection) return;
-
-      transitSections(woodEl, fireSection, 1200);
-
       window.setTimeout(() => {
         room2fireFunc();
       }, 1250);
