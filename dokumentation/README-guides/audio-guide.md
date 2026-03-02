@@ -15,6 +15,7 @@ exempel: src: withBaseUrl("/audiofiles/bgm_fire.mp3"), <- från initAudio.ts
 1. Lägg in era ljud i initAudio.ts
 Exempel från fire room: 
 
+  
     {
       id: "bgm_fire", // same id as in data.json **IMPORTANT**
       src: withBaseUrl("/audiofiles/bgm_fire.mp3"),
@@ -27,6 +28,7 @@ Exempel från fire room:
     kind: "sfx",
     volume: 0.4,
   },
+
 
   2. Koppla BGM i data.json
   

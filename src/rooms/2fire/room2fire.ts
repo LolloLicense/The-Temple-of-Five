@@ -180,6 +180,65 @@ function stopIntroTimeout(): void {
 }
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------- EVENT HANDLERS --------------------------------------------------------------- */
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+function handleFireClick(e: MouseEvent): void {
+  if (locked || isTransitioning) return;
+  if (!fireSection) return;
+
+  // Only react when Fire room is visible (prevents leakage to other rooms)
+  if (!fireSection.classList.contains("isVisible")) return;
+
+  const target = e.target as HTMLElement | null;
+  if (!target) return;
+
+  // Any click inside fireSection -> find closest button.fireKey
+  const btn = target.closest<HTMLButtonElement>(".fireKey");
+  if (!btn) return;
+
+  const pick = btn.dataset.firePick;
+  if (!pick) return;
+
+  const k = pick.toUpperCase();
+  if (!isFireKey(k)) return;
+
+  handlePick(k);
+}
+
+function handleFireKeyDown(e: KeyboardEvent): void {
+  if (locked || isTransitioning) return;
+  if (!fireSection) return;
+
+  // Only react when Fire room is visible (prevents leakage to other rooms)
+  if (!fireSection.classList.contains("isVisible")) return;
+
+  const k = e.key.toUpperCase();
+  if (!isFireKey(k)) return;
+
+  // Prevent page scroll etc. when pressing keys
+  e.preventDefault();
+  handlePick(k);
+}
+
+/**
+ * Bind click event to the element buttons, only once to avoid double listeners.
+ * Only FireKeys
+ * Send to handlePick, game logic
+ */
+
+function bindListenersOnce(): void {
+  if (!fireSection) return;
+
+  // Click delegation on the room section (captures clicks on icons inside buttons too)
+  fireSection.addEventListener("click", handleFireClick);
+
+  // Keyboard is global (but guarded by "isVisible" above)
+  window.addEventListener("keydown", handleFireKeyDown);
+}
+
+
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------- ENTRY POINT ------------------------------------------------------------------------ */
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 
@@ -265,42 +324,6 @@ function cacheDomOrThrow(): void {
       "Fire room DOM mismatch. Need: #fireSlots, .fireKey, #fireLevelValue, #fireMistakes, .balanceBar, #fireBalanceFill",
     );
   }
-}
-/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
-/* -------------------------------------------------------------- LISTENERS ------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
-
-/**
- * Bind click event to the element buttons, only once to avoid double listeners.
- * Only FireKeys
- * Send to handlePick, game logic
- */
-
-function bindListenersOnce(): void {
-  for (const btn of keyButtons) { // loop trough all key buttons from keypad
-    btn.addEventListener("click", () => {
-      if (locked || isTransitioning) return;
-
-      const pick = btn.dataset.firePick; // get the value from HTML data-fire-pick
-      if (!pick) return;
-
-      const k = pick.toUpperCase(); // Convert the pick to uppercase to ensure it matches the FireKey
-      if (!isFireKey(k)) return;  // Only process keys that are valid FireKeys
-
-      handlePick(k);  // Send the picked key to the game logic handler
-    });
-  }
-
-  window.addEventListener("keydown", (e) => {
-    if (locked || isTransitioning) return; // If the puzzle is locked, ignore keyboard input (for example while showing intro)
-
-    const k = e.key.toUpperCase();
-    if (!isFireKey(k)) return;
-
-    e.preventDefault(); // Prevent default behavior for the key press to avoid unintended side effects (like scrolling)
-
-    handlePick(k);
-  });
 }
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -546,73 +569,73 @@ function nextLevel(): void {
 /* ------------------------------------------------------- COMPLETE / FAIL ROOM --------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 
-function ifRoomCompleted(): void {
-  // Block input while we show the final state + delay
-  stopTimeUpWatcher();
-  stopIntroTimeout();
-  isTransitioning = true;
-  locked = true;
+function goToNextRoom(nextSelector: string, nextRoomFunc: () => void): void {
+  if (!fireSection) return;
 
-  // Render final UI state
-  updateHUD();
-  setActiveSlotClass();
+  const nextSection = document.querySelector<HTMLElement>(nextSelector);
+  if (!nextSection) return;
 
-  // Delay so the player can SEE the final state
+  transitSections(fireSection, nextSection, TRANSITION_MS);
+
   window.setTimeout(() => {
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        stopTimer(2);
-
-        // Save room result
-        setRoomResult("fire", { status: "completed", artifact: "true" });
-
-        // Show msg
-        showMsg("Well done — next chamber awaits", COMPLETE_MSG_MS);
-
-        // Reset AFTER message is shown
-        window.setTimeout(() => {
-          currentLevelIndex = 0;
-          attempt = [];
-          mistakes = 0;
-
-          applyLevelClass();
-          createSlots();
-          updateHUD();
-          setActiveSlotClass();
-
-          isTransitioning = false;
-          locked = false;
-
-          // Next step = Earth room / earth is resposible for transition
-          window.setTimeout(() => {
-            room3earthFunc();
-          }, 1250);
-        }, COMPLETE_MSG_MS);
-      });
-    });
-  }, COMPLETE_MSG_MS);
+    nextRoomFunc();
+  }, TRANSITION_MS);
 }
 
-// Called when the room timer hits 0 - fail case
-function ifRoomFailed(): void {
+function ifRoomCompleted(): void {
   stopTimeUpWatcher();
-  stopTimer(2);
   stopIntroTimeout();
+  stopTimer(2);
 
   isTransitioning = true;
   locked = true;
 
-  // Update UI one last time
   updateHUD();
   setActiveSlotClass();
 
   // Save room result
+  setRoomResult("fire", { status: "completed", artifact: "true" });
+
+  // Show msg
+  showMsg("Well done — next chamber awaits", COMPLETE_MSG_MS);
+
+
+  window.setTimeout(() => {
+    // CLEANUP:
+    currentLevelIndex = 0;
+    attempt = [];
+    mistakes = 0;
+
+    applyLevelClass();
+    createSlots();
+    updateHUD();
+    setActiveSlotClass();
+
+    // Lås upp (men rummet kommer ändå försvinna i transition)
+    isTransitioning = false;
+    locked = false;
+
+    // Fire ansvarar för transition till Earth
+    goToNextRoom("#room3Earth", room3earthFunc);
+  }, COMPLETE_MSG_MS);
+}
+
+function ifRoomFailed(): void {
+  stopTimeUpWatcher();
+  stopIntroTimeout();
+  stopTimer(2);
+
+  isTransitioning = true;
+  locked = true;
+
+  updateHUD();
+  setActiveSlotClass();
+
   setRoomResult("fire", { status: "failed", artifact: "false" });
 
-  // Show fail message
   showMsg("Time's up — next chamber awaits", COMPLETE_MSG_MS);
 
-  // Reset AFTER message is shown
+  //  Efter message -> reset -> transition till Earth
   window.setTimeout(() => {
     currentLevelIndex = 0;
     attempt = [];
@@ -626,10 +649,7 @@ function ifRoomFailed(): void {
     isTransitioning = false;
     locked = false;
 
-    // Next step = Earth room
-    window.setTimeout(() => {
-      room3earthFunc();
-    }, 1250);
+    goToNextRoom("#room3Earth", room3earthFunc);
   }, COMPLETE_MSG_MS);
 }
 
