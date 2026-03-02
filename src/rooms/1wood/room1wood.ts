@@ -126,7 +126,6 @@ export function room1woodFunc() {
   const levelTextEl = woodSection.querySelector<HTMLSpanElement>("#levelText");
   const mistakesTextEl =
     woodSection.querySelector<HTMLSpanElement>("#mistakesText");
-  const woodEl = woodSection;
   const roomBalanceEl =
     woodSection.querySelector<HTMLDivElement>("#balanceFill");
 
