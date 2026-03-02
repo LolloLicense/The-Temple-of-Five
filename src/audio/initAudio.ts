@@ -17,10 +17,10 @@ export function initAudio(): void {
       volume: 0.2,
     },
     {
-      id: "bgm_metal", // same id as in data.json **IMPORTANT**
+      id: "bgm_metal", // same id as in data.json 
       src: withBaseUrl("/audiofiles/bgm_metal.mp3"),
       kind: "bgm",
-      volume: 0.6,
+      volume: 0.5,
     },
     {
       id: "bgm_water",
@@ -62,6 +62,12 @@ export function initAudio(): void {
     src: withBaseUrl("/audiofiles/sfx_longSlide.mp3"),
     kind: "sfx",
     volume: 0.4,
+    },
+    {
+      id: "bgm_final", // same id as in data.json
+      src: withBaseUrl("/audiofiles/bgm_final.mp3"),
+      kind: "bgm",
+      volume: 0.5,
     },
     {
       id: "bgm_game_over",
