@@ -1,4 +1,5 @@
 import * as dataJSON from "../../data.json";
+import { playBgm/*, playSfx*/ } from "../../audio/index.ts";
 import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
 //import { startTimer, stopTimer } from "./script/utils.ts";
 import { startTimer } from "../../script/helper/utils.ts";
@@ -6,13 +7,23 @@ import { showGameHeader } from "../../script/helper/gameHeader.ts";
 import { transitSections, getCurrentPage, showSection } from "../../script/helper/transitions.ts";
 
 export function room6finalFunc() {
-  /* Hide the welcome page (menu)
-   This can be removed when we remove the menu */
+  /* Gömmer välkomst sidan, kan tas bort senare*/
   const welcomePage: HTMLElement | null =
     document.querySelector("#welcomePage");
   if (welcomePage) {
     welcomePage.classList.add("hidden");
   }
+
+  //-------------------------------------------------------------------------------------------------------------------------------------
+  //---------------------------------------------------------------- Ljud ---------------------------------------------------------------
+  //-------------------------------------------------------------------------------------------------------------------------------------
+
+  const bgmId = dataJSON.room6validate.bgmId; // Spela bakgrundsmusiken för finalrummet
+  if (bgmId) {
+    void playBgm(bgmId, 650); // Spela bakgrundsmusiken för finalrummet med fade in på 650ms
+  }
+  /*const sfxId = dataJSON.room6validate.sfxId; // Spela ljud när man lägger en bit på plats?*/
+
 
   /* Sets the background for the room and shows room section */
   const finalSection: HTMLElement | null = document.querySelector("#finalRoom");// Hämtar sektionen för finalrummet
