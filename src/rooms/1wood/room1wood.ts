@@ -342,6 +342,19 @@ export function room1woodFunc() {
   //--------------------- ROOMCOMPLETE ------------------------
   //-----------------------------------------------------------
 
+  function goToFireRoom(): void {
+    const fireSection = document.querySelector<HTMLElement>("#room2Fire");
+    if (!fireSection) return;
+
+    // fade wood -> fire
+    transitSections(woodSection, fireSection, TRANSITIONTIME);
+
+    // starta nästa rum när fade är klar
+    window.setTimeout(() => {
+      room2fireFunc();
+    }, TRANSITIONTIME);
+  }
+
   function ifRoomCompleted(): void {
     // Block input while we show the final state + delay
     isTransitioning = true;
@@ -369,7 +382,7 @@ export function room1woodFunc() {
         isTransitioning = false;
         updtUI();
         // go next room
-        room2fireFunc();
+        goToFireRoom();
       }, TRANSITIONTIME);
     }, TRANSITIONTIME);
   }
@@ -400,7 +413,7 @@ export function room1woodFunc() {
       isTransitioning = false;
       updtUI();
 
-      room2fireFunc();
+      goToFireRoom();
     }, TRANSITIONTIME);
   }
 
