@@ -30,6 +30,7 @@ const SLOTS_PER_STAGE = 6;
 // In Room Balance
 const MISTAKE_PENALTY = 4;
 const WOBBLEBALANCE = 1.5;
+const TRANSITIONTIME = 1200;
 
 export function room1woodFunc() {
   //----------------------------------------------------------
@@ -42,24 +43,52 @@ export function room1woodFunc() {
   }
 
   woodSection.style.backgroundImage = `url("${dataJSON.room1wood.backgroundImg}")`;
+
   // Find the current visible page BEFORE switching
   const fromPage =
     getCurrentPage() ??
     document.querySelector<HTMLElement>("main > section.page.isVisible");
   if (fromPage && fromPage !== woodSection) {
     // Fade from current page -> wood room
-    transitSections(fromPage, woodSection, 1200);
+    transitSections(fromPage, woodSection, TRANSITIONTIME);
   } else {
     // Fallback (first load): just show the room
     showSection(woodSection);
   }
-  showGameHeader();
+
+  //-----------------------------------------------------------
+  //-------------------------TIMER SETUP-----------------------
+  //-----------------------------------------------------------
+
+  // Start timer for room 1
+  startTimer(1);
+
+  //
+  let timeUpIntervalId: number | null = null;
+
+  function stopTimeUpWatcher(): void {
+    if (timeUpIntervalId !== null) {
+      window.clearInterval(timeUpIntervalId);
+      timeUpIntervalId = null;
+    }
+  }
+
+  timeUpIntervalId = window.setInterval(() => {
+    if (!TimeIsUp) return;
+    ifRoomFailed();
+  }, 200);
+
+  //-----------------------------------------------------------
+  //----------------------ROOM UI------------------------------
+  //-----------------------------------------------------------
 
   /* Play the background music for woodroom */
   const bgmId = dataJSON.room1wood.bgmId;
   if (bgmId) {
     void playBgm(bgmId, 650); // play the background music for the wood room, with a fade-in duration of 650ms
   }
+
+  showGameHeader();
 
   // fireflie animation
   const particlesWrap =
@@ -88,27 +117,6 @@ export function room1woodFunc() {
       particlesWrap.appendChild(particle);
     }
   }
-
-  // Prevent adding event listeners twice if player re-enters the room
-  if (woodSection.dataset.woodInit === "true") return;
-  woodSection.dataset.woodInit = "true";
-  // Start timer for room 1
-  startTimer(1);
-  // --- TIMEOUT WATCHER (room timer) -------------------------
-  // Poll TimeIsUp every 200ms. When it's true, we fail this room once.
-  let timeUpIntervalId: number | null = null;
-
-  function stopTimeUpWatcher(): void {
-    if (timeUpIntervalId !== null) {
-      window.clearInterval(timeUpIntervalId);
-      timeUpIntervalId = null;
-    }
-  }
-
-  timeUpIntervalId = window.setInterval(() => {
-    if (!TimeIsUp) return;
-    ifRoomFailed();
-  }, 200);
 
   // render desc from JSON into <div id="roomDesc">
   renderRoomDesc(woodSection, dataJSON.room1wood.desc);
@@ -334,34 +342,29 @@ export function room1woodFunc() {
       balanceFill.style.width = "100%";
     }
 
-    // Delay so the player can SEE the final digit
     window.setTimeout(() => {
       // Wait 2 animation frames to guarantee the UI is painted before alert
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          stopTimeUpWatcher();
-          stopTimer(1);
-          // Save room result (used by progressbar + backpack later)
-          setRoomResult("wood", { status: "completed", artifact: "true" });
-          // show msg to player
-          showMsg("Well done — next chamber awaits", 1300);
-          window.setTimeout(() => {
-            // 4) Reset wood state
-            currentLevelIndex = 0;
-            mistakes = 0;
-            resetLevelInput();
+      window.setTimeout(() => {
+        stopTimeUpWatcher();
+        stopTimer(1);
+        // Save room result - used by progressbar + artifactholder later
+        setRoomResult("wood", { status: "completed", artifact: "true" });
+        // show msg to player
+        showMsg("Well done — next chamber awaits", TRANSITIONTIME);
 
-            // Allow input again wood is about to be hidden anyway
-            isTransitioning = false;
-            updtUI();
-
-            window.setTimeout(() => {
-              room2fireFunc();
-            }, 1250);
-          }, 1300);
+        window.setTimeout(() => {
+          // Reset wood state
+          currentLevelIndex = 0;
+          mistakes = 0;
+          resetLevelInput();
+          // Allow input again wood is about to be hidden anyway
+          isTransitioning = false;
+          updtUI();
+          // go next room
+          room2fireFunc();
         });
-      });
-    }, 1300);
+      }, TRANSITIONTIME);
+    });
   }
 
   // Called when the room timer hits 0 - fail case
@@ -370,15 +373,12 @@ export function room1woodFunc() {
     stopTimer(1);
     // Block input so player can't keep interacting
     isTransitioning = true;
-
     // Update UI one last time
     updtUI();
-
-    // Save room result - used by progressbar + backpack later
+    // Save room result - used by progressbar + artifactholder later
     setRoomResult("wood", { status: "failed", artifact: "false" });
-
     // Show fail message
-    showMsg("Time's up — next chamber awaits", 1300);
+    showMsg("Time's up — next chamber awaits", TRANSITIONTIME);
 
     // Reset AFTER message is shown
     window.setTimeout(() => {
@@ -389,10 +389,8 @@ export function room1woodFunc() {
       isTransitioning = false;
       updtUI();
 
-      window.setTimeout(() => {
-        room2fireFunc();
-      }, 1250);
-    }, 1300);
+      room2fireFunc();
+    }, TRANSITIONTIME);
   }
 
   //-----------------------------------------------------------
@@ -451,8 +449,12 @@ export function room1woodFunc() {
     keyBtns[nextKeyIndex].focus();
   }
 
-  keypad.addEventListener("click", handleKeypadClick);
-  keypad.addEventListener("keydown", handleKeyDownEvent);
+  // Prevent adding event listeners twice if player re-enters the room
+  if (woodSection.dataset.woodInit !== "true") {
+    woodSection.dataset.woodInit = "true";
+    keypad.addEventListener("click", handleKeypadClick);
+    keypad.addEventListener("keydown", handleKeyDownEvent);
+  }
 
   function initKeypadFocus(): void {
     // give one button at a time tabIndex 0. all others -0(not able to be tabbed to)
