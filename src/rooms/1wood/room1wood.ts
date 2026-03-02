@@ -320,21 +320,24 @@ export function room1woodFunc() {
     updtUI();
   }
 
-  // WORK IN PROGRESS
+  //-----------------------------------------------------------
+  //-------------------------FAIL / COMPLETE-------------------
+  //-----------------------------------------------------------
+
   function ifRoomCompleted(): void {
     // Block input while we show the final state + delay
     isTransitioning = true;
 
-    // 1) Render the very last digit + final UI state
+    //Render the very last digit + final UI state
     updtUI();
 
     if (mistakes === 0) {
       balanceFill.style.width = "100%";
     }
 
-    // 2) Delay so the player can SEE the final digit (before alert blocks the browser)
+    // Delay so the player can SEE the final digit
     window.setTimeout(() => {
-      // 3) Wait 2 animation frames to guarantee the UI is painted before alert
+      // Wait 2 animation frames to guarantee the UI is painted before alert
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           stopTimeUpWatcher();
@@ -356,23 +359,23 @@ export function room1woodFunc() {
             window.setTimeout(() => {
               room2fireFunc();
             }, 1250);
-          }, 1200);
+          }, 1300);
         });
       });
-    }, 1200);
+    }, 1300);
   }
 
-  // Called when the room timer hits 0 (fail case)
+  // Called when the room timer hits 0 - fail case
   function ifRoomFailed(): void {
     stopTimeUpWatcher();
     stopTimer(1);
     // Block input so player can't keep interacting
     isTransitioning = true;
 
-    // Update UI one last time (optional but nice)
+    // Update UI one last time
     updtUI();
 
-    // Save room result (used by progressbar + backpack later)
+    // Save room result - used by progressbar + backpack later
     setRoomResult("wood", { status: "failed", artifact: "false" });
 
     // Show fail message

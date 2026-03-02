@@ -12,12 +12,17 @@ om rummet ska kunns skicka vidare till nästkommande rum ex:
 startTimer(1); denna låg i början innan ta bort och lägg in detta under play bg music:
 
     // Prevent adding event listeners twice if player re-enters the room
+
     if (woodSection.dataset.woodInit === "true") return;
     woodSection.dataset.woodInit = "true";
+
     // Start timer for room 1
     startTimer(1); 
+
     // --- TIMEOUT WATCHER (room timer) -------------------------
+
     // Poll TimeIsUp every 200ms. When it's true, we fail this room once.
+
     let timeUpIntervalId: number | null = null;
 
     function stopTimeUpWatcher(): void {
@@ -30,13 +35,6 @@ startTimer(1); denna låg i början innan ta bort och lägg in detta under play 
     timeUpIntervalId = window.setInterval(() => {
         if (!TimeIsUp) return;
         ifRoomFailed();
-
-        // TODO: save "failed" artifact result here
-        // setRoomResult("wood", { status: "failed", artifact: "false" });
-
-        // TODO: show message + move player
-        // showMsg("Time is up — the next chamber awaits...", 1200);
-        // transitSections(getCurrentPage() ?? woodSection, nextSection, 1200);
     }, 200);
 
 ## 3 Lägg till en const för din section i DOM sektionen (om du har en)   
@@ -76,8 +74,8 @@ lägg till dina timeranrop samt show msg likt min :
           // Save room result (used by progressbar + backpack later)
 
           setRoomResult("wood", { status: "completed", artifact: "true" });
+          
           // show msg to player
-
           showMsg("Well done — next chamber awaits", 1200);
           window.setTimeout(() => {
             // 4) Reset wood state
