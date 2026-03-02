@@ -75,7 +75,7 @@
     "timeLimitMinutes": 1,
     "timeLimitSeconds": 0,
     "desc": {
-      "text": "Restore the balance. Have you gathered the right elements? Place theme where they belong, wrong element? The gate stays sealed and balance is off.",
+      "text": "Restore the balance. Have you gathered the right elements? Place theme where they belong. Do you have wrong elements? The gate will stay sealed and the balance is off.",
       "trueSign": "./images/backpack-icon.png",
       "falseSign": "./images/backpack-icon.png"
     }

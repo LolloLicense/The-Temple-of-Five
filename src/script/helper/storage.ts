@@ -27,10 +27,11 @@ const LS_KEY = {
 //-----------------------------------------------------------
 //-------------------------ROOMS-----------------------------
 //-----------------------------------------------------------
+
 // roomID
 export type RoomId = "wood" | "fire" | "earth" | "metal" | "water" | "final";
 
-// Minimal status per room for progress + artifacts
+// status / room for progress + artifacts
 export type RoomStatus = "pending" | "completed" | "failed";
 export type ArtifactKind = "true" | "false" | null;
 
@@ -104,7 +105,7 @@ const DEFAULT_GAME_STATE: GameState = {
   final: { status: "pending", artifact: null },
 };
 
-// Read current run state (safe fallback if nothing is saved yet)
+// Read current run state safe fallback if nothing is saved yet
 export function getRoomResults(): GameState {
   const raw = localStorage.getItem(LS_KEY.roomResults);
   if (!raw) return DEFAULT_GAME_STATE;
