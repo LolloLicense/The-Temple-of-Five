@@ -26,9 +26,9 @@ export type ArtifactKind = "true" | "false" | null;
 export type RoomResult = {
   status: RoomStatus;
   artifact: ArtifactKind;
-  mistakes: number;
-  score: number;
-  roomTimeSec: number;
+  mistakes?: number;
+  score?: number;
+  roomTimeSec?: number;
 };
 
 // One object that holds the whole run
@@ -118,6 +118,7 @@ export function setRoomResult(roomId: RoomId, result: RoomResult): void {
   const state = getRoomResults();
   const next: GameState = { ...state, [roomId]: result };
   localStorage.setItem(LS_KEY.roomResults, JSON.stringify(next));
+  console.log("📦 Full gameState:", getRoomResults());
 }
 
 // Reset whole run (ex: on logout or "new game")
