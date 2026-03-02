@@ -59,7 +59,7 @@ export function hideSection(
 export function transitSections(
   from: HTMLElement,
   to: HTMLElement,
-  durationMs = 1300,
+  durationMs = 1200,
   visibleClass = "isVisible",
 ): void {
   // Show next page

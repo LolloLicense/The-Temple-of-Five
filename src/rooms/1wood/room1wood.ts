@@ -52,11 +52,11 @@ export function room1woodFunc() {
     // Fade from current page -> wood room
     transitSections(fromPage, woodSection, TRANSITIONTIME);
   } else {
-    // Fallback (first load): just show the room
+    // Fallback: just show the room
     showSection(woodSection);
   }
 
-  // Allow entering room every time (transition + header + timer)
+  // Allow entering room every time - transition + header + timer)
   // But only create heavy stuff once (particles + event listeners)
   const isFirstInit = woodSection.dataset.woodInit !== "true";
   if (isFirstInit) woodSection.dataset.woodInit = "true";
@@ -370,7 +370,7 @@ export function room1woodFunc() {
     // Save room result - used by progressbar + artifactholder later
     setRoomResult("wood", { status: "completed", artifact: "true" });
     // show msg to player
-    showMsg("Well done — next chamber awaits", TRANSITIONTIME);
+    showMsg("Well done — next chamber awaits", TRANSITIONTIME * 2);
 
     window.setTimeout(() => {
       // Reset wood state
@@ -404,7 +404,7 @@ export function room1woodFunc() {
     // Save room result - used by progressbar + artifactholder later
     setRoomResult("wood", { status: "failed", artifact: "false" });
     // Show fail message
-    showMsg("Time's up — next chamber awaits", TRANSITIONTIME);
+    showMsg("Time's up — next chamber awaits", TRANSITIONTIME * 2);
 
     // Reset AFTER message is shown
     window.setTimeout(() => {
