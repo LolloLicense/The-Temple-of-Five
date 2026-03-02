@@ -36,10 +36,9 @@ export function room4metalFunc() {
     getCurrentPage() ??
     document.querySelector("main > section.page.isVisible");
   if (fromPage && fromPage !== metalSection) {
-    // Fade from current page -> wood room
+    // Fade from current page -> metal room
     transitSections(fromPage, metalSection, 1200);
-  } else {
-    // Fallback (first load): just show the room
+  } else { // Fallback (first load): just show the room
     showSection(metalSection);
   }
 

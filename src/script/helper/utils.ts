@@ -151,6 +151,12 @@ switch (id) { // switch on room id (ex: 1 = wood)
       roomTimeLimitSeconds = dataJSON.room5water.timeLimitSeconds // Set seconds from JSON
       }
       break;
+      case 6: // Final
+      roomTimeLimitMinutes = dataJSON.room6validate.timeLimitMinutes; //Get minutes from JSON
+      if (dataJSON.room6validate.timeLimitSeconds > 0) { // include seconds IF JSON seconds are not 0
+      roomTimeLimitSeconds = dataJSON.room6validate.timeLimitSeconds // Set seconds from JSON
+      }
+      break;
 } // Switch END
 
 /* Setting and printing out the time limits for the room in header */

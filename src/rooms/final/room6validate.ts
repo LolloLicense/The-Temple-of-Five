@@ -1,4 +1,9 @@
 import * as dataJSON from "../../data.json";
+import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
+//import { startTimer, stopTimer } from "./script/utils.ts";
+import { startTimer } from "../../script/helper/utils.ts";
+import { showGameHeader } from "../../script/helper/gameHeader.ts";
+import { transitSections, getCurrentPage, showSection } from "../../script/helper/transitions.ts";
 
 export function room6finalFunc() {
   /* Hide the welcome page (menu)
@@ -10,11 +15,25 @@ export function room6finalFunc() {
   }
 
   /* Sets the background for the room and shows room section */
-  const finalSection: HTMLElement | null = document.querySelector("#finalRoom");
-  if (finalSection) {
-    finalSection.style.backgroundImage = `url("${dataJSON.room6validate.backgroundImg}")`;
-    finalSection.classList.remove("hidden");
+  const finalSection: HTMLElement | null = document.querySelector("#finalRoom");// Hämtar sektionen för finalrummet
+  if (!finalSection) { // Om den inte finns, avbryt funktionen för att undvika fel
+   return;
   }
 
+  finalSection.style.backgroundImage = `url("${dataJSON.room6validate.backgroundImg}")`;
+
+  const fromPage =
+    getCurrentPage() ??
+    document.querySelector("main > section.page.isVisible");
+  if (fromPage && fromPage !== finalSection) { // Fade from current page -> final room
+    transitSections(fromPage, finalSection, 1200);
+  } else { // Fallback (first load): just show the room
+    showSection(finalSection);
+  }
+
+  startTimer(6); // Start timer for room 6
+  showGameHeader(); // Visar globala headern i rummet
+
+  renderRoomDesc(finalSection, dataJSON.room6validate.desc);  // Renderar rummets beskrivning från JSON -> <div id="roomdesc">
   console.log("Hello from the final room");
 }
