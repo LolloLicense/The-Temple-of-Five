@@ -52,24 +52,28 @@ body {
   @include mix.glass();
   border: 2px solid var.$lightColor;
   border-radius: var.$smallRadius;
-  // FLEX
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding: 2rem 2.5rem;
   // Positions & size
   left: 50%;
   transform: translateX(-50%);
   top: 25px;
   width: 90vw;
-  height: 60px;
+  min-height: 60px;
+  height: auto;
   position: absolute;
   z-index: 100;
+
   // Font
   font-size: 1.5rem;
   color: var.$lightColor;
   text-transform: uppercase;
+  .gameHeaderNav {
+    // FLEX
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 2rem;
+  }
   // ProgressBar
   .progress {
     .progressTrack {
