@@ -393,7 +393,7 @@ export function room1woodFunc() {
       window.setTimeout(() => {
         room2fireFunc();
       }, 1250);
-    }, 1200);
+    }, 1300);
   }
 
   //-----------------------------------------------------------
