@@ -196,7 +196,7 @@ body {
 }
 
 //-----------------------------------------------------------
-//-------------------------Dialog----------------------------
+//-------------------------Dialogs----------------------------
 //-----------------------------------------------------------
 
 .aboutDialog {
@@ -274,6 +274,30 @@ body {
       }
       p {
         font-size: var.$fs-body;
+      }
+    }
+  }
+}
+
+.exitDialog {
+  color: var.$lightColor;
+  @include mix.glass();
+
+  .exitDialogInner {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 1rem;
+    .exitDialogText {
+      font-size: var.$fs-h6;
+      text-align: center;
+    }
+    .exitDialogBtns {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      .btn {
+        @include mix.button();
       }
     }
   }
