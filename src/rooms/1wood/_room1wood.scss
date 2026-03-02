@@ -62,6 +62,7 @@
       font-size: var.$fs-h4;
       width: 3rem;
       @include mix.glass();
+      box-shadow: 2px 5px rgba(0, 0, 0, 0.45);
     }
   }
 
@@ -81,6 +82,7 @@
       width: 3rem;
       height: 4rem;
       @include mix.glass();
+      box-shadow: 2px 5px rgba(0, 0, 0, 0.45);
     }
     .slot[data-digits="2"] {
       width: 3.8rem;
@@ -90,6 +92,27 @@
     }
     .slot[data-digits="4"] {
       width: 5.5rem;
+    }
+    .slot.is-active {
+      outline: 2px solid var.$lightColor;
+      outline-offset: 6px;
+      animation: slot-breathe 1.6s ease-in-out infinite;
+    }
+  }
+  @keyframes slot-breathe {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
+  // ALLY STUFF
+  @media (prefers-reduced-motion: reduce) {
+    .slots .slot.is-active {
+      animation: none;
     }
   }
 }
