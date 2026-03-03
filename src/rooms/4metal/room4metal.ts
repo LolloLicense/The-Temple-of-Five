@@ -5,14 +5,10 @@ import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
 import { startTimer } from "../../script/helper/utils.ts";
 import { showGameHeader } from "../../script/helper/gameHeader.ts";
 import { transitSections, getCurrentPage, showSection } from "../../script/helper/transitions.ts";
+import { resetSingleRoomResult } from "../../script/helper/storage.ts";
 
 export function room4metalFunc() {
-  /* Gömmer välkomst sidan, kan tas bort senare*/
-  const welcomePage: HTMLElement | null =
-    document.querySelector("#welcomePage");
-  if (welcomePage) {
-    welcomePage.classList.add("hidden");
-  }
+  resetSingleRoomResult("metal");
   //-------------------------------------------------------------------------------------------------------------------------------------
   //---------------------------------------------------------------- Ljud ---------------------------------------------------------------
   //-------------------------------------------------------------------------------------------------------------------------------------
