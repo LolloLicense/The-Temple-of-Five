@@ -81,6 +81,7 @@ export function initLoginFlow(): void {
     //-----------------------------------------------------------
 
     document.addEventListener("exit:logout", () => {
+      clearLoginFlowTimeouts();
       // Login state is false now
       logoutUser();
 
@@ -177,25 +178,52 @@ export function initLoginFlow(): void {
   //-----------------------------------------------------------
   //------------------ LOGIN SUBMIT ---------------------------
   //-----------------------------------------------------------
-
+  // Find the login form in the DOM
   const form = document.querySelector<HTMLFormElement>("#loginForm");
-  const input = document.querySelector<HTMLInputElement>("#userName");
-  // Submitting username , saving
-  if (form && input) {
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
+  if (form) {
+    // Create ONE submit (login) handler function
+    const onLoginSubmit = onLoginSubmitFactory(
+      loginSection,
+      welcomeSection,
+      renderWelcomeName,
+    );
 
-      const name = input.value.trim();
-      if (!name) return;
-
-      saveUserName(name);
-      setLoggedIn(true);
-      // updt to welcome: name
-      renderWelcomeName();
-      // Stop any pending splash/logout transitions from firing later
-      clearLoginFlowTimeouts();
-      // When logged in -- show welcomepage
-      transitSections(loginSection, welcomeSection, 1200);
-    });
+    form.removeEventListener("submit", onLoginSubmit as EventListener);
+    form.addEventListener("submit", onLoginSubmit);
   }
+}
+
+//-----------------------------------------------------------
+//------------------ LOGIN SUBMIT Local function ------------
+//-----------------------------------------------------------
+
+// This function creates the submit function.
+//reuses the same submit function, and avoid duplicates.
+function onLoginSubmitFactory(
+  // the sections and functions thats used for login
+  loginSection: HTMLElement,
+  welcomeSection: HTMLElement,
+  renderWelcomeName: () => void,
+) {
+  // Return the submit function inside initLoginFlow
+  return function onLoginSubmit(e: SubmitEvent): void {
+    e.preventDefault(); // stop the page from reloading
+    //login form
+    const form = e.currentTarget;
+    if (!(form instanceof HTMLFormElement)) return;
+    // loginform input
+    const input = form.querySelector<HTMLInputElement>("#userName");
+    if (!input) return;
+
+    const name = input.value.trim();
+    if (!name) return;
+    //saving the user that logged in
+    saveUserName(name);
+    // Logged in user ---> localstorage
+    setLoggedIn(true);
+
+    renderWelcomeName(); // updt welcome page with correct username
+    clearLoginFlowTimeouts(); // Stop old flow
+    transitSections(loginSection, welcomeSection, 1200); // trigger trasit
+  };
 }
