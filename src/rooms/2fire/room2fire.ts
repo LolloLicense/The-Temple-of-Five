@@ -37,12 +37,12 @@ import { resetRoomResults } from "../../script/helper/storage";
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 const INTRO_MS = 8000; // Time in milliseconds before the intro text is shown (8 seconds)
-const FOCUS_CLASS = "is-focus"; // The class name used to indicate that the puzzle section is in focus
 const SUCCESS_DELAY_MS = 500; // Sucess input
 const WRONG_DELAY_MS = 350; // Wrong input
 const TRANSITION_MS = 1200; // Transistion between rooms
 const COMPLETE_MSG_MS = 2400; // When room is finished
 const KEYPAD_COLS = 2;  // Keypad columns
+const PUZZLE_FOCUS_CLASS = "puzzle-focus";  // Focus on puzzle for styling
 
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -163,6 +163,9 @@ let isTransitioning = false;
 
 /* Keypad */
 let keypadEl: HTMLElement | null = null;
+
+/* fireUi - for styling */
+let fireUi: HTMLElement | null = null;
 
 /* TIMEOUT WATCHER - (Room timer) */
 
@@ -421,6 +424,9 @@ function cacheDomOrThrow(): void {
   keypadEl = fireSection.querySelector<HTMLElement>(".keypad");
   if (!keypadEl) throw new Error("Fire room DOM mismatch. Need: .keypad");
 
+  fireUi = fireSection.querySelector<HTMLElement>(".room2FireUi");
+  if (!fireUi) throw new Error("Fire room DOM mismatch. Need: .room2FireUi");
+
   levelValueEl = fireSection.querySelector("#fireLevelValue");
   mistakesEl = fireSection.querySelector("#fireMistakes");
   balanceBar = fireSection.querySelector(".balanceBar");
@@ -464,14 +470,14 @@ function resetRoom(): void {  // reset state
   createSlots();  // Prepare UI level 1, but input still locked
   updateHUD();
 
-  fireSlots?.classList.remove(FOCUS_CLASS); // Fokus off until intro is done
+  fireSlots?.classList.remove(PUZZLE_FOCUS_CLASS); // Fokus off until intro is done
 
   introTimeoutId = window.setTimeout(() => { // After intro - Show level 1 instruction - release locked input and focus input
     updateDescText(FIRE_LEVEL_TEXT[0] ?? "");
 
     locked = false;
     isTransitioning = false;
-    fireSlots?.classList.add(FOCUS_CLASS);
+    fireSlots?.classList.add(PUZZLE_FOCUS_CLASS);
     setActiveSlotClass();
 
   }, INTRO_MS);
@@ -782,7 +788,7 @@ function nextLevel(): void {
   createSlots();
   updateHUD();
 
-  if (fireSlots) retriggerClass(fireSlots, FOCUS_CLASS);
+  if (fireUi) retriggerClass(fireUi, PUZZLE_FOCUS_CLASS);
 }
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
