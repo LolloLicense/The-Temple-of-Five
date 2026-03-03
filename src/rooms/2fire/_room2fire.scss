@@ -225,12 +225,12 @@
 
   /* .is-active - focus slot “pulsating” */
   .fireSlots .slot.is-active {
-    animation: slotPulse 900ms ease-in-out infinite;
+    animation: slotPulse 1200ms ease-in-out infinite;
   }
 
   /* .just-filled - slot “pop" when element is put in */
   .fireSlots .slot.just-filled {
-    animation: slotPop 160ms ease-out;
+    animation: slotPop 260ms ease-out;
   }
 
   /* .room-complete - no animation */
