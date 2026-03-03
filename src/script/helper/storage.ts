@@ -117,6 +117,8 @@ export function setRoomResult(roomId: TRoomId, result: TRoomResult): void {
   const state = getRoomResults();
   const next: TGameState = { ...state, [roomId]: result };
   localStorage.setItem(LS_KEY.roomResults, JSON.stringify(next));
+  // ✅ one signal for all UI that depends on room results
+  window.dispatchEvent(new Event("roomResults:changed"));
   console.log("Full gameState:", getRoomResults());
 }
 

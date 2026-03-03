@@ -70,7 +70,7 @@
 
         <!-- Buttons -->
         <div class="headerBtns">
-          <!-- Elements -->
+          <!-- Artifacts btn -->
           <button
             id="itemListBtn"
             class="itemListBtn"
@@ -93,6 +93,7 @@
                 fill="#ECF5F1"
               />
             </svg>
+            <span id="artifactBadge" class="badge" aria-hidden="true"></span>
           </button>
           <!-- Sound-->
           <button
@@ -711,9 +712,10 @@
       <!------------------------------------------------------------------->
       <!--------------------------- Final Room ---------------------------->
       <!------------------------------------------------------------------->
-       <section id="finalRoom" class="finalRoom hidden">
-        <div class="finalContainer"> 
-          <div class="artifacts" id="artifactContainer"><!-- TS lägger in 5 artifakter här från localstorage??? -->
+      <section id="finalRoom" class="finalRoom hidden">
+        <div class="finalContainer">
+          <div class="artifacts" id="artifactContainer">
+            <!-- TS lägger in 5 artifakter här från localstorage??? -->
           </div>
           <div class="dropzones">
             <div class="dropzone" data-accept="wood"></div>
@@ -926,8 +928,8 @@
                 <article class="controlsCard">
                   <h4>1: Wood Chamber</h4>
                   <p>
-                    <kbd>← →</kbd> Navigate between number keys<br/>
-                    <kbd>Enter</kbd> to use the focused number key<br/>
+                    <kbd>← →</kbd> Navigate between number keys<br />
+                    <kbd>Enter</kbd> to use the focused number key<br />
                     After 6 inputs, your sequence is validated automatically.
                   </p>
                 </article>
@@ -946,11 +948,11 @@
                   <h4>4: Metal Chamber</h4>
                   <p>
                     <kbd>← →</kbd> Navigate between slots
-                    <br/>
+                    <br />
                     <kbd>↑ ↓ </kbd> Change the color of the slot
-                    <br/>
+                    <br />
                     <kbd>Enter</kbd> to validate the slots
-                    <br/>
+                    <br />
                   </p>
                 </article>
 

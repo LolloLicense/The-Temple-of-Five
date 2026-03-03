@@ -40,9 +40,11 @@ const ROOM_JSON = {
  */
 
 export function getArtifactIcon(
+  // all room but NOT final room
   roomId: Exclude<TRoomId, "final">,
   kind: TArtifactKind,
 ): string | null {
+  // get the icon from json for specific room
   const artifactData = ROOM_JSON[roomId].artifact;
   // we return null so no crash
   if (!artifactData) return null;
@@ -94,33 +96,73 @@ export function renderArtifactsToSlots(): void {
 }
 
 //-----------------------------------------------------------
+//---------------------- Arficats counterbadge --------------
+//-----------------------------------------------------------
+
+export function updtArtifactBadge(): void {
+  // <span> in itemListBtn
+  const badge = document.querySelector<HTMLElement>("#artifactBadge");
+  if (!badge) return;
+  // Read the latest saved run state from localStorage
+  const state = getRoomResults();
+  /**
+   * Count how many artifacts have been collected
+   * We count both "true" and "false" as "collected".
+   */
+  const count = ROOMS.filter(
+    (roomId) => state[roomId].artifact !== null,
+  ).length;
+
+  // updt badge UI when 0 + 1
+  if (count > 0) {
+    badge.textContent = String(count);
+    badge.classList.add("is-visible");
+  } else {
+    badge.textContent = "";
+    badge.classList.remove("is-visible");
+  }
+}
+
+//-----------------------------------------------------------
 //---------------------- Backpack toggle --------------------
 //-----------------------------------------------------------
 
 export function initBackpackToggle(): void {
-  // grab the elements.html to toggle dropdown
   const itemListBtn = document.querySelector<HTMLElement>("#itemListBtn");
-  const itemDropdown =
-    document.querySelector<HTMLButtonElement>("#itemDropdown");
+  const itemDropdown = document.querySelector<HTMLElement>("#itemDropdown");
 
-  // safety - if header not exist for ex
   if (!itemListBtn || !itemDropdown) return;
-  // toggle dropdown on click
+
+  // Initial paint (page load / refresh)
+  updtArtifactBadge();
+
+  //  Update badge automatically when roomResults change
+  window.addEventListener("roomResults:changed", () => {
+    updtArtifactBadge();
+
+    // Optional: if dropdown is open, also refresh icons live
+    if (itemDropdown.classList.contains("is-open")) {
+      renderArtifactsToSlots();
+    }
+  });
+
+  // Toggle dropdown on click
   itemListBtn.addEventListener("click", (e) => {
     e.stopPropagation();
-    //Before open - call renderArtifactsToSlots
-    // refresh UI icons in beckpack
+
+    // Refresh icons + badge before showing
     renderArtifactsToSlots();
+    updtArtifactBadge();
 
     itemDropdown.classList.toggle("is-open");
   });
 
-  // click outeside of dropdown to close
+  // Click outside closes dropdown
   document.addEventListener("click", () => {
     itemDropdown.classList.remove("is-open");
   });
 
-  // click inside - do nothing
+  // Click inside dropdown should not close it
   itemDropdown.addEventListener("click", (e) => {
     e.stopPropagation();
   });
