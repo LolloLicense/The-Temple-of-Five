@@ -52,21 +52,21 @@ const COMPLETE_MSG_MS = 2400;
  * A = Air, T = Timber, F = Flame, E = Ember, S = Stone, W = Water
  */
 
-type FireKey = "A" | "T" | "F" | "E" | "S" | "W";
+type TFireKey = "A" | "T" | "F" | "E" | "S" | "W";
 
-interface FireLevel {
-  sequence: FireKey[]; // The correct sequence of keys for the level
-  prefilled?: FireKey;  // If the level contain a pre-filled slot
+interface IFireLevel {
+  sequence: TFireKey[]; // The correct sequence of keys for the level
+  prefilled?: TFireKey;  // If the level contain a pre-filled slot
 }
 
 // Typeguard, only accepts the correct keyboard keys
-function isFireKey(k: string): k is FireKey {
+function isFireKey(k: string): k is TFireKey {
   return k === "A" || k === "T" || k === "F" || k === "E" || k === "S" || k === "W";
 }
 
 // Config, level combo for keys
 
-const LEVELS: FireLevel[] = [
+const LEVELS: IFireLevel[] = [
   {
     sequence: ["T", "F", "S", "A"] // Level 1: Timber, Flame, Stone, Air
   },
@@ -152,7 +152,7 @@ let balanceFill: HTMLElement | null = null;
 
 /* STATE */
 let currentLevelIndex = 0;
-let attempt: FireKey[] = [];
+let attempt: TFireKey[] = [];
 let mistakes = 0;
 let locked = false;
 
@@ -471,7 +471,7 @@ function setActiveSlotClass(): void {
   slots.forEach((s, i) => s.classList.toggle("is-active", i === activeIndex));  // Only the correct slot get index "is-active" - CSS styling
 }
 
-function fillSlot(slotIndex: number, key: FireKey): void {  // Fill the specified slot with FireKey (element)
+function fillSlot(slotIndex: number, key: TFireKey): void {  // Fill the specified slot with FireKey (element)
   if (!fireSlots) return;
 
   const slotEl = fireSlots.querySelector<HTMLElement>(`.slot[data-index="${slotIndex}"]`);  // slotEl = find the correct slot bvased on the data index
@@ -492,7 +492,7 @@ function fillSlot(slotIndex: number, key: FireKey): void {  // Fill the specifie
 /* ------------------------------------------------------------ GAME LOGIC -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 
-function handlePick(key: FireKey): void {
+function handlePick(key: TFireKey): void {
   if (locked || isTransitioning) return;
 
   const level = LEVELS[currentLevelIndex];
