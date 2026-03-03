@@ -335,9 +335,13 @@ body {
       p {
         font-size: var.$fs-body;
       }
+      .controlItem {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
     }
-
-    
 
     .devTeamList { // Removed the dots for the list of names with links to GitHub profiles
       list-style: none;

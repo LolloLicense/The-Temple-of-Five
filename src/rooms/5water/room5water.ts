@@ -2,6 +2,7 @@ import * as dataJSON from "../../data.json";
 import { playBgm } from "../../audio";
 import { renderRoomDesc } from "../../script/helper/roomDesc";
 import { showGameHeader } from "../../script/helper/gameHeader";
+import { resetSingleRoomResult } from "../../script/helper/storage";
 import {
   startTimer as startSharedTimer,
   stopTimer  as stopSharedTimer,
@@ -586,6 +587,7 @@ function handleCheck(): void {
 // ── EXPORTED ROOM FUNCTION ─────────────────────────────────────────────────
 
 export function room5waterFunc(): void {
+  resetSingleRoomResult("water");
   // Hide welcome page / menu
   document.querySelector<HTMLElement>("#welcomePage")?.classList.add("hidden");
 
