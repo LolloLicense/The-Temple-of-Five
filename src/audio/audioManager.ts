@@ -4,10 +4,14 @@ import type { SoundConfig } from "./types";
 const sounds = new Map<string, HTMLAudioElement>(); // sounds is a Map that will store the audio elements, with the id as the key and the HTMLAudioElement as the value
 const targetVolumes = new Map<string, number>(); // Saving the volume seperately to be able to fade in and out without losing the original volume level
 
+const soundConfigs = new Map<string, SoundConfig>(); // Meta for lazy load
+
 let desiredBgmId: string | null = null;
 let playingBgmId: string | null = null; // currentBGMid is a string that holds the id of the currently playing background music, or null if no background music is playing
 
 let fadeToken = 0; // if user is changing the room quickly, fade will abort
+
+
 
 /*--------------------------------------------------------
 INIT
@@ -24,30 +28,22 @@ export function initAudioManager(configs: SoundConfig[]): void {
 
   sounds.clear(); // Clear any existing sounds in the Map
   targetVolumes.clear(); // Clear any existing target volumes in the Map
+  soundConfigs.clear(); // LAZY LOAD
 
   desiredBgmId = null; // Reset the desired background music ID
   playingBgmId = null; // Reset the current background music ID
 
   for (const cfg of configs) {
     // create new audio-element
-    const audio = new Audio(cfg.src); // create a new HTMLAudioElement with the source specified in the config
-
-    audio.loop = cfg.loop ?? cfg.kind === "bgm"; // set the loop property based on the config, default to true for bgm and false for sfx
+    soundConfigs.set(cfg.id, cfg); // create a new HTMLAudioElement with the source specified in the config
 
     const defaultVolume = cfg.kind === "bgm" ? 0.2 : 0.35; // set default volume based on kind, 0.2 for bgm and 0.35 for sfx
     const vol = clamp01(cfg.volume ?? defaultVolume); // if we decide to have a controllable volume in the future, we can set it in the config, otherwise it will use the default volume
+    targetVolumes.set(cfg.id, vol);
 
-    audio.volume = vol; // set the volume of the audio element
-
-    audio.muted = isMuted(); // respect mute from soundToggle
-
-    sounds.set(cfg.id, audio); // add the audio element to the sounds Map with the id as the key
-
-    targetVolumes.set(cfg.id, vol); // save the target volume in the targetVolumes Map
-
-    console.log("INIT AUDIO RUNNING");
-    console.log("Audio created:", cfg.id, cfg.src);
+    console.log("[audioManager] Registered config:", cfg.id);
   }
+  console.log("[audioManager] INIT complete. Registered configs =", configs.length);
 }
 
 /*--------------------------------------------------------
@@ -89,7 +85,7 @@ SFX
 export async function playSfx(id: string): Promise<void> {
   if (isMuted()) return; // if muted, do not play sound effects
 
-  const audio = sounds.get(id); // get the audio element for the specified id from the sounds Map
+  const audio = getOrCreateAudio(id); // get the audio element for the specified id from the sounds Map
   if (!audio) {
     console.warn(`[audioManager] Missing SFX id: ${id}`); // if there is no audio element for the specified id, log a warning and return
     return;
@@ -134,7 +130,7 @@ export async function playBgm(id: string, fadeMs: number = 650): Promise<void> {
 }
 
 /*--------------------------------------------------------
-STOP FUNCTIONS FOR BGM AND SFX (also used for quick room changes, quit to main menu, game over, etc)
+STOP FUNCTIONS FOR BGM AND SFX and UnloadBGM for releasing cashe (also used for quick room changes, quit to main menu, game over, etc)
 --------------------------------------------------------*/
 
 /**
@@ -170,6 +166,31 @@ export function stopAll(): void {
   desiredBgmId = null;
 }
 
+/**
+ * unload
+ * - Tar bort en Audio-instans ur cache (sounds)
+ * - Försöker släppa src/buffer (browser bestämmer cache)
+ */
+export function unload(id: string): void {
+  disposeAudio(id);
+
+  if (playingBgmId === id) playingBgmId = null;
+  if (desiredBgmId === id) desiredBgmId = null;
+}
+
+/**
+ * unloadAllBgm
+ * - Rekommenderad för "hard reset" (t.ex. quit to menu / restart run)
+ * - Lämnar SFX kvar (de är små och ger bättre UX att cachea)
+ */
+export function unloadAllBgm(): void {
+  for (const [id, cfg] of soundConfigs.entries()) {
+    if (cfg.kind === "bgm") {
+      unload(id);
+    }
+  }
+}
+
 /*--------------------------------------------------------
 Helper, internal functions - when unmmute
 --------------------------------------------------------*/
@@ -182,7 +203,7 @@ Helper, internal functions - when unmmute
 async function ensureCurrentRoomBgmIsPlaying(fadeMs: number): Promise<void> {
   if (!desiredBgmId) return;
 
-  const audio = sounds.get(desiredBgmId);
+  const audio = getOrCreateAudio(desiredBgmId);
   if (!audio) return;
 
   if (playingBgmId === desiredBgmId && !audio.paused) {
@@ -223,7 +244,7 @@ async function fadeOut(id: string, ms: number): Promise<void> {
 }
 
 async function fadeIn(id: string, ms: number): Promise<void> {
-  const audio = sounds.get(id);
+  const audio = getOrCreateAudio(id);
   if (!audio) return;
 
   audio.muted = isMuted(); // ensure the muted state is respected, in case it was changed since initialization
@@ -255,6 +276,59 @@ async function fadeIn(id: string, ms: number): Promise<void> {
   }
 
   audio.volume = targetVol; // ensure the volume is set to the target volume at the end of the fade in
+}
+
+/*--------------------------------------------------------
+LAZY LOAD (Because we dont want all the audio to load at once)
+--------------------------------------------------------*/
+
+/**
+ * getOrCreateAudio
+ * - Hämtar Audio ur cache om den finns
+ * - Annars skapar den från soundConfigs (lazy)
+ */
+
+function getOrCreateAudio(id: string): HTMLAudioElement | null {
+  const existing = sounds.get(id);
+  if (existing) return existing;
+
+  const cfg = soundConfigs.get(id);
+  if (!cfg) return null;
+
+  const audio = new Audio(cfg.src);
+
+  // Default loop: true för BGM, annars false
+  audio.loop = cfg.loop ?? cfg.kind === "bgm";
+
+  // Volym från targetVolumes (registrerad i init)
+  audio.volume =
+    targetVolumes.get(id) ?? (cfg.kind === "bgm" ? 0.2 : 0.35);
+
+  audio.muted = isMuted();
+
+  sounds.set(id, audio);
+
+  console.log("[audioManager] Lazy-created audio:", id);
+  return audio;
+}
+
+/**
+ * disposeAudio
+ * - Stoppar och försöker frigöra resurser för just den Audio-instansen
+ * - Browsern kan ändå behålla filen i HTTP cache (disk), men buffert/decoded kan minska
+ */
+
+function disposeAudio(id: string): void {
+  const audio = sounds.get(id);
+  if (!audio) return;
+
+  audio.pause();
+
+  // Försök släppa src/buffer
+  audio.removeAttribute("src");
+  audio.load();
+
+  sounds.delete(id);
 }
 
 /*--------------------------------------------------------

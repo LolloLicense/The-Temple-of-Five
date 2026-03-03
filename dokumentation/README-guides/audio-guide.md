@@ -9,6 +9,16 @@ exempel: src: withBaseUrl("/audiofiles/bgm_fire.mp3"), <- från initAudio.ts
 
 - Endast main.ts får anropa initAudio() <- denna är redan klar
 
+- Audio-systemet använder lazy load.
+
+Det betyder:
+
+initAudio() registrerar bara alla ljud (id, src, kind, volume).
+
+Inga Audio()-objekt skapas vid start.
+
+Ett ljud skapas först när det används via playBgm() eller playSfx().
+
 ---
 
 
