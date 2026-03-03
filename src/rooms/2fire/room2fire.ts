@@ -5,8 +5,9 @@ import { startTimer, stopTimer, TimeIsUp } from "../../script/helper/utils.ts";
 import { transitSections, getCurrentPage, showSection } from "../../script/helper/transitions";
 import { showGameHeader, hideGameHeader } from "../../script/helper/gameHeader";
 import { showMsg } from "../../script/helper/showMsg";
-import { setRoomResult } from "../../script/helper/storage";
+import { resetSingleRoomResult, setRoomResult } from "../../script/helper/storage";
 import { room3earthFunc } from "../3earth/room3earth.ts";
+import { resetRoomResults } from "../../script/helper/storage";
 
 
 /**
@@ -37,10 +38,11 @@ import { room3earthFunc } from "../3earth/room3earth.ts";
 
 const INTRO_MS = 8000; // Time in milliseconds before the intro text is shown (8 seconds)
 const FOCUS_CLASS = "is-focus"; // The class name used to indicate that the puzzle section is in focus
-const SUCCESS_DELAY_MS = 500;
-const WRONG_DELAY_MS = 350;
-const TRANSITION_MS = 1200;
-const COMPLETE_MSG_MS = 2400;
+const SUCCESS_DELAY_MS = 500; // Sucess input
+const WRONG_DELAY_MS = 350; // Wrong input
+const TRANSITION_MS = 1200; // Transistion between rooms
+const COMPLETE_MSG_MS = 2400; // When room is finished
+const KEYPAD_COLS = 2;  // Keypad columns
 
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -159,6 +161,9 @@ let locked = false;
 let listenersBound = false;
 let isTransitioning = false;
 
+/* Keypad */
+let keypadEl: HTMLElement | null = null;
+
 /* TIMEOUT WATCHER - (Room timer) */
 
 let timeUpIntervalId: number | null = null;
@@ -250,7 +255,11 @@ export function room2fireFunc(): void {
   fireSection = document.querySelector<HTMLElement>("#room2Fire");
   if (!fireSection) return;
 
+  resetSingleRoomResult("fire");  // artifact null
+
   showGameHeader(); // Show header when entering fire room
+
+  initKeypadFocus();  // Init key-controls
 
   fireSection.style.backgroundImage = `url("${dataJSON.room2fire.backgroundImg}")`; // Set background image from JSON
 
@@ -306,6 +315,9 @@ function cacheDomOrThrow(): void {
   keyButtons = Array.from(
     fireSection.querySelectorAll<HTMLButtonElement>(".fireKey"),
   );
+
+  keypadEl = fireSection.querySelector<HTMLElement>(".keypad");
+  if (!keypadEl) throw new Error("Fire room DOM mismatch. Need: .keypad");
 
   levelValueEl = fireSection.querySelector("#fireLevelValue");
   mistakesEl = fireSection.querySelector("#fireMistakes");
@@ -679,6 +691,8 @@ export function exitFireRoom(): void {
 /* ------------------------------------------------------------- HELPERS ---------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 
+/* For styling */
+
 function wait(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -690,3 +704,9 @@ function retriggerClass(el: HTMLElement, className: string): void {
 
   el.classList.add(className);
 }
+
+function initKeypadFocus(): void {
+  // "roving tabindex": bara 1 knapp är tabbbar
+  keyButtons.forEach((btn, i) => (btn.tabIndex = i === 0 ? 0 : -1));
+}
+
