@@ -11,6 +11,8 @@
   min-height: 100vh;
   color: var.$lightColor;
   font-family: var.$txFont;
+  background-color: rgba(0, 0, 0, 0.3); 
+  background-blend-mode: multiply;
 
   // ── CHAMBER WRAPPER ─────────────────────────────────────────────────
   .w-chamber {
