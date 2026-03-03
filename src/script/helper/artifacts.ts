@@ -44,7 +44,7 @@ export function getArtifactIcon(
   kind: TArtifactKind,
 ): string | null {
   const artifactData = ROOM_JSON[roomId].artifact;
-
+  // we return null so no crash
   if (!artifactData) return null;
   // returns correct artifact kind
   if (kind === "true") return artifactData.icons.true;
@@ -63,19 +63,19 @@ export function renderArtifactsToSlots(): void {
   const slots = Array.from(
     document.querySelectorAll<HTMLElement>("#itemDropdown .artifact-slot"),
   );
+  // Read player state from localStorage
   const state = getRoomResults();
-
-  console.log("backpack state: artifact kind");
-
+  //// Loop through ROOMS in fixed order and map each room to a slot index
   ROOMS.forEach((roomId, index) => {
     const slot = slots[index];
     if (!slot) return;
 
-    // ture / false / null-not earned
+    // Player artifact outcome for this room :true / false / null
     const kind = state[roomId].artifact;
+    // Convert outcome -> actual SVG path from JSON
     const icon = getArtifactIcon(roomId, kind);
 
-    // if icon is earned show if not  clear old
+    // if icon is earned show if not clear old
     slot.style.backgroundImage = icon ? `url("${icon}")` : "";
     slot.style.backgroundSize = "contain";
     slot.style.backgroundRepeat = "no-repeat";
@@ -85,7 +85,7 @@ export function renderArtifactsToSlots(): void {
     slot.classList.toggle("empty", kind === null);
     slot.classList.toggle("is-true", kind === "true");
     slot.classList.toggle("is-false", kind === "false");
-
+    //Store debug info directly on the element
     slot.dataset.room = roomId;
     slot.dataset.artifact = kind ?? "empty";
 
@@ -94,22 +94,22 @@ export function renderArtifactsToSlots(): void {
 }
 
 //-----------------------------------------------------------
-//-------------------------Backpack toggle-------------------
+//---------------------- Backpack toggle --------------------
 //-----------------------------------------------------------
 
 export function initBackpackToggle(): void {
-  // fetching the elements.html to toggle dropdown
+  // grab the elements.html to toggle dropdown
   const itemListBtn = document.querySelector<HTMLElement>("#itemListBtn");
   const itemDropdown =
     document.querySelector<HTMLButtonElement>("#itemDropdown");
 
-  // safety
+  // safety - if header not exist for ex
   if (!itemListBtn || !itemDropdown) return;
-
+  // toggle dropdown on click
   itemListBtn.addEventListener("click", (e) => {
     e.stopPropagation();
-
-    // refresh UI
+    //Before open - call renderArtifactsToSlots
+    // refresh UI icons in beckpack
     renderArtifactsToSlots();
 
     itemDropdown.classList.toggle("is-open");
