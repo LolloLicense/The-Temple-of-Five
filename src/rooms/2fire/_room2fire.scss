@@ -221,8 +221,6 @@
     }
   }
 
-
-
   /* .is-active - focus slot “pulsating” */
   .fireSlots .slot.is-active {
     animation: slotPulse 1200ms ease-in-out infinite;
@@ -244,6 +242,15 @@
       animation: none;
     }
   }
+
+  .is-slot-focused {
+    outline: 2px solid #ffb347;
+    transform: scale(1.05);
+  }
+
+.fireKey[aria-selected="true"] {
+  outline: 2px solid #ffb347;
+}
 
   /* ==============================================================
   ================= AMBIENCE EFFECT (EMBER) =======================

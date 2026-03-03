@@ -185,6 +185,16 @@ function stopIntroTimeout(): void {
 }
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------- KEYBOARD NAVIGATION STATE ---------------------------------------------------------- */
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+  type TFocusMode = "keys" | "slots";
+
+  let focusMode: TFocusMode = "keys";
+  let focusedKeyIndex = 0;
+  let focusedSlotIndex = 0;
+
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------- EVENT HANDLERS --------------------------------------------------------------- */
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 
@@ -213,17 +223,65 @@ function handleFireClick(e: MouseEvent): void {
 
 function handleFireKeyDown(e: KeyboardEvent): void {
   if (locked || isTransitioning) return;
-  if (!fireSection) return;
+  if (!fireSection || !fireSection.classList.contains("isVisible")) return;
 
-  // Only react when Fire room is visible (prevents leakage to other rooms)
-  if (!fireSection.classList.contains("isVisible")) return;
+  const key = e.key;
 
-  const k = e.key.toUpperCase();
-  if (!isFireKey(k)) return;
+  /* --------- NAVIGATION --------- */
 
-  // Prevent page scroll etc. when pressing keys
-  e.preventDefault();
-  handlePick(k);
+  if (key === "ArrowRight") {
+    e.preventDefault();
+    moveFocus(1);
+    return;
+  }
+
+  if (key === "ArrowLeft") {
+    e.preventDefault();
+    moveFocus(-1);
+    return;
+  }
+
+  if (key === "ArrowUp") {
+    e.preventDefault();
+    moveVertical(-1);
+    return;
+  }
+
+  if (key === "ArrowDown") {
+    e.preventDefault();
+    moveVertical(1);
+    return;
+  }
+
+  /* --------- MODE SWITCH --------- */
+
+  if (key === "Tab") {
+    e.preventDefault();
+    toggleFocusMode();
+    return;
+  }
+
+  /* --------- ACTIONS --------- */
+
+  if (key === "Enter" || key === " ") {
+    e.preventDefault();
+
+    if (focusMode === "keys") {
+      const btn = keyButtons[focusedKeyIndex];
+      const pick = btn?.dataset.firePick;
+      if (pick && isFireKey(pick.toUpperCase())) {
+        handlePick(pick.toUpperCase() as TFireKey);
+      }
+    }
+
+    return;
+  }
+
+  if (key === "Backspace") {
+    e.preventDefault();
+    backspace();
+    return;
+  }
 }
 
 /**
@@ -242,6 +300,41 @@ function bindListenersOnce(): void {
   window.addEventListener("keydown", handleFireKeyDown);
 }
 
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* -------------------------------------------------------- NAVIGATION FUNCTIONS -------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+function moveFocus(delta: number): void {
+  if (focusMode === "keys") {
+    const max = keyButtons.length - 1;
+    focusedKeyIndex = Math.max(0, Math.min(max, focusedKeyIndex + delta));
+    applyKeyFocus();
+  }
+
+  if (focusMode === "slots") {
+    const max = attempt.length;
+    focusedSlotIndex = Math.max(0, Math.min(max, focusedSlotIndex + delta));
+    applySlotFocus();
+  }
+}
+
+function moveVertical(delta: number): void {
+  if (focusMode !== "keys") return;
+
+  const next = focusedKeyIndex + delta * KEYPAD_COLS;
+  if (next < 0 || next >= keyButtons.length) return;
+
+  focusedKeyIndex = next;
+  applyKeyFocus();
+}
+
+function toggleFocusMode(): void {
+  focusMode = focusMode === "keys" ? "slots" : "keys";
+
+  if (focusMode === "keys") applyKeyFocus();
+  if (focusMode === "slots") applySlotFocus();
+}
+
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------- ENTRY POINT ------------------------------------------------------------------------ */
@@ -258,8 +351,6 @@ export function room2fireFunc(): void {
   resetSingleRoomResult("fire");  // artifact null
 
   showGameHeader(); // Show header when entering fire room
-
-  initKeypadFocus();  // Init key-controls
 
   fireSection.style.backgroundImage = `url("${dataJSON.room2fire.backgroundImg}")`; // Set background image from JSON
 
@@ -291,6 +382,8 @@ export function room2fireFunc(): void {
   renderRoomDesc(fireSection, dataJSON.room2fire.desc); // Render description from helper function, with text and icons from JSON
 
   cacheDomOrThrow(); // Cashe DOM only once or throw error if missing
+  initKeypadFocus();  // Init key-controls
+  applyKeyFocus(); // Focus on slots or buttons
 
   if (!listenersBound) {
     bindListenersOnce();  // Bind event listeners only once
@@ -336,6 +429,10 @@ function cacheDomOrThrow(): void {
       "Fire room DOM mismatch. Need: #fireSlots, .fireKey, #fireLevelValue, #fireMistakes, .balanceBar, #fireBalanceFill",
     );
   }
+
+  /* A11Y ROLES */
+  keypadEl?.setAttribute("role", "grid");
+  fireSlots?.setAttribute("role", "group");
 }
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -474,6 +571,41 @@ function createSlots(): void {
   setActiveSlotClass(); // Next slot active instead
 }
 
+function redrawSlots(): void {
+  if (!fireSlots) return;
+
+  const level = LEVELS[currentLevelIndex];
+  const total = level.sequence.length;
+
+  fireSlots.replaceChildren();
+
+  for (let i = 0; i < total; i++) {
+    const slot = document.createElement("div");
+    slot.className = "slot";
+    slot.dataset.index = String(i);
+    slot.setAttribute("aria-hidden", "true");
+    fireSlots.appendChild(slot);
+  }
+
+  attempt.forEach((key, i) => fillSlot(i, key));
+
+  if (level.prefilled) {
+    const first = fireSlots.querySelector<HTMLElement>(
+      '.slot[data-index="0"]'
+    );
+    first?.classList.add("is-locked");
+  }
+}
+
+function clearSlot(index: number): void {
+  if (!fireSlots) return;
+
+  const slot = fireSlots.querySelector<HTMLElement>(
+    `.slot[data-index="${index}"]`
+  );
+  slot?.replaceChildren();
+}
+
 function setActiveSlotClass(): void {
   if (!fireSlots) return;
 
@@ -501,6 +633,36 @@ function fillSlot(slotIndex: number, key: TFireKey): void {  // Fill the specifi
 }
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------- FOCUS HELPERS (A11Y) --------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+function applyKeyFocus(): void {
+  keyButtons.forEach((btn, i) => {
+    const active = i === focusedKeyIndex;
+
+    btn.tabIndex = active ? 0 : -1;
+    btn.setAttribute("aria-selected", String(active));
+
+    if (active) btn.focus();
+  });
+}
+
+function applySlotFocus(): void {
+  if (!fireSlots) return;
+
+  const slots = Array.from(
+    fireSlots.querySelectorAll<HTMLElement>(".slot")
+  );
+
+  slots.forEach((slot, i) => {
+    const active = i === focusedSlotIndex;
+
+    slot.classList.toggle("is-slot-focused", active);
+    slot.setAttribute("aria-selected", String(active));
+  });
+}
+
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------ GAME LOGIC -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 
@@ -523,7 +685,46 @@ function handlePick(key: TFireKey): void {
     void validateSequence();
   }
 
+  focusedSlotIndex = attempt.length;
+  applySlotFocus();
+
   console.log("handlePick", key, "time:", Date.now());
+}
+
+function backspace(): void {
+  if (locked) return;
+
+  const level = LEVELS[currentLevelIndex];
+  const hasPrefilled = Boolean(level.prefilled);
+  const minLength = hasPrefilled ? 1 : 0;
+
+  if (attempt.length <= minLength) return;
+
+  if (focusMode === "keys") {
+    const removeIndex = attempt.length - 1;
+
+    attempt.pop();
+    clearSlot(removeIndex);
+
+    focusedSlotIndex = attempt.length;
+  }
+
+  // Slots-läge → radera vald
+  if (focusMode === "slots") {
+    if (focusedSlotIndex < minLength) return;
+    if (focusedSlotIndex >= attempt.length) return;
+
+    attempt.splice(focusedSlotIndex, 1);
+    redrawSlots();
+
+    if (focusedSlotIndex > attempt.length) {
+      focusedSlotIndex = attempt.length;
+    }
+  }
+
+  updateHUD();
+  setActiveSlotClass();
+  applySlotFocus();
 }
 
 async function validateSequence(): Promise<void> {
@@ -623,7 +824,7 @@ function ifRoomCompleted(): void {
     updateHUD();
     setActiveSlotClass();
 
-    // Lås upp (men rummet kommer ändå försvinna i transition)
+    // Lås upp
     isTransitioning = false;
     locked = false;
 
@@ -706,7 +907,7 @@ function retriggerClass(el: HTMLElement, className: string): void {
 }
 
 function initKeypadFocus(): void {
-  // "roving tabindex": bara 1 knapp är tabbbar
+ 
   keyButtons.forEach((btn, i) => (btn.tabIndex = i === 0 ? 0 : -1));
 }
 
