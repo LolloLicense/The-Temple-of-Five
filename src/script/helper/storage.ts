@@ -18,11 +18,9 @@ export type TRoomId = "wood" | "fire" | "earth" | "metal" | "water" | "final";
 export type TRoomStatus = "pending" | "completed" | "failed";
 
 // Artifact outcome true | false | not earned yet
-
 export type TArtifactKind = "true" | "false" | null;
 
 //ROOMS
-
 export type TRoomResult = {
   status: TRoomStatus;
   artifact: TArtifactKind;
@@ -101,6 +99,7 @@ const DEFAULT_GAME_STATE: TGameState = {
 //-----------------------------------------------------------
 //------------------- PROGRESSBAR ---------------------------
 //-----------------------------------------------------------
+
 // Read current run state safe fallback if nothing is saved yet
 export function getRoomResults(): TGameState {
   const raw = localStorage.getItem(LS_KEY.roomResults);
@@ -118,7 +117,7 @@ export function setRoomResult(roomId: TRoomId, result: TRoomResult): void {
   const state = getRoomResults();
   const next: TGameState = { ...state, [roomId]: result };
   localStorage.setItem(LS_KEY.roomResults, JSON.stringify(next));
-  console.log("📦 Full gameState:", getRoomResults());
+  console.log("Full gameState:", getRoomResults());
 }
 
 // Reset whole run (ex: on logout or "new game")
@@ -148,6 +147,7 @@ export function clearUserName(): void {
 //-----------------------------------------------------------
 //----------------------- LOGIN STATE -----------------------
 //-----------------------------------------------------------
+
 /* If user has logged in before and has NOT logged out visit site againg
 NO need to log in again*/
 export function setLoggedIn(value: boolean): void {
