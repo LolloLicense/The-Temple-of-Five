@@ -22,8 +22,8 @@
       "id": "wood",
       "name": "wood artefact",
       "icons": {
-        "true": "/icons/true-wood-icon.svg",
-        "false": "/icons/false-wood-icon.svg"
+        "true": "./icons/true-wood-icon.svg",
+        "false": "./icons/false-wood-icon.svg"
       }
     }
   },
@@ -41,8 +41,8 @@
       "id": "fire",
       "name": "fire artefact",
       "icons": {
-        "true": "/icons/true-fire-icon.svg",
-        "false": "/icons/false-fire-icon.svg"
+        "true": "./icons/true-fire-icon.svg",
+        "false": "./icons/false-fire-icon.svg"
       }
     }
   },
@@ -65,8 +65,8 @@
       "id": "earth",
       "name": "earth artefact",
       "icons": {
-        "true": "/icons/true-earth-icon.svg",
-        "false": "/icons/false-earth-icon.svg"
+        "true": "./icons/true-earth-icon.svg",
+        "false": "./icons/false-earth-icon.svg"
       }
     }
   },
@@ -85,8 +85,8 @@
       "id": "metal",
       "name": "metal artefact",
       "icons": {
-        "true": "/icons/true-metal-icon.svg",
-        "false": "/icons/false-metal-icon.svg"
+        "true": "./icons/true-metal-icon.svg",
+        "false": "./icons/false-metal-icon.svg"
       }
     }
   },
@@ -104,8 +104,8 @@
       "id": "water",
       "name": "water artefact",
       "icons": {
-        "true": "/icons/true-water-icon.svg",
-        "false": "/icons/false-water-icon.svg"
+        "true": "./icons/true-water-icon.svg",
+        "false": "./icons/false-water-icon.svg"
       }
     }
   },

@@ -97,7 +97,7 @@ const DEFAULT_GAME_STATE: TGameState = {
 };
 
 //-----------------------------------------------------------
-//------------------- PROGRESSBAR ---------------------------
+//----------------------- RESULTS ---------------------------
 //-----------------------------------------------------------
 
 // Read current run state safe fallback if nothing is saved yet
@@ -123,6 +123,17 @@ export function setRoomResult(roomId: TRoomId, result: TRoomResult): void {
 // Reset whole run (ex: on logout or "new game")
 export function resetRoomResults(): void {
   localStorage.setItem(LS_KEY.roomResults, JSON.stringify(DEFAULT_GAME_STATE));
+}
+
+export function resetSingleRoomResult(roomId: TRoomId): void {
+  const state = getRoomResults();
+
+  const next: TGameState = {
+    ...state,
+    [roomId]: { ...DEFAULT_GAME_STATE[roomId] },
+  };
+
+  localStorage.setItem(LS_KEY.roomResults, JSON.stringify(next));
 }
 
 //-----------------------------------------------------------
