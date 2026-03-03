@@ -375,10 +375,9 @@ export function room1woodFunc() {
       score: 0, // TODO: define rule later
       roomTimeSec: 0, // TODO: connect to timer later
     });
-    console.log("Wood result:", getRoomResults().wood);
-
     // show msg to player
     showMsg("Well done — next chamber awaits", TRANSITIONTIME * 2);
+    console.log("Wood result:", getRoomResults().wood);
 
     window.setTimeout(() => {
       // Reset wood state

@@ -178,6 +178,7 @@ export function initLoginFlow(): void {
   //-----------------------------------------------------------
   //------------------ LOGIN SUBMIT ---------------------------
   //-----------------------------------------------------------
+
   // Find the login form in the DOM
   const form = document.querySelector<HTMLFormElement>("#loginForm");
   if (form) {
@@ -223,7 +224,7 @@ function onLoginSubmitFactory(
     setLoggedIn(true);
 
     renderWelcomeName(); // updt welcome page with correct username
-    clearLoginFlowTimeouts(); // Stop old flow
+    clearLoginFlowTimeouts(); // Stop old flow so so doubble login
     transitSections(loginSection, welcomeSection, 1200); // trigger trasit
   };
 }
