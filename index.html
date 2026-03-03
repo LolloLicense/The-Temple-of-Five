@@ -244,7 +244,7 @@
             </h2>
           </div>
           <form action="" id="loginForm" class="loginForm">
-            <label for="userName">Username</label>
+            <label for="UserName">Username</label>
             <input
               id="userName"
               name="userName"
@@ -259,7 +259,7 @@
       <!-- Welcome page with menu -->
       <section id="welcomePage" class="page welcomePage hidden">
         <header class="welcomeHeader">
-          <nav class="welcomeCta">
+          <div class="welcomeCta">
             <p class="userName">Welcome: <span class="userNameValue"></span></p>
             <!-- About button -->
             <button
@@ -306,7 +306,7 @@
                 />
               </svg>
             </button>
-          </nav>
+          </div>
         </header>
         <div class="mainMenu">
           <button id="woodRoomBtn" class="woodRoomBtn">Wood</button>
@@ -682,7 +682,7 @@
           </div>
 
           <!-- Sekvens och misstagsräknare -->
-          <div class="inRoombar" aria-label="Room status">
+          <div class="inRoombar1" aria-label="Room status">
             <!-- Sekvens -->
             <div class="inRoombarProgress" aria-label="Level progress">
               <span>Level:</span>
@@ -711,23 +711,25 @@
       <!------------------------------------------------------------------->
       <!--------------------------- Final Room ---------------------------->
       <!------------------------------------------------------------------->
+       <section id="finalRoom" class="finalRoom hidden">
+        <div class="finalContainer"> 
+          <div class="artifacts" id="artifactContainer"><!-- TS lägger in 5 artifakter här från localstorage??? -->
+          </div>
+          <div class="dropzones">
+            <div class="dropzone" data-accept="wood"></div>
+            <div class="dropzone" data-accept="fire"></div>
+            <div class="dropzone" data-accept="earth"></div>
+            <div class="dropzone" data-accept="metal"></div>
+            <div class="dropzone" data-accept="water"></div>
+          </div>
 
-      <section id="finalRoom" class="finalRoom hidden">
-        <div class="artifacts" id="artifactContainer">
-          <!-- TS lägger in 5 artifakter här från localstorage??? -->
+          <button id="validateBtn">Validate</button>
+
+          <div id="finalFeedback"></div>
+          <!-- Ge feedback om de gick igenom??? -->
         </div>
-        <div class="dropzones">
-          <div class="dropzone"></div>
-          <div class="dropzone"></div>
-          <div class="dropzone"></div>
-          <div class="dropzone"></div>
-          <div class="dropzone"></div>
-        </div>
 
-        <button id="validateBtn">Validate</button>
-
-        <div id="finalFeedback"></div>
-        <!-- Ge feedback om de gick igenom??? -->
+        <!-- Innehåll från JSON-->
         <div class="roomDesc" id=""></div>
       </section>
 
@@ -924,8 +926,8 @@
                 <article class="controlsCard">
                   <h4>1: Wood Chamber</h4>
                   <p>
-                    <kbd>← →</kbd> Navigate between number keys<br />
-                    <kbd>Enter</kbd> to use the focused number key<br />
+                    <kbd>← →</kbd> Navigate between number keys<br/>
+                    <kbd>Enter</kbd> to use the focused number key<br/>
                     After 6 inputs, your sequence is validated automatically.
                   </p>
                 </article>
@@ -944,11 +946,11 @@
                   <h4>4: Metal Chamber</h4>
                   <p>
                     <kbd>← →</kbd> Navigate between slots
-                    <br />
+                    <br/>
                     <kbd>↑ ↓ </kbd> Change the color of the slot
-                    <br />
+                    <br/>
                     <kbd>Enter</kbd> to validate the slots
-                    <br />
+                    <br/>
                   </p>
                 </article>
 

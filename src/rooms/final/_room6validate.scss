@@ -1,3 +1,35 @@
 @use "../../sass/var";
+@use "../../sass/mixins" as mix;
 
+.finalRoom {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+    color: var.$lightColor;
+    background-color: rgba(0, 0, 0, 0.3); 
+    background-blend-mode: multiply;
 
+    .finalContainer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3rem;
+    }
+    .artifacts { 
+        display: flex; 
+        gap: 1.5rem; 
+    } 
+    
+    .dropzones { 
+        display: flex; 
+        gap: 1.5rem; 
+    } 
+    
+    .dropzone { 
+        width: 100px; 
+        height: 100px; 
+        border: 2px dashed var.$lightColor; border-radius: 10px; 
+    }
+}

@@ -38,7 +38,7 @@ export function room4metalFunc() {
     showSection(metalSection);
   }
 
-  startTimer(1); // Start timer for room 1
+  startTimer(4); // Start timer for room 1
   showGameHeader(); // Visar globala headern i rummet
 
   renderRoomDesc(metalSection, dataJSON.room4metal.desc);  // Renderar rummets beskrivning från JSON -> <div id="roomdesc">
