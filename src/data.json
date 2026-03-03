@@ -17,6 +17,14 @@
       "text": "The jungle didn't reclaim the world by chance. The temple runs on a growth pattern — an algorithm that never lies. Start from zero, let it grow, and keep track of what came before. The next step is always built from the last two. Enter the sequence in time to unlock the element of wood.",
       "falseSign": "./images/false-wood-glass-icon.png",
       "trueSign": "./images/true-wood-glass-icon.png"
+    },
+    "artifact": {
+      "id": "wood",
+      "name": "wood artefact",
+      "icons": {
+        "true": "/icons/true-wood-icon.svg",
+        "false": "/icons/false-wood-icon.svg"
+      }
     }
   },
   "room2fire": {

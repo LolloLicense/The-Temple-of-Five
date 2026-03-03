@@ -9,7 +9,7 @@ import {
 } from "../../script/helper/transitions.ts";
 //import { startTimer, stopTimer } from "./script/utils.ts";
 import { startTimer, stopTimer, TimeIsUp } from "../../script/helper/utils.ts";
-import { setRoomResult } from "../../script/helper/storage.ts";
+import { setRoomResult, getRoomResults } from "../../script/helper/storage.ts";
 import { showMsg } from "../../script/helper/showMsg.ts";
 import { room2fireFunc } from "../2fire/room2fire.ts";
 
@@ -52,11 +52,11 @@ export function room1woodFunc() {
     // Fade from current page -> wood room
     transitSections(fromPage, woodSection, TRANSITIONTIME);
   } else {
-    // Fallback (first load): just show the room
+    // Fallback: just show the room
     showSection(woodSection);
   }
 
-  // Allow entering room every time (transition + header + timer)
+  // Allow entering room every time - transition + header + timer)
   // But only create heavy stuff once (particles + event listeners)
   const isFirstInit = woodSection.dataset.woodInit !== "true";
   if (isFirstInit) woodSection.dataset.woodInit = "true";
@@ -367,10 +367,18 @@ export function room1woodFunc() {
     stopTimeUpWatcher();
     stopTimer(1);
 
-    // Save room result - used by progressbar + artifactholder later
-    setRoomResult("wood", { status: "completed", artifact: "true" });
+    // TEST
+    setRoomResult("wood", {
+      status: "completed",
+      artifact: "true",
+      mistakes: mistakes,
+      score: 0, // TODO: define rule later
+      roomTimeSec: 0, // TODO: connect to timer later
+    });
+    console.log("Wood result:", getRoomResults().wood);
+
     // show msg to player
-    showMsg("Well done — next chamber awaits", TRANSITIONTIME);
+    showMsg("Well done — next chamber awaits", TRANSITIONTIME * 2);
 
     window.setTimeout(() => {
       // Reset wood state
@@ -383,7 +391,6 @@ export function room1woodFunc() {
 
       // go next room
       goToNextRoom("#room2Fire", room2fireFunc);
-      room2fireFunc();
     }, TRANSITIONTIME);
   }
 
@@ -401,10 +408,18 @@ export function room1woodFunc() {
     stopTimer(1);
     // Update UI one last time
     updtUI();
-    // Save room result - used by progressbar + artifactholder later
-    setRoomResult("wood", { status: "failed", artifact: "false" });
+
+    // TEST
+    setRoomResult("wood", {
+      status: "failed",
+      artifact: "false",
+      mistakes: mistakes,
+      score: 0,
+      roomTimeSec: 0,
+    });
+    console.log("Wood fail result:", getRoomResults().wood);
     // Show fail message
-    showMsg("Time's up — next chamber awaits", TRANSITIONTIME);
+    showMsg("Time's up — next chamber awaits", TRANSITIONTIME * 2);
 
     // Reset AFTER message is shown
     window.setTimeout(() => {

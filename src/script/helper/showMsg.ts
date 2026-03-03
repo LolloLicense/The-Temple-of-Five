@@ -33,6 +33,6 @@ export function showMsg(message: string, durationMs = 1200): void {
     // Remove from flow after fade
     window.setTimeout(() => {
       msgEl?.classList.add("hidden");
-    }, 300);
+    }, 1200);
   }, durationMs);
 }
