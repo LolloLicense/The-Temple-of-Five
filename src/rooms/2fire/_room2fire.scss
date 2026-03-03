@@ -92,6 +92,11 @@
     white-space: nowrap;
   }
 
+  .fireKey[aria-selected="true"] {
+    outline: 2px solid rgba(255, 179, 71, 0.85);
+    outline-offset: 3px;
+  }
+
   /* ==============================================================
   ==================== SLOTS (TS RENDER) ==========================
   ================================================================= */
@@ -119,8 +124,12 @@
 
     border-radius: 12px;
 
+     /* Smooth visual transitions for state classes */
     transition: transform 140ms ease, box-shadow 180ms ease, opacity 180ms ease;
     will-change: transform;
+
+    /* slight border so the slot shape reads even on bright backgrounds */
+    border: 1px solid rgba(255, 255, 255, 0.16);
   }
 
   /* ==============================================================
@@ -145,95 +154,72 @@
     }
   }
 
-  /* Pop = “filled slot” */
+  /* Slot just filled - pop animation */
   @keyframes slotPop {
-    0% {
-      transform: scale(1);
-    }
-
-    45% {
-      transform: scale(1.1);
-    }
-
-    100% {
-      transform: scale(1);
-    }
+    0% { transform: scale(1); }
+    45% { transform: scale(1.1); }
+    100% { transform: scale(1); }
   }
 
-  /* Shake = "wrong input” */
-  @keyframes slotShake {
-    0% {
-      transform: translateX(0);
-    }
-
-    15% {
-      transform: translateX(-6px);
-    }
-
-    30% {
-      transform: translateX(6px);
-    }
-
-    45% {
-      transform: translateX(-5px);
-    }
-
-    60% {
-      transform: translateX(5px);
-    }
-
-    75% {
-      transform: translateX(-3px);
-    }
-
-    100% {
-      transform: translateX(0);
-    }
+  /* Wrong sequence - shake animation */
+  @keyframes rowShake {
+    0% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-6px); }
+    80% { transform: translateX(6px); }
+    100% { transform: translateX(0); }
   }
 
-
-  @keyframes slotGlow {
-    0% {
-      box-shadow: 0 0 0 rgba(255, 200, 120, 0);
-    }
-
-    40% {
-      box-shadow: 0 0 26px rgba(255, 200, 120, 0.35);
-    }
-
-    100% {
-      box-shadow: 0 0 0 rgba(255, 200, 120, 0);
-    }
+  @keyframes rowGlow {
+    0% { filter: drop-shadow(0 0 0 rgba(255, 200, 120, 0)); }
+    45% { filter: drop-shadow(0 0 18px rgba(255, 200, 120, 0.55)); }
+    100% { filter: drop-shadow(0 0 0 rgba(255, 200, 120, 0)); }
   }
 
+  /* ---------- Slot states ---------- */
 
-  @keyframes focusHalo {
-    0% {
-      box-shadow: 0 0 0 0 rgba(255, 160, 80, 0);
-    }
-
-    50% {
-      box-shadow: 0 0 0 4px rgba(255, 160, 80, 0.16);
-    }
-
-    100% {
-      box-shadow: 0 0 0 0 rgba(255, 160, 80, 0);
-    }
-  }
-
-  /* .is-active - focus slot “pulsating” */
+  /* Next slot guidance */
   .fireSlots .slot.is-active {
-    animation: slotPulse 1200ms ease-in-out infinite;
+    animation: slotPulse 1600ms ease-in-out infinite;
+    outline: 2px solid rgba(255, 179, 71, 0.75);
+    outline-offset: 3px;
+    transform: scale(1.03); 
   }
 
-  /* .just-filled - slot “pop" when element is put in */
+  /* Slot filled feedback */
   .fireSlots .slot.just-filled {
-    animation: slotPop 260ms ease-out;
+    animation: slotPop 460ms ease-out;
   }
 
-  /* .room-complete - no animation */
+  /* Prefilled / locked slot */
+  .fireSlots .slot.is-locked {
+    opacity: 0.55;
+    filter: saturate(0.85) brightness(0.95);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    box-shadow: inset 0 0 0 2px rgba(255, 200, 120, 0.10);
+  }
+
+  /* ---------- Row feedback states ---------- */
+
+  .fireSlots.is-wrong {
+    animation: rowShake 320ms ease-in-out;
+  }
+
+  .fireSlots.is-success {
+    animation: rowGlow 800ms ease-out;
+  }
+
+  /* ---------- Puzzle zone highlight ---------- */
+
+  .room2FireUi.puzzle-focus {
+    border-radius: 16px;
+    animation: focusHalo 1.2s ease-in-out infinite;
+  }
+
+  /* Room completed: calm down UI animations */
   &.room-complete {
-    .room2FireUi.is-focus {
+    .room2FireUi.puzzle-focus {
       animation: none;
       box-shadow: 0 0 0 3px rgba(255, 210, 140, 0.14);
     }
@@ -243,13 +229,10 @@
     }
   }
 
-  .is-slot-focused {
-    outline: 2px solid #ffb347;
-    transform: scale(1.05);
+  .room2FireUi {
+  position: relative; /* already true, but required for ::after */
   }
 
-.fireKey[aria-selected="true"] {
-  outline: 2px solid #ffb347;
 }
 
   /* ==============================================================
@@ -257,7 +240,7 @@
   ================================================================= */
 
 
-}
+
 
 @media (prefers-reduced-motion: reduce) {
   .room2Fire {
