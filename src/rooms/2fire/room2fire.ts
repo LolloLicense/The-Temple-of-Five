@@ -282,6 +282,15 @@ function handleFireKeyDown(e: KeyboardEvent): void {
     backspace();
     return;
   }
+
+  /* Letter input */
+  const upper = key.toUpperCase();
+
+  if (isFireKey(upper)) {
+    e.preventDefault();
+    handlePick(upper);
+    return;
+  }
 }
 
 /**
@@ -687,8 +696,6 @@ function handlePick(key: TFireKey): void {
 
   focusedSlotIndex = attempt.length;
   applySlotFocus();
-
-  console.log("handlePick", key, "time:", Date.now());
 }
 
 function backspace(): void {
