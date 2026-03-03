@@ -1,11 +1,14 @@
 import * as dataJSON from "../../data.json";
 import { playBgm, playSfx } from "../../audio/index.ts";
 import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
-//import { startTimer, stopTimer } from "./script/utils.ts";
-import { startTimer } from "../../script/helper/utils.ts";
+import { startTimer, stopTimer, TimeIsUp } from "../../script/helper/utils.ts";
+import { showMsg } from "../../script/helper/showMsg.ts";
+import { setRoomResult, getRoomResults, resetSingleRoomResult  } from "../../script/helper/storage.ts";
+import { room5waterFunc } from "../5water/room5water.ts";
 import { showGameHeader } from "../../script/helper/gameHeader.ts";
 import { transitSections, getCurrentPage, showSection } from "../../script/helper/transitions.ts";
-import { resetSingleRoomResult } from "../../script/helper/storage.ts";
+
+let listenersBound = false;
 
 export function room4metalFunc() {
   resetSingleRoomResult("metal");
@@ -19,11 +22,24 @@ export function room4metalFunc() {
   }
   const sfxId = dataJSON.room4metal.sfxId; // Spela ljud vid växling av slotfärg
   //-------------------------------------------------------------------------------------------------------------------------------------
-  //-------------------------------------------------------------- Struktur ------------------------------------------------------------
+  //-------------------------------------------------------------- Struktur och gå till nästa rum ------------------------------------------------------------
   //-------------------------------------------------------------------------------------------------------------------------------------
   const metalSection: HTMLElement | null = document.querySelector("#room4Metal"); // Hämtar sektionen för metallrummet
   if (!metalSection) { // Om den inte finns, avbryt funktionen för att undvika fel
    return;
+  }
+
+  // Infogad funktion från woodroom, att övergå till nästa rum finns guide men blev förenklad jäntemot woodroom
+  function goToNextRoom(nextSelector: string, nextRoomFunc: () => void): void {
+    const currentSection = document.querySelector<HTMLElement>("#room4Metal");
+    if (!currentSection) return;
+
+    const nextSection = document.querySelector<HTMLElement>(nextSelector);
+    if (!nextSection) return;
+
+    transitSections(currentSection, nextSection, TRANSITION_MS);
+
+    setTimeout(() => nextRoomFunc(), TRANSITION_MS);
   }
 
   metalSection.style.backgroundImage = `url("${dataJSON.room4metal.backgroundImg}")`; // Sätter bakgrundsbilden för metallrummet från JSON-data
@@ -36,9 +52,33 @@ export function room4metalFunc() {
     transitSections(fromPage, metalSection, 1200);
   } else { // Fallback (first load): just show the room
     showSection(metalSection);
+    
+  }
+  console.log("METAL INIT"); // För att se om det blir dubbelt rummet startar om lustigt
+
+
+  // If we re-enter, clear previous watcher (prevents double fail triggers)
+  let timeUpIntervalId: number | null = null;
+
+  function stopTimeUpWatcher(): void {
+    if (timeUpIntervalId !== null) {
+      window.clearInterval(timeUpIntervalId);
+      timeUpIntervalId = null;
+    }
   }
 
-  startTimer(4); // Start timer for room 1
+  //Stop timer
+  stopTimeUpWatcher();
+  // Start timer for room 1
+  startTimer(4);
+
+  timeUpIntervalId = window.setInterval(() => {
+    if (!TimeIsUp) return;
+    ifRoomFailed();
+  }, 200);
+
+  metalSection.dataset.timeUpWatcherId = String(timeUpIntervalId);
+
   showGameHeader(); // Visar globala headern i rummet
 
   renderRoomDesc(metalSection, dataJSON.room4metal.desc);  // Renderar rummets beskrivning från JSON -> <div id="roomdesc">
@@ -52,6 +92,7 @@ export function room4metalFunc() {
     [4, 1, 3, 1, 4, 2] // Level 3 lite svårare sekvens
   ];
 
+  const TRANSITION_MS = 1200;
   let currentLevel = 0; // Variabel för att hålla reda på vilken level spelaren är på 0 = level 1, 1 = level 2, 2 = level 3
   //let mistakes = 0; // Ska räkna antalet misstag spelaren gör
   let playerSlots: (number | null)[] = Array(6).fill(null); // Array med spelarens val, antingen är en slot ett nummer som motsvarar en färg i colorsMetal eller null om spelaren inte valt något för den sloten än.
@@ -126,35 +167,41 @@ export function room4metalFunc() {
    * byta färg i en slot (upp/ned)
    * Blockerar input när sekvensen spelas upp.
    */
-  document.addEventListener("keydown", (event) => {
-    if (isPlayingSequence) return; // Användaren ska inte kunna styra under sekvensens gång
+  
+  if (!listenersBound) {
+    document.addEventListener("keydown", (event) => {
+      console.log("METAL KEYDOWN"); // ← lägg här
+      if (isPlayingSequence) return; // Användaren ska inte kunna styra under sekvensens gång
 
-    if (event.key === "ArrowRight") { // Om man användaren trycker högerpilen
-      activeSlot = Math.min(activeSlot + 1, playerSlots.length - 1); // Flytta markeringen till nästa slot (men inte utanför sista)
-      renderSlots(); // Uppdatera så highlight flyttar sig till den aktiva sloten
-    }
-    
-    if (event.key === "ArrowLeft") { // Om man användaren trycker vänsterpilen
-      activeSlot = Math.max(activeSlot - 1, 0); // Flytta markeringen till föregående slot (men inte utanför första)
-      renderSlots(); // Uppdatera så highlight flyttar sig till den aktiva sloten
-    }
+      if (event.key === "ArrowRight") { // Om man användaren trycker högerpilen
 
-    if (event.key === "ArrowUp") { // Om man användaren trycker uppåtpilen
-      changeSlotColor(1); // Går till nästa färg i listan
-      if (sfxId) playSfx(sfxId);
-    }
-    
-    if (event.key === "ArrowDown") { // Om man användaren trycker nedåtpilen
-      changeSlotColor(-1); // Går till föregående färg i listan
-      if (sfxId) playSfx(sfxId);
-    }
-
-    if (event.key === "Enter") { // Om man trycker på enter
-      if (!isPlayingSequence && allSlotsFilled()) { // Kontrollera att sekvensen inte spelas (dumt att validera mitt i sekvensen) och att alla slots är ifyllda (måste vara färdigt)
-        validate(); // Kör validering av användarens val
+        activeSlot = Math.min(activeSlot + 1, playerSlots.length - 1); // Flytta markeringen till nästa slot (men inte utanför sista)
+        renderSlots(); // Uppdatera så highlight flyttar sig till den aktiva sloten
       }
-    }
-  });
+    
+      if (event.key === "ArrowLeft") { // Om man användaren trycker vänsterpilen
+        activeSlot = Math.max(activeSlot - 1, 0); // Flytta markeringen till föregående slot (men inte utanför första)
+        renderSlots(); // Uppdatera så highlight flyttar sig till den aktiva sloten
+      }
+
+      if (event.key === "ArrowUp") { // Om man användaren trycker uppåtpilen
+        changeSlotColor(1); // Går till nästa färg i listan
+        if (sfxId) playSfx(sfxId);
+      }
+    
+      if (event.key === "ArrowDown") { // Om man användaren trycker nedåtpilen
+        changeSlotColor(-1); // Går till föregående färg i listan
+        if (sfxId) playSfx(sfxId);
+      }
+
+      if (event.key === "Enter") { // Om man trycker på enter
+        if (!isPlayingSequence && allSlotsFilled()) { // Kontrollera att sekvensen inte spelas (dumt att validera mitt i sekvensen) och att alla slots är ifyllda (måste vara färdigt)
+          validate(); // Kör validering av användarens val
+        }
+      }
+    });
+    listenersBound = true;
+  }
   //--------------------------------------------------------------------------------------------------------------------------------------
   //-------------------------------------------------------------- Countdown -------------------------------------------------------------
   //--------------------------------------------------------------------------------------------------------------------------------------
@@ -230,7 +277,6 @@ export function room4metalFunc() {
   function updateMistakeProgress(mistakeCount: number) { // Uppdaterar texten som visar hur många misstag som användaren gjort
     mistakesText.textContent = String(mistakeCount); // Tar emot antalet misstag och skriver ut det som text
   }
-
   //--------------------------------------------------------------------------------------------------------------------------------------
   //----------------------------------------------------------- Validering ---------------------------------------------------------------
   //--------------------------------------------------------------------------------------------------------------------------------------
@@ -265,7 +311,8 @@ export function room4metalFunc() {
           renderSlots();
         }, 1000);
       } else { // Sista leveln klar, rummet är avklarat
-        feedback.textContent = "Metal chamber complete"; 
+        ifRoomCompleted();
+        return;
       }
 
     } else { // Om det är felsvar
@@ -283,6 +330,47 @@ export function room4metalFunc() {
       }, 2000);
     } 
   }
+  
+  // Förklara dessa ingående imorgon, från guiden också
+  function ifRoomCompleted(): void {
+    stopTimeUpWatcher();
+    stopTimer(4);
+
+    setRoomResult("metal", {      
+      status: "completed",
+      artifact: "true",
+      mistakes: mistakes,
+      score: 0,
+      roomTimeSec: 0
+    });
+
+    showMsg("Well done — next chamber awaits", TRANSITION_MS * 2);
+    console.log("Metal result:", getRoomResults().metal);
+
+    setTimeout(() => {
+      goToNextRoom("#room5Water", room5waterFunc);
+    }, TRANSITION_MS);
+  }
+
+  function ifRoomFailed(): void {
+    stopTimeUpWatcher();
+    stopTimer(4);
+
+    setRoomResult("metal", {
+      status: "failed",
+      artifact: "false",
+      mistakes: mistakes,
+      score: 0,
+      roomTimeSec: 0
+    });
+
+    showMsg("Time's up — next chamber awaits", TRANSITION_MS * 2);
+
+    setTimeout(() => {
+      goToNextRoom("#room5Water", room5waterFunc);
+    }, TRANSITION_MS);
+  }
+
 
   renderSlots(); // Rendera slotsen för första gången när rummet laddas
   startCountdown(playSequence); // Starta coundown och sedan starta playsequence
