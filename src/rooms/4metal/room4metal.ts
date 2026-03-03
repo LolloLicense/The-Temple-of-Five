@@ -68,8 +68,8 @@ export function room4metalFunc() {
 
   const signal = metalSection.querySelector("#colorSignal")!; // Hämtar elementet som visar spelets färgsignal. Använder ! som en null check (värdet ska inte vara null)
   const feedback = metalSection.querySelector("#feedback")!; // Hämtar elementet som visar feedback til spelare ex rätt/fel
-  const levelText = metalSection.querySelector("#levelText")!; // Hämtar elementet som visar vilken level spelaren är på ex 1/3
-  const mistakesText = metalSection.querySelector("#mistakesText")!; // Hämtar elementet som visar hur många misstag spelaren har gjort
+  const levelText = metalSection.querySelector("#levelText1")!; // Hämtar elementet som visar vilken level spelaren är på ex 1/3
+  const mistakesText = metalSection.querySelector("#mistakesText1")!; // Hämtar elementet som visar hur många misstag spelaren har gjort
   const slots = Array.from(metalSection.querySelectorAll(".colorSlots > div")); // Selektorn ".colorSlots > div" betyder "ta alla <div> som ligger direkt inuti containern .colorSlots". Det gör att vi får exakt de 6 slotsen (colorSlot1–6) i rätt ordning.
 
   //-------------------------------------------------------------------------------------------------------------------------------------
