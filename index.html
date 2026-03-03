@@ -713,27 +713,23 @@
       <!--------------------------- Final Room ---------------------------->
       <!------------------------------------------------------------------->
       <section id="finalRoom" class="finalRoom hidden">
+        
         <div class="finalContainer">
-          <div class="artifacts" id="artifactContainer">
-            <!-- TS lägger in 5 artifakter här från localstorage??? -->
+          <div class="finalSlots">
+            <div class="slotplace"></div>
+            <div class="slotplace"></div>
+            <div class="slotplace"></div>
+            <div class="slotplace"></div>
+            <div class="slotplace"></div>
           </div>
-          <div class="dropzones">
-            <div class="dropzone" data-accept="wood"></div>
-            <div class="dropzone" data-accept="fire"></div>
-            <div class="dropzone" data-accept="earth"></div>
-            <div class="dropzone" data-accept="metal"></div>
-            <div class="dropzone" data-accept="water"></div>
-          </div>
-
-          <button id="validateBtn">Validate</button>
-
-          <div id="finalFeedback"></div>
-          <!-- Ge feedback om de gick igenom??? -->
         </div>
 
+        <button class="validateBtn" disabled>Validate</button>
         <!-- Innehåll från JSON-->
-        <div class="roomDesc" id=""></div>
+        <div class="roomDesc"></div>
       </section>
+
+
 
       <!------------------------------------------------------------------->
       <!----------------------- Game Win Room ----------------------------->

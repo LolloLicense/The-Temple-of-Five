@@ -2,34 +2,79 @@
 @use "../../sass/mixins" as mix;
 
 .finalRoom {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: var.$lightColor;
+  background-color: rgba(0, 0, 0, 0.3); 
+  background-blend-mode: multiply;
+  
+    
+  .finalContainer {
+    border: 1px solid var.$lightColor;
+    border-radius: 10px;
+    padding: 2rem 3rem; 
+    margin-top: 10rem;
+    margin-bottom: 2rem;
+   }
+
+  .finalSlots {
+    display: flex;
+    gap: 3rem;
+  }
+
+  .slotplace {
+    width: 80px;
+    height: 80px;
+    @include mix.glass();
+    border: 1px solid var.$lightColor;
+    border-radius: 10px;
+    cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
-    position: relative;
-    color: var.$lightColor;
-    background-color: rgba(0, 0, 0, 0.3); 
-    background-blend-mode: multiply;
+    text-transform: uppercase;
 
-    .finalContainer {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 3rem;
+    &:focus {
+      outline: 2px solid var.$lightColor;
+      box-shadow: 0 0 10px var.$lightColor;
     }
-    .artifacts { 
-        display: flex; 
-        gap: 1.5rem; 
-    } 
-    
-    .dropzones { 
-        display: flex; 
-        gap: 1.5rem; 
-    } 
-    
-    .dropzone { 
-        width: 100px; 
-        height: 100px; 
-        border: 2px dashed var.$lightColor; border-radius: 10px; 
+  }
+
+  .artifactPicker {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    @include mix.glass();
+    padding: 1rem;
+    border-radius: 10px;
+
+    button {
+      @include mix.glass();
+      padding: 0.5rem 1rem;
+      border: 1px solid var.$lightColor;
+      color: var.$lightColor;
+      cursor: pointer;
+
+      &.selected {
+        outline: 2px solid var.$lightColor;
+        box-shadow: 0 0 10px var.$lightColor;
+      }
     }
+  }
+
+  .validateBtn {
+    @include mix.glass();
+    padding: 1rem 2rem;
+    border: 1px solid var.$lightColor;
+    color: var.$lightColor;
+    border-radius: 10px;
+    cursor: pointer;
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
 }
