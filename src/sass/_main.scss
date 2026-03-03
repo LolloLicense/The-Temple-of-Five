@@ -315,11 +315,12 @@ body {
       font-size: var.$fs-h6;
       margin-top: 1.5rem;
       margin-bottom: 0.25rem;
-      opacity: 0.85;
+      opacity: 0.9;
     }
     p {
       font-size: var.$fs-h6;
       line-height: 1.8;
+      opacity: 0.9;
     }
 
     &.panelControls {
@@ -334,6 +335,18 @@ body {
       p {
         font-size: var.$fs-body;
       }
+      .controlItem {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+    }
+
+    .devTeamList { // Removed the dots for the list of names with links to GitHub profiles
+      list-style: none;
+      padding: 0;
+      margin: 0;
     }
   }
 }
