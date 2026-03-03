@@ -1,6 +1,7 @@
 import * as dataJSON from "../../data.json";
 import { playBgm } from "../../audio";
 import { renderRoomDesc } from "../../script/helper/roomDesc";
+import { showGameHeader } from "../../script/helper/gameHeader";
 import {
   startTimer as startSharedTimer,
   stopTimer  as stopSharedTimer,
@@ -579,6 +580,7 @@ export function room5waterFunc(): void {
 
   section.style.backgroundImage = `url("${dataJSON.room5water.backgroundImg}")`;
   section.classList.remove("hidden");
+  showGameHeader();
   
     // Inject HTML into the section
     injectHTML(section);
