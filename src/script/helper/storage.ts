@@ -11,28 +11,28 @@ export interface IUserData {
 
 // ROOM ID used in the game
 
-export type RoomId = "wood" | "fire" | "earth" | "metal" | "water" | "final";
+export type TRoomId = "wood" | "fire" | "earth" | "metal" | "water" | "final";
 
 // Rooom STATUS
 
-export type RoomStatus = "pending" | "completed" | "failed";
+export type TRoomStatus = "pending" | "completed" | "failed";
 
 // Artifact outcome true | false | not earned yet
 
-export type ArtifactKind = "true" | "false" | null;
+export type TArtifactKind = "true" | "false" | null;
 
 //ROOMS
 
-export type RoomResult = {
-  status: RoomStatus;
-  artifact: ArtifactKind;
+export type TRoomResult = {
+  status: TRoomStatus;
+  artifact: TArtifactKind;
   mistakes?: number;
   score?: number;
   roomTimeSec?: number;
 };
 
 // One object that holds the whole run
-export type GameState = Record<RoomId, RoomResult>;
+export type TGameState = Record<TRoomId, TRoomResult>;
 
 //-----------------------------------------------------------
 //---------------LocalStorage KEY------------------
@@ -53,7 +53,7 @@ const LS_KEY = {
 //------------------- DEAFAUL GAME STATE---------------------
 //-----------------------------------------------------------
 
-const DEFAULT_GAME_STATE: GameState = {
+const DEFAULT_GAME_STATE: TGameState = {
   wood: {
     status: "pending",
     artifact: null,
@@ -102,21 +102,21 @@ const DEFAULT_GAME_STATE: GameState = {
 //------------------- PROGRESSBAR ---------------------------
 //-----------------------------------------------------------
 // Read current run state safe fallback if nothing is saved yet
-export function getRoomResults(): GameState {
+export function getRoomResults(): TGameState {
   const raw = localStorage.getItem(LS_KEY.roomResults);
   if (!raw) return DEFAULT_GAME_STATE;
 
   try {
-    return JSON.parse(raw) as GameState;
+    return JSON.parse(raw) as TGameState;
   } catch {
     return DEFAULT_GAME_STATE;
   }
 }
 
 // Update ONE room
-export function setRoomResult(roomId: RoomId, result: RoomResult): void {
+export function setRoomResult(roomId: TRoomId, result: TRoomResult): void {
   const state = getRoomResults();
-  const next: GameState = { ...state, [roomId]: result };
+  const next: TGameState = { ...state, [roomId]: result };
   localStorage.setItem(LS_KEY.roomResults, JSON.stringify(next));
   console.log("📦 Full gameState:", getRoomResults());
 }
