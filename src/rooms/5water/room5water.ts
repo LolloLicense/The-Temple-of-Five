@@ -1,16 +1,16 @@
 import * as dataJSON from "../../data.json";
-import { playBgm } from "../../audio";
-import { renderRoomDesc } from "../../script/helper/roomDesc";
-import { showGameHeader } from "../../script/helper/gameHeader";
-import { resetSingleRoomResult } from "../../script/helper/storage";
+import { playBgm } from "../../audio/index.ts";
+import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
+import { showGameHeader } from "../../script/helper/gameHeader.ts";
+import { resetSingleRoomResult } from "../../script/helper/storage.ts";
 import {
   startTimer as startSharedTimer,
   stopTimer  as stopSharedTimer,
   TimeIsUp,
-} from "../../script/helper/utils";
-import { transitSections, getCurrentPage, showSection } from "../../script/helper/transitions"; 
+} from "../../script/helper/utils.ts";
+import { transitSections, getCurrentPage, showSection } from "../../script/helper/transitions.ts"; 
 // FIX 1: Added missing imports
-import { room6finalFunc } from "../final/room6validate";
+import { room6finalFunc } from "../final/room6validate.ts";
 // FIX 2: Uncommented room 6 import
 
 // ── TYPES ──────────────────────────────────────────────────────────────────

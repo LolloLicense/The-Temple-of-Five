@@ -6,84 +6,44 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  padding-top: clamp(2vh, 5vh, 8vh); // scales fluidly across all desktop screen sizes
+  justify-content: center;
   min-height: 100vh;
+  padding: 1rem;
   color: var.$lightColor;
   font-family: var.$txFont;
-  background-color: rgba(0, 0, 0, 0.3); 
+  background-color: rgba(0, 0, 0, 0.4); 
   background-blend-mode: multiply;
+  position: relative;
+  overflow: hidden;
 
-  // ── CHAMBER WRAPPER ─────────────────────────────────────────────────
-  .w-chamber {
-    width: 100%;
-    max-width: 750px;
-    padding: clamp(60px, 8vh, 100px) 1.5rem clamp(2rem, 4vh, 4rem); // top clears fixed header, scales with viewport height
+  // ── PUZZLE CONTAINER ──────────────────────────────────────────────────
+  .w-puzzle {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: clamp(0.75rem, 1.5vh, 1.5rem); // gap between panels scales with screen height
-  }
-
-  // ── HEADER ────────────────────────────────────────────────────────────
-  .w-header {
-    // Kept for structural parity with other rooms (fixed navbar area)
     width: 100%;
-  }
+    max-width: 380px;
+    gap: 0.5rem; 
+    z-index: 1;
+    padding-top: 2rem;
 
-  // ── ROOM HEADING (title + subtitle, below the fixed header) ───────────
-  .w-heading {
-    text-align: center;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(var.$lightColor, 0.25);
-    width: 100%;
+    @media (min-width: 768px) {
+    max-width: 600px; // Laptop/Tablet
   }
-
-  .w-symbol {
-    font-size: var.$fs-h2;
-    display: block;
-    filter: drop-shadow(0 0 16px #5dade2);
-    animation: w-symbolPulse 3s ease-in-out infinite;
-  }
-
-  @keyframes w-symbolPulse {
-    0%, 100% { filter: drop-shadow(0 0 10px #5dade2); }
-    50%       { filter: drop-shadow(0 0 26px #85c1e9); }
-  }
-
-  .w-title {
-    font-size: var.$fs-h3;
-    color: var.$lightColor;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    margin: 0.35rem 0 0.2rem;
-  }
-
-  .w-subtitle {
-    font-size: var.$fs-body;
-    color: rgba(var.$lightColor, 0.7);
-    font-style: italic;
+    
   }
 
   // ── PANELS ────────────────────────────────────────────────────────────
   .w-panel {
     @include mix.glass();
     width: 100%;
-    padding: clamp(1rem, 2vh, 1.75rem) 2rem; // vertical padding scales with screen height
+    padding: 0.8rem 1.2rem;
     color: var.$lightColor;
-
-    h2 {
-      font-size: var.$fs-h6;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 0.75rem;
-      color: var.$lightColor;
-    }
 
     p {
       font-size: var.$fs-body;
-      line-height: 1.75;
-      margin-bottom: 0.5rem;
+      line-height: 1.5;
+      margin-bottom: 0.4rem;
     }
   }
 
@@ -97,19 +57,15 @@
   }
 
   // ── INTRO / PUZZLE VISIBILITY ──────────────────────────────────────────
-  .w-intro {
-    display: none; // intro removed — kept for legacy compatibility
-  }
 
   .w-puzzle {
-    display: none;
     display: flex;
     flex-direction: column;
-    row-gap: 1.2rem; // spacing between panels
-
-    &.active {
-      display: flex;
-    }
+    align-items: center;
+    row-gap: 1.2rem;
+    width: 100%;
+    max-width: 400px;
+    padding-top: clamp(60px, 8vh, 100px);
   }
 
   .w-instruction {
@@ -122,33 +78,24 @@
   }
 
   // ── PIPE GRID ─────────────────────────────────────────────────────────
-  .w-grid-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: clamp(0.75rem, 1.5vh, 1.5rem);
-    margin-top: clamp(0.5rem, 1.2vh, 1.2rem); // pushes grid down so instruction sits closer to top
-  }
-
-  .pipe-grid {
+  .w-pipe-grid {
     display: grid;
-    grid-template-columns: repeat(5, 60px);
-    grid-template-rows: repeat(5, 60px);
+    grid-template-columns: repeat(5, 55px);
+    grid-template-rows: repeat(5, 55px);
     gap: 4px;
-    padding: 12px;
+    padding: 10px;
     @include mix.glass($bg: rgba(9, 49, 52, 0.6));
     position: relative;
+    margin-bottom: 0.5rem;
 
     &::before {
       content: "SOURCE";
       position: absolute;
       top: -1.4rem;
       left: 12px;
-      font-size: 0.62rem;
+      font-size: 0.65rem;
       letter-spacing: 0.14em;
       color: #5dade2;
-      font-family: var.$txFont;
     }
 
     &::after {
@@ -156,11 +103,16 @@
       position: absolute;
       bottom: -1.4rem;
       right: 12px;
-      font-size: 0.62rem;
+      font-size: 0.65rem;
       letter-spacing: 0.14em;
       color: #c9a84c;
-      font-family: var.$txFont;
     }
+
+    @media (min-width: 1024px) {
+    grid-template-columns: repeat(5, 75px);
+    grid-template-rows: repeat(5, 75px);
+    gap: 8px;
+  }
   }
 
   // ── PIPE CELL ─────────────────────────────────────────────────────────
@@ -172,28 +124,6 @@
     justify-content: center;
     @include mix.glass($bg: rgba(9, 49, 52, 0.4), $radius: var.$smallRadius);
     cursor: pointer;
-    transition: background 0.15s, transform 0.1s;
-    user-select: none;
-
-    &:hover,
-    &:focus {
-      background: rgba(41, 128, 185, 0.45);
-      outline: 3px solid var.$lightColor;
-      outline-offset: 2px;
-      transform: scale(1.05);
-      z-index: 2;
-    }
-
-    &.fixed {
-      cursor: default;
-      background: rgba(2, 18, 22, 0.7);
-
-      &:hover {
-        transform: none;
-        outline: none;
-      }
-    }
-
     &.active-flow {
       background: rgba(41, 128, 185, 0.65);
       box-shadow: 0 0 10px rgba(93, 173, 226, 0.55);
@@ -263,13 +193,11 @@
   // ── STATUS / KEYBOARD HINT ─────────────────────────────────────────────
   .w-status {
     text-align: center;
-    min-height: 1.4rem;
+    min-height: 1.5rem;
     font-style: italic;
-    color: rgba(var.$lightColor, 0.75);
-    margin-top: clamp(0.3rem, 0.6vh, 0.6rem);
+    color: rgba(var.$lightColor, 0.8);
     font-size: var.$fs-body;
-    line-height: 1.5;
-    transition: color 0.3s;
+    margin: 0;
 
     &.success-msg { color: #e8d07a; }
     &.error-msg   { color: var.$redColor; }
@@ -277,18 +205,17 @@
 
   // ── TIME WARNING ──────────────────────────────────────────────────────
   .w-time-warning {
-    display: none;
-    width: 100%;
-    text-align: center;
-    margin-top: clamp(0.3rem, 0.6vh, 0.6rem);
-    margin-bottom: 0.25rem;
-    padding: 0.4rem 0.75rem;
+    display: none; // Hidden by default, shown via JS
+    margin-top: 0,5rem;
+    padding: 0.75rem 1.25rem;
     background: rgba(var.$redColor, 0.15);
     border: 1px solid rgba(var.$redColor, 0.4);
     border-radius: var.$smallRadius;
     color: var.$redColor;
     font-style: italic;
-    font-size: var.$fs-body;
+    font-size: 0.9rem;
+    max-width: 400px;
+    text-align: center;
     animation: w-pulseWarning 2s ease infinite;
 
     &.visible { display: block; }
@@ -298,6 +225,34 @@
     0%, 100% { opacity: 1;    }
     50%       { opacity: 0.55; }
   }
+
+  /* ── WATER ROOM CONTAINER ───────────────────────────────────────────── */
+.w-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 95%;
+  max-width: 450px;
+  padding: 1rem;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+// ── BUTTONS + WARNING FLEX ───────────────────────────────────────────
+.w-btns-warning {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: 0.5rem;
+}
 
   // ── ARTIFACT BOX ──────────────────────────────────────────────────────
   .w-artifact {
@@ -379,25 +334,21 @@
 
   // ── BUBBLES (decorative, spawned by JS) ───────────────────────────────
   .bubble {
-    position: fixed;
+    position: absolute;
     border-radius: 50%;
-    background: radial-gradient(
-      circle at 35% 35%,
-      rgba(var.$lightColor, 0.25),
-      rgba(41, 128, 185, 0.1)
-    );
-    border: 1px solid rgba(var.$lightColor, 0.15);
+    background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.3), rgba(41,128,185,0.1));
+    border: 1px solid rgba(255,255,255,0.1);
     animation: w-bubbleRise linear infinite;
     pointer-events: none;
-    z-index: 0;
   }
 
   @keyframes w-bubbleRise {
-    0%   { transform: translateY(100vh) translateX(0)    scale(0.8); opacity: 0;   }
-    10%  {                                                             opacity: 0.5; }
-    90%  {                                                             opacity: 0.25;}
-    100% { transform: translateY(-10vh) translateX(30px) scale(1.1); opacity: 0;   }
+    0% { transform: translateY(110vh) scale(0.8); opacity: 0; }
+    20% { opacity: 0.4; }
+    100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
   }
+
+  // Duplicate keyframes removed (already defined above)
 
   // ── BOTTOM LORE BAR ───────────────────────────────────────────────────
   .w-lore-bar {
@@ -430,4 +381,67 @@
     line-height: 1.65;
     margin: 0;
   }
+
+  // ── W-PIPE-GRID alias (matches the id in HTML) ───────────────────────
+  .w-pipe-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 60px);
+    grid-template-rows: repeat(5, 60px);
+    gap: 4px;
+    padding: 12px;
+    @include mix.glass($bg: rgba(9, 49, 52, 0.6));
+    position: relative;
+
+    &::before {
+      content: "SOURCE";
+      position: absolute;
+      top: -1.4rem;
+      left: 12px;
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      color: #5dade2;
+      font-family: var.$txFont;
+    }
+
+    &::after {
+      content: "VESSEL";
+      position: absolute;
+      bottom: -1.4rem;
+      right: 12px;
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      color: #c9a84c;
+      font-family: var.$txFont;
+    }
+  }
+
+  // ── ACTION BUTTONS ────────────────────────────────────────────────────
+  .w-btns {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    width: 100%;
+    margin-top: 0.2rem;
+  }
+
+  .w-check-btn,
+  .w-reset-btn {
+    @include mix.button();
+    font-size: 0.9rem;
+    min-width: 200px;
+    padding: 0.5rem 1rem;
+  }
+
+  .w-check-btn {
+    border-color: #5dade2;
+    &:hover { background: rgba(93, 173, 226, 0.2); }
+  }
+
+  .w-reset-btn {
+    background: transparent;
+    border: 1px solid rgba(var.$lightColor, 0.3);
+    box-shadow: none;
+    &:hover { background: rgba(255, 255, 255, 0.1); }
+  }
+
 }
