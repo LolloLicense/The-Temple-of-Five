@@ -5,9 +5,8 @@ import { startTimer, stopTimer, TimeIsUp } from "../../script/helper/utils.ts";
 import { transitSections, getCurrentPage, showSection } from "../../script/helper/transitions";
 import { showGameHeader, hideGameHeader } from "../../script/helper/gameHeader";
 import { showMsg } from "../../script/helper/showMsg";
-import { resetSingleRoomResult, setRoomResult } from "../../script/helper/storage";
+import { getRoomResults, resetSingleRoomResult, setRoomResult } from "../../script/helper/storage";
 import { room3earthFunc } from "../3earth/room3earth.ts";
-import { resetRoomResults } from "../../script/helper/storage";
 
 
 /**
@@ -360,7 +359,13 @@ export function room2fireFunc(): void {
   fireSection = document.querySelector<HTMLElement>("#room2Fire");
   if (!fireSection) return;
 
-  resetSingleRoomResult("fire");  // artifact null
+  const fireState = getRoomResults().fire;
+
+  // If already completed in this run → do not allow re-enter
+  if (fireState.status === "completed") {
+    console.warn("Fire room already completed. Access blocked.");
+    return;
+  }
 
   showGameHeader(); // Show header when entering fire room
 
@@ -905,9 +910,24 @@ export function exitFireRoom(): void {
 
   if (!welcomeSection || !fromPage) return;
 
+  // Stop timers/timeouts so nothing fires after exit
   stopTimeUpWatcher();
-  stopTimer(2);
   stopIntroTimeout();
+  stopTimer(2);
+
+  // Reset THIS room in LS on exit
+  // Player can't "continue" into a half-finished Fire.
+  resetSingleRoomResult("fire");
+
+  // Optional: also reset in-memory state so re-enter is always clean
+  currentLevelIndex = 0;
+  attempt = [];
+  mistakes = 0;
+  locked = false;
+  isTransitioning = false;
+  focusMode = "keys";
+  focusedKeyIndex = 0;
+  focusedSlotIndex = 0;
 
   hideGameHeader();
   transitSections(fromPage, welcomeSection, TRANSITION_MS);
