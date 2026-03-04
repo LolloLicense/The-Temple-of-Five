@@ -17,6 +17,14 @@ let timerCheckInterval: number;
 const correctSlatesArr: number[] = [];
 
 export function room3earthFunc(): void {
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "PageDown") {
+      console.log("PageDown");
+      return;
+    }
+    // do something
+  });
+
   /* Sets the background for the room and shows room section */
   const earthSection: HTMLElement | null =
     document.querySelector("#room3Earth");
@@ -83,7 +91,7 @@ export function room3earthFunc(): void {
 
 function slateClick(slate: HTMLElement | null, count: number): void {
   console.log(`Slate ${count} was clicked!`);
-  //winner();
+  winner();
   const currentSlate = document.querySelector(`.slate${count}`);
   const slateNumber: number = count;
   const emptySlate = document.querySelector(".slate16");
@@ -201,7 +209,6 @@ function animateMove(
       }, 750); //Reset transition and transform after animation has finished
     }
   }
-  // TODO SETUP FOR ANIMATIONS
 }
 
 function matchTuples(
@@ -276,8 +283,9 @@ function winner(): void {
     lavaSlate.classList.add("win");
     lavaSlate.style.opacity = "1";
     lavaSlate.style.filter = "grayscale(100%)";
+    lavaSlate.innerHTML = 
   } //IF lavaSlate END
-}
+} // winner END
 
 function checkTextContent(textContent: string, target: number): void {
   const slateIndex: number = correctSlatesArr.indexOf(target);

@@ -38,7 +38,8 @@
 
 .room3Earth .gameDiv .slate {
 	color: white;
-	//border:  1px solid var.$lightColor;
+	font-size: var.$fs-h5;
+	font-family: var.$txFont;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -113,18 +114,12 @@
 
 .room3Earth .gameDiv .slate16.win {
 	background-image: url('/images/earthRoom/lavaSlate.jpg');
-	transition:
-		filter 3s,
-		opacity 3s;
 	opacity: 0;
 	filter: grayscale(0%);
 	-webkit-filter: grayscale(0%);
+	transition: all 4s;
+	-webkit-transition: all 4s;
 }
-
-/* 
--webkit-filter: grayscale(100%);
-filter: grayscale(100%);
-*/
 
 .room3Earth .gameDiv .c00 {
 	grid-area: c00;
@@ -191,10 +186,18 @@ filter: grayscale(100%);
 }
 
 .room3Earth .roomDesc {
-	@include mix.glass();
-	width: 40vw;
-	padding-top: 10px;
-	padding-bottom: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 1.5rem;
+	color: var.$lightColor;
+	position: absolute;
+	bottom: 2rem;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 1200px;
+	font-size: var.$fs-h6;
+	text-align: left;
 }
 
 /*
