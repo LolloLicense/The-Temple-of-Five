@@ -823,18 +823,32 @@
       <!------------------------------------------------------------------->
 
       <section id="highscoreRoom" class="highscoreRoom page hidden">
-        <div class="gameOverHeading">
-          <h2>Balance is distorted</h2>
-          <p>
-            The cycle breaks. Balance remains unrestored. The Water and metall
-            elements are corrupted
-          </p>
+  
+        <!-- Main Title -->
+        <h2 class="highscoreTitle">The Temple of the Five</h2>
+
+        <!-- Glass Highscore Container -->
+        <div class="highscorePlate">
+          <h3 class="highscoreHeading">Highscore</h3>
+
+          <!-- Highscore list -->
+          <ol id="highscoreList" class="highscoreList">
+            <!-- Render later -->
+            <li>Loading...</li>
+          </ol>
         </div>
-        <div class="gameOverCtaBtns">
-          <button id="resetBtn" class="resetBtn">Reset</button>
-          <button id="highScoreBtn" class="highScoreBtn">High Score</button>
-          <button id="gameOverAboutBtn" class="gameOverAboutBtn">About</button>
+
+        <!-- CTA Buttons -->
+        <div class="highscoreActions">
+          <button id="shareResultBtn" class="shareBtn" type="button">
+            Share Result
+          </button>
+
+          <button id="backToMainMenuBtn" class="backBtn" type="button">
+            Back to Main Menu
+          </button>
         </div>
+
       </section>
     </main>
 
