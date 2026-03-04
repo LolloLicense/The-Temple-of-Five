@@ -700,14 +700,14 @@
       <!--------------------------- Water Room ---------------------------->
       <!------------------------------------------------------------------->
 
-      <section id="room5Water" class="room5Water hidden">
+      <section id="room5Water" class="room5Water page hidden">
         <div class="roomDesc" id=""></div>
       </section>
 
       <!------------------------------------------------------------------->
       <!--------------------------- Final Room ---------------------------->
       <!------------------------------------------------------------------->
-      <section id="finalRoom" class="finalRoom hidden">
+      <section id="finalRoom" class="finalRoom page hidden">
         <div class="artifacts" id="artifactContainer">
           <!-- TS lägger in 5 artifakter här från localstorage??? -->
         </div>
@@ -730,13 +730,32 @@
       <!----------------------- Game Win Room ----------------------------->
       <!------------------------------------------------------------------->
 
-      <section id="gameWinRoom" class="gameWinRoom hidden"></section>
+      <section id="gameWinRoom" class="gameWinRoom page hidden"></section>
 
       <!------------------------------------------------------------------->
       <!----------------------- Game Over Room ---------------------------->
       <!------------------------------------------------------------------->
 
-      <section id="gameOverRoom" class="gameOverRoom hidden">
+      <section id="gameOverRoom" class="gameOverRoom page hidden">
+        <div class="gameOverHeading">
+          <h2>Balance is distorted</h2>
+          <p>
+            The cycle breaks. Balance remains unrestored. The Water and metall
+            elements are corrupted
+          </p>
+        </div>
+        <div class="gameOverCtaBtns">
+          <button id="resetBtn" class="resetBtn">Reset</button>
+          <button id="highScoreBtn" class="highScoreBtn">High Score</button>
+          <button id="gameOverAboutBtn" class="gameOverAboutBtn">About</button>
+        </div>
+      </section>
+
+      <!------------------------------------------------------------------->
+      <!----------------------- HighScore Room ---------------------------->
+      <!------------------------------------------------------------------->
+
+      <section id="highscoreRoom" class="highscoreRoom page hidden">
         <div class="gameOverHeading">
           <h2>Balance is distorted</h2>
           <p>
