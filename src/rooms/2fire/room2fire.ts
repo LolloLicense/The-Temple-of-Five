@@ -5,7 +5,7 @@ import { startTimer, stopTimer, TimeIsUp } from "../../script/helper/utils.ts";
 import { transitSections, getCurrentPage, showSection } from "../../script/helper/transitions";
 import { showGameHeader, hideGameHeader } from "../../script/helper/gameHeader";
 import { showMsg } from "../../script/helper/showMsg";
-import { /* getRoomResults */ resetSingleRoomResult, setRoomResult } from "../../script/helper/storage";
+import { getRoomResults, resetSingleRoomResult, setRoomResult } from "../../script/helper/storage";
 import { room3earthFunc } from "../3earth/room3earth.ts";
 
 
@@ -359,8 +359,12 @@ export function room2fireFunc(): void {
   fireSection = document.querySelector<HTMLElement>("#room2Fire");
   if (!fireSection) return;
 
-  /* COMMENT OUT FOR NOW - ACTIVE LATER WHEN GAME FLOW IS RUNNING
-  const fireState = getRoomResults().fire;
+  const after = getRoomResults().fire;
+  console.log("Fire state AFTER reset:", after);
+
+  resetSingleRoomResult("fire");
+
+  /* const fireState = getRoomResults().fire;
 
    // If already completed in this run → do not allow re-enter
   if (fireState.status === "completed") {
@@ -904,6 +908,7 @@ function ifRoomFailed(): void {
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 export function exitFireRoom(): void {
+  console.log("EXIT FIRE ROOM CALLED");
   const welcomeSection = document.querySelector<HTMLElement>("#welcomePage");
   const fromPage =
     getCurrentPage() ??
