@@ -1,0 +1,213 @@
+@use "../../sass/var";
+@use "../../sass/mixins" as mix;
+
+/* =========================================================
+   HIGH SCORE PAGE
+   Layout + Glass container + Action buttons
+========================================================= */
+
+.highscoreRoom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+
+  padding: 2rem;
+  text-align: center;
+  color: var.$lightColor;
+
+  /* -------------------------
+     Page Title
+  -------------------------- */
+
+  .highscoreTitle {
+    margin: 0;
+    font-size: var.$fs-h2;
+    letter-spacing: 2px;
+  }
+
+  /* -------------------------
+     Glass Highscore Container
+  -------------------------- */
+
+  .highscorePlate {
+    @include mix.glass($radius: var.$smallRadius);
+
+    width: min(640px, 100%);
+    padding: 2rem 3rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .highscoreHeading {
+    margin: 0;
+    font-size: var.$fs-h4;
+  }
+
+  /* -------------------------
+     Highscore List
+  -------------------------- */
+
+  .highscoreList {
+    margin: 0;
+    padding-left: 1.5rem;
+    text-align: left;
+
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+
+      font-size: var.$fs-body;
+    }
+  }
+
+  /* -------------------------
+     Action Buttons (Share + Back)
+  -------------------------- */
+
+  .highscoreActions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .shareBtn,
+  .backBtn {
+    @include mix.button($radius: var.$bigRadius);
+
+    border: 2px solid var.$lightColor;
+    min-width: 220px;
+  }
+}
+
+/* =========================================================
+   SHARE MODAL
+   Overlay + Glass dialog + Social buttons
+========================================================= */
+
+.shareModal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+
+  display: grid;
+  place-items: center;
+
+  padding: 1rem;
+
+  /* Dark overlay behind glass */
+  background: rgba(0, 0, 0, 0.45);
+
+  &.hidden {
+    display: none;
+  }
+
+  /* -------------------------
+     Modal Glass Container
+     Smaller than About modal
+  -------------------------- */
+
+  .sharePlate {
+    @include mix.glass($radius: var.$smallRadius);
+
+    width: min(520px, 92vw);
+    padding: 1.5rem 1.75rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    color: var.$lightColor;
+  }
+
+  /* -------------------------
+     Header (Title + Back Arrow)
+  -------------------------- */
+
+  .shareHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+
+    h3 {
+      margin: 0;
+      font-size: var.$fs-h5;
+    }
+  }
+
+  /* Reuse your existing arrow button styling */
+  .modalClose {
+    background: transparent;
+    border: 0;
+    padding: 0.25rem;
+
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+
+    opacity: 0.9;
+    transition: opacity 160ms ease;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    &:focus-visible {
+      outline: 2px solid rgba(236, 245, 241, 0.7);
+      outline-offset: 4px;
+      border-radius: var.$smallRadius;
+    }
+  }
+
+  /* -------------------------
+     Share Text Preview
+  -------------------------- */
+
+  .sharePreview {
+    margin: 0;
+    line-height: 1.4;
+
+    padding: 0.75rem 1rem;
+    border-radius: var.$smallRadius;
+
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(0, 0, 0, 0.12);
+  }
+
+  /* -------------------------
+     Social Share Buttons
+  -------------------------- */
+
+  .shareActions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .shareBtn {
+    @include mix.button($radius: var.$bigRadius);
+
+    border: 2px solid var.$lightColor;
+    flex: 1 1 170px;
+  }
+
+  /* -------------------------
+     Status Message (Copy feedback)
+  -------------------------- */
+
+  .shareStatus {
+    margin: 0;
+    min-height: 1.2em; /* Prevent layout jump */
+    opacity: 0.9;
+  }
+}
