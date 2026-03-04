@@ -6,6 +6,7 @@
 //-----------------------------------------------------------
 
 .conclusoinHeading {
+  margin-top: 5rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -21,7 +22,7 @@
   }
   p {
     font-size: var.$fs-h4;
-    max-width: 900px;
+    max-width: 1000px;
     text-align: center;
     margin: 0;
     color: var.$lightColor;
@@ -32,7 +33,7 @@
 .gameWinRoom {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
   flex-direction: column;
   position: relative;
   overflow: hidden;
@@ -40,7 +41,7 @@
   .ctaBtnsConc {
     margin-top: 5rem;
     display: flex;
-    justify-content: center;
+    justify-content: end;
     align-items: center;
     gap: 2.5rem;
   }

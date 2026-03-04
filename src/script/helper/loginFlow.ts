@@ -27,6 +27,8 @@ let loginFlowListenersBound = false;
 
 let onLoginSubmitHandler: ((e: SubmitEvent) => void) | null = null;
 
+let loginSubmitBound = false;
+
 //-----------------------------------------------------------
 //-------------- Transitions "loop" CLEANUP-----------------
 //-----------------------------------------------------------
@@ -83,6 +85,8 @@ export function initLoginFlow(): void {
     //-----------------------------------------------------------
 
     document.addEventListener("exit:logout", () => {
+      loginFlowInitialized = false;
+      loginSubmitBound = false; // bara om du vill re-binda (valfritt)
       clearLoginFlowTimeouts();
       // Login state is false now
       logoutUser();
@@ -173,7 +177,19 @@ export function initLoginFlow(): void {
 
   // after ... ms - hide splash and show login
   splashToLoginTimeoutId = window.setTimeout(() => {
-    transitSections(splashSection, loginSection, 2000);
+    // if we are no longer on splash: do nothing
+    if (getCurrentPage() !== splashSection) {
+      splashToLoginTimeoutId = null;
+      return;
+    }
+
+    // if user are logged in - dont show spalsh againg
+    if (isLoggedIn() && getUserName()) {
+      splashToLoginTimeoutId = null;
+      return;
+    }
+
+    transitSections(splashSection, loginSection, 1200);
     splashToLoginTimeoutId = null; // reset id arfter it runs
   }, 4000);
 
@@ -184,18 +200,17 @@ export function initLoginFlow(): void {
   // Find the login form in the DOM
   const form = document.querySelector<HTMLFormElement>("#loginForm");
   if (!form) return;
-  if (form) {
-    // Create ONE submit (login) handler function
-    if (!onLoginSubmitHandler) {
-      onLoginSubmitHandler = onLoginSubmitFactory(
-        loginSection,
-        welcomeSection,
-        renderWelcomeName,
-      );
-    }
 
-    form.removeEventListener("submit", onLoginSubmitHandler as EventListener);
-    form.addEventListener("submit", onLoginSubmitHandler);
+  // Bind submit ONLY ONCE (prevents duplicates on re-entry / init running again)
+  if (!loginSubmitBound) {
+    onLoginSubmitHandler = onLoginSubmitFactory(
+      loginSection,
+      welcomeSection,
+      renderWelcomeName,
+    );
+
+    form.addEventListener("submit", onLoginSubmitHandler as EventListener);
+    loginSubmitBound = true;
   }
 }
 
@@ -211,10 +226,11 @@ function onLoginSubmitFactory(
   welcomeSection: HTMLElement,
   renderWelcomeName: () => void,
 ) {
-  console.count("LOGIN SUBMIT fired");
   // Return the submit function inside initLoginFlow
   return function onLoginSubmit(e: SubmitEvent): void {
-    e.preventDefault(); // stop the page from reloading
+    console.count("LOGIN SUBMIT fired");
+    // stop the page from reloading
+    e.preventDefault();
     //login form
     const form = e.currentTarget;
     if (!(form instanceof HTMLFormElement)) return;

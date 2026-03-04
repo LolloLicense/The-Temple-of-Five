@@ -42,7 +42,7 @@ if (fromPage && fromPage !== section) {
 }
 ```
 
-✅ Viktigt:
+ Viktigt:
 - `showSection()` uppdaterar `currentPage` i transitions-helpern.
 - `fromPage !== section` skyddar mot dubbel fade när man redan är där.
 
@@ -67,7 +67,7 @@ function goToNextRoom(nextSelector: string, nextRoomFunc: () => void): void {
 }
 ```
 
-✅ Viktigt:
+Viktigt:
 - Använd samma `TRANSITION_MS` överallt.
 - **Kalla inte** `nextRoomFunc()` både i `goToNextRoom(...)` och direkt efter.
 

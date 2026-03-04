@@ -131,7 +131,7 @@ export function updtArtifactBadge(): void {
 //-----------------------------------------------------------
 
 export function initBackpackToggle(): void {
-  console.log("initBackpackToggle bound ✅");
+  console.log("initBackpackToggle bound");
   if (backpackBound) return;
   backpackBound = true;
   const itemListBtn = document.querySelector<HTMLElement>("#itemListBtn");

@@ -9,6 +9,7 @@
 //------------------- Current page UI -----------------------
 //-----------------------------------------------------------
 let currentPage: HTMLElement | null = null;
+let isTransitioning = false;
 
 function setCurrentPage(page: HTMLElement): void {
   currentPage = page;
@@ -62,12 +63,23 @@ export function transitSections(
   durationMs = 1200,
   visibleClass = "isVisible",
 ): void {
+  // ignore new transitions while one is running
+  if (isTransitioning) return;
+  // if same element, just ensure it's visible
+  if (from === to) {
+    showSection(to, visibleClass);
+    return;
+  }
+  isTransitioning = true;
   // Show next page
   to.classList.remove("hidden");
+  // Force starting state for to
+  to.classList.remove("isVisible");
+
   setCurrentPage(to);
   // start fade-in on nex page
   requestAnimationFrame(() => {
-    to.classList.add(visibleClass);
+    to.classList.add("isVisible");
     //start fade-out on current page
     requestAnimationFrame(() => {
       from.classList.remove(visibleClass);
@@ -77,6 +89,7 @@ export function transitSections(
   // hide previous
   window.setTimeout(() => {
     from.classList.add("hidden");
+    isTransitioning = false; // unlock when trasit is done
   }, durationMs);
 }
 
