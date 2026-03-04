@@ -85,7 +85,6 @@ export function initLoginFlow(): void {
     //-----------------------------------------------------------
 
     document.addEventListener("exit:logout", () => {
-      loginFlowInitialized = false;
       loginSubmitBound = false; // bara om du vill re-binda (valfritt)
       clearLoginFlowTimeouts();
       // Login state is false now
