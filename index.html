@@ -783,7 +783,21 @@
       <!----------------------- Game Win Room ----------------------------->
       <!------------------------------------------------------------------->
 
-      <section id="gameWinRoom" class="gameWinRoom page hidden"></section>
+      <section id="gameWinRoom" class="gameWinRoom page hidden">
+        <div class="winFx" aria-hidden="true">
+          <div class="winFx__stars"></div>
+          <div class="winFx__sparkles"></div>
+        </div>
+        <div class="gameWinHeading">
+          <h2>Balance Restored</h2>
+          <p>Wood, Fire, Earth, Metal, and Water align — the cycle holds</p>
+        </div>
+        <div class="gameCtaBtns">
+          <button type="button" class="resetBtn">Reset</button>
+          <button type="button" class="highScoreBtn">High Score</button>
+          <button type="button" class="gameAboutBtn">About</button>
+        </div>
+      </section>
 
       <!------------------------------------------------------------------->
       <!----------------------- Game Over Room ---------------------------->
@@ -791,16 +805,16 @@
 
       <section id="gameOverRoom" class="gameOverRoom page hidden">
         <div class="gameOverHeading">
-          <h2>Balance is distorted</h2>
+          <h2>Balance distorted</h2>
           <p>
             The cycle breaks. Balance remains unrestored. The Water and metall
             elements are corrupted
           </p>
         </div>
-        <div class="gameOverCtaBtns">
-          <button id="resetBtn" class="resetBtn">Reset</button>
-          <button id="highScoreBtn" class="highScoreBtn">High Score</button>
-          <button id="gameOverAboutBtn" class="gameOverAboutBtn">About</button>
+        <div class="gameCtaBtns">
+          <button type="button" class="resetBtn">Reset</button>
+          <button type="button" class="highScoreBtn">High Score</button>
+          <button type="button" class="gameAboutBtn">About</button>
         </div>
       </section>
 

@@ -1,0 +1,169 @@
+@use "../../sass/var";
+@use "../../sass/mixins" as mix;
+
+.gameWinRoom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+  .gameWinHeading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: relative;
+    z-index: 5;
+    gap: 2.5rem;
+    color: var.$lightColor;
+
+    h2 {
+      font-size: var.$fs-h1;
+      text-transform: uppercase;
+      margin: 0;
+    }
+    p {
+      font-size: var.$fs-h4;
+      max-width: 900px;
+      text-align: center;
+      margin: 0;
+    }
+  }
+
+  .gameCtaBtns {
+    margin-top: 5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2.5rem;
+  }
+  button {
+    @include mix.button();
+    font-size: var.$fs-h6;
+  }
+
+  //-----------------------------------------------------------
+  //---------------------- Animations--------------------------
+  //-----------------------------------------------------------
+
+  .winFx {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    contain: paint;
+  }
+  .winFx__stars,
+  .winFx__sparkles {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+  // starfield “drift”
+  .winFx__stars {
+    position: absolute;
+    inset: -20%;
+    opacity: 0;
+    background-image: radial-gradient(
+        circle at 20% 30%,
+        rgba(255, 255, 255, 0.9) 0 1px,
+        transparent 2px
+      ),
+      radial-gradient(
+        circle at 70% 40%,
+        rgba(255, 255, 255, 0.7) 0 1px,
+        transparent 2px
+      ),
+      radial-gradient(
+        circle at 40% 80%,
+        rgba(255, 255, 255, 0.8) 0 1px,
+        transparent 2px
+      ),
+      radial-gradient(
+        circle at 85% 75%,
+        rgba(255, 255, 255, 0.6) 0 1px,
+        transparent 2px
+      ),
+      radial-gradient(
+        circle at 10% 75%,
+        rgba(255, 255, 255, 0.7) 0 1px,
+        transparent 2px
+      );
+    background-size: 280px 280px;
+    transform: translate3d(0, 0, 0);
+  }
+
+  // sparkle flashes
+  .winFx__sparkles {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    background-image: radial-gradient(
+        circle at 30% 55%,
+        rgba(255, 255, 255, 0.9) 0 2px,
+        transparent 6px
+      ),
+      radial-gradient(
+        circle at 60% 50%,
+        rgba(255, 255, 255, 0.8) 0 1px,
+        transparent 5px
+      ),
+      radial-gradient(
+        circle at 72% 62%,
+        rgba(255, 255, 255, 0.85) 0 2px,
+        transparent 7px
+      ),
+      radial-gradient(
+        circle at 44% 70%,
+        rgba(255, 255, 255, 0.8) 0 1px,
+        transparent 6px
+      );
+    filter: none;
+  }
+
+  //-----------------------------------------------------------
+  //---------------------- Keyframes --------------------------
+  //-----------------------------------------------------------
+
+  &.is-animating {
+    .winFx__stars {
+      animation: winStarsIn 900ms ease forwards,
+        winStarsDrift 12s linear infinite;
+    }
+    .winFx__sparkles {
+      animation: winSparkles 1600ms ease forwards;
+    }
+  }
+
+  @keyframes winStarsIn {
+    to {
+      opacity: 0.75;
+    }
+  }
+
+  @keyframes winStarsDrift {
+    0% {
+      transform: translate3d(0, 0, 0);
+    }
+    100% {
+      transform: translate3d(-6%, 4%, 0);
+    }
+  }
+
+  @keyframes winSparkles {
+    0% {
+      opacity: 0;
+      transform: scale(0.98);
+    }
+    45% {
+      opacity: 0.9;
+      transform: scale(1);
+    }
+    100% {
+      opacity: 0.25;
+      transform: scale(1.02);
+    }
+  }
+}
