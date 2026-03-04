@@ -343,7 +343,8 @@ body {
       }
     }
 
-    .devTeamList { // Removed the dots for the list of names with links to GitHub profiles
+    .devTeamList {
+      // Removed the dots for the list of names with links to GitHub profiles
       list-style: none;
       padding: 0;
       margin: 0;
@@ -415,7 +416,8 @@ kbd {
 .room4Metal,
 .room5Water,
 .finalRoom,
-.gameOverRoom {
+.gameOverRoom,
+.gameWinRoom {
   position: absolute;
   inset: 0;
   height: 100vh;

@@ -7,6 +7,7 @@ import { room4metalFunc } from "./rooms/4metal/room4metal.ts";
 import { room5waterFunc } from "./rooms/5water/room5water.ts";
 import { room6finalFunc } from "./rooms/final/room6validate.ts";
 import { gameOverRoomFunc } from "./rooms/gameover/gameOverRoom.ts";
+import { gameWinFunc } from "./rooms/gameWin/gameWin.ts";
 import { initAudio, initSoundToggle } from "./audio";
 import { aboutTabs, initAboutDialog } from "./script/helper/aboutDialog.ts";
 //import { startTimer, stopTimer } from "./script/utils.ts";
@@ -57,6 +58,11 @@ const gameOverRoomBtn: HTMLElement | null =
   document.querySelector("#gameOverRoomBtn");
 if (gameOverRoomBtn) {
   gameOverRoomBtn.addEventListener("click", gameOverRoomFunc);
+}
+const gameWinBtn: HTMLElement | null =
+  document.querySelector("#openGameWinBtn");
+if (gameWinBtn) {
+  gameWinBtn.addEventListener("click", gameWinFunc);
 }
 
 //-----------------------------------------------------------
