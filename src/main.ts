@@ -15,8 +15,8 @@ import { startTimer } from "./script/helper/utils.ts";
 import { initLoginFlow } from "./script/helper/loginFlow";
 // Exit dialog
 import { initExitDialog } from "./script/helper/exitDialog";
-
-
+// backpack artifacts
+import { initBackpackToggle } from "./script/helper/artifacts";
 
 /* Event listeners for temporary menu
 (Remove when menu is to be removed) */
@@ -59,24 +59,11 @@ if (gameOverRoomBtn) {
   gameOverRoomBtn.addEventListener("click", gameOverRoomFunc);
 }
 
-
-//-----------------------------------------------------------
-//-------------------------Backpack toggle-------------------
-//-----------------------------------------------------------
-
-// Just nu finns bara toggle, Behövs ytterligare funktion för att lägga till artifakterna i ryggsäcken och visa dem. Ska finnas 2 för varje rum, en rätt och en fel. Samt en tom placeholder.
-const itemListBtn = document.getElementById("itemListBtn")!;
-const itemDropdown = document.getElementById("itemDropdown")!;
-
-itemListBtn.addEventListener("click", (event) => {
-  event.stopPropagation();
-  itemDropdown.classList.toggle("is-open");
-});
-
 //-----------------------------------------------------------
 //-------------------------INITS-----------------------------
 //-----------------------------------------------------------
 
+initBackpackToggle();
 initLoginFlow();
 initExitDialog();
 aboutTabs();
@@ -84,4 +71,3 @@ initAboutDialog();
 initSoundToggle();
 initAudio();
 startTimer(0);
-

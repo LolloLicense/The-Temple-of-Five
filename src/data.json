@@ -22,8 +22,8 @@
       "id": "wood",
       "name": "wood artefact",
       "icons": {
-        "true": "/icons/true-wood-icon.svg",
-        "false": "/icons/false-wood-icon.svg"
+        "true": "./icons/true-wood-icon.svg",
+        "false": "./icons/false-wood-icon.svg"
       }
     }
   },
@@ -36,6 +36,14 @@
       "text": "You stand before the flame. It is not your enemy. It is not your servant. Fire answers only to discipline. Learn its laws - or be consumed by your own ignorance,",
       "falseSign": "./images/false-fire-glass-icon.png",
       "trueSign": "./images/true-fire-glass-icon.png"
+    },
+    "artifact": {
+      "id": "fire",
+      "name": "fire artefact",
+      "icons": {
+        "true": "./icons/true-fire-icon.svg",
+        "false": "./icons/false-fire-icon.svg"
+      }
     }
   },
   "room3earth": {
@@ -52,6 +60,14 @@
       "text": "The air inside the Sanctum of Gaea is thick with the scent of damp moss and ancient stone. Beneath a shaft of amber sunlight filtering through the jungle canopy above, a network of massive stone slabs lay before you on the floor of the chamber.",
       "falseSign": "./images/false-earth-glass-icon.png",
       "trueSign": "./images/true-earth-glass-icon.png"
+    },
+    "artifact": {
+      "id": "earth",
+      "name": "earth artefact",
+      "icons": {
+        "true": "./icons/true-earth-icon.svg",
+        "false": "./icons/false-earth-icon.svg"
+      }
     }
   },
   "room4metal": {
@@ -64,6 +80,14 @@
       "text": "Steel remembers every mistake. The universe's mechanisms answer only to rhythm and order. It does not reward errors. Observe the sequence. Repeat it to unlock the element of metal.",
       "falseSign": "./images/false-metal-glass-icon.png",
       "trueSign": "./images/true-metal-glass-icon.png"
+    },
+    "artifact": {
+      "id": "metal",
+      "name": "metal artefact",
+      "icons": {
+        "true": "./icons/true-metal-icon.svg",
+        "false": "./icons/false-metal-icon.svg"
+      }
     }
   },
   "room5water": {
@@ -75,6 +99,14 @@
       "text": "The sacred pipes of the Water Chamber lie broken and tangled. Only when the flow runs pure and unbroken from source to vessel will the ancient symbol reveal itself. Rotate the pipe segments. Restore the flow. Let the water find its way. The temple rewards those who move with purpose.",
       "falseSign": "./images/false-water-glass-icon.png",
       "trueSign": "./images/true-water-glass-icon.png"
+    },
+    "artifact": {
+      "id": "water",
+      "name": "water artefact",
+      "icons": {
+        "true": "./icons/true-water-icon.svg",
+        "false": "./icons/false-water-icon.svg"
+      }
     }
   },
   "room6validate": {

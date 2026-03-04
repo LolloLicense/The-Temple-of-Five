@@ -47,4 +47,6 @@ export function room6finalFunc() {
 
   renderRoomDesc(finalSection, dataJSON.room6validate.desc);  // Renderar rummets beskrivning från JSON -> <div id="roomdesc">
   console.log("Hello from the final room");
+
+  
 }

@@ -209,6 +209,26 @@ import { setRoomResult } from "../../script/helper/storage.ts";
 import { room5waterFunc } from "../5water/room5water.ts";
 ```
 
+  let timeUpIntervalId: number | null = null;
+
+  function stopTimeUpWatcher(): void {
+    if (timeUpIntervalId !== null) {
+      window.clearInterval(timeUpIntervalId);
+      timeUpIntervalId = null;
+    }
+  }
+
+  function goToNextRoom(nextSelector: string, nextRoomFunc: () => void): void {
+  const nextSection = document.querySelector<HTMLElement>(nextSelector);
+  if (!nextSection) return;
+
+  transitSections(roomSection, nextSection, 1200);
+
+  window.setTimeout(() => {
+    nextRoomFunc();
+  }, 1200);
+}
+
 ## Timer-id i Metal
 Byt:
 ```ts
@@ -224,30 +244,33 @@ Skapa:
 
 ```ts
 function ifRoomCompleted(): void {
+  stopTimeUpWatcher();
   stopTimer(4);
 
   setRoomResult("metal", { status: "completed", artifact: "true" });
-  showMsg("Well done — next chamber awaits", TRANSITION_MS * 2);
+
+  showMsg("Well done — next chamber awaits", 1200);
 
   window.setTimeout(() => {
-    goToNextRoom("#room5Water", room5waterFunc);
-  }, TRANSITION_MS);
+    goToNextRoom("#room5Water", room5waterFunc); // exempel
+  }, 1200);
 }
 ```
 
 ### När tiden tar slut (i `timerCheck()`)
 ```ts
-  function ifRoomFailed(): void {
-    clearInterval(timerCheckInterval);
-    stopTimer(3);
+function ifRoomFailed(): void {
+  stopTimeUpWatcher();
+  stopTimer(4);
 
-    setRoomResult("earth", { status: "failed", artifact: "false" });
-    showMsg("Time's up — next chamber awaits", TRANSITION_MS * 2);
+  setRoomResult("metal", { status: "failed", artifact: "false" });
 
-    window.setTimeout(() => {
-      goToNextRoom("#room4Metal", room4metalFunc);
-    }, TRANSITION_MS);
-  }
+  showMsg("Time's up — next chamber awaits", 1200);
+
+  window.setTimeout(() => {
+    goToNextRoom("#room5Water", room5waterFunc); // exempel
+  }, 1200);
+}
 ```
 
 

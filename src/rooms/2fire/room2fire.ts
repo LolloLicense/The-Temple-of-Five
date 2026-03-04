@@ -5,8 +5,9 @@ import { startTimer, stopTimer, TimeIsUp } from "../../script/helper/utils.ts";
 import { transitSections, getCurrentPage, showSection } from "../../script/helper/transitions";
 import { showGameHeader, hideGameHeader } from "../../script/helper/gameHeader";
 import { showMsg } from "../../script/helper/showMsg";
-import { setRoomResult } from "../../script/helper/storage";
+import { resetSingleRoomResult, setRoomResult } from "../../script/helper/storage";
 import { room3earthFunc } from "../3earth/room3earth.ts";
+import { resetRoomResults } from "../../script/helper/storage";
 
 
 /**
@@ -24,10 +25,10 @@ import { room3earthFunc } from "../3earth/room3earth.ts";
  * 
  * LEVELS:
  * 
- * Level 1: 4 empty slots (START THE FIRE)
- * Level 2: 3 slots, 1 pre-filled with Flame (OVERHEAT)
- * Level 3: 4 slots, 1 pre-filled with Stone (FADING FIRE)
- * Level 4: 5 slots, 1 pre-filled with Flame (FINDING BALANCE)
+ * Level 1: 4 empty slots (START THE FIRE) - COMBO: T-F-S-A
+ * Level 2: 3 slots, 1 pre-filled with Flame (OVERHEAT) COMBO: W-S
+ * Level 3: 4 slots, 1 pre-filled with Stone (FADING FIRE) COMBO: T-A-F
+ * Level 4: 5 slots, 1 pre-filled with Flame (FINDING BALANCE) COMBO: T-A-S-E
  * 
  */
 
@@ -36,11 +37,12 @@ import { room3earthFunc } from "../3earth/room3earth.ts";
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 const INTRO_MS = 8000; // Time in milliseconds before the intro text is shown (8 seconds)
-const FOCUS_CLASS = "is-focus"; // The class name used to indicate that the puzzle section is in focus
-const SUCCESS_DELAY_MS = 500;
-const WRONG_DELAY_MS = 350;
-const TRANSITION_MS = 1200;
-const COMPLETE_MSG_MS = 2400;
+const SUCCESS_DELAY_MS = 500; // Sucess input
+const WRONG_DELAY_MS = 350; // Wrong input
+const TRANSITION_MS = 1200; // Transistion between rooms
+const COMPLETE_MSG_MS = 2400; // When room is finished
+const KEYPAD_COLS = 2;  // Keypad columns
+const PUZZLE_FOCUS_CLASS = "puzzle-focus";  // Focus on puzzle for styling
 
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -52,21 +54,21 @@ const COMPLETE_MSG_MS = 2400;
  * A = Air, T = Timber, F = Flame, E = Ember, S = Stone, W = Water
  */
 
-type FireKey = "A" | "T" | "F" | "E" | "S" | "W";
+type TFireKey = "A" | "T" | "F" | "E" | "S" | "W";
 
-interface FireLevel {
-  sequence: FireKey[]; // The correct sequence of keys for the level
-  prefilled?: FireKey;  // If the level contain a pre-filled slot
+interface IFireLevel {
+  sequence: TFireKey[]; // The correct sequence of keys for the level
+  prefilled?: TFireKey;  // If the level contain a pre-filled slot
 }
 
 // Typeguard, only accepts the correct keyboard keys
-function isFireKey(k: string): k is FireKey {
+function isFireKey(k: string): k is TFireKey {
   return k === "A" || k === "T" || k === "F" || k === "E" || k === "S" || k === "W";
 }
 
 // Config, level combo for keys
 
-const LEVELS: FireLevel[] = [
+const LEVELS: IFireLevel[] = [
   {
     sequence: ["T", "F", "S", "A"] // Level 1: Timber, Flame, Stone, Air
   },
@@ -152,12 +154,18 @@ let balanceFill: HTMLElement | null = null;
 
 /* STATE */
 let currentLevelIndex = 0;
-let attempt: FireKey[] = [];
+let attempt: TFireKey[] = [];
 let mistakes = 0;
 let locked = false;
 
 let listenersBound = false;
 let isTransitioning = false;
+
+/* Keypad */
+let keypadEl: HTMLElement | null = null;
+
+/* fireUi - for styling */
+let fireUi: HTMLElement | null = null;
 
 /* TIMEOUT WATCHER - (Room timer) */
 
@@ -178,6 +186,16 @@ function stopIntroTimeout(): void {
     introTimeoutId = null;
   }
 }
+
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------- KEYBOARD NAVIGATION STATE ---------------------------------------------------------- */
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+  type TFocusMode = "keys" | "slots";
+
+  let focusMode: TFocusMode = "keys";
+  let focusedKeyIndex = 0;
+  let focusedSlotIndex = 0;
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------- EVENT HANDLERS --------------------------------------------------------------- */
@@ -208,17 +226,74 @@ function handleFireClick(e: MouseEvent): void {
 
 function handleFireKeyDown(e: KeyboardEvent): void {
   if (locked || isTransitioning) return;
-  if (!fireSection) return;
+  if (!fireSection || !fireSection.classList.contains("isVisible")) return;
 
-  // Only react when Fire room is visible (prevents leakage to other rooms)
-  if (!fireSection.classList.contains("isVisible")) return;
+  const key = e.key;
 
-  const k = e.key.toUpperCase();
-  if (!isFireKey(k)) return;
+  /* --------- NAVIGATION --------- */
 
-  // Prevent page scroll etc. when pressing keys
-  e.preventDefault();
-  handlePick(k);
+  if (key === "ArrowRight") {
+    e.preventDefault();
+    moveFocus(1);
+    return;
+  }
+
+  if (key === "ArrowLeft") {
+    e.preventDefault();
+    moveFocus(-1);
+    return;
+  }
+
+  if (key === "ArrowUp") {
+    e.preventDefault();
+    moveVertical(-1);
+    return;
+  }
+
+  if (key === "ArrowDown") {
+    e.preventDefault();
+    moveVertical(1);
+    return;
+  }
+
+  /* --------- MODE SWITCH --------- */
+
+  if (key === "Tab") {
+    e.preventDefault();
+    toggleFocusMode();
+    return;
+  }
+
+  /* --------- ACTIONS --------- */
+
+  if (key === "Enter" || key === " ") {
+    e.preventDefault();
+
+    if (focusMode === "keys") {
+      const btn = keyButtons[focusedKeyIndex];
+      const pick = btn?.dataset.firePick;
+      if (pick && isFireKey(pick.toUpperCase())) {
+        handlePick(pick.toUpperCase() as TFireKey);
+      }
+    }
+
+    return;
+  }
+
+  if (key === "Backspace") {
+    e.preventDefault();
+    backspace();
+    return;
+  }
+
+  /* Letter input */
+  const upper = key.toUpperCase();
+
+  if (isFireKey(upper)) {
+    e.preventDefault();
+    handlePick(upper);
+    return;
+  }
 }
 
 /**
@@ -237,6 +312,41 @@ function bindListenersOnce(): void {
   window.addEventListener("keydown", handleFireKeyDown);
 }
 
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* -------------------------------------------------------- NAVIGATION FUNCTIONS -------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+function moveFocus(delta: number): void {
+  if (focusMode === "keys") {
+    const max = keyButtons.length - 1;
+    focusedKeyIndex = Math.max(0, Math.min(max, focusedKeyIndex + delta));
+    applyKeyFocus();
+  }
+
+  if (focusMode === "slots") {
+    const max = attempt.length;
+    focusedSlotIndex = Math.max(0, Math.min(max, focusedSlotIndex + delta));
+    applySlotFocus();
+  }
+}
+
+function moveVertical(delta: number): void {
+  if (focusMode !== "keys") return;
+
+  const next = focusedKeyIndex + delta * KEYPAD_COLS;
+  if (next < 0 || next >= keyButtons.length) return;
+
+  focusedKeyIndex = next;
+  applyKeyFocus();
+}
+
+function toggleFocusMode(): void {
+  focusMode = focusMode === "keys" ? "slots" : "keys";
+
+  if (focusMode === "keys") applyKeyFocus();
+  if (focusMode === "slots") applySlotFocus();
+}
+
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------- ENTRY POINT ------------------------------------------------------------------------ */
@@ -249,6 +359,8 @@ function bindListenersOnce(): void {
 export function room2fireFunc(): void {
   fireSection = document.querySelector<HTMLElement>("#room2Fire");
   if (!fireSection) return;
+
+  resetSingleRoomResult("fire");  // artifact null
 
   showGameHeader(); // Show header when entering fire room
 
@@ -282,6 +394,8 @@ export function room2fireFunc(): void {
   renderRoomDesc(fireSection, dataJSON.room2fire.desc); // Render description from helper function, with text and icons from JSON
 
   cacheDomOrThrow(); // Cashe DOM only once or throw error if missing
+  initKeypadFocus();  // Init key-controls
+  applyKeyFocus(); // Focus on slots or buttons
 
   if (!listenersBound) {
     bindListenersOnce();  // Bind event listeners only once
@@ -307,6 +421,12 @@ function cacheDomOrThrow(): void {
     fireSection.querySelectorAll<HTMLButtonElement>(".fireKey"),
   );
 
+  keypadEl = fireSection.querySelector<HTMLElement>(".keypad");
+  if (!keypadEl) throw new Error("Fire room DOM mismatch. Need: .keypad");
+
+  fireUi = fireSection.querySelector<HTMLElement>(".room2FireUi");
+  if (!fireUi) throw new Error("Fire room DOM mismatch. Need: .room2FireUi");
+
   levelValueEl = fireSection.querySelector("#fireLevelValue");
   mistakesEl = fireSection.querySelector("#fireMistakes");
   balanceBar = fireSection.querySelector(".balanceBar");
@@ -324,6 +444,10 @@ function cacheDomOrThrow(): void {
       "Fire room DOM mismatch. Need: #fireSlots, .fireKey, #fireLevelValue, #fireMistakes, .balanceBar, #fireBalanceFill",
     );
   }
+
+  /* A11Y ROLES */
+  keypadEl?.setAttribute("role", "grid");
+  fireSlots?.setAttribute("role", "group");
 }
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -346,14 +470,14 @@ function resetRoom(): void {  // reset state
   createSlots();  // Prepare UI level 1, but input still locked
   updateHUD();
 
-  fireSlots?.classList.remove(FOCUS_CLASS); // Fokus off until intro is done
+  fireSlots?.classList.remove(PUZZLE_FOCUS_CLASS); // Fokus off until intro is done
 
   introTimeoutId = window.setTimeout(() => { // After intro - Show level 1 instruction - release locked input and focus input
     updateDescText(FIRE_LEVEL_TEXT[0] ?? "");
 
     locked = false;
     isTransitioning = false;
-    fireSlots?.classList.add(FOCUS_CLASS);
+    fireSlots?.classList.add(PUZZLE_FOCUS_CLASS);
     setActiveSlotClass();
 
   }, INTRO_MS);
@@ -462,6 +586,41 @@ function createSlots(): void {
   setActiveSlotClass(); // Next slot active instead
 }
 
+function redrawSlots(): void {
+  if (!fireSlots) return;
+
+  const level = LEVELS[currentLevelIndex];
+  const total = level.sequence.length;
+
+  fireSlots.replaceChildren();
+
+  for (let i = 0; i < total; i++) {
+    const slot = document.createElement("div");
+    slot.className = "slot";
+    slot.dataset.index = String(i);
+    slot.setAttribute("aria-hidden", "true");
+    fireSlots.appendChild(slot);
+  }
+
+  attempt.forEach((key, i) => fillSlot(i, key));
+
+  if (level.prefilled) {
+    const first = fireSlots.querySelector<HTMLElement>(
+      '.slot[data-index="0"]'
+    );
+    first?.classList.add("is-locked");
+  }
+}
+
+function clearSlot(index: number): void {
+  if (!fireSlots) return;
+
+  const slot = fireSlots.querySelector<HTMLElement>(
+    `.slot[data-index="${index}"]`
+  );
+  slot?.replaceChildren();
+}
+
 function setActiveSlotClass(): void {
   if (!fireSlots) return;
 
@@ -471,7 +630,7 @@ function setActiveSlotClass(): void {
   slots.forEach((s, i) => s.classList.toggle("is-active", i === activeIndex));  // Only the correct slot get index "is-active" - CSS styling
 }
 
-function fillSlot(slotIndex: number, key: FireKey): void {  // Fill the specified slot with FireKey (element)
+function fillSlot(slotIndex: number, key: TFireKey): void {  // Fill the specified slot with FireKey (element)
   if (!fireSlots) return;
 
   const slotEl = fireSlots.querySelector<HTMLElement>(`.slot[data-index="${slotIndex}"]`);  // slotEl = find the correct slot bvased on the data index
@@ -489,10 +648,40 @@ function fillSlot(slotIndex: number, key: FireKey): void {  // Fill the specifie
 }
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------- FOCUS HELPERS (A11Y) --------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+function applyKeyFocus(): void {
+  keyButtons.forEach((btn, i) => {
+    const active = i === focusedKeyIndex;
+
+    btn.tabIndex = active ? 0 : -1;
+    btn.setAttribute("aria-selected", String(active));
+
+    if (active) btn.focus();
+  });
+}
+
+function applySlotFocus(): void {
+  if (!fireSlots) return;
+
+  const slots = Array.from(
+    fireSlots.querySelectorAll<HTMLElement>(".slot")
+  );
+
+  slots.forEach((slot, i) => {
+    const active = i === focusedSlotIndex;
+
+    slot.classList.toggle("is-slot-focused", active);
+    slot.setAttribute("aria-selected", String(active));
+  });
+}
+
+/* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------ GAME LOGIC -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 
-function handlePick(key: FireKey): void {
+function handlePick(key: TFireKey): void {
   if (locked || isTransitioning) return;
 
   const level = LEVELS[currentLevelIndex];
@@ -511,7 +700,44 @@ function handlePick(key: FireKey): void {
     void validateSequence();
   }
 
-  console.log("handlePick", key, "time:", Date.now());
+  focusedSlotIndex = attempt.length;
+  applySlotFocus();
+}
+
+function backspace(): void {
+  if (locked) return;
+
+  const level = LEVELS[currentLevelIndex];
+  const hasPrefilled = Boolean(level.prefilled);
+  const minLength = hasPrefilled ? 1 : 0;
+
+  if (attempt.length <= minLength) return;
+
+  if (focusMode === "keys") {
+    const removeIndex = attempt.length - 1;
+
+    attempt.pop();
+    clearSlot(removeIndex);
+
+    focusedSlotIndex = attempt.length;
+  }
+
+  // Slots-läge → radera vald
+  if (focusMode === "slots") {
+    if (focusedSlotIndex < minLength) return;
+    if (focusedSlotIndex >= attempt.length) return;
+
+    attempt.splice(focusedSlotIndex, 1);
+    redrawSlots();
+
+    if (focusedSlotIndex > attempt.length) {
+      focusedSlotIndex = attempt.length;
+    }
+  }
+
+  updateHUD();
+  setActiveSlotClass();
+  applySlotFocus();
 }
 
 async function validateSequence(): Promise<void> {
@@ -562,7 +788,7 @@ function nextLevel(): void {
   createSlots();
   updateHUD();
 
-  if (fireSlots) retriggerClass(fireSlots, FOCUS_CLASS);
+  if (fireUi) retriggerClass(fireUi, PUZZLE_FOCUS_CLASS);
 }
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -583,25 +809,36 @@ function goToNextRoom(nextSelector: string, nextRoomFunc: () => void): void {
 }
 
 function ifRoomCompleted(): void {
+  if (isTransitioning) return;
+
+  // Block input
+  isTransitioning = true;
+  locked = true;
+
+  // Stop all timers so they cant trigger after complete
   stopTimeUpWatcher();
   stopIntroTimeout();
   stopTimer(2);
 
-  isTransitioning = true;
-  locked = true;
-
+  // Update UI one last time (just for UX)
   updateHUD();
   setActiveSlotClass();
 
-  // Save room result
-  setRoomResult("fire", { status: "completed", artifact: "true" });
+  // Save room result (status, artifact boolean, mistakes, score, roomtimesec)
+  setRoomResult("fire", {
+    status: "completed",
+    artifact: "true",
+    mistakes,
+    score: 0, // TODO, define scoring rules
+    roomTimeSec: 0, // TODO, define timing rules
+  });
 
-  // Show msg
+  // Show msg - feedback to user/player
   showMsg("Well done — next chamber awaits", COMPLETE_MSG_MS);
 
 
   window.setTimeout(() => {
-    // CLEANUP:
+    // CLEANUP so re-entering starts fresh.
     currentLevelIndex = 0;
     attempt = [];
     mistakes = 0;
@@ -611,27 +848,31 @@ function ifRoomCompleted(): void {
     updateHUD();
     setActiveSlotClass();
 
-    // Lås upp (men rummet kommer ändå försvinna i transition)
-    isTransitioning = false;
-    locked = false;
-
     // Fire ansvarar för transition till Earth
     goToNextRoom("#room3Earth", room3earthFunc);
   }, COMPLETE_MSG_MS);
 }
 
 function ifRoomFailed(): void {
-  stopTimeUpWatcher();
-  stopIntroTimeout();
-  stopTimer(2);
+  if (isTransitioning) return;
 
   isTransitioning = true;
   locked = true;
 
+  stopTimeUpWatcher();
+  stopIntroTimeout();
+  stopTimer(2);
+
   updateHUD();
   setActiveSlotClass();
 
-  setRoomResult("fire", { status: "failed", artifact: "false" });
+  setRoomResult("fire", { 
+    status: "failed",
+    artifact: "false",
+    mistakes,
+    score: 0,
+    roomTimeSec: 0,
+  });
 
   showMsg("Time's up — next chamber awaits", COMPLETE_MSG_MS);
 
@@ -645,9 +886,6 @@ function ifRoomFailed(): void {
     createSlots();
     updateHUD();
     setActiveSlotClass();
-
-    isTransitioning = false;
-    locked = false;
 
     goToNextRoom("#room3Earth", room3earthFunc);
   }, COMPLETE_MSG_MS);
@@ -679,6 +917,8 @@ export function exitFireRoom(): void {
 /* ------------------------------------------------------------- HELPERS ---------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 
+/* For styling */
+
 function wait(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -690,3 +930,9 @@ function retriggerClass(el: HTMLElement, className: string): void {
 
   el.classList.add(className);
 }
+
+function initKeypadFocus(): void {
+ 
+  keyButtons.forEach((btn, i) => (btn.tabIndex = i === 0 ? 0 : -1));
+}
+

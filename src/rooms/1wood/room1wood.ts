@@ -9,7 +9,11 @@ import {
 } from "../../script/helper/transitions.ts";
 //import { startTimer, stopTimer } from "./script/utils.ts";
 import { startTimer, stopTimer, TimeIsUp } from "../../script/helper/utils.ts";
-import { setRoomResult, getRoomResults } from "../../script/helper/storage.ts";
+import {
+  setRoomResult,
+  getRoomResults,
+  resetSingleRoomResult,
+} from "../../script/helper/storage.ts";
 import { showMsg } from "../../script/helper/showMsg.ts";
 import { room2fireFunc } from "../2fire/room2fire.ts";
 
@@ -33,6 +37,8 @@ const WOBBLEBALANCE = 1.5;
 const TRANSITIONTIME = 1200;
 
 export function room1woodFunc() {
+  // reset so we hade default state for artefacts
+  resetSingleRoomResult("wood");
   //----------------------------------------------------------
   //----------------------SETUP ROOM DOM----------------------
   //----------------------------------------------------------
@@ -350,6 +356,7 @@ export function room1woodFunc() {
       nextRoomFunc();
     }, TRANSITIONTIME);
   }
+
   //-----------------------------------------------------------
   //--------------------- ROOMCOMPLETE ------------------------
   //-----------------------------------------------------------

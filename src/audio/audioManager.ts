@@ -168,8 +168,8 @@ export function stopAll(): void {
 
 /**
  * unload
- * - Tar bort en Audio-instans ur cache (sounds)
- * - Försöker släppa src/buffer (browser bestämmer cache)
+ * - Remove audi from cashe
+ * - try to release src / buffer (browser is in control of cashe)
  */
 export function unload(id: string): void {
   disposeAudio(id);
@@ -180,9 +180,10 @@ export function unload(id: string): void {
 
 /**
  * unloadAllBgm
- * - Rekommenderad för "hard reset" (t.ex. quit to menu / restart run)
- * - Lämnar SFX kvar (de är små och ger bättre UX att cachea)
+ * - "Hard reset" (for example quit to menu / restart run)
+ * - Leave SFX since it's so small
  */
+
 export function unloadAllBgm(): void {
   for (const [id, cfg] of soundConfigs.entries()) {
     if (cfg.kind === "bgm") {
@@ -314,8 +315,8 @@ function getOrCreateAudio(id: string): HTMLAudioElement | null {
 
 /**
  * disposeAudio
- * - Stoppar och försöker frigöra resurser för just den Audio-instansen
- * - Browsern kan ändå behålla filen i HTTP cache (disk), men buffert/decoded kan minska
+ * - Stop and try to dispose the audio-files
+ * - Broswer can still keep the audio-files in memory
  */
 
 function disposeAudio(id: string): void {
@@ -324,7 +325,7 @@ function disposeAudio(id: string): void {
 
   audio.pause();
 
-  // Försök släppa src/buffer
+  // Try to remove src
   audio.removeAttribute("src");
   audio.load();
 

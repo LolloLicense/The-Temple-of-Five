@@ -4,7 +4,7 @@ Detta är The Pogo Stick Pioneers gruppgift, där vi skulle designa ett spel i t
 
 ## Använda tekniker
 
-![HTML badge](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white) ![CSS badge](https://img.shields.io/badge/CSS-563d7c?&style=flat&logo=css3&logoColor=white) ![Sass badge](https://img.shields.io/badge/Sass-CC6699?style=flat&logo=sass&logoColor=white) ![Javascript badge](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black) ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white) ![Markdown badge](https://img.shields.io/badge/Markdown-000000?style=flat&logo=markdown&logoColor=white) ![Vite badge](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white) ![Biome](https://img.shields.io/badge/biome-%2360A5FA.svg?style=for-the-badge&logo=biome&logoColor=white) ![Prettier badge](https://img.shields.io/badge/prettier-%23192a32?style=for-the-badge&logo=prettier&logoColor=dc524a) 
+![HTML badge](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white) ![CSS badge](https://img.shields.io/badge/CSS-563d7c?&style=flat&logo=css3&logoColor=white) ![Sass badge](https://img.shields.io/badge/Sass-CC6699?style=flat&logo=sass&logoColor=white) ![Javascript badge](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black) ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white) ![Markdown badge](https://img.shields.io/badge/Markdown-000000?style=flat&logo=markdown&logoColor=white) ![Vite badge](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white) ![Biome](https://img.shields.io/badge/biome-%2360A5FA.svg?style=for-the-badge&logo=biome&logoColor=white) 
 
 ## Screenshots från projektet
 
@@ -37,7 +37,7 @@ Länk till Mockup på [Figma](https://www.figma.com/design/OJgqdjOM1fksuh2Gh2rsA
 
 - Musik jordrummet: “Abyssal Echoes Dark Cinematic Suspenseful” av [TrenoX8](https://pixabay.com/music/mystery-abyssal-echoes-dark-cinematic-suspenseful-316857/) via [Pixabay](https://pixabay.com/)
 
-- Musik eldrummet: “” av [???](https://pixabay.com) via [Pixabay](https://pixabay.com/)
+- Musik eldrummet: “Ambient Burning Caste" av [Sound Reality](https://pixabay.com) via [Pixabay](https://pixabay.com/)
 
 - Musik metallrummet: “Veil of Darkness” av [TrenoX8](https://pixabay.com/music/mystery-veil-of-darkness-321167/) via [Pixabay](https://pixabay.com/)
 

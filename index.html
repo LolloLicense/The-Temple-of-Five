@@ -38,14 +38,8 @@
             aria-labelledby="progressLabel"
           >
             <span class="roomProgress current" aria-label="room 1 of 6"></span>
-            <span
-              class="roomProgress roomFailed"
-              aria-label="room 2 of 6"
-            ></span>
-            <span
-              class="roomProgress roomCompleted"
-              aria-label="room 3 of 6"
-            ></span>
+            <span class="roomProgress" aria-label="room 2 of 6"></span>
+            <span class="roomProgress" aria-label="room 3 of 6"></span>
             <span class="roomProgress" aria-label="room 4 of 6"></span>
             <span class="roomProgress" aria-label="room 5 of 6"></span>
             <span class="roomProgress" aria-label="Final room"></span>
@@ -93,6 +87,7 @@
                 fill="#ECF5F1"
               />
             </svg>
+            <span id="artifactBadge" class="badge" aria-hidden="true"></span>
           </button>
           <!-- Sound-->
           <button
@@ -244,7 +239,7 @@
             </h2>
           </div>
           <form action="" id="loginForm" class="loginForm">
-            <label for="UserName">Username</label>
+            <label for="userName">Username</label>
             <input
               id="userName"
               name="userName"
@@ -712,18 +707,21 @@
       <!--------------------------- Final Room ---------------------------->
       <!------------------------------------------------------------------->
       <section id="finalRoom" class="finalRoom hidden">
-        <div class="artifacts" id="artifactContainer"> <!-- TS lägger in 5 artifakter här från localstorage??? --></div>
-        <div class="dropzones"> 
-          <div class="dropzone"></div> 
-          <div class="dropzone"></div> 
-          <div class="dropzone"></div> 
+        <div class="artifacts" id="artifactContainer">
+          <!-- TS lägger in 5 artifakter här från localstorage??? -->
+        </div>
+        <div class="dropzones">
           <div class="dropzone"></div>
-          <div class="dropzone"></div> 
+          <div class="dropzone"></div>
+          <div class="dropzone"></div>
+          <div class="dropzone"></div>
+          <div class="dropzone"></div>
         </div>
 
         <button id="validateBtn">Validate</button>
 
-        <div id="finalFeedback"></div> <!-- Ge feedback om de gick igenom??? -->
+        <div id="finalFeedback"></div>
+        <!-- Ge feedback om de gick igenom??? -->
         <div class="roomDesc" id=""></div>
       </section>
 
@@ -895,6 +893,7 @@
 
             <p>Restore the balance — or leave with nothing.</p>
           </section>
+
           <!-- Features -->
           <section
             class="tabsPanel"
@@ -903,8 +902,48 @@
             aria-labelledby="tabFeatures"
             hidden
           >
-            <p>Features</p>
+            <div class="tabsPannelScroll">
+              <h3>Game Features</h3>
+
+              <h4>Gameplay</h4>
+              <p>
+                Five unique puzzle rooms inspired by Wu Xing — the five Chinese
+                elements: Wood, Fire, Earth, Metal and Water. Each room has its
+                own mechanics and challenge. Collect one artifact per room — the
+                correct artifacts unlock the final altar.
+              </p>
+
+              <h4>Scoring &amp; Timers</h4>
+              <p>
+                Score is based on how fast you solve each room — the faster, the
+                higher. A per-room timer and a total timer track your full run.
+              </p>
+
+              <h4>Progression</h4>
+              <p>
+                A progress bar shows how many rooms you've completed. Progress
+                is saved automatically — close the browser and pick up where you
+                left off. Wrong artifact? Replay just that room without losing
+                progress in the others.
+              </p>
+
+              <h4>Accessibility</h4>
+              <p>
+                Fully keyboard navigable throughout the entire game. Screen
+                reader support with ARIA labels and live regions. Focus
+                management between all interactive elements.
+              </p>
+
+              <h4>Other</h4>
+              <p>
+                Login with your name and compete for a spot on the top 3
+                highscore list. The game can be reset and replayed after
+                completion. There's also a hidden way to clear the highscore
+                list — can you find it?
+              </p>
+            </div>
           </section>
+
           <!-- Controls -->
           <section
             class="tabsPanel panelControls"
@@ -920,8 +959,8 @@
                 <article class="controlsCard">
                   <h4>1: Wood Chamber</h4>
                   <p>
-                    <kbd>← →</kbd> Navigate between number keys<br/>
-                    <kbd>Enter</kbd> to use the focused number key<br/>
+                    <kbd>← →</kbd> Navigate between number keys<br />
+                    <kbd>Enter</kbd> to use the focused number key<br />
                     After 6 inputs, your sequence is validated automatically.
                   </p>
                 </article>
@@ -940,11 +979,11 @@
                   <h4>4: Metal Chamber</h4>
                   <p>
                     <kbd>← →</kbd> Navigate between slots
-                    <br/>
+                    <br />
                     <kbd>↑ ↓ </kbd> Change the color of the slot
-                    <br/>
+                    <br />
                     <kbd>Enter</kbd> to validate the slots
-                    <br/>
+                    <br />
                   </p>
                 </article>
 
@@ -967,6 +1006,7 @@
               </div>
             </div>
           </section>
+
           <!-- Dev -->
           <section
             class="tabsPanel"
@@ -975,7 +1015,117 @@
             aria-labelledby="tabDev"
             hidden
           >
-            <p>Dev</p>
+            <div class="tabsPannelScroll">
+              <div class="controlsGrid">
+                <div class="controlItem">
+                  <h3>About</h3>
+                  <p>Built by The Pogo Stick Pioneers &mdash; 2025</p>
+                  <p>
+                    Frontend Development students, class of FED25D,
+                    Medieinstitutet &mdash; Sweden
+                  </p>
+                </div>
+
+                <div class="controlItem">
+                  <h3>Tech Stack</h3>
+                  <p>HTML5, CSS3, Sass, JavaScript, TypeScript, Vite, Biome,</p>
+                </div>
+
+                <div class="controlItem">
+                  <h3>What We Learned</h3>
+                  <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+                    do eiusmod tempor incididunt ut labore et dolore magna
+                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                    ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+                    do eiusmod tempor incididunt ut labore et dolore magna
+                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                    ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+                    do eiusmod tempor incididunt ut labore et dolore magna
+                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                    ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                  </p>
+                </div>
+
+                <div class="controlItem">
+                  <h3>Challenges</h3>
+                  <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+                    do eiusmod tempor incididunt ut labore et dolore magna
+                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                    ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+                    do eiusmod tempor incididunt ut labore et dolore magna
+                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                    ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                  </p>
+                </div>
+
+                <div class="controlItem">
+                  <h3>Planning &amp; Design</h3>
+                  <p>
+                    <a
+                      href="https://miro.com/welcomeonboard/WWQxUmtDQk03bVljYzllZHRWRkQ1OXArZTVOSW9wVUcrY3pweWRBUUhLUGdhZ0t1em95cGZON3AzVHQ4a2xZZFVjZnV2bVMvQTRWY01JVW1mMHRtdnBmeG5VQ1BkalR6MG90Q2NWS2I4MWYyRy8yLzE0NmltYmozd2hNellJSytyVmtkMG5hNDA3dVlncnBvRVB2ZXBnPT0hdjE=?share_link_id=170887747902"
+                      target="_blank"
+                      rel="noopener"
+                      >Miro flow</a
+                    >
+                    &mdash;
+
+                    <!-- NEED a figma link -->
+                    <a href="" target="_blank" rel="noopener">Figma mockup</a>
+                  </p>
+                </div>
+
+                <div class="controlItem">
+                  <h3>Team</h3>
+                  <ul class="devTeamList">
+                    <li>
+                      <a
+                        href="https://github.com/AlexJCodes"
+                        target="_blank"
+                        rel="noopener"
+                        >Alexander Johansson &mdash; GitHub</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        href="https://github.com/AlexandraHenriksson"
+                        target="_blank"
+                        rel="noopener"
+                        >Alexandra Henriksson &mdash; GitHub</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        href="https://github.com/elychnell"
+                        target="_blank"
+                        rel="noopener"
+                        >Emil Lychnell &mdash; GitHub</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        href="https://github.com/LolloLicense"
+                        target="_blank"
+                        rel="noopener"
+                        >Louise Sverkström &mdash; GitHub</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        href="https://github.com/minza-42"
+                        target="_blank"
+                        rel="noopener"
+                        >Minai Karlsson &mdash; GitHub</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </section>
         </div>
       </div>

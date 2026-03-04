@@ -12,6 +12,8 @@
   flex-direction: column;
   position: relative;
   color: var.$lightColor;
+  background-color: rgba(0, 0, 0, 0.3);
+  background-blend-mode: multiply;
 
   .woodParticles {
     position: absolute;
@@ -94,9 +96,8 @@
       width: 5.5rem;
     }
     .slot.is-active {
-      outline: 2px solid var.$lightColor;
-      outline-offset: 6px;
-      animation: slot-breathe 1.6s ease-in-out infinite;
+      outline: 2px solid #ff9f1c;
+      animation: slot-breathe 2s ease-in-out infinite;
     }
   }
   @keyframes slot-breathe {

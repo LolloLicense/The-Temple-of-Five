@@ -2,30 +2,39 @@ import * as dataJSON from "../../data.json";
 import { playBgm } from "../../audio";
 import { renderRoomDesc } from "../../script/helper/roomDesc";
 import { showGameHeader } from "../../script/helper/gameHeader";
+import { resetSingleRoomResult } from "../../script/helper/storage";
 import {
   startTimer as startSharedTimer,
   stopTimer  as stopSharedTimer,
+  TimeIsUp,
 } from "../../script/helper/utils";
+import { transitSections, getCurrentPage, showSection } from "../../script/helper/transitions"; 
+// FIX 1: Added missing imports
+import { room6finalFunc } from "../final/room6validate";
+// FIX 2: Uncommented room 6 import
 
 // ── TYPES ──────────────────────────────────────────────────────────────────
+// Prefix T = type, I = interface for clearer and more readable code
 
-type PipeType = "NS" | "EW" | "NE" | "NW" | "SE" | "SW";
-type CellType = PipeType | "SRC" | "SNK";
-type Direction = "N" | "E" | "S" | "W";
-type Connections = Record<Direction, boolean>;
-type Grid = CellType[][];
+type TPipeType = "NS" | "EW" | "NE" | "NW" | "SE" | "SW";
+type TCellType = TPipeType | "SRC" | "SNK";
+// SRC = the source (💧, top-left corner) — fixed, cannot be rotated by the player
+// SNK = the vessel/sink (⚱️, bottom-right corner) — fixed, cannot be rotated
+type TDirection = "N" | "E" | "S" | "W";
+type TConnections = Record<TDirection, boolean>;
+type TGrid = TCellType[][];
 
-interface PipeDef {
-  c: [boolean, boolean, boolean, boolean]; // N, E, S, W
+interface IPipeDef {
+  c: [boolean, boolean, boolean, boolean]; // N, E, S, W — indicates which directions the pipe connects to
   label: string;
 }
 
-interface FlowResult {
+interface IFlowResult {
   flowPath: Set<string>;
   sinkReached: boolean;
 }
 
-interface RoomResult {
+interface IRoomResult {
   room: string;
   artifact: string;
   artifactCorrect: boolean;
@@ -36,7 +45,7 @@ interface RoomResult {
 
 // ── CONSTANTS ──────────────────────────────────────────────────────────────
 
-const PIPE_DEFS: Record<PipeType, PipeDef> = {
+const PIPE_DEFS: Record<TPipeType, IPipeDef> = {
   NS: { c: [true,  false, true,  false], label: "Straight vertical pipe"            },
   EW: { c: [false, true,  false, true ], label: "Straight horizontal pipe"          },
   NE: { c: [true,  true,  false, false], label: "Elbow connecting top and right"    },
@@ -45,111 +54,48 @@ const PIPE_DEFS: Record<PipeType, PipeDef> = {
   SW: { c: [false, false, true,  true ], label: "Elbow connecting bottom and left"  },
 };
 
-const ROTATE_MAP: Record<PipeType, PipeType> = {
+const ROTATE_MAP: Record<TPipeType, TPipeType> = {
   NS: "EW", EW: "NS",
   NE: "SE", SE: "SW", SW: "NW", NW: "NE",
 };
 
-const DIRS: Record<Direction, [number, number]> = {
+// Movement vectors per direction: [rowDelta, columnDelta]
+// Used in pathfinding and flow checks to find neighbouring cells
+const DIR_DELTA: Record<TDirection, [number, number]> = {
   N: [-1, 0], S: [1, 0], E: [0, 1], W: [0, -1],
 };
 
-const OPPOSITE: Record<Direction, Direction> = {
+// Opposite direction — used to verify that the neighbouring cell connects back
+// Example: if cell A points North toward cell B, cell B must point South back toward A
+const OPPOSITE: Record<TDirection, TDirection> = {
   N: "S", S: "N", E: "W", W: "E",
 };
 
-const DIR_DELTA: Record<Direction, [number, number]> = {
-  N: [-1, 0], S: [1, 0], E: [0, 1], W: [0, -1],
-};
-
+// Fixed cells the player cannot rotate: the source (0,0) and the vessel (4,4)
 const FIXED_CELLS        = new Set<string>(["0,0", "4,4"]);
 const MAX_SCORE          = 1000;
 const SCORE_PER_SECOND   = 3;
-const ARTIFACT_THRESHOLD = 110; // seconds (1 min 50 s) — under this = correct artifact
+const ARTIFACT_THRESHOLD = 110; // seconds (1 min 50 s) — below this threshold gives the correct artifact
+const TRANSITION_MS      = 1200; // FIX 3: Shared transition constant
 
 // ── MODULE STATE ───────────────────────────────────────────────────────────
 
-let currentGrid: Grid             = [];
+let currentGrid: TGrid            = [];
 let focusedCell: [number, number] = [0, 0];
 let timerInterval: ReturnType<typeof setInterval> | null = null;
 let secondsElapsed  = 0;
 let solved          = false;
-let SOURCE_EXIT_DIR: Direction = "E";
-let SINK_ENTRY_DIR:  Direction = "W";
-
-// ── HTML INJECTION ─────────────────────────────────────────────────────────
-// Builds and injects the room layout into <section id="room5Water">
-
-function injectHTML(section: HTMLElement): void {
-  section.innerHTML = `
-    <div class="w-chamber">
-      <!-- Puzzle panel (shown immediately) -->
-      <div id="w-puzzle" class="w-puzzle active">
-        <div class="w-panel">
-          <p class="w-instruction">
-            Rotate the pipes to connect
-            <strong>SOURCE 💧 (top-left)</strong> to the
-            <strong>VESSEL ⚱️ (bottom-right)</strong>.
-          </p>
-
-          <!-- Pipe grid -->
-          <div class="w-grid-wrapper">
-            <div
-              class="pipe-grid"
-              id="w-pipe-grid"
-              role="grid"
-              aria-label="5 by 5 pipe grid. Navigate with arrow keys. Press Enter or Space to rotate a pipe."
-            >
-              <!-- Cells injected by renderGrid() -->
-            </div>
-          </div>
-
-          <!-- Time warning (shown at 60 s) -->
-          <div
-            class="w-time-warning"
-            id="w-time-warning"
-            role="alert"
-            aria-live="assertive"
-          >
-            ⚠ The temple senses hesitation. The water grows restless — impurity may follow...
-          </div>
-
-          <!-- Status -->
-          <p id="w-status" class="w-status" role="status" aria-live="polite"></p>
-
-          <!-- Controls -->
-          <div class="w-controls">
-            <button class="w-btn w-btn--ghost" id="w-reset-btn">↺ Reset Pipes</button>
-            <button class="w-btn w-btn--gold"  id="w-check-btn">Check Flow</button>
-          </div>
-        </div>
-
-
-
-      </div><!-- /w-puzzle -->
-
-      <!-- Bottom lore bar -->
-      <div id="roomDesc" class="roomDesc"></div>
-
-    </div><!-- /w-chamber -->
-
-    <!-- Screen-reader live region -->
-    <div
-      id="w-aria-live"
-      aria-live="polite"
-      aria-atomic="true"
-      role="status"
-      style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);"
-    ></div>
-  `;
-}
+let SOURCE_EXIT_DIR: TDirection = "E";
+let SINK_ENTRY_DIR:  TDirection = "W";
+let listenersBound  = false; // FIX 4: Prevent duplicate listeners on re-entry
+let timeUpIntervalId: number | null = null; // FIX 5: Time-up watcher id
 
 // ── PIPE SVG ───────────────────────────────────────────────────────────────
 
-function pipeSVG(type: PipeType): string {
+function pipeSVG(type: TPipeType): string {
   const c    = 22;
   const open = `<svg class="pipe-svg" viewBox="0 0 44 44" aria-hidden="true" focusable="false">`;
-  const paths: Record<PipeType, string> = {
+  const paths: Record<TPipeType, string> = {
     NS: `<line x1="${c}" y1="0"  x2="${c}" y2="44"/>`,
     EW: `<line x1="0"   y1="${c}" x2="44" y2="${c}"/>`,
     NE: `<path d="M${c} 0 L${c} ${c} L44 ${c}"/>`,
@@ -162,9 +108,9 @@ function pipeSVG(type: PipeType): string {
 
 // ── PUZZLE GENERATION ──────────────────────────────────────────────────────
 
-function pipeForDirs(a: Direction, b: Direction): PipeType {
+function pipeForDirs(a: TDirection, b: TDirection): TPipeType {
   const key = [a, b].sort().join("");
-  const map: Record<string, PipeType> = {
+  const map: Record<string, TPipeType> = {
     NS: "NS", EW: "EW",
     EN: "NE", NE: "NE",
     NW: "NW", WN: "NW",
@@ -182,11 +128,16 @@ function randomPath(): [number, number][] {
     let r = 0, c = 0, stuck = false;
 
     while (!(r === 4 && c === 4)) {
-      const moves: [Direction, number, number][] = [];
-      for (const [dir, [dr, dc]] of Object.entries(DIRS) as [Direction, [number, number]][]) {
+      const moves: [TDirection, number, number][] = [];
+      for (const [dir, [dr, dc]] of Object.entries(DIR_DELTA) as [TDirection, [number, number]][]) {
         const nr = r + dr, nc = c + dc;
         if (nr < 0 || nr > 4 || nc < 0 || nc > 4) continue;
         if (visited.has(`${nr},${nc}`)) continue;
+        // Weights moves to the right (E) and downward (S) since the goal is (4,4).
+        // nr >= r means moving south or staying in the same row → heavier weight.
+        // nc >= c means moving east or staying in the same column → heavier weight.
+        // The result is that the algorithm prefers to move toward the goal,
+        // but can still go the "wrong" way for variation in the puzzle.
         const weight = (nr >= r ? 2 : 1) + (nc >= c ? 2 : 1);
         for (let w = 0; w < weight; w++) moves.push([dir, nr, nc]);
       }
@@ -199,15 +150,15 @@ function randomPath(): [number, number][] {
     }
     if (!stuck && r === 4 && c === 4) return path;
   }
-  // Fallback: L-shape
+  // Fallback: L-shape if no valid path was found
   const path: [number, number][] = [];
   for (let col = 0; col <= 4; col++) path.push([0, col]);
   for (let row = 1; row <= 4; row++) path.push([row, 4]);
   return path;
 }
 
-function buildSolutionGrid(path: [number, number][]): Grid {
-  const grid: Grid = Array.from({ length: 5 }, () => Array(5).fill(null) as CellType[]);
+function buildSolutionGrid(path: [number, number][]): TGrid {
+  const grid: TGrid = Array.from({ length: 5 }, () => Array(5).fill(null) as TCellType[]);
   grid[0][0] = "SRC";
   grid[4][4] = "SNK";
 
@@ -215,12 +166,12 @@ function buildSolutionGrid(path: [number, number][]): Grid {
     const [r, c]   = path[i];
     const [pr, pc] = path[i - 1];
     const [nr, nc] = path[i + 1];
-    const fromDir: Direction = pr === r - 1 ? "N" : pr === r + 1 ? "S" : pc === c - 1 ? "W" : "E";
-    const toDir:   Direction = nr === r - 1 ? "N" : nr === r + 1 ? "S" : nc === c - 1 ? "W" : "E";
+    const fromDir: TDirection = pr === r - 1 ? "N" : pr === r + 1 ? "S" : pc === c - 1 ? "W" : "E";
+    const toDir:   TDirection = nr === r - 1 ? "N" : nr === r + 1 ? "S" : nc === c - 1 ? "W" : "E";
     grid[r][c] = pipeForDirs(fromDir, toDir);
   }
 
-  const pipeTypes: PipeType[] = ["NS", "EW", "NE", "NW", "SE", "SW"];
+  const pipeTypes: TPipeType[] = ["NS", "EW", "NE", "NW", "SE", "SW"];
   for (let row = 0; row < 5; row++) {
     for (let col = 0; col < 5; col++) {
       if (grid[row][col] === null) {
@@ -231,13 +182,13 @@ function buildSolutionGrid(path: [number, number][]): Grid {
   return grid;
 }
 
-function scrambleGrid(grid: Grid, fixedCells: Set<string>): Grid {
-  const g: Grid = grid.map(row => [...row]);
+function scrambleGrid(grid: TGrid, fixedCells: Set<string>): TGrid {
+  const g: TGrid = grid.map(row => [...row]);
   for (let r = 0; r < 5; r++) {
     for (let c = 0; c < 5; c++) {
       if (fixedCells.has(`${r},${c}`)) continue;
       if (g[r][c] === "SRC" || g[r][c] === "SNK") continue;
-      let t = g[r][c] as PipeType;
+      let t = g[r][c] as TPipeType;
       const rotations = Math.floor(Math.random() * 4);
       for (let i = 0; i < rotations; i++) t = ROTATE_MAP[t];
       g[r][c] = t;
@@ -259,16 +210,16 @@ function initGrid(): void {
 
 // ── FLOW CHECK ─────────────────────────────────────────────────────────────
 
-function getConnections(type: CellType): Connections {
+function getConnections(type: TCellType): TConnections {
   if (type === "SRC") return { N: SOURCE_EXIT_DIR === "N", E: SOURCE_EXIT_DIR === "E", S: SOURCE_EXIT_DIR === "S", W: SOURCE_EXIT_DIR === "W" };
   if (type === "SNK") return { N: SINK_ENTRY_DIR  === "N", E: SINK_ENTRY_DIR  === "E", S: SINK_ENTRY_DIR  === "S", W: SINK_ENTRY_DIR  === "W" };
-  const def = PIPE_DEFS[type as PipeType];
+  const def = PIPE_DEFS[type as TPipeType];
   if (!def) return { N: false, E: false, S: false, W: false };
   const [n, e, s, w] = def.c;
   return { N: n, E: e, S: s, W: w };
 }
 
-function checkFlow(grid: Grid): FlowResult {
+function checkFlow(grid: TGrid): IFlowResult {
   const visited  = new Set<string>();
   const flowPath = new Set<string>();
   const queue: [number, number][] = [[0, 0]];
@@ -278,7 +229,7 @@ function checkFlow(grid: Grid): FlowResult {
     const [r, c] = queue.shift()!;
     flowPath.add(`${r},${c}`);
     const conns = getConnections(grid[r][c]);
-    for (const dir of ["N", "E", "S", "W"] as Direction[]) {
+    for (const dir of ["N", "E", "S", "W"] as TDirection[]) {
       if (!conns[dir]) continue;
       const [dr, dc] = DIR_DELTA[dir];
       const nr = r + dr, nc = c + dc;
@@ -294,6 +245,21 @@ function checkFlow(grid: Grid): FlowResult {
 }
 
 // ── RENDER ─────────────────────────────────────────────────────────────────
+// Rebuilds the entire grid DOM from scratch on every state change.
+// Checks which cells are in the flow and sets CSS classes + ARIA labels.
+
+function buildCellAriaLabel(
+  type: TCellType,
+  r: number,
+  c: number,
+  isFixed: boolean,
+  inFlow: boolean
+): string {
+  if (type === "SRC") return "Water source, row 1 column 1, fixed";
+  if (type === "SNK") return `Sacred vessel, row 5 column 5${inFlow ? ", water flowing in — vessel filled!" : ", awaiting water"}`;
+  const def = PIPE_DEFS[type as TPipeType];
+  return `${def?.label ?? type}, row ${r + 1} col ${c + 1}${isFixed ? ", fixed" : ", rotatable"}${inFlow ? ", water flowing" : ""}`;
+}
 
 function renderGrid(): void {
   const gridEl = document.getElementById("w-pipe-grid");
@@ -324,17 +290,7 @@ function renderGrid(): void {
       cell.setAttribute("data-row", String(r));
       cell.setAttribute("data-col", String(c));
       cell.setAttribute("tabindex", isFocused ? "0" : "-1");
-
-      let label = "";
-      if (isSource) {
-        label = "Water source, row 1 column 1, fixed";
-      } else if (isSink) {
-        label = `Sacred vessel, row 5 column 5${inFlow ? ", water flowing in — vessel filled!" : ", awaiting water"}`;
-      } else {
-        const def = PIPE_DEFS[type as PipeType];
-        label = `${def?.label ?? type}, row ${r + 1} col ${c + 1}${isFixed ? ", fixed" : ", rotatable"}${inFlow ? ", water flowing" : ""}`;
-      }
-      cell.setAttribute("aria-label", label);
+      cell.setAttribute("aria-label", buildCellAriaLabel(type, r, c, isFixed, inFlow));
       if (!isFixed) cell.setAttribute("aria-description", "Press Enter or Space to rotate");
 
       if (isSource) {
@@ -342,7 +298,7 @@ function renderGrid(): void {
       } else if (isSink) {
         cell.innerHTML = `<span aria-hidden="true" style="font-size:1.6rem;">${inFlow ? "🏺" : "⚱️"}</span>`;
       } else {
-        cell.innerHTML = pipeSVG(type as PipeType);
+        cell.innerHTML = pipeSVG(type as TPipeType);
       }
 
       cell.addEventListener("click", () => {
@@ -361,7 +317,7 @@ function renderGrid(): void {
 function rotatePipe(r: number, c: number): void {
   const type = currentGrid[r][c];
   if (type === "SRC" || type === "SNK") return;
-  const rotated = ROTATE_MAP[type as PipeType];
+  const rotated = ROTATE_MAP[type as TPipeType];
   currentGrid[r][c] = rotated;
   announce(`Rotated to ${PIPE_DEFS[rotated]?.label}`);
 }
@@ -372,7 +328,7 @@ function focusCellEl(r: number, c: number): void {
 
 // ── TIMER ──────────────────────────────────────────────────────────────────
 // The header countdown display is handled by the shared timer in utils.ts.
-// This internal timer only tracks secondsElapsed for score and the 60 s warning.
+// This internal timer only tracks secondsElapsed for scoring and the 60 s warning.
 
 function startTimer(): void {
   timerInterval = setInterval(() => {
@@ -395,6 +351,56 @@ function checkWarning(): void {
   }
 }
 
+// ── TIME-UP WATCHER ────────────────────────────────────────────────────────
+// ✅ FIX 5: Polls the shared TimeIsUp flag; navigates to room 6 on timeout
+
+function stopTimeUpWatcher(): void {
+  if (timeUpIntervalId !== null) {
+    window.clearInterval(timeUpIntervalId);
+    timeUpIntervalId = null;
+  }
+}
+
+function ifRoomFailed(): void {
+  stopTimeUpWatcher();
+  stopTimer();
+  stopSharedTimer(5);
+
+  const result: IRoomResult = {
+    room: "water",
+    artifact: "亂",
+    artifactCorrect: false,
+    score: 0,
+    time: secondsElapsed,
+    completed: false,
+  };
+
+  try {
+    localStorage.setItem("room_water", JSON.stringify(result));
+  } catch {
+    // storage unavailable
+  }
+
+  announce("Time is up. The vessel remains empty.");
+
+  window.setTimeout(() => {
+    goToNextRoom("#finalRoom", room6finalFunc);
+  }, TRANSITION_MS);
+}
+
+// ── NAVIGATION ─────────────────────────────────────────────────────────────
+// FIX 2 + FIX 3: Standard exit pattern — fade out → call next room func
+
+function goToNextRoom(nextSelector: string, nextRoomFunc: () => void): void {
+  const section = document.querySelector<HTMLElement>("#room5Water");
+  if (!section) return;
+  const next = document.querySelector<HTMLElement>(nextSelector);
+  if (!next) return;
+
+  transitSections(section, next, TRANSITION_MS);
+  window.setTimeout(() => nextRoomFunc(), TRANSITION_MS);
+}
+
 // ── SCORE ──────────────────────────────────────────────────────────────────
 
 function calcScore(): number {
@@ -402,8 +408,6 @@ function calcScore(): number {
 }
 
 // ── HELPERS ────────────────────────────────────────────────────────────────
-
-// Removed unused updateProgress function
 
 function setStatus(msg: string, type = ""): void {
   const el = document.getElementById("w-status");
@@ -424,6 +428,7 @@ function announce(msg: string): void {
 function solvePuzzle(): void {
   if (solved) return;
   solved = true;
+  stopTimeUpWatcher(); // FIX 5: Stop watcher so fail can't fire after win
   stopTimer();
   stopSharedTimer(5);
 
@@ -436,8 +441,7 @@ function solvePuzzle(): void {
   announce(`Puzzle solved. Score: ${score} points.`);
   document.getElementById("w-time-warning")?.classList.remove("visible");
 
-  // Save result to localStorage for room 6 to read
-  const result: RoomResult = {
+  const result: IRoomResult = {
     room: "water",
     artifact,
     artifactCorrect: isCorrectArtifact,
@@ -452,10 +456,10 @@ function solvePuzzle(): void {
     // storage unavailable
   }
 
-  // Navigate directly to room 6 (finalRoom) without showing any text or artifact panel
-  /*import("./room6validate").then(({ room6finalFunc }) => {
-    room6finalFunc();
-  });*/
+  // FIX 2: Navigate to room 6 via standard goToNextRoom pattern
+  window.setTimeout(() => {
+    goToNextRoom("#finalRoom", room6finalFunc);
+  }, TRANSITION_MS);
 }
 
 // ── RESET ──────────────────────────────────────────────────────────────────
@@ -485,7 +489,12 @@ function setupKeyboard(): void {
         ArrowRight: [ 0,  1],
       };
       const [dr, dc] = delta[e.key];
-      focusedCell = [Math.max(0, Math.min(4, r + dr)), Math.max(0, Math.min(4, c + dc))];
+      // Clamps focus within the grid bounds (0–4) so that arrow keys
+      // cannot move the cursor outside the 5×5 pipe grid
+      focusedCell = [
+        Math.max(0, Math.min(4, r + dr)),
+        Math.max(0, Math.min(4, c + dc)),
+      ];
       renderGrid();
       focusCellEl(focusedCell[0], focusedCell[1]);
       return;
@@ -494,6 +503,7 @@ function setupKeyboard(): void {
     if ((e.key === "Enter" || e.key === " ") && !solved) {
       e.preventDefault();
       const type = currentGrid[r][c];
+      // SRC (source) and SNK (sink) are fixed — they should never be rotatable
       if (type !== "SRC" && type !== "SNK" && !FIXED_CELLS.has(`${r},${c}`)) {
         rotatePipe(r, c);
         renderGrid();
@@ -537,6 +547,12 @@ function startChamber(): void {
   startTimer();        // internal: tracks secondsElapsed for score + warning
   startSharedTimer(5); // shared: drives the header countdown display
 
+  // FIX 5: Start time-up watcher — clears old one first to prevent duplicates
+  stopTimeUpWatcher();
+  timeUpIntervalId = window.setInterval(() => {
+    if (!TimeIsUp) return;
+    if (!solved) ifRoomFailed();
+  }, 200);
 
   setTimeout(() => {
     outer: for (let r = 0; r < 5; r++) {
@@ -571,21 +587,26 @@ function handleCheck(): void {
 // ── EXPORTED ROOM FUNCTION ─────────────────────────────────────────────────
 
 export function room5waterFunc(): void {
+  resetSingleRoomResult("water");
   // Hide welcome page / menu
   document.querySelector<HTMLElement>("#welcomePage")?.classList.add("hidden");
 
-  // Show and set up the water section
   const section = document.querySelector<HTMLElement>("#room5Water");
   if (!section) return;
 
   section.style.backgroundImage = `url("${dataJSON.room5water.backgroundImg}")`;
-  section.classList.remove("hidden");
   showGameHeader();
-  
-    // Inject HTML into the section
-    injectHTML(section);
-
   renderRoomDesc(section, dataJSON.room5water.desc);
+
+  // FIX 1: Standard entry pattern — fade from current page or show directly
+  const fromPage =
+    getCurrentPage() ??
+    document.querySelector<HTMLElement>("main > section.page.isVisible");
+  if (fromPage && fromPage !== section) {
+    transitSections(fromPage, section, TRANSITION_MS);
+  } else {
+    showSection(section);
+  }
 
   // Reset state (safe to call multiple times if room is replayed)
   solved         = false;
@@ -593,17 +614,20 @@ export function room5waterFunc(): void {
   focusedCell    = [0, 0];
   stopTimer();
   stopSharedTimer(5);
-  
+  stopTimeUpWatcher(); // FIX 5: Clean up any leftover watcher from previous visit
+
   spawnBubbles(section);
 
   // Start background music immediately when entering the room
   playBgm("bgm_water");
 
-  // Wire up buttons
-  document.getElementById("w-check-btn")?.addEventListener("click", handleCheck);
-  document.getElementById("w-reset-btn")?.addEventListener("click", resetPuzzle);
-  
-  setupKeyboard();
+  // FIX 4: Bind listeners only once — prevents duplicates on re-entry
+  if (!listenersBound) {
+    document.getElementById("w-check-btn")?.addEventListener("click", handleCheck);
+    document.getElementById("w-reset-btn")?.addEventListener("click", resetPuzzle);
+    setupKeyboard();
+    listenersBound = true;
+  }
 
   // Start immediately — no intro screen
   startChamber();
