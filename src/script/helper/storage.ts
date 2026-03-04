@@ -122,7 +122,7 @@ export function setRoomResult(roomId: TRoomId, result: TRoomResult): void {
   console.log("Full gameState:", getRoomResults());
 }
 
-// Reset whole run (ex: on logout or "new game")
+// Reset whole run  for -new gameBtn
 export function resetRoomResults(): void {
   localStorage.setItem(LS_KEY.roomResults, JSON.stringify(DEFAULT_GAME_STATE));
 }

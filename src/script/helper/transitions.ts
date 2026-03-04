@@ -80,37 +80,6 @@ export function transitSections(
   }, durationMs);
 }
 
-/*
-export function transitSections(
-  from: HTMLElement,
-  to: HTMLElement,
-  durationMs = 1300,
-  visibleClass = "isVisible",
-): void {
-  if (from === to) return;
-
-  const half = Math.max(0, Math.floor(durationMs / 2));
-
-  
-  from.classList.remove(visibleClass);
-
-  window.setTimeout(() => {
-   
-    from.classList.add("hidden");
-
-    
-    to.classList.remove("hidden");
-
-    
-    requestAnimationFrame(() => {
-      to.classList.add(visibleClass);
-    });
-
-    setCurrentPage(to);
-  }, half);
-}
-*/
-
 //-----------------------------------------------------------
 //-------------- Splash heading fade in----------------------
 //-----------------------------------------------------------
