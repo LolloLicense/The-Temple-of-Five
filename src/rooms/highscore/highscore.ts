@@ -5,6 +5,8 @@ import {
   showSection,
   transitSections,
 } from "../../script/helper/transitions.ts";
+import { renderHighscoreList } from "./renderHighscoreList";
+import { initHighscoreShare } from "./highscoreShare";
 
 const TRANSITION_MS = 1200;
 
@@ -32,6 +34,26 @@ export function highscoreRoomFunc(): void {
   // Eventually a BGM
   const bgmId = dataJSON.highScoreRoom.bgmId;
   if (bgmId) void playBgm(bgmId, 650);
+
+  renderHighscoreList();
+  initHighscoreShare({
+  shareUrl: "https://medieinstitutet.github.io/fed25d-js-intro-grupparbete-the-pogo-stick-pioneers/"
+  });
+
+  const backBtn = document.querySelector<HTMLButtonElement>("#backToMainMenuBtn");
+  const welcomePage = document.querySelector<HTMLElement>("#welcomePage");
+
+  if (backBtn && welcomePage) {
+    // Prevent double-binding
+    if (backBtn.dataset.bound !== "true") {
+      backBtn.dataset.bound = "true";
+
+      backBtn.addEventListener("click", () => {
+        // Always transition from highscore section to welcome page
+        transitSections(highscoreSection, welcomePage, TRANSITION_MS);
+      });
+   }
+ }
 
   console.log("Hello from the highscore room");
 }
