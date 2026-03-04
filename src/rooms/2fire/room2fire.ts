@@ -359,13 +359,14 @@ export function room2fireFunc(): void {
   fireSection = document.querySelector<HTMLElement>("#room2Fire");
   if (!fireSection) return;
 
+  /* COMMENT OUT FOR NOW - ACTIVE LATER WHEN GAME FLOW IS RUNNING
   const fireState = getRoomResults().fire;
 
-  // If already completed in this run → do not allow re-enter
+   // If already completed in this run → do not allow re-enter
   if (fireState.status === "completed") {
     console.warn("Fire room already completed. Access blocked.");
     return;
-  }
+  } */
 
   showGameHeader(); // Show header when entering fire room
 
