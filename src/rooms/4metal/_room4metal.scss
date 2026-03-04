@@ -20,7 +20,7 @@
         align-items: center;
         gap: 3rem;
         
-        //Färgsignalen som börjar med rött 
+        //Färgsignalen som börjar som glasikon
         .colorSignal { 
             @include mix.glass();
             width: 70px;
@@ -31,34 +31,34 @@
             border-radius: var.$smallRadius; 
         }
 
-        //Färger som är valbara i slotsen INTE FÄRDIGA ÄNNU, BARA FÖR TESTNING
+        //Färger som är valbara i slotsen, metall aktiga inte ren metallfärg
         .iron {
-            background: #8a8a8a; // grå metall
-            box-shadow: 0 0 10px #8a8a8a88;
+           background: #535252; /* mörk, neutral grå */ 
+           box-shadow: 0 0 10px #2f2f2f;
         }
 
        .copper {
-            background: #b87333;
-            box-shadow: 0 0 10px #b8733388;
+            background: #c37a35;
+            box-shadow: 0 0 10px #2f2f2f;
         }
 
        .gold {
             background: #d4af37;
-            box-shadow: 0 0 10px #d4af3788;
+            box-shadow: 0 0 10px #2f2f2f;
         }
 
-        .silver {
-            background: #c0c0c0;
-            box-shadow: 0 0 10px #c0c0c088;
+        .emerald {
+            background: #679c4a;
+            box-shadow: 0 0 10px #2f2f2f;
         }
 
         .steel {
-            background: #708090;
-            box-shadow: 0 0 10px #70809088;
+            background: #355d85;
+            box-shadow: 0 0 10px #2f2f2f;
         }
     }
 
-    // Meddelande rätt/fel jobba vidare på 
+    
     .feedback {
         height: 1.8rem;
         font-size: 1.2rem;  

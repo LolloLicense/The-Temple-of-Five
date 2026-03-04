@@ -163,7 +163,7 @@ export function room4metalFunc() {
   //-------------------------------------------------------------------------------------------------------------------------------------
   //--------------------------------------------------- Sekvenser, färger, states -------------------------------------------------------
   //-------------------------------------------------------------------------------------------------------------------------------------
-  const colorsMetal = ["iron", "copper", "gold", "silver", "steel"]; // Lista med namn på färgerna från sass klasserna.
+  const colorsMetal = ["iron", "copper", "gold", "emerald", "steel"]; // Lista med namn på färgerna från sass klasserna.
   const levelsMetal = [
     // Lista med sekvenser, varje inre array är en level. Ex colorsMetal[0] är "iron", colorsMetal[1] är "copper" osv.
     [0, 1, 2, 1, 3, 4], //Level 1 enkel sekvens
