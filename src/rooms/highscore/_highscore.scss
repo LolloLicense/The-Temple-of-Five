@@ -1,10 +1,9 @@
 @use "../../sass/var";
 @use "../../sass/mixins" as mix;
 
-/* =========================================================
-   HIGH SCORE PAGE
-   Layout + Glass container + Action buttons
-========================================================= */
+/*  ==============================================================
+    =================== HIGHSCORE PAGE ===========================
+    ============================================================== */
 
 .highscoreRoom {
   display: flex;
@@ -17,9 +16,7 @@
   text-align: center;
   color: var.$lightColor;
 
-  /* -------------------------
-     Page Title
-  -------------------------- */
+  /* Page Title */
 
   .highscoreTitle {
     margin: 0;
@@ -27,9 +24,7 @@
     letter-spacing: 2px;
   }
 
-  /* -------------------------
-     Glass Highscore Container
-  -------------------------- */
+  /* Highscore Container */
 
   .highscorePlate {
     @include mix.glass($radius: var.$smallRadius);
@@ -47,9 +42,7 @@
     font-size: var.$fs-h4;
   }
 
-  /* -------------------------
-     Highscore List
-  -------------------------- */
+  /* Highscore List */
 
   .highscoreList {
     margin: 0;
@@ -69,9 +62,7 @@
     }
   }
 
-  /* -------------------------
-     Action Buttons (Share + Back)
-  -------------------------- */
+  /* Buttons (Share and Back) */
 
   .highscoreActions {
     display: flex;
@@ -89,10 +80,7 @@
   }
 }
 
-/* =========================================================
-   SHARE MODAL
-   Overlay + Glass dialog + Social buttons
-========================================================= */
+/* SHARE MODAL */
 
 .shareModal {
   position: fixed;
@@ -111,10 +99,7 @@
     display: none;
   }
 
-  /* -------------------------
-     Modal Glass Container
-     Smaller than About modal
-  -------------------------- */
+  /* Modal Container */
 
   .sharePlate {
     @include mix.glass($radius: var.$smallRadius);
@@ -129,9 +114,7 @@
     color: var.$lightColor;
   }
 
-  /* -------------------------
-     Header (Title + Back Arrow)
-  -------------------------- */
+  /* Header (Title and Back Arrow) */
 
   .shareHeader {
     display: flex;
@@ -145,7 +128,7 @@
     }
   }
 
-  /* Reuse your existing arrow button styling */
+  /* Back button (same as in about) */
   .modalClose {
     background: transparent;
     border: 0;
@@ -169,9 +152,7 @@
     }
   }
 
-  /* -------------------------
-     Share Text Preview
-  -------------------------- */
+  /* Share Text */
 
   .sharePreview {
     margin: 0;
@@ -184,9 +165,7 @@
     background: rgba(0, 0, 0, 0.12);
   }
 
-  /* -------------------------
-     Social Share Buttons
-  -------------------------- */
+  /* Social Share Buttons */
 
   .shareActions {
     display: flex;
@@ -201,13 +180,11 @@
     flex: 1 1 170px;
   }
 
-  /* -------------------------
-     Status Message (Copy feedback)
-  -------------------------- */
+  /* Status Message */
 
   .shareStatus {
     margin: 0;
-    min-height: 1.2em; /* Prevent layout jump */
+    min-height: 1.2em; 
     opacity: 0.9;
   }
 }
