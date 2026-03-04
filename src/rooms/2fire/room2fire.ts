@@ -5,7 +5,7 @@ import { startTimer, stopTimer, TimeIsUp } from "../../script/helper/utils.ts";
 import { transitSections, getCurrentPage, showSection } from "../../script/helper/transitions";
 import { showGameHeader, hideGameHeader } from "../../script/helper/gameHeader";
 import { showMsg } from "../../script/helper/showMsg";
-import { getRoomResults, resetSingleRoomResult, setRoomResult } from "../../script/helper/storage";
+import { /* getRoomResults */ resetSingleRoomResult, setRoomResult } from "../../script/helper/storage";
 import { room3earthFunc } from "../3earth/room3earth.ts";
 
 

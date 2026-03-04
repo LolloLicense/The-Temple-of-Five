@@ -7,6 +7,7 @@ import { room4metalFunc } from "./rooms/4metal/room4metal.ts";
 import { room5waterFunc } from "./rooms/5water/room5water.ts";
 import { room6finalFunc } from "./rooms/final/room6validate.ts";
 import { gameOverRoomFunc } from "./rooms/gameover/gameOverRoom.ts";
+import { highscoreRoomFunc } from "./rooms/highscore/highscore.ts";
 import { gameWinFunc } from "./rooms/gameWin/gameWin.ts";
 import { initAudio, initSoundToggle } from "./audio";
 import { aboutTabs, initAboutDialog } from "./script/helper/aboutDialog.ts";
@@ -64,6 +65,11 @@ const gameWinBtn: HTMLElement | null =
 if (gameWinBtn) {
   gameWinBtn.addEventListener("click", gameWinFunc);
 }
+const highScoreBtn: HTMLElement | null = document.querySelector("#openHighScoreBtn");
+if (highScoreBtn) {
+  highScoreBtn.addEventListener("click", highscoreRoomFunc);
+}
+
 
 //-----------------------------------------------------------
 //-------------------------INITS-----------------------------
