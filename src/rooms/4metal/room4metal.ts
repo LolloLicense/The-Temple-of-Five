@@ -3,11 +3,7 @@ import { playBgm, playSfx } from "../../audio/index.ts";
 import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
 import { startTimer, stopTimer, TimeIsUp } from "../../script/helper/utils.ts";
 import { showMsg } from "../../script/helper/showMsg.ts";
-import {
-  setRoomResult,
-  getRoomResults,
-  resetSingleRoomResult,
-} from "../../script/helper/storage.ts";
+import { setRoomResult, getRoomResults } from "../../script/helper/storage.ts";
 import { room5waterFunc } from "../5water/room5water.ts";
 import { showGameHeader } from "../../script/helper/gameHeader.ts";
 import {
@@ -90,8 +86,6 @@ export function room4metalFunc() {
   cleanupMetalRuntime();
   // NEW: update ref every time we enter
   metalSectionRef = metalSection;
-  // CHANGED: reset storage AFTER we know the section exists
-  resetSingleRoomResult("metal");
 
   currentLevel = 0; // Variabel för att hålla reda på vilken level spelaren är på 0 = level 1, 1 = level 2, 2 = level 3
   //let mistakes = 0; // Ska räkna antalet misstag spelaren gör
