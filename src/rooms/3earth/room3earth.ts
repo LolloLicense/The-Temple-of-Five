@@ -1,6 +1,5 @@
 import * as dataJSON from "../../data.json";
-//import { startTimer, stopTimer } from "./script/utils.ts";
-import { startTimer, TimeIsUp } from "../../script/helper/utils.ts";
+import { startTimer, stopTimer, TimeIsUp } from "../../script/helper/utils.ts";
 import { showGameHeader } from "../../script/helper/gameHeader.ts";
 import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
 import {
@@ -51,8 +50,6 @@ export function room3earthFunc(): void {
   timerCheckInterval = setInterval(timerCheck, 1000);
   startTimer(3); // Start timer for room 3
   showGameHeader(); // Show game header
-
-  console.log("Hello from the earth room");
 
   audioHandler("bgm");
 
@@ -272,20 +269,44 @@ function checkSlateLock(movedSlate: HTMLElement | null): void {
 
   console.log(correctSlatesArr);
   if (correctSlatesArr.length === 15) {
-    console.log("WINNER WINNER CHICKEN DINNER!!!");
     winner();
   } // IF win END
 } //checkSlateLock END
 
 function winner(): void {
+  stopTimer(3);
+  audioHandler("longSlide");
   const lavaSlate: HTMLElement | null = document.querySelector(".slate16");
   if (lavaSlate) {
-    lavaSlate.classList.add("win");
+    lavaSlate.classList.add("end");
     lavaSlate.style.opacity = "1";
-    lavaSlate.style.filter = "grayscale(100%)";
-    lavaSlate.innerHTML = "";
+    setTimeout(() => {
+      lavaSlate.style.filter = "grayscale(100%)";
+      lavaSlate.innerHTML = `<img id="lavaImg" src="${dataJSON.room3earth.desc.trueSign}"/>`;
+      const lavaImg: HTMLElement | null = document.querySelector("#lavaImg");
+      if (lavaImg) {
+        lavaImg.style.opacity = "1";
+        lavaImg.style.width = "100px";
+        lavaImg.style.height = "100px";
+      }
+    }, 1000);
   } //IF lavaSlate END
 } // winner END
+
+function looser(): void {
+  const lavaSlate: HTMLElement | null = document.querySelector(".slate16");
+  if (lavaSlate) {
+    lavaSlate.classList.add("end");
+    lavaSlate.style.opacity = "1";
+    lavaSlate.style.filter = "grayscale(100%)";
+    lavaSlate.innerHTML = `<img id="lavaImg" src="${dataJSON.room3earth.desc.falseSign}"/>`;
+
+    const lavaImg: HTMLElement | null = document.querySelector("#lavaImg");
+    if (lavaImg) {
+      lavaImg.style.opacity = "1";
+    }
+  } //IF lavaSlate END
+} // loser END
 
 function checkTextContent(textContent: string, target: number): void {
   const slateIndex: number = correctSlatesArr.indexOf(target);
