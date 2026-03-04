@@ -1,6 +1,10 @@
 type ExitMode = "welcome" | "room";
 
+let exitDialogBound = false;
+
 export function initExitDialog(): void {
+  if (exitDialogBound) return;
+  exitDialogBound = true;
   // find exitDialog
   const dialog = document.querySelector<HTMLDialogElement>("#exitDialog");
   if (!dialog) return;
@@ -40,6 +44,7 @@ export function initExitDialog(): void {
   // Listening to click inside dialog
   dialog.addEventListener("click", (e) => {
     const target = e.target as HTMLElement;
+    if (!(target instanceof HTMLElement)) return;
     const btn = target.closest<HTMLButtonElement>("button");
     if (!btn) return;
     //checking what action is clicked, data-action="logout" = action: logout
