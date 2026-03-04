@@ -187,3 +187,26 @@ function freshDefaultGameState(): TGameState {
   // structuredClone finns i moderna browsers. Annars kan vi göra JSON-klon.
   return structuredClone(DEFAULT_GAME_STATE);
 }
+
+//-----------------------------------------------------------
+//----------------------- RESETS ----------------------------
+//-----------------------------------------------------------
+
+// Reset RUN without clearing highscores
+export function resetRunKeepHighscores(): void {
+  //  reset the run state
+  localStorage.setItem(
+    LS_KEY.roomResults,
+    JSON.stringify(freshDefaultGameState()),
+  );
+
+  // reset timers (if you store them)
+  localStorage.removeItem(LS_KEY.totalTime);
+  localStorage.removeItem(LS_KEY.roomTime);
+
+  //  reset artifacts/backpack (only if you actually use this key)
+  localStorage.removeItem(LS_KEY.artifacts);
+
+  // notify UI that depends on roomResults
+  window.dispatchEvent(new Event("roomResults:changed"));
+}

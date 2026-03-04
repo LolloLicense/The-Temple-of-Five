@@ -19,6 +19,8 @@ import { initLoginFlow } from "./script/helper/loginFlow";
 import { initExitDialog } from "./script/helper/exitDialog";
 // backpack artifacts
 import { initBackpackToggle } from "./script/helper/artifacts";
+//resetBTNs
+import { initResetButtons } from "./script/helper/reset";
 
 /* Event listeners for temporary menu
 (Remove when menu is to be removed) */
@@ -65,11 +67,11 @@ const gameWinBtn: HTMLElement | null =
 if (gameWinBtn) {
   gameWinBtn.addEventListener("click", gameWinFunc);
 }
-const highScoreBtn: HTMLElement | null = document.querySelector("#openHighScoreBtn");
+const highScoreBtn: HTMLElement | null =
+  document.querySelector("#openHighScoreBtn");
 if (highScoreBtn) {
   highScoreBtn.addEventListener("click", highscoreRoomFunc);
 }
-
 
 //-----------------------------------------------------------
 //-------------------------INITS-----------------------------
@@ -83,3 +85,4 @@ initAboutDialog();
 initSoundToggle();
 initAudio();
 startTimer(0);
+initResetButtons();
