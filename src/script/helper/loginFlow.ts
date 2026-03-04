@@ -25,6 +25,8 @@ let logoutToLoginTimeoutId: number | null = null;
 // Prevents double listeners if initLoginFlow runs again (HMR etc.)
 let loginFlowListenersBound = false;
 
+let onLoginSubmitHandler: ((e: SubmitEvent) => void) | null = null;
+
 //-----------------------------------------------------------
 //-------------- Transitions "loop" CLEANUP-----------------
 //-----------------------------------------------------------
@@ -181,16 +183,19 @@ export function initLoginFlow(): void {
 
   // Find the login form in the DOM
   const form = document.querySelector<HTMLFormElement>("#loginForm");
+  if (!form) return;
   if (form) {
     // Create ONE submit (login) handler function
-    const onLoginSubmit = onLoginSubmitFactory(
-      loginSection,
-      welcomeSection,
-      renderWelcomeName,
-    );
+    if (!onLoginSubmitHandler) {
+      onLoginSubmitHandler = onLoginSubmitFactory(
+        loginSection,
+        welcomeSection,
+        renderWelcomeName,
+      );
+    }
 
-    form.removeEventListener("submit", onLoginSubmit as EventListener);
-    form.addEventListener("submit", onLoginSubmit);
+    form.removeEventListener("submit", onLoginSubmitHandler as EventListener);
+    form.addEventListener("submit", onLoginSubmitHandler);
   }
 }
 
@@ -206,6 +211,7 @@ function onLoginSubmitFactory(
   welcomeSection: HTMLElement,
   renderWelcomeName: () => void,
 ) {
+  console.count("LOGIN SUBMIT fired");
   // Return the submit function inside initLoginFlow
   return function onLoginSubmit(e: SubmitEvent): void {
     e.preventDefault(); // stop the page from reloading

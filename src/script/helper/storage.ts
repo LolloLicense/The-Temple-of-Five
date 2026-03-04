@@ -10,11 +10,9 @@ export interface IUserData {
 }
 
 // ROOM ID used in the game
-
 export type TRoomId = "wood" | "fire" | "earth" | "metal" | "water" | "final";
 
 // Rooom STATUS
-
 export type TRoomStatus = "pending" | "completed" | "failed";
 
 // Artifact outcome true | false | not earned yet

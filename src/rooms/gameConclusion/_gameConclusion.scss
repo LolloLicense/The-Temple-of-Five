@@ -1,33 +1,43 @@
 @use "../../sass/var";
 @use "../../sass/mixins" as mix;
 
-.gameOverRoom {
+//-----------------------------------------------------------
+//------------------- Global for conclucion -----------------
+//-----------------------------------------------------------
+
+.conclusoinHeading {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  .gameOverHeading {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 2.5rem;
+  position: relative;
+  z-index: 5;
+  gap: 2.5rem;
+  h2 {
+    font-size: var.$fs-h1;
+    text-transform: uppercase;
+    margin: 0;
     color: var.$lightColor;
-
-    h2 {
-      font-size: var.$fs-h1;
-      text-transform: uppercase;
-      margin: 0;
-    }
-    p {
-      font-size: var.$fs-h4;
-      max-width: 900px;
-      text-align: center;
-      margin: 0;
-    }
   }
+  p {
+    font-size: var.$fs-h4;
+    max-width: 900px;
+    text-align: center;
+    margin: 0;
+    color: var.$lightColor;
+  }
+}
 
-  .gameOverCtaBtns {
+.gameOverRoom,
+.gameWinRoom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+  .ctaBtnsConc {
     margin-top: 5rem;
     display: flex;
     justify-content: center;
@@ -40,49 +50,119 @@
   }
 }
 
+//-----------------------------------------------------------
+//---------------------- Game Over Room ----------------------
+//-----------------------------------------------------------
+
+.gameOverRoom {
+  .overFx {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    contain: paint;
+  }
+
+  .overFx__embers {
+    position: absolute;
+    inset: -30%;
+    opacity: 0;
+
+    background-image: radial-gradient(
+        circle,
+        rgba(255, 170, 60, 0.9) 0 1px,
+        transparent 2px
+      ),
+      radial-gradient(circle, rgba(255, 120, 40, 0.75) 0 1px, transparent 2px),
+      radial-gradient(circle, rgba(255, 220, 170, 0.65) 0 1px, transparent 2px);
+    background-size: 180px 180px, 260px 260px, 320px 320px;
+    background-position: 0 0, 40px 80px, 120px 30px;
+
+    filter: blur(0.1px);
+    transform-origin: 50% 30%;
+    will-change: transform, opacity, background-position;
+  }
+
+  .overFx__glow {
+    position: absolute;
+    inset: -10%;
+    opacity: 0;
+    background: radial-gradient(
+        circle at 50% 35%,
+        rgba(255, 140, 60, 0.18),
+        transparent 55%
+      ),
+      radial-gradient(
+        circle at 52% 40%,
+        rgba(255, 255, 255, 0.05),
+        transparent 60%
+      );
+    transform-origin: 50% 35%;
+    will-change: transform, opacity;
+  }
+
+  &.is-animating {
+    .overFx__embers {
+      animation: embersIn 700ms ease forwards, embersFall 5.5s linear infinite,
+        embersSwirl 7.5s ease-in-out infinite;
+    }
+
+    .overFx__glow {
+      animation: glowIn 900ms ease forwards, glowPulse 3.2s ease-in-out infinite;
+    }
+  }
+
+  @keyframes embersIn {
+    to {
+      opacity: 0.55;
+    }
+  }
+
+  @keyframes embersFall {
+    0% {
+      background-position: 0 0, 40px 80px, 120px 30px;
+    }
+    100% {
+      background-position: 0 520px, 40px 720px, 120px 860px;
+    }
+  }
+
+  @keyframes embersSwirl {
+    0% {
+      transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+    }
+    50% {
+      transform: translate3d(1.5%, 1%, 0) rotate(9deg) scale(1.01);
+    }
+    100% {
+      transform: translate3d(-1.5%, 2%, 0) rotate(-9deg) scale(1.02);
+    }
+  }
+
+  @keyframes glowIn {
+    to {
+      opacity: 0.8;
+    }
+  }
+
+  @keyframes glowPulse {
+    0%,
+    100% {
+      transform: rotate(0deg) scale(1);
+      opacity: 0.45;
+    }
+    50% {
+      transform: rotate(4deg) scale(1.02);
+      opacity: 0.7;
+    }
+  }
+}
+
+//-----------------------------------------------------------
+//---------------------- Game Win Room ----------------------
+//-----------------------------------------------------------
+
 .gameWinRoom {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  position: relative;
-  overflow: hidden;
-  min-height: 100vh;
-  .gameWinHeading {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    position: relative;
-    z-index: 5;
-    gap: 2.5rem;
-    color: var.$lightColor;
-
-    h2 {
-      font-size: var.$fs-h1;
-      text-transform: uppercase;
-      margin: 0;
-    }
-    p {
-      font-size: var.$fs-h4;
-      max-width: 900px;
-      text-align: center;
-      margin: 0;
-    }
-  }
-
-  .gameCtaBtns {
-    margin-top: 5rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 2.5rem;
-  }
-  button {
-    @include mix.button();
-    font-size: var.$fs-h6;
-  }
-
   //-----------------------------------------------------------
   //---------------------- Animations--------------------------
   //-----------------------------------------------------------
@@ -100,7 +180,7 @@
     transform: translateZ(0);
     backface-visibility: hidden;
   }
-  // starfield “drift”
+
   .winFx__stars {
     position: absolute;
     inset: -20%;
@@ -134,7 +214,6 @@
     transform: translate3d(0, 0, 0);
   }
 
-  // sparkle flashes
   .winFx__sparkles {
     position: absolute;
     inset: 0;

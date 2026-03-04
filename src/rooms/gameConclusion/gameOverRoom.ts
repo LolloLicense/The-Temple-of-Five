@@ -12,6 +12,8 @@ export function gameOverRoomFunc() {
   const gameOverSection = document.querySelector<HTMLElement>("#gameOverRoom");
   if (!gameOverSection) return;
 
+  // Reset + restart animation each time we enter
+  gameOverSection.classList.remove("is-animating");
   // Set background
   gameOverSection.style.backgroundImage = `url("${dataJSON.gameOverRoom.backgroundImg}")`;
 
@@ -24,6 +26,11 @@ export function gameOverRoomFunc() {
   } else {
     showSection(gameOverSection);
   }
+
+  // Trigger animation
+  requestAnimationFrame(() => {
+    gameOverSection.classList.add("is-animating");
+  });
 
   const bgmId = dataJSON.gameOverRoom.bgmId;
   if (bgmId) void playBgm(bgmId, 650);
