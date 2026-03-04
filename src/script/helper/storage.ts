@@ -124,7 +124,11 @@ export function setRoomResult(roomId: TRoomId, result: TRoomResult): void {
 
 // Reset whole run  for -new gameBtn
 export function resetRoomResults(): void {
-  localStorage.setItem(LS_KEY.roomResults, JSON.stringify(DEFAULT_GAME_STATE));
+  localStorage.setItem(
+    LS_KEY.roomResults,
+    JSON.stringify(freshDefaultGameState()),
+  );
+  window.dispatchEvent(new Event("roomResults:changed"));
 }
 
 export function resetSingleRoomResult(roomId: TRoomId): void {
@@ -136,6 +140,7 @@ export function resetSingleRoomResult(roomId: TRoomId): void {
   };
 
   localStorage.setItem(LS_KEY.roomResults, JSON.stringify(next));
+  window.dispatchEvent(new Event("roomResults:changed"));
 }
 
 //-----------------------------------------------------------
@@ -176,4 +181,9 @@ export function isLoggedIn(): boolean {
 export function logoutUser(): void {
   setLoggedIn(false);
   // keep username for convenience
+}
+
+function freshDefaultGameState(): TGameState {
+  // structuredClone finns i moderna browsers. Annars kan vi göra JSON-klon.
+  return structuredClone(DEFAULT_GAME_STATE);
 }

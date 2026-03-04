@@ -36,6 +36,16 @@ const MISTAKE_PENALTY = 4;
 const WOBBLEBALANCE = 1.5;
 const TRANSITIONTIME = 1200;
 
+// If we re-enter, clear previous watcher (prevents double fail triggers)
+let timeUpIntervalId: number | null = null;
+
+function stopTimeUpWatcher(): void {
+  if (timeUpIntervalId !== null) {
+    window.clearInterval(timeUpIntervalId);
+    timeUpIntervalId = null;
+  }
+}
+
 export function room1woodFunc() {
   // reset so we hade default state for artefacts
   resetSingleRoomResult("wood");
@@ -70,16 +80,6 @@ export function room1woodFunc() {
   //-----------------------------------------------------------
   //-------------------------TIMER SETUP-----------------------
   //-----------------------------------------------------------
-
-  // If we re-enter, clear previous watcher (prevents double fail triggers)
-  let timeUpIntervalId: number | null = null;
-
-  function stopTimeUpWatcher(): void {
-    if (timeUpIntervalId !== null) {
-      window.clearInterval(timeUpIntervalId);
-      timeUpIntervalId = null;
-    }
-  }
 
   //Stop timer
   stopTimeUpWatcher();

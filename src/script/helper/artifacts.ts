@@ -29,6 +29,7 @@ const ROOM_JSON = {
   water: dataJSON.room5water,
 } as const;
 
+let backpackBound = false;
 //-----------------------------------------------------------
 //-------------------- ICONS CHECK --------------------------
 //-----------------------------------------------------------
@@ -61,6 +62,8 @@ export function getArtifactIcon(
 //-----------------------------------------------------------
 
 export function renderArtifactsToSlots(): void {
+  const itemDropdown = document.querySelector<HTMLElement>("#itemDropdown");
+  if (!itemDropdown || !itemDropdown.classList.contains("is-open")) return;
   // Fills the  HTML-slots inside the dropdown
   const slots = Array.from(
     document.querySelectorAll<HTMLElement>("#itemDropdown .artifact-slot"),
@@ -128,6 +131,9 @@ export function updtArtifactBadge(): void {
 //-----------------------------------------------------------
 
 export function initBackpackToggle(): void {
+  console.log("initBackpackToggle bound ✅");
+  if (backpackBound) return;
+  backpackBound = true;
   const itemListBtn = document.querySelector<HTMLElement>("#itemListBtn");
   const itemDropdown = document.querySelector<HTMLElement>("#itemDropdown");
 
@@ -150,11 +156,12 @@ export function initBackpackToggle(): void {
   itemListBtn.addEventListener("click", (e) => {
     e.stopPropagation();
 
-    // Refresh icons + badge before showing
-    renderArtifactsToSlots();
-    updtArtifactBadge();
-
     itemDropdown.classList.toggle("is-open");
+
+    if (itemDropdown.classList.contains("is-open")) {
+      renderArtifactsToSlots();
+      updtArtifactBadge();
+    }
   });
 
   // Click outside closes dropdown
