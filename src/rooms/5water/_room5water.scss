@@ -1,8 +1,22 @@
+// Grid size variable for dynamic layout (keep in sync with GRID_SIZE in TS)
+// IMPORTANT: Keep $grid-size in sync with GRID_SIZE in room5water.ts
+$grid-size: 5;
 @use "../../sass/var";
 @use "../../sass/mixins" as mix;
 
 // ── ROOM 5 — WATER ───────────────────────────────────────────────────────
+// Responsive tweaks for MacBook Air 13" and similar
 .room5Water {
+  @media (max-width: 1280px) {
+    justify-content: flex-start;
+    padding-top: 1.2rem;
+    min-height: 0;
+  }
+  @media (max-width: 1024px) {
+    justify-content: flex-start;
+    padding-top: 0.5rem;
+    min-height: 0;
+  }
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -18,6 +32,14 @@
 
   // ── PUZZLE CONTAINER ──────────────────────────────────────────────────
   .w-puzzle {
+    @media (max-width: 1280px) {
+      max-width: 320px;
+      padding-top: 0.5rem;
+    }
+    @media (max-width: 1024px) {
+      max-width: 300px;
+      padding-top: 0.2rem;
+    }
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -28,9 +50,8 @@
     padding-top: 2rem;
 
     @media (min-width: 768px) {
-    max-width: 600px; // Laptop/Tablet
-  }
-    
+      max-width: 600px; // Laptop/Tablet
+    }
   }
 
   // ── PANELS ────────────────────────────────────────────────────────────
@@ -78,10 +99,25 @@
   }
 
   // ── PIPE GRID ─────────────────────────────────────────────────────────
+  // PIPE GRID (single definition, uses $grid-size for all breakpoints)
   .w-pipe-grid {
+    @media (max-width: 1280px) {
+      max-width: 320px;
+      grid-template-columns: repeat($grid-size, 48px);
+      grid-template-rows: repeat($grid-size, 48px);
+      gap: 3px;
+      padding: 6px;
+    }
+    @media (max-width: 1024px) {
+      max-width: 300px;
+      grid-template-columns: repeat($grid-size, 40px);
+      grid-template-rows: repeat($grid-size, 40px);
+      gap: 2px;
+      padding: 4px;
+    }
     display: grid;
-    grid-template-columns: repeat(5, 55px);
-    grid-template-rows: repeat(5, 55px);
+    grid-template-columns: repeat($grid-size, 60px);
+    grid-template-rows: repeat($grid-size, 60px);
     gap: 4px;
     padding: 10px;
     @include mix.glass($bg: rgba(9, 49, 52, 0.6));
@@ -109,10 +145,10 @@
     }
 
     @media (min-width: 1024px) {
-    grid-template-columns: repeat(5, 75px);
-    grid-template-rows: repeat(5, 75px);
-    gap: 8px;
-  }
+      grid-template-columns: repeat($grid-size, 75px);
+      grid-template-rows: repeat($grid-size, 75px);
+      gap: 8px;
+    }
   }
 
   // ── PIPE CELL ─────────────────────────────────────────────────────────
@@ -122,8 +158,19 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    box-sizing: border-box;
     @include mix.glass($bg: rgba(9, 49, 52, 0.4), $radius: var.$smallRadius);
     cursor: pointer;
+    font-size: 1rem;
+    outline: none;
+
+    // Focus style for accessibility
+    &:focus-visible {
+      outline: 2px solid #5dade2;
+      outline-offset: 2px;
+      z-index: 2;
+    }
+
     &.active-flow {
       background: rgba(41, 128, 185, 0.65);
       box-shadow: 0 0 10px rgba(93, 173, 226, 0.55);
@@ -196,7 +243,7 @@
     min-height: 1.5rem;
     font-style: italic;
     color: rgba(var.$lightColor, 0.8);
-    font-size: var.$fs-body;
+    font-size: 1rem;
     margin: 0;
 
     &.success-msg { color: #e8d07a; }
@@ -206,7 +253,7 @@
   // ── TIME WARNING ──────────────────────────────────────────────────────
   .w-time-warning {
     display: none; // Hidden by default, shown via JS
-    margin-top: 0,5rem;
+    margin-top: 0.5rem;
     padding: 0.75rem 1.25rem;
     background: rgba(var.$redColor, 0.15);
     border: 1px solid rgba(var.$redColor, 0.4);
@@ -232,7 +279,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 95%;
+  width: 100%;
   max-width: 450px;
   padding: 1rem;
   box-sizing: border-box;
