@@ -124,10 +124,9 @@
 }
 
 .room3Earth .gameDiv .slate16.end img {
-	width: auto;
-	height: auto;
+	width: 100px;
+	height: 100px;
 	opacity: 0;
-	fill-opacity: 0 fill var.$lightColor;
 	transition: all 3s;
 	-webkit-transition: all 3s;
 }

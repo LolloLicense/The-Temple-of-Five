@@ -1,14 +1,24 @@
 import * as dataJSON from "../../data.json";
 import { startTimer, stopTimer, TimeIsUp } from "../../script/helper/utils.ts";
-import { showGameHeader } from "../../script/helper/gameHeader.ts";
+import {
+  showGameHeader,
+  hideGameHeader,
+} from "../../script/helper/gameHeader.ts";
 import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
 import {
   getCurrentPage,
   showSection,
   transitSections,
 } from "../../script/helper/transitions.ts";
+import {
+  setRoomResult,
+  getRoomResults,
+  resetSingleRoomResult,
+} from "../../script/helper/storage.ts";
 import { playBgm, playSfx } from "../../audio/index.ts";
+import { room4metalFunc } from "../4metal/room4metal.ts";
 
+const mistakes: number = 0; //TODO COUNT MISTAKES
 const slateNumbersArray: number[] = [
   1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
 ];
@@ -88,7 +98,9 @@ export function room3earthFunc(): void {
 
 function slateClick(slate: HTMLElement | null, count: number): void {
   console.log(`Slate ${count} was clicked!`);
-  winner();
+
+  //winner();
+
   const currentSlate = document.querySelector(`.slate${count}`);
   const slateNumber: number = count;
   const emptySlate = document.querySelector(".slate16");
@@ -187,8 +199,7 @@ function animateMove(
   if (currentRect && toRect) {
     const topCalc: number = toRect.top - currentRect.top;
     const leftCalc: number = toRect.left - currentRect.left;
-    //console.log(`topCalc = ${currentRect?.top} - ${toRect?.top} = ${topCalc}`);
-    //console.log(`leftCalc = ${currentRect?.left} - ${toRect?.left} = ${leftCalc}`);
+
     if (currentSlate && topCalc === 0) {
       currentSlate.style.transition = `transform 750ms`;
       currentSlate.style.transform = `translateX(${leftCalc.toString()}px)`;
@@ -274,6 +285,7 @@ function checkSlateLock(movedSlate: HTMLElement | null): void {
 } //checkSlateLock END
 
 function winner(): void {
+  clearInterval(timerCheckInterval); // Stop monitoring if time is up
   stopTimer(3);
   audioHandler("longSlide");
   const lavaSlate: HTMLElement | null = document.querySelector(".slate16");
@@ -286,27 +298,51 @@ function winner(): void {
       const lavaImg: HTMLElement | null = document.querySelector("#lavaImg");
       if (lavaImg) {
         lavaImg.style.opacity = "1";
-        lavaImg.style.width = "100px";
-        lavaImg.style.height = "100px";
       }
     }, 1000);
+    setTimeout(() => {
+      hideGameHeader();
+      toNextRoom("#room4Metal", room4metalFunc);
+    }, 4500);
   } //IF lavaSlate END
+  setRoomResult("earth", {
+    status: "completed",
+    artifact: "true",
+    mistakes: mistakes,
+    score: 0, // TODO: define rule later
+    roomTimeSec: 0, // TODO: connect to timer later
+  });
 } // winner END
 
 function looser(): void {
+  audioHandler("longSlide");
   const lavaSlate: HTMLElement | null = document.querySelector(".slate16");
   if (lavaSlate) {
     lavaSlate.classList.add("end");
     lavaSlate.style.opacity = "1";
-    lavaSlate.style.filter = "grayscale(100%)";
-    lavaSlate.innerHTML = `<img id="lavaImg" src="${dataJSON.room3earth.desc.falseSign}"/>`;
+    setTimeout(() => {
+      lavaSlate.style.filter = "grayscale(100%)";
+      lavaSlate.innerHTML = `<img id="lavaImg" src="${dataJSON.room3earth.desc.falseSign}"/>`;
+      const lavaImg: HTMLElement | null = document.querySelector("#lavaImg");
+      if (lavaImg) {
+        lavaImg.style.opacity = "1";
+      }
+    }, 1000);
 
-    const lavaImg: HTMLElement | null = document.querySelector("#lavaImg");
-    if (lavaImg) {
-      lavaImg.style.opacity = "1";
-    }
+    setTimeout(() => {
+      hideGameHeader();
+      toNextRoom("#room4Metal", room4metalFunc);
+    }, 4500);
   } //IF lavaSlate END
-} // loser END
+
+  setRoomResult("earth", {
+    status: "completed",
+    artifact: "false",
+    mistakes: mistakes,
+    score: 0, // TODO: define rule later
+    roomTimeSec: 0, // TODO: connect to timer later
+  });
+} // looser END
 
 function checkTextContent(textContent: string, target: number): void {
   const slateIndex: number = correctSlatesArr.indexOf(target);
@@ -325,7 +361,10 @@ function checkTextContent(textContent: string, target: number): void {
 function timerCheck(): void {
   if (TimeIsUp) {
     console.log("Time has now expired!");
-    clearInterval(timerCheckInterval); //TODO END ROOM WITH FAIL AND TRANSITION
+    clearInterval(timerCheckInterval);
+    looser();
+
+    //TODO END ROOM WITH FAIL AND TRANSITION
   }
 }
 
@@ -384,4 +423,18 @@ function getRandomInt(min: number, max: number): number {
   const minCeiled = Math.ceil(min);
   const maxFloored = Math.floor(max);
   return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled);
+}
+
+function toNextRoom(nextSelector: string, nextRoomFunc: () => void): void {
+  const nextSection = document.querySelector<HTMLElement>(nextSelector);
+  if (!nextSection) return;
+
+  const page: HTMLElement | null = getCurrentPage();
+  if (page && nextSection) {
+    transitSections(page, nextSection, 1200);
+  }
+
+  window.setTimeout(() => {
+    nextRoomFunc();
+  }, 1200);
 }
