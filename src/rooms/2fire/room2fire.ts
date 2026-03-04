@@ -25,10 +25,10 @@ import { resetRoomResults } from "../../script/helper/storage";
  * 
  * LEVELS:
  * 
- * Level 1: 4 empty slots (START THE FIRE)
- * Level 2: 3 slots, 1 pre-filled with Flame (OVERHEAT)
- * Level 3: 4 slots, 1 pre-filled with Stone (FADING FIRE)
- * Level 4: 5 slots, 1 pre-filled with Flame (FINDING BALANCE)
+ * Level 1: 4 empty slots (START THE FIRE) - COMBO: T-F-S-A
+ * Level 2: 3 slots, 1 pre-filled with Flame (OVERHEAT) COMBO: W-S
+ * Level 3: 4 slots, 1 pre-filled with Stone (FADING FIRE) COMBO: T-A-F
+ * Level 4: 5 slots, 1 pre-filled with Flame (FINDING BALANCE) COMBO: T-A-S-E
  * 
  */
 
@@ -809,25 +809,36 @@ function goToNextRoom(nextSelector: string, nextRoomFunc: () => void): void {
 }
 
 function ifRoomCompleted(): void {
+  if (isTransitioning) return;
+
+  // Block input
+  isTransitioning = true;
+  locked = true;
+
+  // Stop all timers so they cant trigger after complete
   stopTimeUpWatcher();
   stopIntroTimeout();
   stopTimer(2);
 
-  isTransitioning = true;
-  locked = true;
-
+  // Update UI one last time (just for UX)
   updateHUD();
   setActiveSlotClass();
 
-  // Save room result
-  setRoomResult("fire", { status: "completed", artifact: "true" });
+  // Save room result (status, artifact boolean, mistakes, score, roomtimesec)
+  setRoomResult("fire", {
+    status: "completed",
+    artifact: "true",
+    mistakes,
+    score: 0, // TODO, define scoring rules
+    roomTimeSec: 0, // TODO, define timing rules
+  });
 
-  // Show msg
+  // Show msg - feedback to user/player
   showMsg("Well done — next chamber awaits", COMPLETE_MSG_MS);
 
 
   window.setTimeout(() => {
-    // CLEANUP:
+    // CLEANUP so re-entering starts fresh.
     currentLevelIndex = 0;
     attempt = [];
     mistakes = 0;
@@ -837,27 +848,31 @@ function ifRoomCompleted(): void {
     updateHUD();
     setActiveSlotClass();
 
-    // Lås upp
-    isTransitioning = false;
-    locked = false;
-
     // Fire ansvarar för transition till Earth
     goToNextRoom("#room3Earth", room3earthFunc);
   }, COMPLETE_MSG_MS);
 }
 
 function ifRoomFailed(): void {
-  stopTimeUpWatcher();
-  stopIntroTimeout();
-  stopTimer(2);
+  if (isTransitioning) return;
 
   isTransitioning = true;
   locked = true;
 
+  stopTimeUpWatcher();
+  stopIntroTimeout();
+  stopTimer(2);
+
   updateHUD();
   setActiveSlotClass();
 
-  setRoomResult("fire", { status: "failed", artifact: "false" });
+  setRoomResult("fire", { 
+    status: "failed",
+    artifact: "false",
+    mistakes,
+    score: 0,
+    roomTimeSec: 0,
+  });
 
   showMsg("Time's up — next chamber awaits", COMPLETE_MSG_MS);
 
@@ -871,9 +886,6 @@ function ifRoomFailed(): void {
     createSlots();
     updateHUD();
     setActiveSlotClass();
-
-    isTransitioning = false;
-    locked = false;
 
     goToNextRoom("#room3Earth", room3earthFunc);
   }, COMPLETE_MSG_MS);
