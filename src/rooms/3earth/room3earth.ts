@@ -283,7 +283,7 @@ function winner(): void {
     lavaSlate.classList.add("win");
     lavaSlate.style.opacity = "1";
     lavaSlate.style.filter = "grayscale(100%)";
-    lavaSlate.innerHTML = 
+    lavaSlate.innerHTML = "";
   } //IF lavaSlate END
 } // winner END
 
