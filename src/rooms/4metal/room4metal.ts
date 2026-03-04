@@ -6,156 +6,145 @@ import { showMsg } from "../../script/helper/showMsg.ts";
 import { setRoomResult, getRoomResults } from "../../script/helper/storage.ts";
 import { room5waterFunc } from "../5water/room5water.ts";
 import { showGameHeader } from "../../script/helper/gameHeader.ts";
-import {
-  transitSections,
-  getCurrentPage,
-  showSection,
-} from "../../script/helper/transitions.ts";
+import { transitSections, getCurrentPage, showSection, } from "../../script/helper/transitions.ts";
 
-let listenersBound = false;
-//NEW keep ONE timeUp watcher id across re-enters
-let timeUpIntervalId: number | null = null;
-//NEW keep a ref so keydown guard doesn't depend on old closures
-let metalSectionRef: HTMLElement | null = null;
+//-------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------- Modul variabler -------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------------
+let listenersBound = false; // Säkerställer att keydown‑lyssnaren bara binds en gång
+let timeUpIntervalId: number | null = null; // ID för timern som övervakar om rummets tid är slut. Behöver sparas mellan in/ut‑gångar.
+let metalSectionRef: HTMLElement | null = null; // Referens till rumssektionen. Används för att blockera input när spelaren lämnar rummet.
 
-// NEW move "game state" to module scope so the keydown handler always uses the latest state
-let currentLevel = 0;
-let playerSlots: (number | null)[] = Array(6).fill(null);
-let activeSlot = 0;
-let isPlayingSequence = true;
-let mistakes = 0;
+// Spelstatus som måste ligga i modulens scope så keydown alltid använder senaste värdena.
+let currentLevel = 0; // Håller nuvarande nivå: 0 = första nivån.
+let playerSlots: (number | null)[] = Array(6).fill(null); // Array med spelarens valda färger, 6 platser, null = ej vald
+let activeSlot = 0; // Index för vilken slot spelaren håller på att ändra just nu
+let isPlayingSequence = true; // true = spelet spelar upp sekvensen, spelaren får inte styra ännu
+let mistakes = 0; // Räknare för hur många misstag spelaren gjort
 
-// NEW timers that must be cleared on re-enter ---
-let countdownIntervalId: number | null = null; // for startCountdown()
-let sequenceIntervalId: number | null = null; // for playSequence()
-let sequenceEndTimeoutId: number | null = null; // for the "clearColor + unlock" timeout
-
-//NEW
+// Timers som måste nollställas varje gång spelaren går in i rummet igen.
+let countdownIntervalId: number | null = null; // För startCountdown()
+let sequenceIntervalId: number | null = null; // För playSequence()
+let sequenceEndTimeoutId: number | null = null; // För "clearColor + unlock" timeout
+//-------------------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------- Timer rensning -------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------------
+// Stoppar nedräkningstimern om den är aktiv
 function clearCountdown(): void {
-  if (countdownIntervalId !== null) {
-    window.clearInterval(countdownIntervalId);
-    countdownIntervalId = null;
+  if (countdownIntervalId !== null) { // Kolla om det finns en aktiv timer.
+    window.clearInterval(countdownIntervalId); // Stoppa nedräkningstimern.
+    countdownIntervalId = null; // Nollställ referensen så vi vet att den är stoppad.
   }
 }
-//NEW to clear sequense if leave room an re- enter
+// Stoppar alla timers kopplade till sekvensuppspelningen.
 function clearSequence(): void {
-  if (sequenceIntervalId !== null) {
-    window.clearInterval(sequenceIntervalId);
-    sequenceIntervalId = null;
+  if (sequenceIntervalId !== null) { // Om sekvensintervallen är aktiv
+    window.clearInterval(sequenceIntervalId); // Stoppa intervallen som spelar upp sekvensen
+    sequenceIntervalId = null; // Nollställ referensen
   }
-  if (sequenceEndTimeoutId !== null) {
-    window.clearTimeout(sequenceEndTimeoutId);
-    sequenceEndTimeoutId = null;
+  if (sequenceEndTimeoutId !== null) { // Om timeouten efter sekvensen är aktiv
+    window.clearTimeout(sequenceEndTimeoutId); // Stoppa timeouten
+    sequenceEndTimeoutId = null; // Nollställ referensen
   }
 }
-// CLEAN UP
+//-------------------------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------- Städar rummet -------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------------
+/// Rensar allt som kan ligga kvar när spelaren lämnar metallrummet.
 function cleanupMetalRuntime(): void {
-  // stop timers that can keep running after leaving the room
+  // Stoppar timers som kan fortsätta även när man lämnat rummet
   clearCountdown();
   clearSequence();
 
-  // stop room timer watcher
-  if (timeUpIntervalId !== null) {
-    window.clearInterval(timeUpIntervalId);
-    timeUpIntervalId = null;
+  if (timeUpIntervalId !== null) { // Om timeUp‑watchern är aktiv
+    window.clearInterval(timeUpIntervalId); // Stoppa intervallen som kollar om tiden är slut
+    timeUpIntervalId = null; // Nollställ referensen
   }
 
-  // IMPORTANT: prevent keyboard input while not in this room
-  isPlayingSequence = true;
+  isPlayingSequence = true; // Blockerar användarens input tills rummet startas om korrekt
 
-  // reset the visual signal safely (only if we still have a section ref)
-  if (metalSectionRef) {
-    const signal = metalSectionRef.querySelector<HTMLElement>("#colorSignal");
-    const feedback = metalSectionRef.querySelector<HTMLElement>("#feedback");
-    if (signal) signal.className = "colorSignal";
-    if (feedback) feedback.textContent = "";
+  // Återställ visuella element om rummet fortfarande finns i DOM
+  if (metalSectionRef) { // Om vi fortfarande har en referens till rummet i DOM
+    const signal = metalSectionRef.querySelector<HTMLElement>("#colorSignal"); // Hämta elementet som visar färgsignal
+    const feedback = metalSectionRef.querySelector<HTMLElement>("#feedback"); // Hämta elementet som visar feedback‑text
+    if (signal) signal.className = "colorSignal"; // Återställ signalens klass till standard
+    if (feedback) feedback.textContent = ""; // Töm feedback‑texten
   }
-  stopTimer(4);
-  // IMPORTANT: break the ref so keydown can never act on a "left" room
-  metalSectionRef = null;
+
+  stopTimer(4); // Stoppar rummets huvudtimer
+  metalSectionRef = null; // Ta bort referensen så inget mer kan påverka rummet efter exit
 }
-
-export function room4metalFunc() {
+//-------------------------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------- Huvudfunktion startar ----------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------------
+export function room4metalFunc() { 
   const metalSection: HTMLElement | null =
     document.querySelector("#room4Metal"); // Hämtar sektionen för metallrummet
   if (!metalSection) {
     // Om den inte finns, avbryt funktionen för att undvika fel
     return;
   }
-  // NEW kill anything from a previous visit before starting a new one
-  cleanupMetalRuntime();
-  // NEW: update ref every time we enter
-  metalSectionRef = metalSection;
 
+  cleanupMetalRuntime(); // Rensar innan rummet startar nytt
+
+  metalSectionRef = metalSection; // uppdaterar referens varje gång vi går in i rummet
   currentLevel = 0; // Variabel för att hålla reda på vilken level spelaren är på 0 = level 1, 1 = level 2, 2 = level 3
-  //let mistakes = 0; // Ska räkna antalet misstag spelaren gör
   playerSlots = Array(6).fill(null); // Array med spelarens val, antingen är en slot ett nummer som motsvarar en färg i colorsMetal eller null om spelaren inte valt något för den sloten än.
   activeSlot = 0; // Vilken slot som är aktiv för närvarande, börjar på 0 (första sloten).
   isPlayingSequence = true; // När användaren kommer in i rummet blockeras man från att börja spela (byta slots) innan sekvensen börjat.
   mistakes = 0; // räkna hur många misstag användaren har gjort
-
   //-------------------------------------------------------------------------------------------------------------------------------------
   //---------------------------------------------------------------- Ljud ---------------------------------------------------------------
   //-------------------------------------------------------------------------------------------------------------------------------------
-
   const bgmId = dataJSON.room4metal.bgmId; // Spela bakgrundsmusiken för metallrummet
   if (bgmId) {
     void playBgm(bgmId, 650); // Spela bakgrundsmusiken för metallrummet med fade in på 650ms
   }
   const sfxId = dataJSON.room4metal.sfxId; // Spela ljud vid växling av slotfärg
   //-------------------------------------------------------------------------------------------------------------------------------------
-  //-------------------------------------------------------------- Struktur och gå till nästa rum ------------------------------------------------------------
+  //--------------------------------------------------- Struktur och gå till nästa rum --------------------------------------------------
   //-------------------------------------------------------------------------------------------------------------------------------------
-  // NEW const for TRASNIT
-  const TRANSITION_MS = 1200;
+  const TRANSITION_MS = 1200; // Standard tid för rumsövergångar
 
-  // Infogad funktion från woodroom, att övergå till nästa rum finns guide men blev förenklad jäntemot woodroom
+  // Funktion för att lämna metallrummet och gå till nästa rum
   function goToNextRoom(nextSelector: string, nextRoomFunc: () => void): void {
-    const currentSection = document.querySelector<HTMLElement>("#room4Metal");
-    if (!currentSection) return;
+    const currentSection = document.querySelector<HTMLElement>("#room4Metal"); // Hämta nuvarande rumssektion
+    if (!currentSection) return; // Avbryt om de inte finns
 
-    const nextSection = document.querySelector<HTMLElement>(nextSelector);
-    if (!nextSection) return;
-
-    // NEW: stop all Metal timers/intervals BEFORE leaving
-    cleanupMetalRuntime();
-    transitSections(currentSection, nextSection, TRANSITION_MS);
-
-    setTimeout(() => nextRoomFunc(), TRANSITION_MS);
+    const nextSection = document.querySelector<HTMLElement>(nextSelector); // Hämta nästa rumssektion via CSS‑selektor
+    if (!nextSection) return; // Om nästa rum inte finns, avbryt
+    
+    cleanupMetalRuntime(); // Stoppa alla timers innan vi lämnar rummet.
+    transitSections(currentSection, nextSection, TRANSITION_MS); // Kör övergångsanimeringen mellan rummen
+    setTimeout(() => nextRoomFunc(), TRANSITION_MS); // Starta nästa rums logik efter att övergången är klar
   }
 
   metalSection.style.backgroundImage = `url("${dataJSON.room4metal.backgroundImg}")`; // Sätter bakgrundsbilden för metallrummet från JSON-data
 
   const fromPage =
-    getCurrentPage() ?? document.querySelector("main > section.page.isVisible");
-  if (fromPage && fromPage !== metalSection) {
-    // Fade from current page -> metal room
-    transitSections(fromPage, metalSection, 1200);
+    getCurrentPage() ?? document.querySelector("main > section.page.isVisible"); // Hitta aktuell sida, annars ta första synliga sidan
+  if (fromPage && fromPage !== metalSection) { // Om vi kommer från en annan sida än metallrummet
+    transitSections(fromPage, metalSection, 1200); // Kör en fade/transition från föregående sida till metallrummet
   } else {
-    // Fallback (first load): just show the room
-    showSection(metalSection);
+    showSection(metalSection); // Om det är första laddningen: visa metallrummet direkt
   }
-  console.log("METAL INIT"); // För att se om det blir dubbelt rummet startar om lustigt
 
-  // CHANGED: now we can clear the *previous* watcher because id is module-scope
-  function stopTimeUpWatcher(): void {
-    if (timeUpIntervalId !== null) {
-      window.clearInterval(timeUpIntervalId);
-      timeUpIntervalId = null;
+  function stopTimeUpWatcher(): void { // Hjälpfunktion för att stoppa timeUp‑watchern
+    if (timeUpIntervalId !== null) { // Om intervallen är aktiv
+      window.clearInterval(timeUpIntervalId); // Stoppa intervallen.
+      timeUpIntervalId = null; // Nollställ referensen
     }
   }
 
-  //Stop timer
-  stopTimeUpWatcher();
-  // Start timer for room 1
-  startTimer(4);
+  stopTimeUpWatcher(); // Säkerställ att ingen gammal timeUp‑watcher ligger kvar.
+  startTimer(4);  // Starta timer rum 4 metall
 
-  timeUpIntervalId = window.setInterval(() => {
-    if (!TimeIsUp) return;
-    ifRoomFailed();
-  }, 200);
+  timeUpIntervalId = window.setInterval(() => { // Starta en intervall som kollar om tiden är slut
+    if (!TimeIsUp) return; // Om tiden inte är slut ännu, gör inget
+    ifRoomFailed(); // Om tiden är slut: kör logik för att spelaren misslyckats i rummet
+  }, 200); // Kolla var 200 ms
 
-  metalSection.dataset.timeUpWatcherId = String(timeUpIntervalId);
+  metalSection.dataset.timeUpWatcherId = String(timeUpIntervalId); 
 
   showGameHeader(); // Visar globala headern i rummet
 
@@ -170,11 +159,9 @@ export function room4metalFunc() {
     [4, 2, 4, 1, 3, 1], //Level 2 lite svårare med upprepningar
     [4, 1, 3, 1, 4, 2], // Level 3 lite svårare sekvens
   ];
-
   //-------------------------------------------------------------------------------------------------------------------------------------
   //---------------------------------------------------------- DOM element --------------------------------------------------------------
   //-------------------------------------------------------------------------------------------------------------------------------------
-
   const signal = metalSection.querySelector("#colorSignal")!; // Hämtar elementet som visar spelets färgsignal. Använder ! som en null check (värdet ska inte vara null)
   const feedback = metalSection.querySelector("#feedback")!; // Hämtar elementet som visar feedback til spelare ex rätt/fel
   const levelText = metalSection.querySelector("#levelText1")!; // Hämtar elementet som visar vilken level spelaren är på ex 1/3
@@ -186,7 +173,6 @@ export function room4metalFunc() {
   mistakesText.textContent = "0";
   feedback.textContent = "";
   signal.className = "colorSignal";
-
   //-------------------------------------------------------------------------------------------------------------------------------------
   //----------------------------------------------------- Rendering av slots ------------------------------------------------------------
   //-------------------------------------------------------------------------------------------------------------------------------------
@@ -247,12 +233,12 @@ export function room4metalFunc() {
    * Blockerar input när sekvensen spelas upp.
    */
 
-  if (!listenersBound) {
+  if (!listenersBound) { // Bind keydown‑lyssnaren endast en gång
     document.addEventListener("keydown", (event) => {
-      console.log("METAL KEYDOWN"); // ← lägg här
-      if (!metalSectionRef || !metalSectionRef.classList.contains("isVisible"))
-        return;
-      if (isPlayingSequence) return;
+  
+      if (!metalSectionRef || !metalSectionRef.classList.contains("isVisible")) // Om rummet inte är aktivt
+        return; // ignorera input helt
+      if (isPlayingSequence) return; // Blockera input medan sekvensen spelas upp
 
       if (event.key === "ArrowRight") {
         // Om man användaren trycker högerpilen
@@ -287,7 +273,7 @@ export function room4metalFunc() {
         }
       }
     });
-    listenersBound = true;
+    listenersBound = true; // Markera att lyssnaren nu är bunden
   }
   //--------------------------------------------------------------------------------------------------------------------------------------
   //-------------------------------------------------------------- Countdown -------------------------------------------------------------
@@ -297,15 +283,14 @@ export function room4metalFunc() {
    * När den är klar startas playSequence
    */
   function startCountdown(next: () => void) {
-    // NEW - to clear previous berfor start new run
-    clearCountdown();
-    isPlayingSequence = true;
+    clearCountdown(); // Säkerställ att ingen gammal nedräkning körs
+
+    isPlayingSequence = true; // Blockera input under nedräkningen
     let count = 10; // Start värde för nedräkningen 10 sek (Får prova oss fram)
     feedback.textContent = `Booting sequence in ${count}...`; // Visar första nedräkningsmeddelandet innan timern startat
-    // NEW
-    countdownIntervalId = window.setInterval(() => {
-      // Timer som körs varje sekund
-      count--; // Minskar nedräkningen med 1
+    
+    countdownIntervalId = window.setInterval(() => { 
+      count--; // Minska nedräkningen med 1 varje sekund
 
       if (count > 0) {
         // Så länge nedräkning pågår uppdatera texten
@@ -442,52 +427,55 @@ export function room4metalFunc() {
     }
   }
 
+  //--------------------------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------- Vid klarat rum -------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------------------------
   // Förklara dessa ingående imorgon, från guiden också
   function ifRoomCompleted(): void {
-    // NEW cleanup before leaving
-    cleanupMetalRuntime();
-    stopTimeUpWatcher();
-    stopTimer(4);
+    
+    cleanupMetalRuntime(); // Rensar alla timers, event‑handlers och visuella element innan rummet lämnas
+    stopTimeUpWatcher(); // Stoppar intervallen som övervakar om tiden är slut
+    stopTimer(4); // Stoppar rummets huvudtimer (rum 4)
 
-    setRoomResult("metal", {
+    setRoomResult("metal", { // Sparar resultatet för metallrummet i spelets globala resultatlista
       status: "completed",
-      artifact: "true",
+      artifact: "true", // Användaren får rätt artifakt
       mistakes: mistakes,
-      score: 0,
-      roomTimeSec: 0,
+      score: 0, // Poäng (används ej här men krävs av strukturen)
+      roomTimeSec: 0, // Tid (används ej här men krävs av strukturen)
     });
 
-    showMsg("Well done — next chamber awaits", TRANSITION_MS * 2);
-    console.log("Metal result:", getRoomResults().metal);
+    showMsg("Well done — next chamber awaits", TRANSITION_MS * 2); // Visa meddelande om att rummet är klart
+    console.log("Metal result:", getRoomResults().metal); // Logga resultatet i konsolen för felsökning
 
-    setTimeout(() => {
-      goToNextRoom("#room5Water", room5waterFunc);
+    setTimeout(() => { // Vänta en stund innan nästa rum startas
+      goToNextRoom("#room5Water", room5waterFunc); // Gå vidare till vattenrummet
     }, TRANSITION_MS);
   }
 
-  function ifRoomFailed(): void {
-    stopTimeUpWatcher();
-    stopTimer(4);
+  //--------------------------------------------------------------------------------------------------------------------------------------
+  //----------------------------------------------------- Vid rummet misslyckas ----------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------------------------
 
-    setRoomResult("metal", {
+  function ifRoomFailed(): void {
+    stopTimeUpWatcher(); // Stoppar intervallen som övervakar om tiden är slut
+    stopTimer(4); // Stoppar rummets huvudtimer (rum 4)
+
+    setRoomResult("metal", { // Sparar resultatet för metallrummet
       status: "failed",
-      artifact: "false",
+      artifact: "false", // Användaren får fel artifakt
       mistakes: mistakes,
-      score: 0,
-      roomTimeSec: 0,
+      score: 0, // Poäng (används ej här men krävs av strukturen)
+      roomTimeSec: 0, // Tid (används ej här men krävs av strukturen)
     });
 
-    showMsg("Time's up — next chamber awaits", TRANSITION_MS * 2);
+    showMsg("Time's up — next chamber awaits", TRANSITION_MS * 2); // Visa meddelande om att tiden är slut
 
-    setTimeout(() => {
-      goToNextRoom("#room5Water", room5waterFunc);
+    setTimeout(() => { // Vänta en stund innan nästa rum startas
+      goToNextRoom("#room5Water", room5waterFunc); // Gå vidare till vattenrummet
     }, TRANSITION_MS);
   }
 
   renderSlots(); // Rendera slotsen för första gången när rummet laddas
   startCountdown(playSequence); // Starta coundown och sedan starta playsequence
 }
-// ATT GÖRA KVAR I FRAMTIDEN
-// Koppla ihop rummet till dem andra
-// Spara misstagen till localstorage
-// Ta fram artifakterna för rummet kommer vara 2 stycken
