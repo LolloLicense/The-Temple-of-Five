@@ -25,12 +25,13 @@ let logoutToLoginTimeoutId: number | null = null;
 // Prevents double listeners if initLoginFlow runs again (HMR etc.)
 let loginFlowListenersBound = false;
 
+// ?? AI -STUFF
 let onLoginSubmitHandler: ((e: SubmitEvent) => void) | null = null;
 
 let loginSubmitBound = false;
 
 //-----------------------------------------------------------
-//-------------- Transitions "loop" CLEANUP-----------------
+//-------------- Transitions "loop" CLEANUP------------------
 //-----------------------------------------------------------
 
 function clearLoginFlowTimeouts(): void {
@@ -86,7 +87,6 @@ export function initLoginFlow(): void {
     //-----------------------------------------------------------
 
     document.addEventListener("exit:logout", () => {
-      loginSubmitBound = false; // DONT KNOW!!?
       clearLoginFlowTimeouts();
       // Login state is false now
       logoutUser();
@@ -246,7 +246,9 @@ function onLoginSubmitFactory(
     setLoggedIn(true);
 
     renderWelcomeName(); // updt welcome page with correct username
+
     clearLoginFlowTimeouts(); // Stop old flow so so doubble login
+
     transitSections(loginSection, welcomeSection, 1200); // trigger trasit
   };
 }
