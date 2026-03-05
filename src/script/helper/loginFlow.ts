@@ -59,13 +59,13 @@ export function initLoginFlow(): void {
   const welcomeSection: HTMLElement | null =
     document.querySelector("#welcomePage");
 
+  // no header while loop is in action
   if (!splashSection || !loginSection || !welcomeSection) return;
   hideGameHeader();
 
   // When user logges in : show welcome: Unsername
   const welcomeNameEl =
     welcomeSection.querySelector<HTMLElement>(".userNameValue");
-
   function renderWelcomeName(): void {
     const name = getUserName();
     if (welcomeNameEl) {
@@ -77,6 +77,7 @@ export function initLoginFlow(): void {
   //---STOP Listeners to run x2 if initLoginFlow runs again----
   //-----------------------------------------------------------
 
+  // Not doing its job
   if (!loginFlowListenersBound) {
     loginFlowListenersBound = true;
 
@@ -85,15 +86,15 @@ export function initLoginFlow(): void {
     //-----------------------------------------------------------
 
     document.addEventListener("exit:logout", () => {
-      loginSubmitBound = false; // bara om du vill re-binda (valfritt)
+      loginSubmitBound = false; // DONT KNOW!!?
       clearLoginFlowTimeouts();
       // Login state is false now
       logoutUser();
 
-      // return to spalshpage after logout and clear inputs i exitdialog
+      // return to spalshpage after logout and clear inputs i login-dialog
       const input = document.querySelector<HTMLInputElement>("#userName");
       if (input) input.value = "";
-
+      // hiding header
       hideGameHeader();
       // change page
       const fromPage = getCurrentPage() ?? welcomeSection;
@@ -158,7 +159,7 @@ export function initLoginFlow(): void {
   //-----------------------------------------------------------
 
   const savedUser = getUserName();
-  // if user has logged in befor and not logged out
+  // if user has logged in befor and not logged out - show welcome
   if (isLoggedIn() && savedUser) {
     renderWelcomeName();
     showSection(welcomeSection);
@@ -200,7 +201,7 @@ export function initLoginFlow(): void {
   const form = document.querySelector<HTMLFormElement>("#loginForm");
   if (!form) return;
 
-  // Bind submit ONLY ONCE (prevents duplicates on re-entry / init running again)
+  // Bind submit ONLY ONCE should prevents duplicates on re-entry / init running again
   if (!loginSubmitBound) {
     onLoginSubmitHandler = onLoginSubmitFactory(
       loginSection,
