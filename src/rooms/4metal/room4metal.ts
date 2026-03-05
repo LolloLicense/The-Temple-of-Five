@@ -6,7 +6,11 @@ import { showMsg } from "../../script/helper/showMsg.ts";
 import { setRoomResult, getRoomResults } from "../../script/helper/storage.ts";
 import { room5waterFunc } from "../5water/room5water.ts";
 import { showGameHeader } from "../../script/helper/gameHeader.ts";
-import { transitSections, getCurrentPage, showSection, } from "../../script/helper/transitions.ts";
+import {
+  transitSections,
+  getCurrentPage,
+  showSection,
+} from "../../script/helper/transitions.ts";
 
 //-------------------------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------------- Modul variabler -------------------------------------------------------------
@@ -31,18 +35,21 @@ let sequenceEndTimeoutId: number | null = null; // För "clearColor + unlock" ti
 //-------------------------------------------------------------------------------------------------------------------------------------
 // Stoppar nedräkningstimern om den är aktiv
 function clearCountdown(): void {
-  if (countdownIntervalId !== null) { // Kolla om det finns en aktiv timer.
+  if (countdownIntervalId !== null) {
+    // Kolla om det finns en aktiv timer.
     window.clearInterval(countdownIntervalId); // Stoppa nedräkningstimern.
     countdownIntervalId = null; // Nollställ referensen så vi vet att den är stoppad.
   }
 }
 // Stoppar alla timers kopplade till sekvensuppspelningen.
 function clearSequence(): void {
-  if (sequenceIntervalId !== null) { // Om sekvensintervallen är aktiv
+  if (sequenceIntervalId !== null) {
+    // Om sekvensintervallen är aktiv
     window.clearInterval(sequenceIntervalId); // Stoppa intervallen som spelar upp sekvensen
     sequenceIntervalId = null; // Nollställ referensen
   }
-  if (sequenceEndTimeoutId !== null) { // Om timeouten efter sekvensen är aktiv
+  if (sequenceEndTimeoutId !== null) {
+    // Om timeouten efter sekvensen är aktiv
     window.clearTimeout(sequenceEndTimeoutId); // Stoppa timeouten
     sequenceEndTimeoutId = null; // Nollställ referensen
   }
@@ -56,7 +63,8 @@ function cleanupMetalRuntime(): void {
   clearCountdown();
   clearSequence();
 
-  if (timeUpIntervalId !== null) { // Om timeUp‑watchern är aktiv
+  if (timeUpIntervalId !== null) {
+    // Om timeUp‑watchern är aktiv
     window.clearInterval(timeUpIntervalId); // Stoppa intervallen som kollar om tiden är slut
     timeUpIntervalId = null; // Nollställ referensen
   }
@@ -64,7 +72,8 @@ function cleanupMetalRuntime(): void {
   isPlayingSequence = true; // Blockerar användarens input tills rummet startas om korrekt
 
   // Återställ visuella element om rummet fortfarande finns i DOM
-  if (metalSectionRef) { // Om vi fortfarande har en referens till rummet i DOM
+  if (metalSectionRef) {
+    // Om vi fortfarande har en referens till rummet i DOM
     const signal = metalSectionRef.querySelector<HTMLElement>("#colorSignal"); // Hämta elementet som visar färgsignal
     const feedback = metalSectionRef.querySelector<HTMLElement>("#feedback"); // Hämta elementet som visar feedback‑text
     if (signal) signal.className = "colorSignal"; // Återställ signalens klass till standard
@@ -77,7 +86,7 @@ function cleanupMetalRuntime(): void {
 //-------------------------------------------------------------------------------------------------------------------------------------
 //---------------------------------------------------- Huvudfunktion startar ----------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------------------------------
-export function room4metalFunc() { 
+export function room4metalFunc() {
   const metalSection: HTMLElement | null =
     document.querySelector("#room4Metal"); // Hämtar sektionen för metallrummet
   if (!metalSection) {
@@ -113,7 +122,7 @@ export function room4metalFunc() {
 
     const nextSection = document.querySelector<HTMLElement>(nextSelector); // Hämta nästa rumssektion via CSS‑selektor
     if (!nextSection) return; // Om nästa rum inte finns, avbryt
-    
+
     cleanupMetalRuntime(); // Stoppa alla timers innan vi lämnar rummet.
     transitSections(currentSection, nextSection, TRANSITION_MS); // Kör övergångsanimeringen mellan rummen
     setTimeout(() => nextRoomFunc(), TRANSITION_MS); // Starta nästa rums logik efter att övergången är klar
@@ -123,28 +132,32 @@ export function room4metalFunc() {
 
   const fromPage =
     getCurrentPage() ?? document.querySelector("main > section.page.isVisible"); // Hitta aktuell sida, annars ta första synliga sidan
-  if (fromPage && fromPage !== metalSection) { // Om vi kommer från en annan sida än metallrummet
+  if (fromPage && fromPage !== metalSection) {
+    // Om vi kommer från en annan sida än metallrummet
     transitSections(fromPage, metalSection, 1200); // Kör en fade/transition från föregående sida till metallrummet
   } else {
     showSection(metalSection); // Om det är första laddningen: visa metallrummet direkt
   }
 
-  function stopTimeUpWatcher(): void { // Hjälpfunktion för att stoppa timeUp‑watchern
-    if (timeUpIntervalId !== null) { // Om intervallen är aktiv
+  function stopTimeUpWatcher(): void {
+    // Hjälpfunktion för att stoppa timeUp‑watchern
+    if (timeUpIntervalId !== null) {
+      // Om intervallen är aktiv
       window.clearInterval(timeUpIntervalId); // Stoppa intervallen.
       timeUpIntervalId = null; // Nollställ referensen
     }
   }
 
   stopTimeUpWatcher(); // Säkerställ att ingen gammal timeUp‑watcher ligger kvar.
-  startTimer(4);  // Starta timer rum 4 metall
+  startTimer(4); // Starta timer rum 4 metall
 
-  timeUpIntervalId = window.setInterval(() => { // Starta en intervall som kollar om tiden är slut
+  timeUpIntervalId = window.setInterval(() => {
+    // Starta en intervall som kollar om tiden är slut
     if (!TimeIsUp) return; // Om tiden inte är slut ännu, gör inget
     ifRoomFailed(); // Om tiden är slut: kör logik för att spelaren misslyckats i rummet
   }, 200); // Kolla var 200 ms
 
-  metalSection.dataset.timeUpWatcherId = String(timeUpIntervalId); 
+  metalSection.dataset.timeUpWatcherId = String(timeUpIntervalId);
 
   showGameHeader(); // Visar globala headern i rummet
 
@@ -233,10 +246,11 @@ export function room4metalFunc() {
    * Blockerar input när sekvensen spelas upp.
    */
 
-  if (!listenersBound) { // Bind keydown‑lyssnaren endast en gång
+  if (!listenersBound) {
+    // Bind keydown‑lyssnaren endast en gång
     document.addEventListener("keydown", (event) => {
-  
-      if (!metalSectionRef || !metalSectionRef.classList.contains("isVisible")) // Om rummet inte är aktivt
+      if (!metalSectionRef || !metalSectionRef.classList.contains("isVisible"))
+        // Om rummet inte är aktivt
         return; // ignorera input helt
       if (isPlayingSequence) return; // Blockera input medan sekvensen spelas upp
 
@@ -288,8 +302,8 @@ export function room4metalFunc() {
     isPlayingSequence = true; // Blockera input under nedräkningen
     let count = 10; // Start värde för nedräkningen 10 sek (Får prova oss fram)
     feedback.textContent = `Booting sequence in ${count}...`; // Visar första nedräkningsmeddelandet innan timern startat
-    
-    countdownIntervalId = window.setInterval(() => { 
+
+    countdownIntervalId = window.setInterval(() => {
       count--; // Minska nedräkningen med 1 varje sekund
 
       if (count > 0) {
@@ -432,12 +446,11 @@ export function room4metalFunc() {
   //--------------------------------------------------------------------------------------------------------------------------------------
   // Förklara dessa ingående imorgon, från guiden också
   function ifRoomCompleted(): void {
-    
     cleanupMetalRuntime(); // Rensar alla timers, event‑handlers och visuella element innan rummet lämnas
     stopTimeUpWatcher(); // Stoppar intervallen som övervakar om tiden är slut
-    stopTimer(4); // Stoppar rummets huvudtimer (rum 4)
 
-    setRoomResult("metal", { // Sparar resultatet för metallrummet i spelets globala resultatlista
+    setRoomResult("metal", {
+      // Sparar resultatet för metallrummet i spelets globala resultatlista
       status: "completed",
       artifact: "true", // Användaren får rätt artifakt
       mistakes: mistakes,
@@ -445,10 +458,12 @@ export function room4metalFunc() {
       roomTimeSec: 0, // Tid (används ej här men krävs av strukturen)
     });
 
+    stopTimer(4); // Stoppar rummets huvudtimer (rum 4) (Behöver vara efter results så att dom inte skrivs över)
     showMsg("Well done — next chamber awaits", TRANSITION_MS * 2); // Visa meddelande om att rummet är klart
     console.log("Metal result:", getRoomResults().metal); // Logga resultatet i konsolen för felsökning
 
-    setTimeout(() => { // Vänta en stund innan nästa rum startas
+    setTimeout(() => {
+      // Vänta en stund innan nästa rum startas
       goToNextRoom("#room5Water", room5waterFunc); // Gå vidare till vattenrummet
     }, TRANSITION_MS);
   }
@@ -459,19 +474,20 @@ export function room4metalFunc() {
 
   function ifRoomFailed(): void {
     stopTimeUpWatcher(); // Stoppar intervallen som övervakar om tiden är slut
-    stopTimer(4); // Stoppar rummets huvudtimer (rum 4)
 
-    setRoomResult("metal", { // Sparar resultatet för metallrummet
+    setRoomResult("metal", {
+      // Sparar resultatet för metallrummet
       status: "failed",
       artifact: "false", // Användaren får fel artifakt
       mistakes: mistakes,
       score: 0, // Poäng (används ej här men krävs av strukturen)
       roomTimeSec: 0, // Tid (används ej här men krävs av strukturen)
     });
-
+    stopTimer(4); // Stoppar rummets huvudtimer (rum 4) (Behöver vara efter results så att dom inte skrivs över)
     showMsg("Time's up — next chamber awaits", TRANSITION_MS * 2); // Visa meddelande om att tiden är slut
 
-    setTimeout(() => { // Vänta en stund innan nästa rum startas
+    setTimeout(() => {
+      // Vänta en stund innan nästa rum startas
       goToNextRoom("#room5Water", room5waterFunc); // Gå vidare till vattenrummet
     }, TRANSITION_MS);
   }

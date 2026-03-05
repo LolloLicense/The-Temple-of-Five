@@ -10,11 +10,16 @@ import {
   showSection,
   transitSections,
 } from "../../script/helper/transitions.ts";
+/*
 import {
   setRoomResult,
   getRoomResults,
   resetSingleRoomResult,
 } from "../../script/helper/storage.ts";
+*/
+
+import { setRoomResult } from "../../script/helper/storage.ts";
+
 import { playBgm, playSfx } from "../../audio/index.ts";
 import { showMsg } from "../../script/helper/showMsg.ts";
 import { room4metalFunc } from "../4metal/room4metal.ts";
@@ -27,14 +32,15 @@ let timerCheckInterval: number;
 const correctSlatesArr: number[] = [];
 
 export function room3earthFunc(): void {
+  /*
   document.addEventListener("keydown", (event) => {
     if (event.key === "PageDown") {
       console.log("PageDown");
       return;
     }
-    // do something
+   do something
   });
-
+*/
   /* Sets the background for the room and shows room section */
   const earthSection: HTMLElement | null =
     document.querySelector("#room3Earth");
@@ -100,7 +106,7 @@ export function room3earthFunc(): void {
 function slateClick(slate: HTMLElement | null, count: number): void {
   console.log(`Slate ${count} was clicked!`);
 
-  //winner();
+  winner();
 
   const currentSlate = document.querySelector(`.slate${count}`);
   const slateNumber: number = count;
@@ -287,7 +293,7 @@ function checkSlateLock(movedSlate: HTMLElement | null): void {
 
 function winner(): void {
   clearInterval(timerCheckInterval); // Stop monitoring if time is up
-  stopTimer(3);
+
   audioHandler("longSlide");
   const lavaSlate: HTMLElement | null = document.querySelector(".slate16");
   if (lavaSlate) {
@@ -314,6 +320,7 @@ function winner(): void {
     score: 0, // TODO: define rule later
     roomTimeSec: 0, // TODO: connect to timer later
   });
+  stopTimer(3);
 } // winner END
 
 function looser(): void {
@@ -343,8 +350,9 @@ function looser(): void {
     artifact: "false",
     mistakes: mistakes,
     score: 0, // TODO: define rule later
-    roomTimeSec: 0, // TODO: connect to timer later
+    roomTimeSec: 0, //Set in stop timer function
   });
+  stopTimer(3);
 } // looser END
 
 function checkTextContent(textContent: string, target: number): void {
@@ -363,11 +371,8 @@ function checkTextContent(textContent: string, target: number): void {
 
 function timerCheck(): void {
   if (TimeIsUp) {
-    console.log("Time has now expired!");
     clearInterval(timerCheckInterval);
     looser();
-
-    //TODO END ROOM WITH FAIL AND TRANSITION
   }
 }
 

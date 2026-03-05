@@ -1,4 +1,9 @@
 import * as dataJSON from "../../data.json";
+import {
+  setRoomResult,
+  getRoomResults,
+  type TGameState,
+} from "../../script/helper/storage.ts";
 
 //let localStorage: Array = [];
 
@@ -31,8 +36,6 @@ export function startTimer(id: number): void {
     roomTimerInterval = setInterval(() => {
       timerTick(id);
     }, 1000);
-
-    //window.localStorage.setItem(`room${id}`, { roomMinutes, roomSeconds })
   }
 }
 
@@ -41,9 +44,75 @@ export function stopTimer(id: number): void {
     clearInterval(totalTimerInterval);
   } else {
     clearInterval(roomTimerInterval);
+    setRoomTime(id);
     TimeIsUp = true;
   }
 }
+
+function setRoomTime(id: number): void {
+  const roomMinutesSpan: HTMLElement | null =
+    document.querySelector("#roomMinutesSpan");
+  const roomSecondsSpan: HTMLElement | null =
+    document.querySelector("#roomSecondsSpan");
+
+  const results: TGameState = getRoomResults();
+
+  if (roomMinutesSpan && roomSecondsSpan) {
+    const roomMinutes = parseInt(roomMinutesSpan.innerHTML);
+    const roomSeconds = parseInt(roomSecondsSpan.innerHTML);
+    const totalRoomSeconds = roomSeconds + roomMinutes * 60;
+
+    //console.log(totalRoomSeconds);
+
+    switch (id) {
+      case 1:
+        setRoomResult("wood", {
+          status: results.wood.status,
+          artifact: results.wood.artifact,
+          mistakes: results.wood.mistakes,
+          score: results.wood.score,
+          roomTimeSec: totalRoomSeconds,
+        });
+        break;
+      case 2:
+        setRoomResult("fire", {
+          status: results.fire.status,
+          artifact: results.fire.artifact,
+          mistakes: results.fire.mistakes,
+          score: results.fire.score,
+          roomTimeSec: totalRoomSeconds,
+        });
+        break;
+      case 3:
+        setRoomResult("earth", {
+          status: results.earth.status,
+          artifact: results.earth.artifact,
+          mistakes: results.earth.mistakes,
+          score: results.earth.score,
+          roomTimeSec: totalRoomSeconds,
+        });
+        break;
+      case 4:
+        setRoomResult("metal", {
+          status: results.metal.status,
+          artifact: results.metal.artifact,
+          mistakes: results.metal.mistakes,
+          score: results.metal.score,
+          roomTimeSec: totalRoomSeconds,
+        });
+        break;
+      case 5:
+        setRoomResult("water", {
+          status: results.water.status,
+          artifact: results.water.artifact,
+          mistakes: results.water.mistakes,
+          score: results.water.score,
+          roomTimeSec: totalRoomSeconds,
+        });
+        break;
+    } // SWITCH END
+  } // IF roomMinutesSpan && roomSecondsSpan END
+} // setRoomTime END
 
 function timerTick(id: number): void {
   const totalMinutesSpan: HTMLElement | null =
@@ -163,8 +232,9 @@ function setTimeLimits(id: number) {
       break;
     case 6: // Final
       roomTimeLimitMinutes = dataJSON.room6validate.timeLimitMinutes; //Get minutes from JSON
-      if (dataJSON.room6validate.timeLimitSeconds > 0) { // include seconds IF JSON seconds are not 0
-      roomTimeLimitSeconds = dataJSON.room6validate.timeLimitSeconds // Set seconds from JSON
+      if (dataJSON.room6validate.timeLimitSeconds > 0) {
+        // include seconds IF JSON seconds are not 0
+        roomTimeLimitSeconds = dataJSON.room6validate.timeLimitSeconds; // Set seconds from JSON
       }
       break;
   } // Switch END
