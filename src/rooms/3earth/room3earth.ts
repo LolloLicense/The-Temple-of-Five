@@ -16,6 +16,7 @@ import {
   resetSingleRoomResult,
 } from "../../script/helper/storage.ts";
 import { playBgm, playSfx } from "../../audio/index.ts";
+import { showMsg } from "../../script/helper/showMsg.ts";
 import { room4metalFunc } from "../4metal/room4metal.ts";
 
 const mistakes: number = 0; //TODO COUNT MISTAKES
@@ -303,6 +304,7 @@ function winner(): void {
     setTimeout(() => {
       hideGameHeader();
       toNextRoom("#room4Metal", room4metalFunc);
+      showMsg("Time's up — next chamber awaits", 1200 * 2);
     }, 4500);
   } //IF lavaSlate END
   setRoomResult("earth", {
@@ -332,6 +334,7 @@ function looser(): void {
     setTimeout(() => {
       hideGameHeader();
       toNextRoom("#room4Metal", room4metalFunc);
+      showMsg("Time's up — next chamber awaits", 1200 * 2);
     }, 4500);
   } //IF lavaSlate END
 
