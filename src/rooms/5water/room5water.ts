@@ -22,6 +22,7 @@ import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
 import { showGameHeader } from "../../script/helper/gameHeader.ts";
 import { resetSingleRoomResult } from "../../script/helper/storage.ts";
 import { setRoomResult } from "../../script/helper/storage.ts";
+import { showMsg } from "../../script/helper/showMsg.ts";
 import {
   startTimer as startSharedTimer,
   stopTimer  as stopSharedTimer,
@@ -399,6 +400,7 @@ function ifRoomFailed(): void {
   });
 
   announce("Time is up. The vessel remains empty.");
+  showMsg("Time's up — next chamber awaits", TRANSITION_MS * 2);
 
   window.setTimeout(() => {
     goToNextRoom("#finalRoom", room6finalFunc);
@@ -470,6 +472,9 @@ function solvePuzzle(): void {
     score: score,
     roomTimeSec: secondsElapsed,
   });
+
+  // Show a message to the player before transitioning to the final chamber (room 6)
+  showMsg("Well done — the final chamber awaits", TRANSITION_MS * 2);
 
   // FIX 2: Navigate to room 6 via standard goToNextRoom pattern
   window.setTimeout(() => {
