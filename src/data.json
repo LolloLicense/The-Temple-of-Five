@@ -96,7 +96,7 @@
     "timeLimitMinutes": 5,
     "timeLimitSeconds": 0,
     "desc": {
-      "text": "The sacred pipes of the Water Chamber lie broken and tangled. Only when the flow runs pure and unbroken from source to vessel will the ancient symbol reveal itself. Rotate the pipe segments. Restore the flow. Let the water find its way. The temple rewards those who move with purpose.",
+      "text": "The Water Chamber lies broken. Restore the flow from source to vessel to reveal the ancient symbol. Move with purpose; let the water find its way.",
       "falseSign": "./images/false-water-glass-icon.png",
       "trueSign": "./images/true-water-glass-icon.png"
     },
