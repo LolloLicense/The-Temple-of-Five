@@ -37,7 +37,7 @@ export function highscoreRoomFunc(): void {
 
   renderHighscoreList();
   initHighscoreShare({
-  shareUrl: "https://medieinstitutet.github.io/fed25d-js-intro-grupparbete-the-pogo-stick-pioneers/"
+    shareUrl: "https://medieinstitutet.github.io/fed25d-js-intro-grupparbete-the-pogo-stick-pioneers/"
   });
 
   const backBtn = document.querySelector<HTMLButtonElement>("#backToMainMenuBtn");
@@ -52,8 +52,8 @@ export function highscoreRoomFunc(): void {
         // Always transition from highscore section to welcome page
         transitSections(highscoreSection, welcomePage, TRANSITION_MS);
       });
-   }
- }
+    }
+  }
 
   console.log("Hello from the highscore room");
 }
