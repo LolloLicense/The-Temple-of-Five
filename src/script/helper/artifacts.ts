@@ -142,6 +142,10 @@ export function initBackpackToggle(): void {
   // Initial paint (page load / refresh)
   updtArtifactBadge();
 
+  if (itemDropdown.classList.contains("is-open")) {
+    renderArtifactsToSlots();
+  }
+
   //  Update badge automatically when roomResults change
   window.addEventListener("roomResults:changed", () => {
     updtArtifactBadge();
