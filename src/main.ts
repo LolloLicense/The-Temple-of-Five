@@ -21,6 +21,8 @@ import { initExitDialog } from "./script/helper/exitDialog";
 import { initBackpackToggle } from "./script/helper/artifacts";
 //resetBTNs
 import { initResetButtons } from "./script/helper/reset";
+// Pogo-sticks cheat DEV
+import { initDevCheats } from "./script/helper/devCheats.ts";
 
 /* Event listeners for temporary menu
 (Remove when menu is to be removed) */
@@ -86,3 +88,4 @@ initSoundToggle();
 initAudio();
 startTimer(0);
 initResetButtons();
+initDevCheats();
