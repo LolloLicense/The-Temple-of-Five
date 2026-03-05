@@ -372,7 +372,6 @@ export function room1woodFunc() {
     // Wait 2 animation frames to guarantee the UI is painted before alert
 
     stopTimeUpWatcher();
-    stopTimer(1);
 
     // TEST
     setRoomResult("wood", {
@@ -382,6 +381,7 @@ export function room1woodFunc() {
       score: 0, // TODO: define rule later
       roomTimeSec: 0, // TODO: connect to timer later
     });
+    stopTimer(1);
     // show msg to player
     showMsg("Well done — next chamber awaits", TRANSITIONTIME * 2);
     console.log("Wood result:", getRoomResults().wood);
@@ -411,7 +411,7 @@ export function room1woodFunc() {
     isTransitioning = true;
     //timer stuff
     stopTimeUpWatcher();
-    stopTimer(1);
+
     // Update UI one last time
     updtUI();
 
@@ -423,6 +423,7 @@ export function room1woodFunc() {
       score: 0,
       roomTimeSec: 0,
     });
+    stopTimer(1);
     console.log("Wood fail result:", getRoomResults().wood);
     // Show fail message
     showMsg("Time's up — next chamber awaits", TRANSITIONTIME * 2);
