@@ -342,13 +342,39 @@ body {
         gap: 0.5rem;
       }
     }
+  }
+}
 
-    .devTeamList {
-      // Removed the dots for the list of names with links to GitHub profiles
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
+.panelDev {
+  .devTeamList {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0 0 0;
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: center;
+  }
+
+  .devTeamList li {
+    display: inline-flex;
+    gap: 0.5rem;
+  }
+
+  .devTeamList a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    width: fit-content;
+    text-decoration: none;
+  }
+
+  .devTeamList img {
+    display: block;
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
   }
 }
 
