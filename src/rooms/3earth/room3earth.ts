@@ -106,7 +106,7 @@ export function room3earthFunc(): void {
 function slateClick(slate: HTMLElement | null, count: number): void {
   console.log(`Slate ${count} was clicked!`);
 
-  winner();
+  //winner();
 
   const currentSlate = document.querySelector(`.slate${count}`);
   const slateNumber: number = count;
@@ -318,7 +318,7 @@ function winner(): void {
     artifact: "true",
     mistakes: mistakes,
     score: 0, // TODO: define rule later
-    roomTimeSec: 0, // TODO: connect to timer later
+    roomTimeSec: 0, // Set by stopTimer function
   });
   stopTimer(3);
 } // winner END

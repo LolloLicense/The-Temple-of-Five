@@ -62,8 +62,6 @@ function setRoomTime(id: number): void {
     const roomSeconds = parseInt(roomSecondsSpan.innerHTML);
     const totalRoomSeconds = roomSeconds + roomMinutes * 60;
 
-    //console.log(totalRoomSeconds);
-
     switch (id) {
       case 1:
         setRoomResult("wood", {
@@ -261,6 +259,7 @@ function setTimeLimits(id: number) {
     }
   }
 } // setTimeLimits END
+
 export function getTotalTime(): { minutes: number; seconds: number } {
   return { minutes: totalMinutes, seconds: totalSeconds };
 }
