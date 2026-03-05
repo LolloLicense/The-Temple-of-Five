@@ -1,5 +1,4 @@
 import * as dataJSON from "../../data.json";
-import { playBgm } from "../../audio";
 import {
   getCurrentPage,
   showSection,
@@ -31,9 +30,6 @@ export function gameOverRoomFunc() {
   requestAnimationFrame(() => {
     gameOverSection.classList.add("is-animating");
   });
-
-  const bgmId = dataJSON.gameOverRoom.bgmId;
-  if (bgmId) void playBgm(bgmId, 650);
 
   console.log("Hello from the gameOver room");
 }
