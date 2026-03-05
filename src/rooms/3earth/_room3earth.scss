@@ -210,11 +210,122 @@
 	text-align: left;
 }
 
-/*
-.room3Earth .roomDesc .leftIcon {
-
+@media only screen and (max-height: 950px) {
+	.room3Earth .gameBoard {
+		background-size: 100%;
+		width: 505.5px;
+		height: 505.5px;
+	}
+	.room3Earth .gameDiv {
+		top: 24px;
+		left: 22px;
+		gap: 10px;
+		grid-template-columns: repeat(4, 106.5px);
+		grid-template-rows: repeat(4, 106.5px);
+	}
 }
-.room3Earth .roomDesc .rightIcon {
 
+@media only screen and (max-height: 775px) {
+	.room3Earth .gameBoard {
+		background-size: 100%;
+		width: 379.125px;
+		height: 379.125px;
+	}
+	.room3Earth .gameDiv {
+		top: 14px;
+		left: 13px;
+		gap: 9px;
+		grid-template-columns: repeat(4, 79.875px);
+		grid-template-rows: repeat(4, 79.875px);
+	}
 }
-*/
+
+@media only screen and (max-width: 1300px) {
+	#roomDesc {
+		font-size: 1.2rem;
+		width: 1165px;
+	}
+	#roomDesc img {
+		width: 95.2px;
+		height: 93.5px;
+	}
+
+	#gameHeader.gameHeader {
+		font-size: 1.2rem;
+	}
+}
+
+@media only screen and (max-width: 1200px) {
+	#roomDesc {
+		font-size: 1.05rem;
+		width: 1050px;
+	}
+	#roomDesc img {
+		width: 84px;
+		height: 82.5px;
+	}
+
+	#gameHeader.gameHeader {
+		font-size: 1.2rem;
+	}
+}
+
+@media only screen and (max-width: 1100px) {
+	#roomDesc {
+		font-size: 1rem;
+		width: 950px;
+	}
+	#roomDesc img {
+		width: 84px;
+		height: 82.5px;
+	}
+
+	#gameHeader.gameHeader {
+		font-size: 1.2rem;
+	}
+}
+
+@media only screen and (max-width: 950px) {
+	#roomDesc {
+		font-size: 1rem;
+		width: 850px;
+	}
+	#roomDesc img {
+		width: 84px;
+		height: 82.5px;
+	}
+
+	#gameHeader.gameHeader {
+		font-size: 1rem;
+	}
+}
+
+@media only screen and (max-width: 855px) {
+	#roomDesc {
+		font-size: 1rem;
+		width: 750px;
+	}
+	#roomDesc img {
+		width: 84px;
+		height: 82.5px;
+	}
+
+	#gameHeader.gameHeader {
+		font-size: 0.8rem;
+	}
+}
+
+@media only screen and (max-width: 755px) {
+	#roomDesc {
+		font-size: 0.85rem;
+		width: 650px;
+	}
+	#roomDesc img {
+		width: 84px;
+		height: 82.5px;
+	}
+
+	#gameHeader.gameHeader {
+		font-size: 0.65rem;
+	}
+}
