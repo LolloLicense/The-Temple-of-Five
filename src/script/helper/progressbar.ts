@@ -1,15 +1,10 @@
 import { getRoomResults } from "./storage";
 
-/**
- * Progressbar ska känna av state på spelat rum och css ska göra
- */
-
 //-----------------------------------------------------------
 //------------------- ROOM ORDER CONFIG ---------------------
 //-----------------------------------------------------------
 
-// Progressbaren måste veta i vilken ordning rummen kommer.
-// Detta ska matcha HTML-strukturen på dina .roomProgress
+// Progressbaren gets informed on the absolut order of the rooms
 
 const PROGRESS_ROOMS = [
   "wood",
