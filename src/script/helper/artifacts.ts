@@ -57,6 +57,46 @@ export function getArtifactIcon(
   return null;
 }
 
+/**
+ * Count how many artifacts the player has collected.
+ * Both "true" and "false" count as collected artifacts.
+ */
+export function getCollectedArtifactsCount(): number {
+  const state = getRoomResults();
+
+  return ROOMS.filter((roomId) => state[roomId].artifact !== null).length;
+}
+
+/**
+ * Returns true if all artifact results are "true".
+ * For the VALIDATE room before sending player to the WIN ending.
+ */
+export function areAllArtifactsTrue(): boolean {
+  const state = getRoomResults();
+
+  return ROOMS.every((roomId) => state[roomId].artifact === "true");
+}
+
+/**
+ * Returns all rooms where the player got a false artifact.
+ *  for game over / retry logic.
+ */
+export function getRoomsWithFalseArtifacts(): Exclude<TRoomId, "final">[] {
+  const state = getRoomResults();
+
+  return ROOMS.filter((roomId) => state[roomId].artifact === "false");
+}
+
+/**
+ * Returns all rooms that are not completed yet.
+ * Useful if validate room needs to know what rooms must be replayed.
+ */
+export function getIncompleteRooms(): Exclude<TRoomId, "final">[] {
+  const state = getRoomResults();
+
+  return ROOMS.filter((roomId) => state[roomId].status !== "completed");
+}
+
 //-----------------------------------------------------------
 //-------------------------Backpack SLOTS--------------------
 //-----------------------------------------------------------
@@ -66,7 +106,7 @@ export function renderArtifactsToSlots(): void {
   if (!itemDropdown || !itemDropdown.classList.contains("is-open")) return;
   // Fills the  HTML-slots inside the dropdown
   const slots = Array.from(
-    document.querySelectorAll<HTMLElement>("#itemDropdown .artifact-slot"),
+    itemDropdown.querySelectorAll<HTMLElement>(".artifact-slot"),
   );
   // Read player state from localStorage
   const state = getRoomResults();
@@ -94,6 +134,7 @@ export function renderArtifactsToSlots(): void {
     slot.dataset.room = roomId;
     slot.dataset.artifact = kind ?? "empty";
 
+    // USE FOR DEBUG
     console.log(`${roomId}:`, kind, icon ?? "(empty)");
   });
 }
@@ -102,21 +143,15 @@ export function renderArtifactsToSlots(): void {
 //---------------------- Arficats counterbadge --------------
 //-----------------------------------------------------------
 
-export function updtArtifactBadge(): void {
-  // <span> in itemListBtn
+export function updateArtifactBadge(): void {
+  // <span> inside the backpack button
   const badge = document.querySelector<HTMLElement>("#artifactBadge");
   if (!badge) return;
-  // Read the latest saved run state from localStorage
-  const state = getRoomResults();
-  /**
-   * Count how many artifacts have been collected
-   * We count both "true" and "false" as "collected".
-   */
-  const count = ROOMS.filter(
-    (roomId) => state[roomId].artifact !== null,
-  ).length;
 
-  // updt badge UI when 0 + 1
+  // Get current number of collected artifacts
+  const count = getCollectedArtifactsCount();
+
+  // Show badge only when player has collected at least one artifact
   if (count > 0) {
     badge.textContent = String(count);
     badge.classList.add("is-visible");
@@ -140,7 +175,7 @@ export function initBackpackToggle(): void {
   if (!itemListBtn || !itemDropdown) return;
 
   // Initial paint (page load / refresh)
-  updtArtifactBadge();
+  updateArtifactBadge();
 
   if (itemDropdown.classList.contains("is-open")) {
     renderArtifactsToSlots();
@@ -148,7 +183,7 @@ export function initBackpackToggle(): void {
 
   //  Update badge automatically when roomResults change
   window.addEventListener("roomResults:changed", () => {
-    updtArtifactBadge();
+    updateArtifactBadge();
 
     // Optional: if dropdown is open, also refresh icons live
     if (itemDropdown.classList.contains("is-open")) {
@@ -164,7 +199,7 @@ export function initBackpackToggle(): void {
 
     if (itemDropdown.classList.contains("is-open")) {
       renderArtifactsToSlots();
-      updtArtifactBadge();
+      updateArtifactBadge();
     }
   });
 
