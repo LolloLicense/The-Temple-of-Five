@@ -112,7 +112,7 @@
   "room6validate": {
     "backgroundImg": "./images/room-6.jpg",
     "bgmId": "bgm_final",
-    "timeLimitMinutes": 1,
+    "timeLimitMinutes": 2,
     "timeLimitSeconds": 0,
     "desc": {
       "text": "Restore the balance. Have you gathered the right elements? Place theme where they belong. Do you have wrong elements? The gate will stay sealed and the balance is off.",
