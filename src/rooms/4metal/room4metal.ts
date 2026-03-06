@@ -11,6 +11,7 @@ import {
   getCurrentPage,
   showSection,
 } from "../../script/helper/transitions.ts";
+import { updateProgressBar } from "../../script/helper/progressbar.ts";
 
 //-------------------------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------------- Modul variabler -------------------------------------------------------------
@@ -362,7 +363,6 @@ export function room4metalFunc() {
       }
     }, 1000);
   }
-
   //--------------------------------------------------------------------------------------------------------------------------------------
   //--------------------------------------------- Slotsfyllda, Level och misstagbaren ----------------------------------------------------
   //--------------------------------------------------------------------------------------------------------------------------------------
@@ -440,7 +440,6 @@ export function room4metalFunc() {
       }, 2000);
     }
   }
-
   //--------------------------------------------------------------------------------------------------------------------------------------
   //--------------------------------------------------------- Vid klarat rum -------------------------------------------------------------
   //--------------------------------------------------------------------------------------------------------------------------------------
@@ -459,6 +458,7 @@ export function room4metalFunc() {
     });
 
     stopTimer(4); // Stoppar rummets huvudtimer (rum 4) (Behöver vara efter results så att dom inte skrivs över)
+    updateProgressBar();
     showMsg("Well done — next chamber awaits", TRANSITION_MS * 2); // Visa meddelande om att rummet är klart
     console.log("Metal result:", getRoomResults().metal); // Logga resultatet i konsolen för felsökning
 
@@ -467,11 +467,9 @@ export function room4metalFunc() {
       goToNextRoom("#room5Water", room5waterFunc); // Gå vidare till vattenrummet
     }, TRANSITION_MS);
   }
-
   //--------------------------------------------------------------------------------------------------------------------------------------
   //----------------------------------------------------- Vid rummet misslyckas ----------------------------------------------------------
   //--------------------------------------------------------------------------------------------------------------------------------------
-
   function ifRoomFailed(): void {
     stopTimeUpWatcher(); // Stoppar intervallen som övervakar om tiden är slut
 
@@ -483,7 +481,9 @@ export function room4metalFunc() {
       score: 0, // Poäng (används ej här men krävs av strukturen)
       roomTimeSec: 0, // Tid (används ej här men krävs av strukturen)
     });
+
     stopTimer(4); // Stoppar rummets huvudtimer (rum 4) (Behöver vara efter results så att dom inte skrivs över)
+    updateProgressBar();
     showMsg("Time's up — next chamber awaits", TRANSITION_MS * 2); // Visa meddelande om att tiden är slut
 
     setTimeout(() => {
