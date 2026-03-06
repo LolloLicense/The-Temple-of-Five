@@ -53,12 +53,9 @@ export function updateProgressBar(): void {
     // get roomstate
     const roomState = state[roomId];
 
-    // if room completed -- fill progress <span> ( scss)
-    if (roomState.status === "completed") {
-      // add class that mark room as completed
+    if (roomState.artifact !== null) {
       step.classList.add("is-completed");
     } else {
-      // else dont.
       step.classList.remove("is-completed");
     }
   });
