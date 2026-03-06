@@ -33,6 +33,7 @@ import {
   getCurrentPage,
   showSection,
 } from "../../script/helper/transitions.ts";
+import { updateProgressBar } from "../../script/helper/progressbar.ts";
 // FIX 1: Added missing imports
 import { room6finalFunc } from "../final/room6validate.ts";
 // FIX 2: Uncommented room 6 import
@@ -482,6 +483,7 @@ function ifRoomFailed(): void {
     roomTimeSec: secondsElapsed,
   });
   stopTimer();
+  updateProgressBar();
   announce("Time is up. The vessel remains empty.");
   showMsg("Time's up — the final chamber awaits", 2400);
 
@@ -560,6 +562,8 @@ function solvePuzzle(): void {
     score,
     roomTimeSec: secondsElapsed,
   });
+
+  updateProgressBar();
 
   showMsg("Well done — the final chamber awaits", 2400);
 
