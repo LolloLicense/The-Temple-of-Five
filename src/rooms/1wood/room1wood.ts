@@ -1,7 +1,15 @@
 import { playBgm } from "../../audio/index.ts";
 import * as dataJSON from "../../data.json";
 import { showGameHeader } from "../../script/helper/gameHeader.ts";
+// Uppdaterar progressbaren i UI utifrån sparad room-status
+import { updateProgressBar } from "../../script/helper/progressbar.ts";
 import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
+import { showMsg } from "../../script/helper/showMsg.ts";
+import {
+  getRoomResults,
+  resetSingleRoomResult,
+  setRoomResult,
+} from "../../script/helper/storage.ts";
 import {
   getCurrentPage,
   showSection,
@@ -9,15 +17,7 @@ import {
 } from "../../script/helper/transitions.ts";
 //import { startTimer, stopTimer } from "./script/utils.ts";
 import { startTimer, stopTimer, TimeIsUp } from "../../script/helper/utils.ts";
-import {
-  setRoomResult,
-  getRoomResults,
-  resetSingleRoomResult,
-} from "../../script/helper/storage.ts";
-import { showMsg } from "../../script/helper/showMsg.ts";
 import { room2fireFunc } from "../2fire/room2fire.ts";
-// Uppdaterar progressbaren i UI utifrån sparad room-status
-import { updateProgressBar } from "../../script/helper/progressbar.ts";
 
 //-----------------------------------------------------------
 //----------------------CONFIG / RULES-----------------------

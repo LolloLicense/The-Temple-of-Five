@@ -1,5 +1,6 @@
 import "./sass/style.scss";
 
+import { initAudio, initSoundToggle } from "./audio";
 import { room1woodFunc } from "./rooms/1wood/room1wood.ts";
 import { room2fireFunc } from "./rooms/2fire/room2fire.ts";
 import { room3earthFunc } from "./rooms/3earth/room3earth.ts";
@@ -7,22 +8,21 @@ import { room4metalFunc } from "./rooms/4metal/room4metal.ts";
 import { room5waterFunc } from "./rooms/5water/room5water.ts";
 import { room6finalFunc } from "./rooms/final/room6validate.ts";
 import { gameOverRoomFunc } from "./rooms/gameConclusion/gameOverRoom.ts";
-import { highscoreRoomFunc } from "./rooms/highscore/highscore.ts";
 import { gameWinFunc } from "./rooms/gameConclusion/gameWin.ts";
-import { initAudio, initSoundToggle } from "./audio";
+import { highscoreRoomFunc } from "./rooms/highscore/highscore.ts";
 import { aboutTabs, initAboutDialog } from "./script/helper/aboutDialog.ts";
-//import { startTimer, stopTimer } from "./script/utils.ts";
-import { startTimer } from "./script/helper/utils.ts";
-// LOGIN
-import { initLoginFlow } from "./script/helper/loginFlow";
-// Exit dialog
-import { initExitDialog } from "./script/helper/exitDialog";
 // backpack artifacts
 import { initBackpackToggle } from "./script/helper/artifacts";
-//resetBTNs
-import { initResetButtons } from "./script/helper/reset";
 // Pogo-sticks cheat DEV
 import { initDevCheats } from "./script/helper/devCheats.ts";
+// Exit dialog
+import { initExitDialog } from "./script/helper/exitDialog";
+// LOGIN
+import { initLoginFlow } from "./script/helper/loginFlow";
+//resetBTNs
+import { initResetButtons } from "./script/helper/reset";
+//import { startTimer, stopTimer } from "./script/utils.ts";
+import { startTimer } from "./script/helper/utils.ts";
 
 /* Event listeners for temporary menu
 (Remove when menu is to be removed) */

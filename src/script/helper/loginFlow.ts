@@ -153,7 +153,8 @@ function onLoginSubmit(e: SubmitEvent): void {
   const loginSection = document.querySelector<HTMLElement>("#loginPage")!;
 
   // Sätt användarnamnet i welcome-sidan
-  const welcomeNameEl = welcomeSection.querySelector<HTMLElement>(".userNameValue");
+  const welcomeNameEl =
+    welcomeSection.querySelector<HTMLElement>(".userNameValue");
   if (welcomeNameEl) welcomeNameEl.textContent = name;
 
   // Stoppa eventuella timeouts
@@ -210,7 +211,8 @@ export function initLoginFlow(): void {
 
   // Om användaren redan är inloggad → hoppa direkt till welcome
   if (isLoggedIn() && savedUser) {
-    const welcomeNameEl = welcomeSection.querySelector<HTMLElement>(".userNameValue");
+    const welcomeNameEl =
+      welcomeSection.querySelector<HTMLElement>(".userNameValue");
     if (welcomeNameEl) welcomeNameEl.textContent = savedUser;
 
     showSection(welcomeSection);
