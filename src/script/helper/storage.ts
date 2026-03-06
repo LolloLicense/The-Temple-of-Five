@@ -2,12 +2,12 @@
 //----------------------- INTERFACE / TYPES -----------------
 //-----------------------------------------------------------
 
-// The data we save for user
-export interface IUserData {
-  userName: string;
-  // lastPlayedAt?: string;
-  //
-}
+// // The data we save for user
+// export interface IUserData {
+//   userName: string;
+//   // lastPlayedAt?: string;
+//   //
+// }
 
 // ROOM ID used in the game
 export type TRoomId = "wood" | "fire" | "earth" | "metal" | "water" | "final";
@@ -42,141 +42,41 @@ const LS_KEY = {
   totalTime: "tempelTotalTime",
   roomTime: "tempelRoomTime",
   highscores: "tempelHighscores",
-  artifacts: "artifacts",
 } as const;
 
 //-----------------------------------------------------------
 //------------------- DEAFAUL GAME STATE---------------------
 //-----------------------------------------------------------
 
+// create default state for one room
+function createDefaultRoomResult(): TRoomResult {
+  return {
+    status: "pending",
+    artifact: null,
+    mistakes: 0,
+    roomTimeSec: 0,
+    score: 0,
+  };
+}
+
+// Default state for the full run
+// All rooms get their own default room result
 const DEFAULT_GAME_STATE: TGameState = {
-  wood: {
-    status: "pending",
-    artifact: null,
-    mistakes: 0,
-    roomTimeSec: 0,
-    score: 0,
-  },
-  fire: {
-    status: "pending",
-    artifact: null,
-    mistakes: 0,
-    roomTimeSec: 0,
-    score: 0,
-  },
-  earth: {
-    status: "pending",
-    artifact: null,
-    mistakes: 0,
-    roomTimeSec: 0,
-    score: 0,
-  },
-  metal: {
-    status: "pending",
-    artifact: null,
-    mistakes: 0,
-    roomTimeSec: 0,
-    score: 0,
-  },
-  water: {
-    status: "pending",
-    artifact: null,
-    mistakes: 0,
-    roomTimeSec: 0,
-    score: 0,
-  },
-  final: {
-    status: "pending",
-    artifact: null,
-    mistakes: 0,
-    roomTimeSec: 0,
-    score: 0,
-  },
+  wood: createDefaultRoomResult(),
+  fire: createDefaultRoomResult(),
+  earth: createDefaultRoomResult(),
+  metal: createDefaultRoomResult(),
+  water: createDefaultRoomResult(),
+  final: createDefaultRoomResult(),
 };
 
 //-----------------------------------------------------------
-//----------------------- RESULTS ---------------------------
+//----------------------- USER HELPER -----------------------
 //-----------------------------------------------------------
 
 /**
- * Read current run state
- * Nu läser vi från en user-specifik key,
- */
-export function getRoomResults(): TGameState {
-  //  "tempelRoomResults:Lollo"
-  const raw = localStorage.getItem(scopedKey(LS_KEY.roomResults));
-
-  // if nothing is saved yet - return DEFAULT_GAME_STATE
-  if (!raw) return DEFAULT_GAME_STATE;
-
-  try {
-    //  TGameState ????
-    return JSON.parse(raw) as TGameState;
-  } catch {
-    // fall back till default
-    return DEFAULT_GAME_STATE;
-  }
-}
-
-/**
- * repeat ONE room in run state.
- * Saved on a user-specifik key.
- */
-export function setRoomResult(roomId: TRoomId, result: TRoomResult): void {
-  // active userns run state
-  const state = getRoomResults();
-
-  // create new updt room
-  const next: TGameState = { ...state, [roomId]: result };
-
-  // Save to "tempelRoomResults:Lollo"
-  localStorage.setItem(scopedKey(LS_KEY.roomResults), JSON.stringify(next));
-
-  // Sends event so UI udts
-  window.dispatchEvent(new Event("roomResults:changed"));
-}
-
-/**
- * Reset whole run  for -new gameBtn
- */
-export function resetRoomResults(): void {
-  localStorage.setItem(
-    scopedKey(LS_KEY.roomResults), // user-specific key
-    JSON.stringify(freshDefaultGameState()),
-  );
-
-  window.dispatchEvent(new Event("roomResults:changed"));
-}
-
-/**
- * Resets specific room for active user
- */
-export function resetSingleRoomResult(roomId: TRoomId): void {
-  const state = getRoomResults();
-
-  const next: TGameState = {
-    ...state,
-    [roomId]: { ...DEFAULT_GAME_STATE[roomId] },
-  };
-
-  // Saves to same user
-  localStorage.setItem(scopedKey(LS_KEY.roomResults), JSON.stringify(next));
-
-  window.dispatchEvent(new Event("roomResults:changed"));
-}
-
-//-----------------------------------------------------------
-//-------------------------Userdata--------------------------
-//-----------------------------------------------------------
-
-// Saving username
-export function saveUserName(name: string): void {
-  localStorage.setItem(LS_KEY.userName, name);
-}
-
-/**
- * Find what user is active by userName-id
- * of username is new user NewUserName
+ * Returns the active user id based on the saved userName.
+ * Falls back to "guest" if no valid userName exists.
  */
 function getActiveUserId(): string {
   // localStorage.getItem can be string || null
@@ -201,6 +101,89 @@ function getActiveUserId(): string {
  */
 function scopedKey(baseKey: string): string {
   return `${baseKey}::${getActiveUserId()}`;
+}
+
+//-----------------------------------------------------------
+//----------------------- ROOM RESULT HELP ------------------
+//-----------------------------------------------------------
+// reurns new copy of default state
+function freshDefaultGameState(): TGameState {
+  return structuredClone(DEFAULT_GAME_STATE);
+}
+
+// Saves the full roomResults state for the active user
+// and dispatches an event so the UI can update
+function saveRoomResults(state: TGameState): void {
+  localStorage.setItem(scopedKey(LS_KEY.roomResults), JSON.stringify(state));
+  window.dispatchEvent(new Event("roomResults:changed"));
+}
+
+//-----------------------------------------------------------
+//----------------------- RESULTS ---------------------------
+//-----------------------------------------------------------
+
+/**
+ * Read current run state
+ * Nu läser vi från en user-specifik key,
+ */
+export function getRoomResults(): TGameState {
+  //  "tempelRoomResults:Lollo"
+  const raw = localStorage.getItem(scopedKey(LS_KEY.roomResults));
+
+  // if nothing is saved yet - return DEFAULT_GAME_STATE
+  if (!raw) return freshDefaultGameState();
+
+  try {
+    //  TGameState ????
+    return JSON.parse(raw) as TGameState;
+  } catch {
+    // fall back till default
+    return freshDefaultGameState();
+  }
+}
+
+/**
+ * repeat ONE room in run state.
+ * Saved on a user-specifik key.
+ */
+export function setRoomResult(roomId: TRoomId, result: TRoomResult): void {
+  // active userns run state
+  const state = getRoomResults();
+
+  // create new updt room
+  const next: TGameState = { ...state, [roomId]: result };
+
+  saveRoomResults(next);
+}
+
+/**
+ * Reset whole run  for -new gameBtn
+ */
+export function resetRoomResults(): void {
+  saveRoomResults(freshDefaultGameState());
+}
+
+/**
+ * Resets specific room for active user
+ */
+export function resetSingleRoomResult(roomId: TRoomId): void {
+  const state = getRoomResults();
+
+  const next: TGameState = {
+    ...state,
+    [roomId]: createDefaultRoomResult(),
+  };
+
+  saveRoomResults(next);
+}
+
+//-----------------------------------------------------------
+//-------------------------Userdata--------------------------
+//-----------------------------------------------------------
+
+// Saving username
+export function saveUserName(name: string): void {
+  localStorage.setItem(LS_KEY.userName, name);
 }
 
 // Getting the username
@@ -234,31 +217,16 @@ export function logoutUser(): void {
   // keep username for convenience
 }
 
-function freshDefaultGameState(): TGameState {
-  // structuredClone finns i moderna browsers. Annars kan vi göra JSON-klon.
-  return structuredClone(DEFAULT_GAME_STATE);
-}
-
 //-----------------------------------------------------------
 //----------------------- RESETS ----------------------------
 //-----------------------------------------------------------
 
 // Reset RUN without clearing highscores
 export function resetRunKeepHighscores(): void {
-  // Reset run state för AKTIV user
-  localStorage.setItem(
-    scopedKey(LS_KEY.roomResults),
-    JSON.stringify(freshDefaultGameState()),
-  );
+  // Reset roomResult
+  saveRoomResults(freshDefaultGameState());
 
   // Reset timers för AKTIV user (om du vill spara dem per user)
   localStorage.removeItem(scopedKey(LS_KEY.totalTime));
   localStorage.removeItem(scopedKey(LS_KEY.roomTime));
-
-  // OBS: LS_KEY.artifacts använder du inte längre som “källa”,
-  // eftersom artifacts redan ligger i roomResults -> state[roomId].artifact.
-  // Men om du ändå har kvar den av legacy-skäl:
-  localStorage.removeItem(scopedKey(LS_KEY.artifacts));
-
-  window.dispatchEvent(new Event("roomResults:changed"));
 }
