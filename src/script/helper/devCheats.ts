@@ -617,7 +617,7 @@ function mapSectionIdToRoomId(sectionId: string): TRoomId | null {
     case "room5Water":
       return "water";
 
-    case "room6validate":
+    case "finalRoom":
       return "final";
 
     default:
@@ -638,7 +638,7 @@ function mapRoomIdToSelector(roomId: TRoomId): string {
     case "water":
       return "#room5Water";
     case "final":
-      return "#room6validate";
+      return "#finalRoom";
     default:
       throw new Error("Unknown roomId");
   }
