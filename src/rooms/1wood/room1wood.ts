@@ -16,6 +16,8 @@ import {
 } from "../../script/helper/storage.ts";
 import { showMsg } from "../../script/helper/showMsg.ts";
 import { room2fireFunc } from "../2fire/room2fire.ts";
+// Uppdaterar progressbaren i UI utifrån sparad room-status
+import { updateProgressBar } from "../../script/helper/progressbar.ts";
 
 //-----------------------------------------------------------
 //----------------------CONFIG / RULES-----------------------
@@ -381,7 +383,9 @@ export function room1woodFunc() {
       score: 0, // TODO: define rule later
       roomTimeSec: 0, // TODO: connect to timer later
     });
+
     stopTimer(1);
+    updateProgressBar();
     // show msg to player
     showMsg("Well done — next chamber awaits", TRANSITIONTIME * 2);
     console.log("Wood result:", getRoomResults().wood);
@@ -424,6 +428,7 @@ export function room1woodFunc() {
       roomTimeSec: 0,
     });
     stopTimer(1);
+    updateProgressBar();
     console.log("Wood fail result:", getRoomResults().wood);
     // Show fail message
     showMsg("Time's up — next chamber awaits", TRANSITIONTIME * 2);
