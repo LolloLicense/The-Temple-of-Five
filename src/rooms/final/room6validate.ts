@@ -16,6 +16,14 @@ export function room6finalFunc(): void {
   // INGEN showSection / INGEN transit här
   // finalSection är redan synlig efter goToNextRoom
 
+  //----------------------------------------------------------
+  // 1) Städa bort welcomePage (om den kan råka ligga kvar)
+  //----------------------------------------------------------
+  const welcomePage = document.querySelector<HTMLElement>("#welcomePage");
+  if (welcomePage) {
+    welcomePage.classList.add("hidden");
+  }
+
   finalSection.style.backgroundImage = `url("${dataJSON.room6validate.backgroundImg}")`;
 
   startTimer(6);
