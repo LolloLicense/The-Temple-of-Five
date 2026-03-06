@@ -7,60 +7,52 @@
   align-items: center;
   flex-direction: column;
   color: var.$lightColor;
-  background-color: rgba(0, 0, 0, 0.3); 
+  background-color: rgba(0, 0, 0, 0.3);
   background-blend-mode: multiply;
-  
-    
+  gap: 1rem;
+
   .finalContainer {
-    border: 1px solid var.$lightColor;
-    border-radius: 10px;
-    padding: 2rem 3rem; 
-    margin-top: 10rem;
-    margin-bottom: 2rem;
-   }
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+    margin-top: 8rem;
+  }
 
   .finalSlots {
+    border: 2px solid var.$lightColor;
+    border-radius: var.$smallRadius;
+    padding: 1.5rem 2rem;
     display: flex;
     gap: 3rem;
   }
 
-  .slotplace {
-    width: 80px;
-    height: 80px;
+  .slot {
     @include mix.glass();
     border: 1px solid var.$lightColor;
-    border-radius: 10px;
+    border-radius: var.$smallRadius;
+    width: 70px;
+    height: 70px;
     cursor: pointer;
+    transition: box-shadow 0.3s, background 0.3s, transform 0.1s;
     display: flex;
     justify-content: center;
     align-items: center;
-    text-transform: uppercase;
 
-    &:focus {
-      outline: 2px solid var.$lightColor;
-      box-shadow: 0 0 10px var.$lightColor;
+    /* Ikonerna i sloten */
+    img {
+      width: 60%;
+      height: 60%;
+      object-fit: contain;
+      pointer-events: none;
     }
-  }
 
-  .artifactPicker {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    @include mix.glass();
-    padding: 1rem;
-    border-radius: 10px;
-
-    button {
-      @include mix.glass();
-      padding: 0.5rem 1rem;
-      border: 1px solid var.$lightColor;
-      color: var.$lightColor;
-      cursor: pointer;
-
-      &.selected {
-        outline: 2px solid var.$lightColor;
-        box-shadow: 0 0 10px var.$lightColor;
-      }
+    /* Highlight */
+    &.is-active {
+      outline: 4px solid #ffffff;
+      outline-offset: 4px;
+      transform: scale(1.1);
+      box-shadow: 0 0 20px rgba(255,255,255,0.8);
     }
   }
 
@@ -68,13 +60,20 @@
     @include mix.glass();
     padding: 1rem 2rem;
     border: 1px solid var.$lightColor;
+    border-radius: var.$smallRadius;
     color: var.$lightColor;
-    border-radius: 10px;
     cursor: pointer;
+    transition: opacity 0.3s;
 
     &:disabled {
       opacity: 0.4;
       cursor: not-allowed;
     }
+  }
+
+  .finalFeedback {
+    height: 1.8rem;
+    font-size: 1.2rem;
+    margin-top: 1rem;
   }
 }
