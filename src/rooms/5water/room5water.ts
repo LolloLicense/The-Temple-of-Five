@@ -19,7 +19,17 @@
 import * as dataJSON from "../../data.json";
 import { playBgm } from "../../audio/index.ts";
 import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
-import { showGameHeader } from "../../script/helper/gameHeader.ts";
+import { showGameHeader, hideGameHeader } from "../../script/helper/gameHeader.ts";
+// ── EXIT TO WELCOME ──────────────────────────────────────────────────────
+function exitToWelcome(): void {
+  if (!waterSection) return;
+  const welcomeSection = document.querySelector<HTMLElement>("#welcomePage");
+  if (!welcomeSection) return;
+  hideGameHeader();
+  const fromPage = getCurrentPage();
+  if (!fromPage) return;
+  transitSections(fromPage, welcomeSection, TRANSITION_MS);
+}
 import { resetSingleRoomResult } from "../../script/helper/storage.ts";
 import { setRoomResult } from "../../script/helper/storage.ts";
 import { showMsg } from "../../script/helper/showMsg.ts";
@@ -500,7 +510,7 @@ function goToNextRoom(nextSelector: string, nextRoomFunc: () => void): void {
   const nextSection = document.querySelector<HTMLElement>(nextSelector);
   if (!nextSection) return;
 
-  // ✅ SÄTT BG INNAN TRANSIT så den hinner börja ladda innan sektionen syns
+  // Set BG before transit so it starts loading before the section becomes visible
   nextSection.style.backgroundImage = `url("${dataJSON.room6validate.backgroundImg}")`;
 
   transitSections(waterSection, nextSection, TRANSITION_MS);
@@ -747,6 +757,10 @@ export function room5waterFunc(): void {
     document
       .getElementById("w-reset-btn")
       ?.addEventListener("click", resetPuzzle);
+    // Example: exit button for leaving the room
+    document
+      .getElementById("w-exit-btn")
+      ?.addEventListener("click", exitToWelcome);
     setupKeyboard();
     listenersBound = true;
   }
