@@ -103,7 +103,18 @@ export function pushHighscore(entry: Omit<THighscoreEntry, "createdAtIso">): voi
     }
 
     setHighscores(normalizeHighscores(nextRaw));
+
+    // Notify that leaderboard changed
+    window.dispatchEvent(new Event("highscores:changed"));
 }
 
+/**
+ * Clears the entire leaderboard.
+ * Dispatch event so UI can update instantly.
+ */
+export function resetHighscores(): void {
+    localStorage.removeItem("tempelHighscores");
 
+    window.dispatchEvent(new Event("highscores:changed"));
+}
 

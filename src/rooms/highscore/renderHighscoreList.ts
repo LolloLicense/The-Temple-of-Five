@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------- HIGHSCORE STORAGE --------------------------------------------------------------------- */
+/* ------------------------------------------------------- RENDER HIGHSCORE LIST -------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 import { getHighscores, type THighscoreEntry } from "./highscoreStorage";
@@ -45,4 +45,16 @@ export function renderHighscoreList(): void {
         li.append(nameSpan, scoreSpan);
         listEl.append(li);
     }
+}
+
+// Attach listener only once
+let highscoreListenerBound = false;
+
+export function initHighscoreRenderListener(): void {
+    if (highscoreListenerBound) return;
+    highscoreListenerBound = true;
+
+    window.addEventListener("highscores:changed", () => {
+        renderHighscoreList();
+    });
 }

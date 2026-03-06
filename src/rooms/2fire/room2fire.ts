@@ -7,6 +7,7 @@ import { showGameHeader, hideGameHeader } from "../../script/helper/gameHeader";
 import { showMsg } from "../../script/helper/showMsg";
 import { getRoomResults, resetSingleRoomResult, setRoomResult } from "../../script/helper/storage";
 import { room3earthFunc } from "../3earth/room3earth.ts";
+import { updateProgressBar } from "../../script/helper/progressbar.ts";
 
 
 /**
@@ -190,11 +191,11 @@ function stopIntroTimeout(): void {
 /* ------------------------------------------------------------- KEYBOARD NAVIGATION STATE ---------------------------------------------------------- */
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 
-  type TFocusMode = "keys" | "slots";
+type TFocusMode = "keys" | "slots";
 
-  let focusMode: TFocusMode = "keys";
-  let focusedKeyIndex = 0;
-  let focusedSlotIndex = 0;
+let focusMode: TFocusMode = "keys";
+let focusedKeyIndex = 0;
+let focusedSlotIndex = 0;
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------- EVENT HANDLERS --------------------------------------------------------------- */
@@ -830,6 +831,9 @@ function ifRoomCompleted(): void {
   stopIntroTimeout();
   stopTimer(2);
 
+  // Update progress bar
+  updateProgressBar();
+
   // Update UI one last time (just for UX)
   updateHUD();
   setActiveSlotClass();
@@ -873,10 +877,13 @@ function ifRoomFailed(): void {
   stopIntroTimeout();
   stopTimer(2);
 
+  //update progress bar
+  updateProgressBar;
+
   updateHUD();
   setActiveSlotClass();
 
-  setRoomResult("fire", { 
+  setRoomResult("fire", {
     status: "failed",
     artifact: "false",
     mistakes,
@@ -958,7 +965,7 @@ function retriggerClass(el: HTMLElement, className: string): void {
 }
 
 function initKeypadFocus(): void {
- 
+
   keyButtons.forEach((btn, i) => (btn.tabIndex = i === 0 ? 0 : -1));
 }
 
