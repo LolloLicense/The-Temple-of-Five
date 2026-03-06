@@ -4,9 +4,15 @@ import {
   showSection,
   transitSections,
 } from "../../script/helper/transitions.ts";
-import { renderHighscoreList, initHighscoreRenderListener, } from "./renderHighscoreList";
+import {
+  initHighscoreResetButton,
+  initHighscoreSecret,
+} from "./highscoreSecret";
 import { initHighscoreShare } from "./highscoreShare";
-import { initHighscoreSecret, initHighscoreResetButton, } from "./highscoreSecret";
+import {
+  initHighscoreRenderListener,
+  renderHighscoreList,
+} from "./renderHighscoreList";
 
 const TRANSITION_MS = 1200;
 
@@ -17,8 +23,7 @@ export function highscoreRoomFunc(): void {
   if (!highscoreSection) return;
 
   // Set background from data.json
-  highscoreSection.style.backgroundImage =
-    `url("${dataJSON.highScoreRoom.backgroundImg}")`;
+  highscoreSection.style.backgroundImage = `url("${dataJSON.highScoreRoom.backgroundImg}")`;
 
   const fromPage =
     getCurrentPage() ??
@@ -35,13 +40,15 @@ export function highscoreRoomFunc(): void {
   renderHighscoreList();
 
   initHighscoreShare({
-    shareUrl: "https://medieinstitutet.github.io/fed25d-js-intro-grupparbete-the-pogo-stick-pioneers/"
+    shareUrl:
+      "https://medieinstitutet.github.io/fed25d-js-intro-grupparbete-the-pogo-stick-pioneers/",
   });
 
   initHighscoreSecret();
   initHighscoreResetButton();
 
-  const backBtn = document.querySelector<HTMLButtonElement>("#backToMainMenuBtn");
+  const backBtn =
+    document.querySelector<HTMLButtonElement>("#backToMainMenuBtn");
   const welcomePage = document.querySelector<HTMLElement>("#welcomePage");
 
   if (backBtn && welcomePage) {

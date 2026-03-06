@@ -1,35 +1,42 @@
 import { playBgm } from "../../audio";
 import * as dataJSON from "../../data.json";
-import { renderRoomDesc } from "../../script/helper/roomDesc";
-import { startTimer, stopTimer, TimeIsUp } from "../../script/helper/utils.ts";
-import { transitSections, getCurrentPage, showSection } from "../../script/helper/transitions";
-import { showGameHeader, hideGameHeader } from "../../script/helper/gameHeader";
-import { showMsg } from "../../script/helper/showMsg";
-import { getRoomResults, resetSingleRoomResult, setRoomResult } from "../../script/helper/storage";
-import { room3earthFunc } from "../3earth/room3earth.ts";
+import { hideGameHeader, showGameHeader } from "../../script/helper/gameHeader";
 import { updateProgressBar } from "../../script/helper/progressbar.ts";
-
+import { renderRoomDesc } from "../../script/helper/roomDesc";
+import { showMsg } from "../../script/helper/showMsg";
+import {
+  getRoomResults,
+  resetSingleRoomResult,
+  setRoomResult,
+} from "../../script/helper/storage";
+import {
+  getCurrentPage,
+  showSection,
+  transitSections,
+} from "../../script/helper/transitions";
+import { startTimer, stopTimer, TimeIsUp } from "../../script/helper/utils.ts";
+import { room3earthFunc } from "../3earth/room3earth.ts";
 
 /**
  * FIRE ROOM (2)
- * 
+ *
  * Intro-text from JSON (shown 8 sec after entering the room)
  * After into, show level instruction (stay until you're finished with the level, then show the next one) + fokus on the puzzle section
- * 
+ *
  * Sequense puzzle and wordplay with 4 levels - Keyboard + mouse klick
  * The player choose elements trough a sequence of 3-5 keys, each key represents an element (Air, Timber, Flame, Ember, Stone, Water)
  * Fill the slots in the right order
  * When the last slot is filled - check if the sequence is correct.
  * Correct: Sucess glow (animation) + move on to the next level
  * Wrong: Shake + reset + mistakes counter
- * 
+ *
  * LEVELS:
- * 
+ *
  * Level 1: 4 empty slots (START THE FIRE) - COMBO: T-F-S-A
  * Level 2: 3 slots, 1 pre-filled with Flame (OVERHEAT) COMBO: W-S
  * Level 3: 4 slots, 1 pre-filled with Stone (FADING FIRE) COMBO: T-A-F
  * Level 4: 5 slots, 1 pre-filled with Flame (FINDING BALANCE) COMBO: T-A-S-E
- * 
+ *
  */
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -41,9 +48,8 @@ const SUCCESS_DELAY_MS = 500; // Sucess input
 const WRONG_DELAY_MS = 350; // Wrong input
 const TRANSITION_MS = 1200; // Transistion between rooms
 const COMPLETE_MSG_MS = 2400; // When room is finished
-const KEYPAD_COLS = 2;  // Keypad columns
-const PUZZLE_FOCUS_CLASS = "puzzle-focus";  // Focus on puzzle for styling
-
+const KEYPAD_COLS = 2; // Keypad columns
+const PUZZLE_FOCUS_CLASS = "puzzle-focus"; // Focus on puzzle for styling
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ---------------------------------------------------------- TYPES AND LEVELS ---------------------------------------------------------------------- */
@@ -58,31 +64,33 @@ type TFireKey = "A" | "T" | "F" | "E" | "S" | "W";
 
 interface IFireLevel {
   sequence: TFireKey[]; // The correct sequence of keys for the level
-  prefilled?: TFireKey;  // If the level contain a pre-filled slot
+  prefilled?: TFireKey; // If the level contain a pre-filled slot
 }
 
 // Typeguard, only accepts the correct keyboard keys
 function isFireKey(k: string): k is TFireKey {
-  return k === "A" || k === "T" || k === "F" || k === "E" || k === "S" || k === "W";
+  return (
+    k === "A" || k === "T" || k === "F" || k === "E" || k === "S" || k === "W"
+  );
 }
 
 // Config, level combo for keys
 
 const LEVELS: IFireLevel[] = [
   {
-    sequence: ["T", "F", "S", "A"] // Level 1: Timber, Flame, Stone, Air
+    sequence: ["T", "F", "S", "A"], // Level 1: Timber, Flame, Stone, Air
   },
   {
     sequence: ["F", "W", "S"], // Level 2: FLAME, Water, Stone
-    prefilled: "F"
+    prefilled: "F",
   },
   {
     sequence: ["S", "T", "A", "F"], // Level 3: Stone, Timber, Air, Flame
-    prefilled: "S"
+    prefilled: "S",
   },
   {
-    sequence: ["F", "T", "A", "S", "E"],  // Level 4: Flame, Timber, Air, Stone, Ember
-    prefilled: "F"
+    sequence: ["F", "T", "A", "S", "E"], // Level 4: Flame, Timber, Air, Stone, Ember
+    prefilled: "F",
   },
 ];
 
@@ -347,7 +355,6 @@ function toggleFocusMode(): void {
   if (focusMode === "slots") applySlotFocus();
 }
 
-
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------- ENTRY POINT ------------------------------------------------------------------------ */
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -389,7 +396,7 @@ export function room2fireFunc(): void {
     showSection(fireSection); // fallback first load - show room directly with showSection
   }
 
-  stopTimeUpWatcher();  // No double watchers if re-entering the room
+  stopTimeUpWatcher(); // No double watchers if re-entering the room
   startTimer(2); // Start the timer for the fire room
 
   timeUpIntervalId = window.setInterval(() => {
@@ -405,11 +412,11 @@ export function room2fireFunc(): void {
   renderRoomDesc(fireSection, dataJSON.room2fire.desc); // Render description from helper function, with text and icons from JSON
 
   cacheDomOrThrow(); // Cashe DOM only once or throw error if missing
-  initKeypadFocus();  // Init key-controls
+  initKeypadFocus(); // Init key-controls
   applyKeyFocus(); // Focus on slots or buttons
 
   if (!listenersBound) {
-    bindListenersOnce();  // Bind event listeners only once
+    bindListenersOnce(); // Bind event listeners only once
     listenersBound = true;
   }
 
@@ -465,8 +472,8 @@ function cacheDomOrThrow(): void {
 /* ------------------------------------------------------------- ROOM RESET ------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 
-
-function resetRoom(): void {  // reset state
+function resetRoom(): void {
+  // reset state
   stopIntroTimeout();
   currentLevelIndex = 0;
   applyLevelClass();
@@ -475,22 +482,22 @@ function resetRoom(): void {  // reset state
 
   updateDescText(dataJSON.room2fire.desc.text);
 
-  locked = true;  // Locked input
+  locked = true; // Locked input
   isTransitioning = true;
 
-  createSlots();  // Prepare UI level 1, but input still locked
+  createSlots(); // Prepare UI level 1, but input still locked
   updateHUD();
 
   fireSlots?.classList.remove(PUZZLE_FOCUS_CLASS); // Fokus off until intro is done
 
-  introTimeoutId = window.setTimeout(() => { // After intro - Show level 1 instruction - release locked input and focus input
+  introTimeoutId = window.setTimeout(() => {
+    // After intro - Show level 1 instruction - release locked input and focus input
     updateDescText(FIRE_LEVEL_TEXT[0] ?? "");
 
     locked = false;
     isTransitioning = false;
     fireSlots?.classList.add(PUZZLE_FOCUS_CLASS);
     setActiveSlotClass();
-
   }, INTRO_MS);
 }
 
@@ -501,8 +508,7 @@ function resetRoom(): void {  // reset state
 function updateDescText(text: string): void {
   if (!fireSection) return;
 
-  const textEl =
-    fireSection.querySelector<HTMLElement>(".roomDesc .descText");
+  const textEl = fireSection.querySelector<HTMLElement>(".roomDesc .descText");
 
   if (!textEl) {
     throw new Error("Missing .descText (renderRoomDesc must run first)");
@@ -524,12 +530,7 @@ function applyLevelClass(): void {
   if (!fireSection) return;
 
   // remove old classes
-  fireSection.classList.remove(
-    "fire--l1",
-    "fire--l2",
-    "fire--l3",
-    "fire--l4",
-  );
+  fireSection.classList.remove("fire--l1", "fire--l2", "fire--l3", "fire--l4");
 
   // add actual level class
   const levelClass = `fire--l${currentLevelIndex + 1}`;
@@ -542,41 +543,46 @@ function applyLevelClass(): void {
 
 /**
  * updateHUD() - Responsible for updating HUD, that'll be level text, misstakes, progress-bar
- * createSlots() - Build the slot row in DOM for the actual level 
+ * createSlots() - Build the slot row in DOM for the actual level
  * setActiveSlotClass() - For better UX, marks the slot that has tp be filled in
  * fillSlot () - Resposible for putting the right element in a certain slot
  */
 
 function updateHUD(): void {
-  if (!levelValueEl || !mistakesEl || !balanceBar || !balanceFill) return;  // Fallback
+  if (!levelValueEl || !mistakesEl || !balanceBar || !balanceFill) return; // Fallback
 
-  const level = LEVELS[currentLevelIndex];  // get the levels array for the current level
+  const level = LEVELS[currentLevelIndex]; // get the levels array for the current level
 
-  levelValueEl.textContent = `${currentLevelIndex + 1} / ${LEVELS.length}` // Showing level 1 - 4, +1 because currentLevelIndex starts at 0.
+  levelValueEl.textContent = `${currentLevelIndex + 1} / ${LEVELS.length}`; // Showing level 1 - 4, +1 because currentLevelIndex starts at 0.
 
-  mistakesEl.textContent = String(mistakes);  // Show mistakes as text. (string)
+  mistakesEl.textContent = String(mistakes); // Show mistakes as text. (string)
 
   const totalSlots = level.sequence.length; // totalSlots = How many slots for the current level
-  const playerSlots = level.prefilled ? Math.max(0, totalSlots - 1) : totalSlots; // playerSlots = How many slots that has to be filled (example, prefilled = -1 that has to be filled)
+  const playerSlots = level.prefilled
+    ? Math.max(0, totalSlots - 1)
+    : totalSlots; // playerSlots = How many slots that has to be filled (example, prefilled = -1 that has to be filled)
 
-  const playerFilled = level.prefilled ? Math.max(0, attempt.length - 1) : attempt.length;  // playerFilled = How many slots that has been filled in
+  const playerFilled = level.prefilled
+    ? Math.max(0, attempt.length - 1)
+    : attempt.length; // playerFilled = How many slots that has been filled in
 
-  const progress = playerSlots === 0 ? 0 : playerFilled / playerSlots;  // If playerSlots = 0, put 0 to avoid division with 0
+  const progress = playerSlots === 0 ? 0 : playerFilled / playerSlots; // If playerSlots = 0, put 0 to avoid division with 0
   const percent = Math.round(progress * 100); // percent = progress in %, rounded to integer
 
-  balanceFill.style.width = `${percent}%`;  // Visual width styling on the progress bar
-  balanceBar.setAttribute("aria-valuenow", String(percent));  // For screen readers in percentages (bar)
+  balanceFill.style.width = `${percent}%`; // Visual width styling on the progress bar
+  balanceBar.setAttribute("aria-valuenow", String(percent)); // For screen readers in percentages (bar)
 }
 
 function createSlots(): void {
   if (!fireSlots) return; // Fallback
 
-  fireSlots.replaceChildren();  // Clears the old slots (we start from 0 in each level)
+  fireSlots.replaceChildren(); // Clears the old slots (we start from 0 in each level)
 
-  const level = LEVELS[currentLevelIndex];  // level =Get actual level
-  const total = level.sequence.length;  // total = how many slots to create (sequence)
+  const level = LEVELS[currentLevelIndex]; // level =Get actual level
+  const total = level.sequence.length; // total = how many slots to create (sequence)
 
-  for (let i = 0; i < total; i++) { // Loop, creates (total) div.slots with data index 
+  for (let i = 0; i < total; i++) {
+    // Loop, creates (total) div.slots with data index
     const slot = document.createElement("div");
     slot.className = "slot";
     slot.dataset.index = String(i);
@@ -588,9 +594,9 @@ function createSlots(): void {
 
   if (level.prefilled) {
     attempt.push(level.prefilled);
-    fillSlot(0, level.prefilled); // if prefilled slot - make attempt.length 1 - activeIndex can point at the next slot automaticaly 
+    fillSlot(0, level.prefilled); // if prefilled slot - make attempt.length 1 - activeIndex can point at the next slot automaticaly
 
-    const first = fireSlots.querySelector<HTMLElement>('.slot[data-index="0"]');  // Mark slot 0 as locked (prefilled and not active) - CSS Styling.
+    const first = fireSlots.querySelector<HTMLElement>('.slot[data-index="0"]'); // Mark slot 0 as locked (prefilled and not active) - CSS Styling.
     first?.classList.add("is-locked");
   }
 
@@ -613,12 +619,12 @@ function redrawSlots(): void {
     fireSlots.appendChild(slot);
   }
 
-  attempt.forEach((key, i) => fillSlot(i, key));
+  attempt.forEach((key, i) => {
+    fillSlot(i, key);
+  });
 
   if (level.prefilled) {
-    const first = fireSlots.querySelector<HTMLElement>(
-      '.slot[data-index="0"]'
-    );
+    const first = fireSlots.querySelector<HTMLElement>('.slot[data-index="0"]');
     first?.classList.add("is-locked");
   }
 }
@@ -627,7 +633,7 @@ function clearSlot(index: number): void {
   if (!fireSlots) return;
 
   const slot = fireSlots.querySelector<HTMLElement>(
-    `.slot[data-index="${index}"]`
+    `.slot[data-index="${index}"]`,
   );
   slot?.replaceChildren();
 }
@@ -638,24 +644,29 @@ function setActiveSlotClass(): void {
   const slots = Array.from(fireSlots.querySelectorAll<HTMLElement>(".slot")); // slots = Fetch all the slots in the array so we can loop
   const activeIndex = attempt.length; // activeIndex = example, attempt.length = 0, -> we have to fill in slot 0. If prefilled jump to next slot.
 
-  slots.forEach((s, i) => s.classList.toggle("is-active", i === activeIndex));  // Only the correct slot get index "is-active" - CSS styling
+  slots.forEach((s, i) => {
+    s.classList.toggle("is-active", i === activeIndex);
+  }); // Only the correct slot get index "is-active" - CSS styling
 }
 
-function fillSlot(slotIndex: number, key: TFireKey): void {  // Fill the specified slot with FireKey (element)
+function fillSlot(slotIndex: number, key: TFireKey): void {
+  // Fill the specified slot with FireKey (element)
   if (!fireSlots) return;
 
-  const slotEl = fireSlots.querySelector<HTMLElement>(`.slot[data-index="${slotIndex}"]`);  // slotEl = find the correct slot bvased on the data index
+  const slotEl = fireSlots.querySelector<HTMLElement>(
+    `.slot[data-index="${slotIndex}"]`,
+  ); // slotEl = find the correct slot bvased on the data index
   if (!slotEl) return;
 
-
-  const btn = keyButtons.find((b) => b.dataset.firePick?.toUpperCase() === key);  // Find correct FireKey in "keypad", uppercase to match (example "A" "T"..)
-  const svg = btn?.querySelector("svg");  // Get the SVG from buttons
+  const btn = keyButtons.find((b) => b.dataset.firePick?.toUpperCase() === key); // Find correct FireKey in "keypad", uppercase to match (example "A" "T"..)
+  const svg = btn?.querySelector("svg"); // Get the SVG from buttons
 
   slotEl.replaceChildren();
-  if (svg) slotEl.appendChild(svg.cloneNode(true)); // cloneNode(true) = Clone the whole SVG tree - (This is because a DOM element cant be in two places at the same time) Cloning so we can show in button and slot.
-  else slotEl.textContent = key;  // Fallback
+  if (svg)
+    slotEl.appendChild(svg.cloneNode(true)); // cloneNode(true) = Clone the whole SVG tree - (This is because a DOM element cant be in two places at the same time) Cloning so we can show in button and slot.
+  else slotEl.textContent = key; // Fallback
 
-  retriggerClass(slotEl, "just-filled");  // Re-trigger class so we can create an animation
+  retriggerClass(slotEl, "just-filled"); // Re-trigger class so we can create an animation
 }
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -676,9 +687,7 @@ function applyKeyFocus(): void {
 function applySlotFocus(): void {
   if (!fireSlots) return;
 
-  const slots = Array.from(
-    fireSlots.querySelectorAll<HTMLElement>(".slot")
-  );
+  const slots = Array.from(fireSlots.querySelectorAll<HTMLElement>(".slot"));
 
   slots.forEach((slot, i) => {
     const active = i === focusedSlotIndex;
@@ -698,11 +707,11 @@ function handlePick(key: TFireKey): void {
   const level = LEVELS[currentLevelIndex];
   const total = level.sequence.length;
 
-  if (attempt.length >= total) return;  // If already filled, ignore input
+  if (attempt.length >= total) return; // If already filled, ignore input
 
-  attempt.push(key);  // add input
+  attempt.push(key); // add input
 
-  fillSlot(attempt.length - 1, key) // Fill the correct slot in UI
+  fillSlot(attempt.length - 1, key); // Fill the correct slot in UI
 
   setActiveSlotClass();
   updateHUD();
@@ -853,7 +862,6 @@ function ifRoomCompleted(): void {
   // Show msg - feedback to user/player
   showMsg("Well done — next chamber awaits", COMPLETE_MSG_MS);
 
-
   window.setTimeout(() => {
     // CLEANUP so re-entering starts fresh.
     currentLevelIndex = 0;
@@ -896,7 +904,6 @@ function ifRoomFailed(): void {
   //update progress bar
   updateProgressBar();
 
-
   showMsg("Time's up — next chamber awaits", COMPLETE_MSG_MS);
 
   //  Efter message -> reset -> transition till Earth
@@ -913,8 +920,6 @@ function ifRoomFailed(): void {
     goToNextRoom("#room3Earth", room3earthFunc);
   }, COMPLETE_MSG_MS);
 }
-
-
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------ EXIT ROOM --------------------------------------------------------------------------- */
@@ -971,7 +976,7 @@ function retriggerClass(el: HTMLElement, className: string): void {
 }
 
 function initKeypadFocus(): void {
-
-  keyButtons.forEach((btn, i) => (btn.tabIndex = i === 0 ? 0 : -1));
+  keyButtons.forEach((btn, i) => {
+    btn.tabIndex = i === 0 ? 0 : -1;
+  });
 }
-

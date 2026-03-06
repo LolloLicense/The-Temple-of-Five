@@ -9,52 +9,52 @@ import { getHighscores, type THighscoreEntry } from "./highscoreStorage";
  * This renderer only displays data
  */
 export function renderHighscoreList(): void {
-    const listEl = document.querySelector<HTMLOListElement>("#highscoreList");
-    if (!listEl) return;
+  const listEl = document.querySelector<HTMLOListElement>("#highscoreList");
+  if (!listEl) return;
 
-    // Clear previous list content 
-    listEl.replaceChildren();
+  // Clear previous list content
+  listEl.replaceChildren();
 
-    const highscores: THighscoreEntry[] = getHighscores();
+  const highscores: THighscoreEntry[] = getHighscores();
 
-    // Empty state
-    if (highscores.length === 0) {
-        const li = document.createElement("li");
+  // Empty state
+  if (highscores.length === 0) {
+    const li = document.createElement("li");
 
-        const left = document.createElement("span");
-        left.textContent = "No highscores yet";
+    const left = document.createElement("span");
+    left.textContent = "No highscores yet";
 
-        const right = document.createElement("span");
-        right.textContent = "—";
+    const right = document.createElement("span");
+    right.textContent = "—";
 
-        li.append(left, right);
-        listEl.append(li);
-        return;
-    }
+    li.append(left, right);
+    listEl.append(li);
+    return;
+  }
 
-    // Render each entry
-    for (const entry of highscores) {
-        const li = document.createElement("li");
+  // Render each entry
+  for (const entry of highscores) {
+    const li = document.createElement("li");
 
-        const nameSpan = document.createElement("span");
-        nameSpan.textContent = entry.name;
+    const nameSpan = document.createElement("span");
+    nameSpan.textContent = entry.name;
 
-        const scoreSpan = document.createElement("span");
-        scoreSpan.textContent = `${entry.score}`;
+    const scoreSpan = document.createElement("span");
+    scoreSpan.textContent = `${entry.score}`;
 
-        li.append(nameSpan, scoreSpan);
-        listEl.append(li);
-    }
+    li.append(nameSpan, scoreSpan);
+    listEl.append(li);
+  }
 }
 
 // Attach listener only once
 let highscoreListenerBound = false;
 
 export function initHighscoreRenderListener(): void {
-    if (highscoreListenerBound) return;
-    highscoreListenerBound = true;
+  if (highscoreListenerBound) return;
+  highscoreListenerBound = true;
 
-    window.addEventListener("highscores:changed", () => {
-        renderHighscoreList();
-    });
+  window.addEventListener("highscores:changed", () => {
+    renderHighscoreList();
+  });
 }

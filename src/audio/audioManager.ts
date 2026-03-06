@@ -11,8 +11,6 @@ let playingBgmId: string | null = null; // currentBGMid is a string that holds t
 
 let fadeToken = 0; // if user is changing the room quickly, fade will abort
 
-
-
 /*--------------------------------------------------------
 INIT
 --------------------------------------------------------*/
@@ -43,7 +41,10 @@ export function initAudioManager(configs: SoundConfig[]): void {
 
     console.log("[audioManager] Registered config:", cfg.id);
   }
-  console.log("[audioManager] INIT complete. Registered configs =", configs.length);
+  console.log(
+    "[audioManager] INIT complete. Registered configs =",
+    configs.length,
+  );
 }
 
 /*--------------------------------------------------------
@@ -302,8 +303,7 @@ function getOrCreateAudio(id: string): HTMLAudioElement | null {
   audio.loop = cfg.loop ?? cfg.kind === "bgm";
 
   // Volym från targetVolumes (registrerad i init)
-  audio.volume =
-    targetVolumes.get(id) ?? (cfg.kind === "bgm" ? 0.2 : 0.35);
+  audio.volume = targetVolumes.get(id) ?? (cfg.kind === "bgm" ? 0.2 : 0.35);
 
   audio.muted = isMuted();
 

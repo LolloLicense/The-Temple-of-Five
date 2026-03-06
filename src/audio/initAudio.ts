@@ -17,7 +17,7 @@ export function initAudio(): void {
       volume: 0.2,
     },
     {
-      id: "bgm_metal", // same id as in data.json 
+      id: "bgm_metal", // same id as in data.json
       src: withBaseUrl("/audiofiles/bgm_metal.mp3"),
       kind: "bgm",
       volume: 0.5,
@@ -34,34 +34,34 @@ export function initAudio(): void {
       volume: 0.5,
     },
     {
-    id: "sfx_click",
-    src: withBaseUrl("/audiofiles/sfx_click.mp3"),
-    kind: "sfx",
-    volume: 0.4,
+      id: "sfx_click",
+      src: withBaseUrl("/audiofiles/sfx_click.mp3"),
+      kind: "sfx",
+      volume: 0.4,
     },
     {
-    id: "sfx_shortSlide",
-    src: withBaseUrl("/audiofiles/sfx_shortSlide.mp3"),
-    kind: "sfx",
-    volume: 0.4,
+      id: "sfx_shortSlide",
+      src: withBaseUrl("/audiofiles/sfx_shortSlide.mp3"),
+      kind: "sfx",
+      volume: 0.4,
     },
     {
-    id: "sfx_midSlide",
-    src: withBaseUrl("/audiofiles/sfx_midSlide.mp3"),
-    kind: "sfx",
-    volume: 0.4,
+      id: "sfx_midSlide",
+      src: withBaseUrl("/audiofiles/sfx_midSlide.mp3"),
+      kind: "sfx",
+      volume: 0.4,
     },
     {
-    id: "sfx_midSlide2",
-    src: withBaseUrl("/audiofiles/sfx_midSlide2.mp3"),
-    kind: "sfx",
-    volume: 0.4,
+      id: "sfx_midSlide2",
+      src: withBaseUrl("/audiofiles/sfx_midSlide2.mp3"),
+      kind: "sfx",
+      volume: 0.4,
     },
     {
-    id: "sfx_longSlide",
-    src: withBaseUrl("/audiofiles/sfx_longSlide.mp3"),
-    kind: "sfx",
-    volume: 0.4,
+      id: "sfx_longSlide",
+      src: withBaseUrl("/audiofiles/sfx_longSlide.mp3"),
+      kind: "sfx",
+      volume: 0.4,
     },
     {
       id: "bgm_final", // same id as in data.json
