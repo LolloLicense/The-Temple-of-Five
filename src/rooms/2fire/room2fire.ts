@@ -829,10 +829,6 @@ function ifRoomCompleted(): void {
   // Stop all timers so they cant trigger after complete
   stopTimeUpWatcher();
   stopIntroTimeout();
-  stopTimer(2);
-
-  // Update progress bar
-  updateProgressBar();
 
   // Update UI one last time (just for UX)
   updateHUD();
@@ -846,6 +842,13 @@ function ifRoomCompleted(): void {
     score: 0, // TODO, define scoring rules
     roomTimeSec: 0, // TODO, define timing rules
   });
+
+  // Stop timer AFTER saving status/artifact/mistakes/score.
+  // The timer helper will then store roomTimeSec while keeping the other fields.
+  stopTimer(2);
+
+  //update progress bar
+  updateProgressBar();
 
   // Show msg - feedback to user/player
   showMsg("Well done — next chamber awaits", COMPLETE_MSG_MS);
@@ -875,10 +878,6 @@ function ifRoomFailed(): void {
 
   stopTimeUpWatcher();
   stopIntroTimeout();
-  stopTimer(2);
-
-  //update progress bar
-  updateProgressBar;
 
   updateHUD();
   setActiveSlotClass();
@@ -890,6 +889,13 @@ function ifRoomFailed(): void {
     score: 0,
     roomTimeSec: 0,
   });
+
+  // Stop timer AFTER saving status/artifact/mistakes/score.
+  stopTimer(2);
+
+  //update progress bar
+  updateProgressBar();
+
 
   showMsg("Time's up — next chamber awaits", COMPLETE_MSG_MS);
 
