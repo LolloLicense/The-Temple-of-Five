@@ -13,7 +13,7 @@ import {
 import { goToSection } from "../../script/helper/transitions.ts";
 //import { startTimer, stopTimer } from "./script/utils.ts";
 import { startTimer, stopTimer, TimeIsUp } from "../../script/helper/utils.ts";
-import { room6finalFunc } from "../final/room6validate.ts";
+import { room2fireFunc } from "../2fire/room2fire.ts";
 
 //-----------------------------------------------------------
 //----------------------CONFIG / RULES-----------------------
@@ -384,7 +384,7 @@ export function room1woodFunc() {
       updtUI();
 
       // go next room
-      goToNextRoom("#room2Fire", room6finalFunc);
+      goToNextRoom("#room2Fire", room2fireFunc);
     }, TRANSITIONTIME);
   }
 
@@ -425,7 +425,7 @@ export function room1woodFunc() {
 
       isTransitioning = false;
       updtUI();
-      goToNextRoom("#room2Fire", room6finalFunc);
+      goToNextRoom("#room2Fire", room2fireFunc);
     }, TRANSITIONTIME);
   }
 

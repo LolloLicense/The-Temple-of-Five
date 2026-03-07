@@ -124,6 +124,7 @@ let SINK_ENTRY_DIR: TDirection = "W";
 let listenersBound = false; // FIX 4: Prevent duplicate listeners on re-entry
 let timeUpIntervalId: number | null = null; // FIX 5: Time-up watcher id
 let isTransitioning = false;
+let waterSection: HTMLElement | null = null;
 
 // ── PIPE SVG ───────────────────────────────────────────────────────────────
 
@@ -490,13 +491,15 @@ function ifRoomFailed(): void {
 
 // ── NAVIGATION ─────────────────────────────────────────────────────────────
 function goToNextRoom(nextSelector: string, nextRoomFunc: () => void): void {
+  if (!waterSection) return;
+
   const nextSection = document.querySelector<HTMLElement>(nextSelector);
   if (!nextSection) return;
 
-  // Build the next room first
+  // Build next room first
   nextRoomFunc();
 
-  // Then let Water own the transition to the next room
+  // Let Water own the transition
   goToSection(nextSection, TRANSITION_MS);
 }
 
@@ -700,6 +703,8 @@ export function room5waterFunc(): void {
 
   const section = document.querySelector<HTMLElement>("#room5Water");
   if (!section) return;
+
+  waterSection = section;
 
   section.style.backgroundImage = `url("${dataJSON.room5water.backgroundImg}")`;
   showGameHeader();
