@@ -1,13 +1,19 @@
 import * as dataJSON from "../../data.json";
 import { playBgm } from "../../audio/index.ts";
 import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
-import { startTimer } from "../../script/helper/utils.ts";
+import { startTimer, stopTimer } from "../../script/helper/utils.ts";
 import { showGameHeader } from "../../script/helper/gameHeader.ts";
 import { getRoomResults } from "../../script/helper/storage.ts";
 import { getArtifactIcon } from "../../script/helper/artifacts.ts";
+import { goToSection } from "../../script/helper/transitions.ts";
+import { gameOverRoomFunc } from "../gameConclusion/gameOverRoom.ts";
+import { gameWinFunc } from "../gameConclusion/gameWin.ts";
 
 // Typ som bara innehåller de fem elementrummen (inte "final")
 type TElementRoomId = "wood" | "fire" | "earth" | "metal" | "water";
+
+// Standardtid för övergång till nästa sektion
+const TRANSITION_MS = 1200;
 
 export function room6finalFunc(): void {
   //-------------------------------------------------------------------------------------------------------------------------------------
@@ -16,8 +22,18 @@ export function room6finalFunc(): void {
   const finalSection = document.querySelector<HTMLElement>("#finalRoom"); // Hämta finalrummet
   if (!finalSection) return;
 
-  const welcomePage = document.querySelector<HTMLElement>("#welcomePage"); // Dölj welcomePage om den syns
-  if (welcomePage) welcomePage.classList.add("hidden");
+  // Finalrummet äger transitionen vidare till nästa sektion.
+
+  function goToNextRoom(nextSelector: string, nextRoomFunc: () => void): void {
+    const nextSection = document.querySelector<HTMLElement>(nextSelector);
+    if (!nextSection) return;
+
+    // Bygg upp nästa rum först
+    nextRoomFunc();
+
+    // Låt finalrummet äga transitionen dit
+    goToSection(nextSection, TRANSITION_MS);
+  }
 
   finalSection.style.backgroundImage = `url("${dataJSON.room6validate.backgroundImg}")`; // Sätt bakgrundsbild
 
@@ -38,7 +54,7 @@ export function room6finalFunc(): void {
   const rooms: TElementRoomId[] = ["wood", "fire", "earth", "metal", "water"]; // Rummen i korrekt ordning
 
   // Bygg artifactPool = lista med { roomId, kind, icon }
-  const artifactPool = rooms.map(roomId => {
+  const artifactPool = rooms.map((roomId) => {
     const kind = state[roomId].artifact; // "true" | "false" | null
     const icon = getArtifactIcon(roomId, kind); // Hämta ikon
     return { roomId, kind, icon };
@@ -47,19 +63,24 @@ export function room6finalFunc(): void {
   //----------------------------------------------------------- Slots & State -----------------------------------------------------------
   //-------------------------------------------------------------------------------------------------------------------------------------
   const slots = Array.from(
-    finalSection.querySelectorAll(".finalSlots .slot")
+    finalSection.querySelectorAll(".finalSlots .slot"),
   ) as HTMLElement[]; // Hämta alla slot-element
 
   let slotSelections: (number | null)[] = [null, null, null, null, null]; // Vilken artifact ligger i vilken slot
   let activeSlotIndex = 0; // Vilken slot är aktiv (highlightad)
 
-  const validateBtn = finalSection.querySelector("#validateBtn") as HTMLButtonElement; // Validateknappen
-  const feedbackEl = finalSection.querySelector("#finalFeedback") as HTMLElement; // Feedbacktext
+  const validateBtn = finalSection.querySelector(
+    "#validateBtn",
+  ) as HTMLButtonElement; // Validateknappen
+  const feedbackEl = finalSection.querySelector(
+    "#finalFeedback",
+  ) as HTMLElement; // Feedbacktext
   //-------------------------------------------------------------------------------------------------------------------------------------
   //-------------------------------------------------------------- Render ---------------------------------------------------------------
   //-------------------------------------------------------------------------------------------------------------------------------------
   function renderSlots() {
-    slots.forEach((slotElement, slotIndex) => { // Gå igenom varje slot
+    slots.forEach((slotElement, slotIndex) => {
+      // Gå igenom varje slot
 
       slotElement.classList.remove("is-active"); // Ta bort highlight
       slotElement.innerHTML = ""; // Töm sloten
@@ -80,25 +101,28 @@ export function room6finalFunc(): void {
   //----------------------------------------------------------- Validate-knapp ----------------------------------------------------------
   //-------------------------------------------------------------------------------------------------------------------------------------
   function updateValidate() {
-    const allSlotsAreFilled = slotSelections.every(selection => selection !== null); // Är alla slots fyllda?
+    const allSlotsAreFilled = slotSelections.every(
+      (selection) => selection !== null,
+    ); // Är alla slots fyllda?
     validateBtn.disabled = !allSlotsAreFilled; // Aktivera/inaktivera knappen
   }
   //-------------------------------------------------------------------------------------------------------------------------------------
   //------------------------------------------------------- Byt artifact i slot ---------------------------------------------------------
   //-------------------------------------------------------------------------------------------------------------------------------------
   // Skapa en Set (samling utan dubbletter) med alla artifacts som redan används i någon slot
-  function cycleArtifact(direction: number) {  
+  function cycleArtifact(direction: number) {
     const usedArtifactIndexes = new Set(
-      slotSelections.filter(selection => selection !== null) // Ta bort tomma slots (null)
+      slotSelections.filter((selection) => selection !== null), // Ta bort tomma slots (null)
     );
 
     // Skapa en lista med alla artifacts som är tillgängliga att välja i den aktiva sloten
     const availableArtifactIndexes = artifactPool
-    .map((_, artifactIndex) => artifactIndex) // Gör en lista [0,1,2,3,4] baserat på artifactPool
-    .filter(artifactIndex =>
-      !usedArtifactIndexes.has(artifactIndex) || // Artifacten är inte upptagen av en annan slot
-      slotSelections[activeSlotIndex] === artifactIndex // Eller så är det samma artifact som redan ligger i denna slot
-    );
+      .map((_, artifactIndex) => artifactIndex) // Gör en lista [0,1,2,3,4] baserat på artifactPool
+      .filter(
+        (artifactIndex) =>
+          !usedArtifactIndexes.has(artifactIndex) || // Artifacten är inte upptagen av en annan slot
+          slotSelections[activeSlotIndex] === artifactIndex, // Eller så är det samma artifact som redan ligger i denna slot
+      );
 
     // Om det inte finns några artifacts att välja → avbryt funktionen
     if (availableArtifactIndexes.length === 0) return;
@@ -110,35 +134,42 @@ export function room6finalFunc(): void {
     // Om sloten är tom → börja på -1 (innan första artifacten)
     // Annars → hitta indexet i availableArtifactIndexes
     let newIndexInAvailableList =
-    currentArtifactIndex === null ? -1 : availableArtifactIndexes.indexOf(currentArtifactIndex);
+      currentArtifactIndex === null
+        ? -1
+        : availableArtifactIndexes.indexOf(currentArtifactIndex);
 
     // Flytta upp eller ner i listan beroende på direction (+1 eller -1)
     newIndexInAvailableList += direction;
 
     // Wrap-around: om vi går förbi sista artifacten → hoppa till första
-    if (newIndexInAvailableList >= availableArtifactIndexes.length) newIndexInAvailableList = 0;
+    if (newIndexInAvailableList >= availableArtifactIndexes.length)
+      newIndexInAvailableList = 0;
 
     // Wrap-around: om vi går före första artifacten → hoppa till sista
-    if (newIndexInAvailableList < 0) newIndexInAvailableList = availableArtifactIndexes.length - 1;
+    if (newIndexInAvailableList < 0)
+      newIndexInAvailableList = availableArtifactIndexes.length - 1;
 
     // Sätt den nya artifacten i den aktiva sloten
-    slotSelections[activeSlotIndex] = availableArtifactIndexes[newIndexInAvailableList];
+    slotSelections[activeSlotIndex] =
+      availableArtifactIndexes[newIndexInAvailableList];
 
-    renderSlots();// Rita om slotarna så spelaren ser ändringen
+    renderSlots(); // Rita om slotarna så spelaren ser ändringen
     updateValidate(); // Uppdatera Validate-knappen (kan bli aktiv om alla slots är fyllda)
   }
   //-------------------------------------------------------------------------------------------------------------------------------------
   //----------------------------------------------------------- Tangentbord -------------------------------------------------------------
   //-------------------------------------------------------------------------------------------------------------------------------------
-  document.addEventListener("keydown", event => {
-    if (!finalSection.classList.contains("isVisible")) return;  // Tangentbordet ska bara fungera när finalrummet är synligt
+  document.addEventListener("keydown", (event) => {
+    if (!finalSection.classList.contains("isVisible")) return; // Tangentbordet ska bara fungera när finalrummet är synligt
 
-    if (event.key === "ArrowLeft") { // Om spelaren trycker vänsterpil
+    if (event.key === "ArrowLeft") {
+      // Om spelaren trycker vänsterpil
       activeSlotIndex = Math.max(0, activeSlotIndex - 1); // Flytta highlight åt vänster, men aldrig under 0
       renderSlots(); // Rita om så highlight syns
     }
 
-    if (event.key === "ArrowRight") { // Om spelaren trycker högerpil
+    if (event.key === "ArrowRight") {
+      // Om spelaren trycker högerpil
       activeSlotIndex = Math.min(4, activeSlotIndex + 1); // Flytta highlight åt höger, men aldrig över 4
       renderSlots(); // Rita om så highlight syns
     }
@@ -147,21 +178,32 @@ export function room6finalFunc(): void {
 
     if (event.key === "ArrowDown") cycleArtifact(1); // Om spelaren trycker nedåt → byt artifact nedåt i listan
   });
+
   //-------------------------------------------------------------------------------------------------------------------------------------
   //------------------------------------------------------------- Validate --------------------------------------------------------------
   //-------------------------------------------------------------------------------------------------------------------------------------
+
   validateBtn.addEventListener("click", () => {
-    const correctOrder: TElementRoomId[] = ["wood", "fire", "earth", "metal", "water"]; // Den korrekta ordningen av artifacts baserat på rummen
-    
-    const selectedArtifacts = slotSelections.map( // Hämta artifacts i den ordning spelaren har placerat dem i slotsen
-      artifactIndex => artifactPool[artifactIndex!] // artifactIndex! = vi lovar att det inte är null
+    const correctOrder: TElementRoomId[] = [
+      "wood",
+      "fire",
+      "earth",
+      "metal",
+      "water",
+    ]; // Den korrekta ordningen av artifacts baserat på rummen
+
+    const selectedArtifacts = slotSelections.map(
+      // Hämta artifacts i den ordning spelaren har placerat dem i slotsen
+      (artifactIndex) => artifactPool[artifactIndex!], // artifactIndex! = vi lovar att det inte är null
     );
 
-    const orderIsCorrect = selectedArtifacts.every(  //Kontrollera ordningen
-     (artifact, slotIndex) => artifact.roomId === correctOrder[slotIndex] // Jämför varje artifact med rätt position
+    const orderIsCorrect = selectedArtifacts.every(
+      // Kontrollera ordningen
+      (artifact, slotIndex) => artifact.roomId === correctOrder[slotIndex], // Jämför varje artifact med rätt position
     );
 
-    if (!orderIsCorrect) { // Om ordningen är fel
+    if (!orderIsCorrect) {
+      // Om ordningen är fel
       feedbackEl.textContent = "Wrong order. Try again."; // Visa feedback
       slotSelections = [null, null, null, null, null]; // Töm alla slots
       activeSlotIndex = 0; // Flytta highlight till första sloten
@@ -171,18 +213,33 @@ export function room6finalFunc(): void {
       return; // Avsluta funktionen här
     }
 
-    const allArtifactsAreTrue = selectedArtifacts.every( // Kontrollera om artifacts är "true"
-      artifact => artifact.kind === "true" // Alla artifacts måste vara "true"
+    const allArtifactsAreTrue = selectedArtifacts.every(
+      // Kontrollera om artifacts är "true"
+      (artifact) => artifact.kind === "true",
     );
- 
-    if (allArtifactsAreTrue) {  // Om spelaren vann
+
+    if (allArtifactsAreTrue) {
+      // Om spelaren vann
       feedbackEl.textContent = "You win!";
-      // TODO: gå till gameWin
-    } 
-  
-    else { // Om spelaren hade rätt ordning men fel artifacts
+
+      // Stoppa finalrummets timer innan vi går vidare
+      stopTimer(6);
+
+      // Finalrummet äger transitionen till win-sidan
+      window.setTimeout(() => {
+        goToNextRoom("#gameWinRoom", gameWinFunc);
+      }, TRANSITION_MS);
+    } else {
+      // Om ordningen var rätt men någon artifact var falsk
       feedbackEl.textContent = "Incorrect artifacts. Game Over.";
-      // TODO: gå till gameOver
+
+      // Stoppa finalrummets timer innan vi går vidare
+      stopTimer(6);
+
+      // Finalrummet äger transitionen till game-over-sidan
+      window.setTimeout(() => {
+        goToNextRoom("#gameOverRoom", gameOverRoomFunc);
+      }, TRANSITION_MS);
     }
   });
   //-------------------------------------------------------------------------------------------------------------------------------------

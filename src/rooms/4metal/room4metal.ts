@@ -6,11 +6,7 @@ import { showMsg } from "../../script/helper/showMsg.ts";
 import { setRoomResult, getRoomResults } from "../../script/helper/storage.ts";
 import { room5waterFunc } from "../5water/room5water.ts";
 import { showGameHeader } from "../../script/helper/gameHeader.ts";
-import {
-  transitSections,
-  getCurrentPage,
-  showSection,
-} from "../../script/helper/transitions.ts";
+import { goToSection } from "../../script/helper/transitions.ts";
 import { updateProgressBar } from "../../script/helper/progressbar.ts";
 
 //-------------------------------------------------------------------------------------------------------------------------------------
@@ -53,6 +49,15 @@ function clearSequence(): void {
     // Om timeouten efter sekvensen är aktiv
     window.clearTimeout(sequenceEndTimeoutId); // Stoppa timeouten
     sequenceEndTimeoutId = null; // Nollställ referensen
+  }
+}
+
+function stopTimeUpWatcher(): void {
+  // Hjälpfunktion för att stoppa timeUp‑watchern
+  if (timeUpIntervalId !== null) {
+    // Om intervallen är aktiv
+    window.clearInterval(timeUpIntervalId); // Stoppa intervallen.
+    timeUpIntervalId = null; // Nollställ referensen
   }
 }
 //-------------------------------------------------------------------------------------------------------------------------------------
@@ -116,38 +121,18 @@ export function room4metalFunc() {
   //-------------------------------------------------------------------------------------------------------------------------------------
   const TRANSITION_MS = 1200; // Standard tid för rumsövergångar
 
-  // Funktion för att lämna metallrummet och gå till nästa rum
   function goToNextRoom(nextSelector: string, nextRoomFunc: () => void): void {
-    const currentSection = document.querySelector<HTMLElement>("#room4Metal"); // Hämta nuvarande rumssektion
-    if (!currentSection) return; // Avbryt om de inte finns
+    const nextSection = document.querySelector<HTMLElement>(nextSelector);
+    if (!nextSection) return;
 
-    const nextSection = document.querySelector<HTMLElement>(nextSelector); // Hämta nästa rumssektion via CSS‑selektor
-    if (!nextSection) return; // Om nästa rum inte finns, avbryt
+    // Build the next room first
+    nextRoomFunc();
 
-    cleanupMetalRuntime(); // Stoppa alla timers innan vi lämnar rummet.
-    transitSections(currentSection, nextSection, TRANSITION_MS); // Kör övergångsanimeringen mellan rummen
-    setTimeout(() => nextRoomFunc(), TRANSITION_MS); // Starta nästa rums logik efter att övergången är klar
+    // Then let Metal own the transition to the next room
+    goToSection(nextSection, TRANSITION_MS);
   }
 
   metalSection.style.backgroundImage = `url("${dataJSON.room4metal.backgroundImg}")`; // Sätter bakgrundsbilden för metallrummet från JSON-data
-
-  const fromPage =
-    getCurrentPage() ?? document.querySelector("main > section.page.isVisible"); // Hitta aktuell sida, annars ta första synliga sidan
-  if (fromPage && fromPage !== metalSection) {
-    // Om vi kommer från en annan sida än metallrummet
-    transitSections(fromPage, metalSection, 1200); // Kör en fade/transition från föregående sida till metallrummet
-  } else {
-    showSection(metalSection); // Om det är första laddningen: visa metallrummet direkt
-  }
-
-  function stopTimeUpWatcher(): void {
-    // Hjälpfunktion för att stoppa timeUp‑watchern
-    if (timeUpIntervalId !== null) {
-      // Om intervallen är aktiv
-      window.clearInterval(timeUpIntervalId); // Stoppa intervallen.
-      timeUpIntervalId = null; // Nollställ referensen
-    }
-  }
 
   stopTimeUpWatcher(); // Säkerställ att ingen gammal timeUp‑watcher ligger kvar.
   startTimer(4); // Starta timer rum 4 metall

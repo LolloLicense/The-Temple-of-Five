@@ -10,14 +10,10 @@ import {
   resetSingleRoomResult,
   setRoomResult,
 } from "../../script/helper/storage.ts";
-import {
-  getCurrentPage,
-  showSection,
-  transitSections,
-} from "../../script/helper/transitions.ts";
+import { goToSection } from "../../script/helper/transitions.ts";
 //import { startTimer, stopTimer } from "./script/utils.ts";
 import { startTimer, stopTimer, TimeIsUp } from "../../script/helper/utils.ts";
-import { room2fireFunc } from "../2fire/room2fire.ts";
+import { room6finalFunc } from "../final/room6validate.ts";
 
 //-----------------------------------------------------------
 //----------------------CONFIG / RULES-----------------------
@@ -51,6 +47,7 @@ function stopTimeUpWatcher(): void {
 export function room1woodFunc() {
   // reset so we hade default state for artefacts
   resetSingleRoomResult("wood");
+
   //----------------------------------------------------------
   //----------------------SETUP ROOM DOM----------------------
   //----------------------------------------------------------
@@ -58,21 +55,10 @@ export function room1woodFunc() {
   const woodSection = document.querySelector<HTMLElement>("#room1Wood");
   if (!woodSection) return;
 
-  const woodEl = woodSection;
-
   woodSection.style.backgroundImage = `url("${dataJSON.room1wood.backgroundImg}")`;
 
-  // Find the current visible page BEFORE switching
-  const fromPage =
-    getCurrentPage() ??
-    document.querySelector<HTMLElement>("main > section.page.isVisible");
-  if (fromPage && fromPage !== woodSection) {
-    // Fade from current page -> wood room
-    transitSections(fromPage, woodSection, TRANSITIONTIME);
-  } else {
-    // Fallback: just show the room
-    showSection(woodSection);
-  }
+  // Let transition helper handle showing / switching to this room
+  goToSection(woodSection, TRANSITIONTIME);
 
   // Allow entering room every time - transition + header + timer)
   // But only create heavy stuff once (particles + event listeners)
@@ -352,11 +338,11 @@ export function room1woodFunc() {
     const nextSection = document.querySelector<HTMLElement>(nextSelector);
     if (!nextSection) return;
 
-    transitSections(woodEl, nextSection, TRANSITIONTIME);
+    // Build the next room before it fades in
+    nextRoomFunc();
 
-    window.setTimeout(() => {
-      nextRoomFunc();
-    }, TRANSITIONTIME);
+    // Then run the visual transition
+    goToSection(nextSection, TRANSITIONTIME);
   }
 
   //-----------------------------------------------------------
@@ -370,8 +356,6 @@ export function room1woodFunc() {
     //Render the very last digit + final UI state
     updtUI();
     if (mistakes === 0) balanceFill.style.width = "100%";
-
-    // Wait 2 animation frames to guarantee the UI is painted before alert
 
     stopTimeUpWatcher();
 
@@ -400,7 +384,7 @@ export function room1woodFunc() {
       updtUI();
 
       // go next room
-      goToNextRoom("#room2Fire", room2fireFunc);
+      goToNextRoom("#room2Fire", room6finalFunc);
     }, TRANSITIONTIME);
   }
 
@@ -441,7 +425,7 @@ export function room1woodFunc() {
 
       isTransitioning = false;
       updtUI();
-      goToNextRoom("#room2Fire", room2fireFunc);
+      goToNextRoom("#room2Fire", room6finalFunc);
     }, TRANSITIONTIME);
   }
 

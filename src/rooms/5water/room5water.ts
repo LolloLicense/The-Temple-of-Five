@@ -19,34 +19,21 @@
 import * as dataJSON from "../../data.json";
 import { playBgm } from "../../audio/index.ts";
 import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
-import { showGameHeader, hideGameHeader } from "../../script/helper/gameHeader.ts";
-// ── EXIT TO WELCOME ──────────────────────────────────────────────────────
-function exitToWelcome(): void {
-  if (!waterSection) return;
-  const welcomeSection = document.querySelector<HTMLElement>("#welcomePage");
-  if (!welcomeSection) return;
-  hideGameHeader();
-  const fromPage = getCurrentPage();
-  if (!fromPage) return;
-  transitSections(fromPage, welcomeSection, TRANSITION_MS);
-}
-import { resetSingleRoomResult } from "../../script/helper/storage.ts";
-import { setRoomResult } from "../../script/helper/storage.ts";
+import { showGameHeader } from "../../script/helper/gameHeader.ts";
+
+import {
+  resetSingleRoomResult,
+  setRoomResult,
+} from "../../script/helper/storage.ts";
 import { showMsg } from "../../script/helper/showMsg.ts";
 import {
   startTimer as startSharedTimer,
   stopTimer as stopSharedTimer,
   TimeIsUp,
 } from "../../script/helper/utils.ts";
-import {
-  transitSections,
-  getCurrentPage,
-  showSection,
-} from "../../script/helper/transitions.ts";
+import { goToSection } from "../../script/helper/transitions.ts";
 import { updateProgressBar } from "../../script/helper/progressbar.ts";
-// FIX 1: Added missing imports
 import { room6finalFunc } from "../final/room6validate.ts";
-// FIX 2: Uncommented room 6 import
 
 // ── TYPES ──────────────────────────────────────────────────────────────────
 // Prefix T = type, I = interface for clearer and more readable code
@@ -137,7 +124,6 @@ let SINK_ENTRY_DIR: TDirection = "W";
 let listenersBound = false; // FIX 4: Prevent duplicate listeners on re-entry
 let timeUpIntervalId: number | null = null; // FIX 5: Time-up watcher id
 let isTransitioning = false;
-let waterSection: HTMLElement | null = null;
 
 // ── PIPE SVG ───────────────────────────────────────────────────────────────
 
@@ -503,21 +489,15 @@ function ifRoomFailed(): void {
 }
 
 // ── NAVIGATION ─────────────────────────────────────────────────────────────
-// FIX 2 + FIX 3: Standard exit pattern — fade out → call next room func
 function goToNextRoom(nextSelector: string, nextRoomFunc: () => void): void {
-  if (!waterSection) return;
-
   const nextSection = document.querySelector<HTMLElement>(nextSelector);
   if (!nextSection) return;
 
-  // Set BG before transit so it starts loading before the section becomes visible
-  nextSection.style.backgroundImage = `url("${dataJSON.room6validate.backgroundImg}")`;
+  // Build the next room first
+  nextRoomFunc();
 
-  transitSections(waterSection, nextSection, TRANSITION_MS);
-
-  window.setTimeout(() => {
-    nextRoomFunc();
-  }, TRANSITION_MS);
+  // Then let Water own the transition to the next room
+  goToSection(nextSection, TRANSITION_MS);
 }
 
 // ── SCORE ──────────────────────────────────────────────────────────────────
@@ -720,20 +700,10 @@ export function room5waterFunc(): void {
 
   const section = document.querySelector<HTMLElement>("#room5Water");
   if (!section) return;
-  waterSection = section;
+
   section.style.backgroundImage = `url("${dataJSON.room5water.backgroundImg}")`;
   showGameHeader();
   renderRoomDesc(section, dataJSON.room5water.desc);
-
-  // FIX 1: Standard entry pattern — fade from current page or show directly
-  const fromPage =
-    getCurrentPage() ??
-    document.querySelector<HTMLElement>("main > section.page.isVisible");
-  if (fromPage && fromPage !== section) {
-    transitSections(fromPage, section, TRANSITION_MS);
-  } else {
-    showSection(section);
-  }
 
   // Reset state (safe to call multiple times if room is replayed)
   solved = false;
@@ -757,10 +727,6 @@ export function room5waterFunc(): void {
     document
       .getElementById("w-reset-btn")
       ?.addEventListener("click", resetPuzzle);
-    // Example: exit button for leaving the room
-    document
-      .getElementById("w-exit-btn")
-      ?.addEventListener("click", exitToWelcome);
     setupKeyboard();
     listenersBound = true;
   }

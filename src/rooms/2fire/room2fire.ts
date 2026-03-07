@@ -9,11 +9,7 @@ import {
   resetSingleRoomResult,
   setRoomResult,
 } from "../../script/helper/storage";
-import {
-  getCurrentPage,
-  showSection,
-  transitSections,
-} from "../../script/helper/transitions";
+import { goToSection } from "../../script/helper/transitions";
 import { startTimer, stopTimer, TimeIsUp } from "../../script/helper/utils.ts";
 import { room3earthFunc } from "../3earth/room3earth.ts";
 
@@ -383,18 +379,6 @@ export function room2fireFunc(): void {
   showGameHeader(); // Show header when entering fire room
 
   fireSection.style.backgroundImage = `url("${dataJSON.room2fire.backgroundImg}")`; // Set background image from JSON
-
-  // If transiting from Wood room or other sections
-  const fromPage =
-    getCurrentPage() ??
-    document.querySelector<HTMLElement>("main > section.page.isVisible");
-
-  // Change page with fade animation
-  if (fromPage && fromPage !== fireSection) {
-    transitSections(fromPage, fireSection, TRANSITION_MS);
-  } else {
-    showSection(fireSection); // fallback first load - show room directly with showSection
-  }
 
   stopTimeUpWatcher(); // No double watchers if re-entering the room
   startTimer(2); // Start the timer for the fire room
@@ -816,16 +800,14 @@ function nextLevel(): void {
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 function goToNextRoom(nextSelector: string, nextRoomFunc: () => void): void {
-  if (!fireSection) return;
-
   const nextSection = document.querySelector<HTMLElement>(nextSelector);
   if (!nextSection) return;
 
-  transitSections(fireSection, nextSection, TRANSITION_MS);
+  // Build the next room first
+  nextRoomFunc();
 
-  window.setTimeout(() => {
-    nextRoomFunc();
-  }, TRANSITION_MS);
+  // Then let THIS room own the transition
+  goToSection(nextSection, TRANSITION_MS);
 }
 
 function ifRoomCompleted(): void {
@@ -928,11 +910,7 @@ function ifRoomFailed(): void {
 export function exitFireRoom(): void {
   console.log("EXIT FIRE ROOM CALLED");
   const welcomeSection = document.querySelector<HTMLElement>("#welcomePage");
-  const fromPage =
-    getCurrentPage() ??
-    document.querySelector<HTMLElement>("main > section.page.isVisible");
-
-  if (!welcomeSection || !fromPage) return;
+  if (!welcomeSection) return;
 
   // Stop timers/timeouts so nothing fires after exit
   stopTimeUpWatcher();
@@ -954,7 +932,8 @@ export function exitFireRoom(): void {
   focusedSlotIndex = 0;
 
   hideGameHeader();
-  transitSections(fromPage, welcomeSection, TRANSITION_MS);
+  // Let transition helper handle switching back to welcome
+  goToSection(welcomeSection, TRANSITION_MS);
 }
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */

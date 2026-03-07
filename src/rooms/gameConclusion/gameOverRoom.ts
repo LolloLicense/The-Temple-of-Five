@@ -1,32 +1,19 @@
 import * as dataJSON from "../../data.json";
-import {
-  getCurrentPage,
-  showSection,
-  transitSections,
-} from "../../script/helper/transitions.ts";
+import { hideGameHeader } from "../../script/helper/gameHeader.ts";
 
-const TRANSITION_MS = 1200;
-
-export function gameOverRoomFunc() {
+export function gameOverRoomFunc(): void {
   const gameOverSection = document.querySelector<HTMLElement>("#gameOverRoom");
   if (!gameOverSection) return;
 
-  // Reset + restart animation each time we enter
+  // hide the header
+  hideGameHeader();
+  // Reset animation so it can restart every time we enter the room
   gameOverSection.classList.remove("is-animating");
-  // Set background
+
+  // Set background image
   gameOverSection.style.backgroundImage = `url("${dataJSON.gameOverRoom.backgroundImg}")`;
 
-  const fromPage =
-    getCurrentPage() ??
-    document.querySelector<HTMLElement>("main > section.page.isVisible");
-
-  if (fromPage && fromPage !== gameOverSection) {
-    transitSections(fromPage, gameOverSection, TRANSITION_MS);
-  } else {
-    showSection(gameOverSection);
-  }
-
-  // Trigger animation
+  // Restart animation
   requestAnimationFrame(() => {
     gameOverSection.classList.add("is-animating");
   });

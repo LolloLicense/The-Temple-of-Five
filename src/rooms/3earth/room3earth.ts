@@ -5,11 +5,7 @@ import {
   hideGameHeader,
 } from "../../script/helper/gameHeader.ts";
 import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
-import {
-  getCurrentPage,
-  showSection,
-  transitSections,
-} from "../../script/helper/transitions.ts";
+import { goToSection } from "../../script/helper/transitions.ts";
 /*
 import {
   setRoomResult,
@@ -51,398 +47,388 @@ export function room3earthFunc(): void {
     // Renders the room description from data.JSON
     renderRoomDesc(earthSection, dataJSON.room3earth.desc);
     // Find the current visible page BEFORE switching
-    const fromPage =
-      getCurrentPage() ??
-      document.querySelector<HTMLElement>("main > section.page.isVisible");
 
-    if (fromPage && fromPage !== earthSection) {
-      // Fade from current page -> wood room
-      transitSections(fromPage, earthSection, 1200);
-    } else {
-      // Fallback (first load): just show the room
-      showSection(earthSection);
-    }
-  } // IF earthSection END
+    timerCheckInterval = setInterval(timerCheck, 1000);
+    startTimer(3); // Start timer for room 3
+    showGameHeader(); // Show game header
 
-  timerCheckInterval = setInterval(timerCheck, 1000);
-  startTimer(3); // Start timer for room 3
-  showGameHeader(); // Show game header
+    audioHandler("bgm");
 
-  audioHandler("bgm");
+    const gameDiv: HTMLElement | null = document.querySelector("#gameDiv");
+    if (gameDiv) {
+      const generateVisualGrid = (
+        containerId: string,
+        size: number = 4,
+      ): void => {
+        const container = document.getElementById(containerId);
+        let count: number = 1; // Count for slates
+        if (!container) return;
+        for (let i = 0; i < size * size; i++) {
+          const cell = document.createElement("div"); // Create a div for the slate
+          cell.classList.add("slate"); // Add generic slate class for CSS
+          cell.classList.add(`slate${count}`); // Add specific slate class for CSS
+          cell.classList.add(`c${Math.floor(i / size)}${i % size}`); // Add initial coordinates class for slate.
+          /* Pick one entry in array remove it and print it as cell text */
+          cell.textContent = getFromArray(
+            slateNumbersArray,
+          ) as unknown as string;
+          container.appendChild(cell); // Add div to DOM
+          count++; // Count goes upp
+        }
+      };
+      generateVisualGrid("gameDiv");
 
-  const gameDiv: HTMLElement | null = document.querySelector("#gameDiv");
-  if (gameDiv) {
-    const generateVisualGrid = (
-      containerId: string,
-      size: number = 4,
-    ): void => {
-      const container = document.getElementById(containerId);
-      let count: number = 1; // Count for slates
-      if (!container) return;
-      for (let i = 0; i < size * size; i++) {
-        const cell = document.createElement("div"); // Create a div for the slate
-        cell.classList.add("slate"); // Add generic slate class for CSS
-        cell.classList.add(`slate${count}`); // Add specific slate class for CSS
-        cell.classList.add(`c${Math.floor(i / size)}${i % size}`); // Add initial coordinates class for slate.
-        /* Pick one entry in array remove it and print it as cell text */
-        cell.textContent = getFromArray(slateNumbersArray) as unknown as string;
-        container.appendChild(cell); // Add div to DOM
-        count++; // Count goes upp
+      const slates: NodeListOf<HTMLElement> =
+        document.querySelectorAll<HTMLElement>(".slate");
+      for (let i = 0; i < slates.length; i++) {
+        slates[i].addEventListener("click", () => {
+          slateClick(slates[i], i + 1);
+        });
+        //console.log(slates[i].textContent);
       }
-    };
-    generateVisualGrid("gameDiv");
+    } // IF gameDiv
+  } // room3earthFunc END
 
-    const slates: NodeListOf<HTMLElement> =
-      document.querySelectorAll<HTMLElement>(".slate");
-    for (let i = 0; i < slates.length; i++) {
-      slates[i].addEventListener("click", () => {
-        slateClick(slates[i], i + 1);
-      });
-      //console.log(slates[i].textContent);
+  function slateClick(slate: HTMLElement | null, count: number): void {
+    console.log(`Slate ${count} was clicked!`);
+
+    //winner();
+
+    const currentSlate = document.querySelector(`.slate${count}`);
+    const slateNumber: number = count;
+    const emptySlate = document.querySelector(".slate16");
+
+    if (slate?.classList[2] === emptySlate?.classList[2]) {
+      console.log("LavaSlate was clicked");
     }
-  } // IF gameDiv
-} // room3earthFunc END
 
-function slateClick(slate: HTMLElement | null, count: number): void {
-  console.log(`Slate ${count} was clicked!`);
+    if (emptySlate && currentSlate) {
+      const lavaX: number = parseInt(emptySlate?.classList[2].substring(1, 2));
+      const lavaY: number = parseInt(emptySlate?.classList[2].substring(2));
 
-  //winner();
+      const currX: number = parseInt(
+        currentSlate?.classList[2].substring(1, 2),
+      );
+      const currY: number = parseInt(currentSlate?.classList[2].substring(2));
 
-  const currentSlate = document.querySelector(`.slate${count}`);
-  const slateNumber: number = count;
-  const emptySlate = document.querySelector(".slate16");
+      const lavaPos: [x: number, y: number] = [lavaX, lavaY];
+      const currentPos: [x: number, y: number] = [currX, currY];
 
-  if (slate?.classList[2] === emptySlate?.classList[2]) {
-    console.log("LavaSlate was clicked");
+      moveSlate(slateNumber, currentPos, lavaPos);
+    }
+  } // slateClick END
+
+  function moveSlate(
+    slateNumber: number,
+    currentPos: [x: number, y: number],
+    lavaPos: [x: number, y: number],
+  ): void {
+    const directions: [x: number, y: number][] = [
+      [0, 1],
+      [0, -1], // Vertical
+      [1, 0],
+      [-1, 0], // Horizontal
+    ];
+
+    for (let i = 0; i < directions.length; i++) {
+      const [currX, currY] = currentPos;
+      const [directX, directY] = directions[i];
+
+      const dirX: number = currX + directX;
+      const dirY: number = currY + directY;
+
+      const dirPoint: [x: number, y: number] = [dirX, dirY];
+
+      if (matchTuples(dirPoint, lavaPos)) {
+        animateMove(currentPos, dirPoint);
+
+        if (getRandomInt(1, 2) === 1) {
+          audioHandler("midSlide");
+        } else {
+          audioHandler("midSlide2");
+        }
+        setTimeout(() => {
+          // Wait for animation to finish
+          const slateToMove: HTMLElement | null = document.querySelector(
+            `.slate${slateNumber}`,
+          );
+          const lavaSlate: HTMLElement | null =
+            document.querySelector(`.slate16`);
+
+          const oldSlateCord: string = slateToMove
+            ?.classList[2] as unknown as string;
+          const newSlateCord: string = lavaSlate
+            ?.classList[2] as unknown as string;
+
+          slateToMove?.classList.remove(oldSlateCord);
+          slateToMove?.classList.add(newSlateCord);
+          lavaSlate?.classList.remove(newSlateCord);
+          lavaSlate?.classList.add(oldSlateCord);
+
+          checkSlateLock(slateToMove);
+        }, 750); // setTimeout END (Wait for animation)
+      } // IF MATCHED END
+    } // Directions Loop END
+  } //moveSlate END
+
+  function animateMove(
+    currentPos: [x: number, y: number],
+    direction: [x: number, y: number],
+  ): void {
+    let currentPosString: string = currentPos.toString();
+    currentPosString = currentPosString.replace(",", "");
+
+    let directionString: string = direction.toString();
+    directionString = directionString.replace(",", "");
+
+    const currentSlate: HTMLElement | null = document.querySelector(
+      `.c${currentPosString}`,
+    );
+    const toSlate: HTMLElement | null = document.querySelector(
+      `.c${directionString}`,
+    );
+
+    const currentRect = currentSlate?.getBoundingClientRect();
+    const toRect = toSlate?.getBoundingClientRect();
+
+    if (currentRect && toRect) {
+      const topCalc: number = toRect.top - currentRect.top;
+      const leftCalc: number = toRect.left - currentRect.left;
+
+      if (currentSlate && topCalc === 0) {
+        currentSlate.style.transition = `transform 750ms`;
+        currentSlate.style.transform = `translateX(${leftCalc.toString()}px)`;
+
+        setTimeout(() => {
+          currentSlate.style.transition = ``;
+          currentSlate.style.transform = ``;
+        }, 750); //Reset transition and transform after animation has finished
+      } else if (currentSlate && leftCalc === 0) {
+        currentSlate.style.transition = `transform 750ms`;
+        currentSlate.style.transform = `translateY(${topCalc.toString()}px)`;
+        setTimeout(() => {
+          currentSlate.style.transition = ``;
+          currentSlate.style.transform = ``;
+        }, 750); //Reset transition and transform after animation has finished
+      }
+    }
   }
 
-  if (emptySlate && currentSlate) {
-    const lavaX: number = parseInt(emptySlate?.classList[2].substring(1, 2));
-    const lavaY: number = parseInt(emptySlate?.classList[2].substring(2));
+  function matchTuples(
+    expected: [number, number],
+    actual: [number, number],
+  ): boolean {
+    return expected[0] === actual[0] && expected[1] === actual[1];
+  } //matchTuples END
 
-    const currX: number = parseInt(currentSlate?.classList[2].substring(1, 2));
-    const currY: number = parseInt(currentSlate?.classList[2].substring(2));
+  function checkSlateLock(movedSlate: HTMLElement | null): void {
+    const cord: string = movedSlate?.classList[2] as unknown as string;
+    const slateText: string = movedSlate?.textContent as unknown as string;
 
-    const lavaPos: [x: number, y: number] = [lavaX, lavaY];
-    const currentPos: [x: number, y: number] = [currX, currY];
+    switch (cord) {
+      case "c00":
+        checkTextContent(slateText, 1);
+        break;
+      case "c01":
+        checkTextContent(slateText, 2);
+        break;
+      case "c02":
+        checkTextContent(slateText, 3);
+        break;
+      case "c03":
+        checkTextContent(slateText, 4);
+        break;
+      case "c10":
+        checkTextContent(slateText, 5);
+        break;
+      case "c11":
+        checkTextContent(slateText, 6);
+        break;
+      case "c12":
+        checkTextContent(slateText, 7);
+        break;
+      case "c13":
+        checkTextContent(slateText, 8);
+        break;
+      case "c20":
+        checkTextContent(slateText, 9);
+        break;
+      case "c21":
+        checkTextContent(slateText, 10);
+        break;
+      case "c22":
+        checkTextContent(slateText, 11);
+        break;
+      case "c23":
+        checkTextContent(slateText, 12);
+        break;
+      case "c30":
+        checkTextContent(slateText, 13);
+        break;
+      case "c31":
+        checkTextContent(slateText, 14);
+        break;
+      case "c32":
+        checkTextContent(slateText, 15);
+        break;
+    } // Switch END
 
-    moveSlate(slateNumber, currentPos, lavaPos);
-  }
-} // slateClick END
+    console.log(correctSlatesArr);
+    if (correctSlatesArr.length === 15) {
+      winner();
+    } // IF win END
+  } //checkSlateLock END
 
-function moveSlate(
-  slateNumber: number,
-  currentPos: [x: number, y: number],
-  lavaPos: [x: number, y: number],
-): void {
-  const directions: [x: number, y: number][] = [
-    [0, 1],
-    [0, -1], // Vertical
-    [1, 0],
-    [-1, 0], // Horizontal
-  ];
+  function winner(): void {
+    clearInterval(timerCheckInterval); // Stop monitoring if time is up
 
-  for (let i = 0; i < directions.length; i++) {
-    const [currX, currY] = currentPos;
-    const [directX, directY] = directions[i];
-
-    const dirX: number = currX + directX;
-    const dirY: number = currY + directY;
-
-    const dirPoint: [x: number, y: number] = [dirX, dirY];
-
-    if (matchTuples(dirPoint, lavaPos)) {
-      animateMove(currentPos, dirPoint);
-
-      if (getRandomInt(1, 2) === 1) {
-        audioHandler("midSlide");
-      } else {
-        audioHandler("midSlide2");
-      }
+    audioHandler("longSlide");
+    const lavaSlate: HTMLElement | null = document.querySelector(".slate16");
+    if (lavaSlate) {
+      lavaSlate.classList.add("end");
+      lavaSlate.style.opacity = "1";
       setTimeout(() => {
-        // Wait for animation to finish
-        const slateToMove: HTMLElement | null = document.querySelector(
-          `.slate${slateNumber}`,
-        );
-        const lavaSlate: HTMLElement | null =
-          document.querySelector(`.slate16`);
+        lavaSlate.style.filter = "grayscale(100%)";
+        lavaSlate.innerHTML = `<img id="lavaImg" src="${dataJSON.room3earth.desc.trueSign}"/>`;
+        const lavaImg: HTMLElement | null = document.querySelector("#lavaImg");
+        if (lavaImg) {
+          lavaImg.style.opacity = "1";
+        }
+      }, 1000);
+      setTimeout(() => {
+        hideGameHeader();
+        showMsg("Well done — next chamber awaits", 1200 * 2);
+        toNextRoom("#room4Metal", room4metalFunc);
+      }, 4500);
+    } //IF lavaSlate END
+    setRoomResult("earth", {
+      status: "completed",
+      artifact: "true",
+      mistakes: mistakes,
+      score: 0, // TODO: define rule later
+      roomTimeSec: 0, // Set by stopTimer function
+    });
+    stopTimer(3);
+  } // winner END
 
-        const oldSlateCord: string = slateToMove
-          ?.classList[2] as unknown as string;
-        const newSlateCord: string = lavaSlate
-          ?.classList[2] as unknown as string;
-
-        slateToMove?.classList.remove(oldSlateCord);
-        slateToMove?.classList.add(newSlateCord);
-        lavaSlate?.classList.remove(newSlateCord);
-        lavaSlate?.classList.add(oldSlateCord);
-
-        checkSlateLock(slateToMove);
-      }, 750); // setTimeout END (Wait for animation)
-    } // IF MATCHED END
-  } // Directions Loop END
-} //moveSlate END
-
-function animateMove(
-  currentPos: [x: number, y: number],
-  direction: [x: number, y: number],
-): void {
-  let currentPosString: string = currentPos.toString();
-  currentPosString = currentPosString.replace(",", "");
-
-  let directionString: string = direction.toString();
-  directionString = directionString.replace(",", "");
-
-  const currentSlate: HTMLElement | null = document.querySelector(
-    `.c${currentPosString}`,
-  );
-  const toSlate: HTMLElement | null = document.querySelector(
-    `.c${directionString}`,
-  );
-
-  const currentRect = currentSlate?.getBoundingClientRect();
-  const toRect = toSlate?.getBoundingClientRect();
-
-  if (currentRect && toRect) {
-    const topCalc: number = toRect.top - currentRect.top;
-    const leftCalc: number = toRect.left - currentRect.left;
-
-    if (currentSlate && topCalc === 0) {
-      currentSlate.style.transition = `transform 750ms`;
-      currentSlate.style.transform = `translateX(${leftCalc.toString()}px)`;
+  function looser(): void {
+    audioHandler("longSlide");
+    const lavaSlate: HTMLElement | null = document.querySelector(".slate16");
+    if (lavaSlate) {
+      lavaSlate.classList.add("end");
+      lavaSlate.style.opacity = "1";
+      setTimeout(() => {
+        lavaSlate.style.filter = "grayscale(100%)";
+        lavaSlate.innerHTML = `<img id="lavaImg" src="${dataJSON.room3earth.desc.falseSign}"/>`;
+        const lavaImg: HTMLElement | null = document.querySelector("#lavaImg");
+        if (lavaImg) {
+          lavaImg.style.opacity = "1";
+        }
+      }, 1000);
 
       setTimeout(() => {
-        currentSlate.style.transition = ``;
-        currentSlate.style.transform = ``;
-      }, 750); //Reset transition and transform after animation has finished
-    } else if (currentSlate && leftCalc === 0) {
-      currentSlate.style.transition = `transform 750ms`;
-      currentSlate.style.transform = `translateY(${topCalc.toString()}px)`;
-      setTimeout(() => {
-        currentSlate.style.transition = ``;
-        currentSlate.style.transform = ``;
-      }, 750); //Reset transition and transform after animation has finished
+        hideGameHeader();
+        showMsg("Time's up — next chamber awaits", 1200 * 2);
+        toNextRoom("#room4Metal", room4metalFunc);
+      }, 4500);
+    } //IF lavaSlate END
+
+    setRoomResult("earth", {
+      status: "completed",
+      artifact: "false",
+      mistakes: mistakes,
+      score: 0, // TODO: define rule later
+      roomTimeSec: 0, //Set in stop timer function
+    });
+    stopTimer(3);
+  } // looser END
+
+  function checkTextContent(textContent: string, target: number): void {
+    const slateIndex: number = correctSlatesArr.indexOf(target);
+    if (textContent === target.toString()) {
+      audioHandler("click");
+      if (slateIndex === -1) {
+        correctSlatesArr.push(target);
+      }
+    } else if (textContent !== target.toString()) {
+      if (slateIndex !== -1) {
+        correctSlatesArr.splice(slateIndex, 1);
+      }
+    }
+  } // checkTextContent END
+
+  function timerCheck(): void {
+    if (TimeIsUp) {
+      clearInterval(timerCheckInterval);
+      looser();
     }
   }
-}
 
-function matchTuples(
-  expected: [number, number],
-  actual: [number, number],
-): boolean {
-  return expected[0] === actual[0] && expected[1] === actual[1];
-} //matchTuples END
+  function getFromArray(arr: number[]): number {
+    // Generate random index based on current array length
+    const randomIndex = Math.floor(Math.random() * arr.length);
+    // Remove element at that index and capture it
+    const [removedNumber] = arr.splice(randomIndex, 1);
+    // Return the removed number
+    return removedNumber;
+  }
 
-function checkSlateLock(movedSlate: HTMLElement | null): void {
-  const cord: string = movedSlate?.classList[2] as unknown as string;
-  const slateText: string = movedSlate?.textContent as unknown as string;
+  function audioHandler(audio: string): void {
+    const bgmId = dataJSON.room3earth.bgmId;
+    const sfxId = dataJSON.room3earth.sfxId;
+    const sfx2Id = dataJSON.room3earth.sfx2Id;
+    const sfx3Id = dataJSON.room3earth.sfx3Id;
+    const sfx4Id = dataJSON.room3earth.sfx4Id;
+    const sfx5Id = dataJSON.room3earth.sfx5Id;
 
-  switch (cord) {
-    case "c00":
-      checkTextContent(slateText, 1);
-      break;
-    case "c01":
-      checkTextContent(slateText, 2);
-      break;
-    case "c02":
-      checkTextContent(slateText, 3);
-      break;
-    case "c03":
-      checkTextContent(slateText, 4);
-      break;
-    case "c10":
-      checkTextContent(slateText, 5);
-      break;
-    case "c11":
-      checkTextContent(slateText, 6);
-      break;
-    case "c12":
-      checkTextContent(slateText, 7);
-      break;
-    case "c13":
-      checkTextContent(slateText, 8);
-      break;
-    case "c20":
-      checkTextContent(slateText, 9);
-      break;
-    case "c21":
-      checkTextContent(slateText, 10);
-      break;
-    case "c22":
-      checkTextContent(slateText, 11);
-      break;
-    case "c23":
-      checkTextContent(slateText, 12);
-      break;
-    case "c30":
-      checkTextContent(slateText, 13);
-      break;
-    case "c31":
-      checkTextContent(slateText, 14);
-      break;
-    case "c32":
-      checkTextContent(slateText, 15);
-      break;
-  } // Switch END
-
-  console.log(correctSlatesArr);
-  if (correctSlatesArr.length === 15) {
-    winner();
-  } // IF win END
-} //checkSlateLock END
-
-function winner(): void {
-  clearInterval(timerCheckInterval); // Stop monitoring if time is up
-
-  audioHandler("longSlide");
-  const lavaSlate: HTMLElement | null = document.querySelector(".slate16");
-  if (lavaSlate) {
-    lavaSlate.classList.add("end");
-    lavaSlate.style.opacity = "1";
-    setTimeout(() => {
-      lavaSlate.style.filter = "grayscale(100%)";
-      lavaSlate.innerHTML = `<img id="lavaImg" src="${dataJSON.room3earth.desc.trueSign}"/>`;
-      const lavaImg: HTMLElement | null = document.querySelector("#lavaImg");
-      if (lavaImg) {
-        lavaImg.style.opacity = "1";
-      }
-    }, 1000);
-    setTimeout(() => {
-      hideGameHeader();
-      toNextRoom("#room4Metal", room4metalFunc);
-      showMsg("Time's up — next chamber awaits", 1200 * 2);
-    }, 4500);
-  } //IF lavaSlate END
-  setRoomResult("earth", {
-    status: "completed",
-    artifact: "true",
-    mistakes: mistakes,
-    score: 0, // TODO: define rule later
-    roomTimeSec: 0, // Set by stopTimer function
-  });
-  stopTimer(3);
-} // winner END
-
-function looser(): void {
-  audioHandler("longSlide");
-  const lavaSlate: HTMLElement | null = document.querySelector(".slate16");
-  if (lavaSlate) {
-    lavaSlate.classList.add("end");
-    lavaSlate.style.opacity = "1";
-    setTimeout(() => {
-      lavaSlate.style.filter = "grayscale(100%)";
-      lavaSlate.innerHTML = `<img id="lavaImg" src="${dataJSON.room3earth.desc.falseSign}"/>`;
-      const lavaImg: HTMLElement | null = document.querySelector("#lavaImg");
-      if (lavaImg) {
-        lavaImg.style.opacity = "1";
-      }
-    }, 1000);
-
-    setTimeout(() => {
-      hideGameHeader();
-      toNextRoom("#room4Metal", room4metalFunc);
-      showMsg("Time's up — next chamber awaits", 1200 * 2);
-    }, 4500);
-  } //IF lavaSlate END
-
-  setRoomResult("earth", {
-    status: "completed",
-    artifact: "false",
-    mistakes: mistakes,
-    score: 0, // TODO: define rule later
-    roomTimeSec: 0, //Set in stop timer function
-  });
-  stopTimer(3);
-} // looser END
-
-function checkTextContent(textContent: string, target: number): void {
-  const slateIndex: number = correctSlatesArr.indexOf(target);
-  if (textContent === target.toString()) {
-    audioHandler("click");
-    if (slateIndex === -1) {
-      correctSlatesArr.push(target);
+    switch (audio) {
+      case "bgm":
+        if (bgmId) {
+          void playBgm(bgmId, 650); // play the background music for the fire room, with a fade-in duration of 650ms
+        }
+        break;
+      case "click":
+        if (sfxId) {
+          void playSfx(sfxId); // play the click sound effect
+        }
+        break;
+      case "shortSlide":
+        if (sfx2Id) {
+          void playSfx(sfx2Id); // play the shortSlide sound effect
+        }
+        break;
+      case "midSlide":
+        if (sfx3Id) {
+          void playSfx(sfx3Id); // play the midSlide sound effect
+        }
+        break;
+      case "midSlide2":
+        if (sfx4Id) {
+          void playSfx(sfx4Id); // play the midSlide2 sound effect
+        }
+        break;
+      case "longSlide":
+        if (sfx5Id) {
+          void playSfx(sfx5Id); // play the longSlide sound effect
+        }
+        break;
     }
-  } else if (textContent !== target.toString()) {
-    if (slateIndex !== -1) {
-      correctSlatesArr.splice(slateIndex, 1);
-    }
-  }
-} // checkTextContent END
+  } // Audio Handler END
 
-function timerCheck(): void {
-  if (TimeIsUp) {
-    clearInterval(timerCheckInterval);
-    looser();
-  }
-}
-
-function getFromArray(arr: number[]): number {
-  // Generate random index based on current array length
-  const randomIndex = Math.floor(Math.random() * arr.length);
-  // Remove element at that index and capture it
-  const [removedNumber] = arr.splice(randomIndex, 1);
-  // Return the removed number
-  return removedNumber;
-}
-
-function audioHandler(audio: string): void {
-  const bgmId = dataJSON.room3earth.bgmId;
-  const sfxId = dataJSON.room3earth.sfxId;
-  const sfx2Id = dataJSON.room3earth.sfx2Id;
-  const sfx3Id = dataJSON.room3earth.sfx3Id;
-  const sfx4Id = dataJSON.room3earth.sfx4Id;
-  const sfx5Id = dataJSON.room3earth.sfx5Id;
-
-  switch (audio) {
-    case "bgm":
-      if (bgmId) {
-        void playBgm(bgmId, 650); // play the background music for the fire room, with a fade-in duration of 650ms
-      }
-      break;
-    case "click":
-      if (sfxId) {
-        void playSfx(sfxId); // play the click sound effect
-      }
-      break;
-    case "shortSlide":
-      if (sfx2Id) {
-        void playSfx(sfx2Id); // play the shortSlide sound effect
-      }
-      break;
-    case "midSlide":
-      if (sfx3Id) {
-        void playSfx(sfx3Id); // play the midSlide sound effect
-      }
-      break;
-    case "midSlide2":
-      if (sfx4Id) {
-        void playSfx(sfx4Id); // play the midSlide2 sound effect
-      }
-      break;
-    case "longSlide":
-      if (sfx5Id) {
-        void playSfx(sfx5Id); // play the longSlide sound effect
-      }
-      break;
-  }
-} // Audio Handler END
-
-function getRandomInt(min: number, max: number): number {
-  const minCeiled = Math.ceil(min);
-  const maxFloored = Math.floor(max);
-  return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled);
-}
-
-function toNextRoom(nextSelector: string, nextRoomFunc: () => void): void {
-  const nextSection = document.querySelector<HTMLElement>(nextSelector);
-  if (!nextSection) return;
-
-  const page: HTMLElement | null = getCurrentPage();
-  if (page && nextSection) {
-    transitSections(page, nextSection, 1200);
+  function getRandomInt(min: number, max: number): number {
+    const minCeiled = Math.ceil(min);
+    const maxFloored = Math.floor(max);
+    return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled);
   }
 
-  window.setTimeout(() => {
+  function toNextRoom(nextSelector: string, nextRoomFunc: () => void): void {
+    const nextSection = document.querySelector<HTMLElement>(nextSelector);
+    if (!nextSection) return;
+
+    // Build next room first
     nextRoomFunc();
-  }, 1200);
+
+    // Then let THIS room own the transition
+    goToSection(nextSection, 1200);
+  }
 }
