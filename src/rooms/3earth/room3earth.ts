@@ -6,16 +6,8 @@ import {
 } from "../../script/helper/gameHeader.ts";
 import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
 import { goToSection } from "../../script/helper/transitions.ts";
-/*
-import {
-  setRoomResult,
-  getRoomResults,
-  resetSingleRoomResult,
-} from "../../script/helper/storage.ts";
-*/
-
 import { setRoomResult } from "../../script/helper/storage.ts";
-
+import { updateProgressBar } from "../../script/helper/progressbar.ts";
 import { playBgm, playSfx } from "../../audio/index.ts";
 import { showMsg } from "../../script/helper/showMsg.ts";
 import { room4metalFunc } from "../4metal/room4metal.ts";
@@ -28,15 +20,6 @@ let timerCheckInterval: number;
 const correctSlatesArr: number[] = [];
 
 export function room3earthFunc(): void {
-  /*
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "PageDown") {
-      console.log("PageDown");
-      return;
-    }
-   do something
-  });
-*/
   /* Sets the background for the room and shows room section */
   const earthSection: HTMLElement | null =
     document.querySelector("#room3Earth");
@@ -92,7 +75,7 @@ export function room3earthFunc(): void {
   function slateClick(slate: HTMLElement | null, count: number): void {
     console.log(`Slate ${count} was clicked!`);
 
-    //winner();
+    winner();
 
     const currentSlate = document.querySelector(`.slate${count}`);
     const slateNumber: number = count;
@@ -309,6 +292,7 @@ export function room3earthFunc(): void {
       roomTimeSec: 0, // Set by stopTimer function
     });
     stopTimer(3);
+    updateProgressBar();
   } // winner END
 
   function looser(): void {
