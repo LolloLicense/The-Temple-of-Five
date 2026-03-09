@@ -88,46 +88,10 @@ Kunde inte göras första veckan då vi inte kommit så långt i det skedet.
 
         •	Estimera och ta in tidigt så det inte hamnar som panik på slutet
 
+
 ## V4:
 
-![Retro-shot](/dokumentation/Retrospektiv/retrospektiv3.jpg)
-
-### Glad + Vind i seglen
-
-    • Gruppen upplever fortsatt bra kommunikation och att vi arbetar tillsammans när problem uppstår.
-    • Backloggen hjälper oss att hålla struktur och riktning i arbetet.
-    • Teamwork – vi hjälper varandra vid konflikter och när något fastnar.
-    • Designkonceptet börjar bli färdigt och flera rum har påbörjats eller blivit klara.
-    • Möten och diskussioner hjälper oss att komma framåt och lösa problem tillsammans.
-    • Gruppen känner att vi har kommit långt tillsammans och att planen vi satt upp fungerar bra.
-    • Spelet börjar mer och mer se ut som ett riktigt spel och rummen börjar kännas enhetliga.
-    • Saker och funktioner börjar falla på plats i projektet.
-
-### Sad/Mad + Ankare
-
-    • Mergekonflikter dyker fortfarande upp ibland och skapar osäkerhet kring kod och struktur.
-    • Några upplever att det är svårt att förstå all logik och alla begrepp som används.
-    • I vissa möten kan man känna sig lite "lost" när mycket nytt diskuteras samtidigt.
-    • Det tog tid att komma på idéer till vissa rum.
-    • Vissa upplever frustration över att inte alltid förstå hur allt ska implementeras eller knytas ihop i slutet.
-
-### Isberg
-
-    • Att koppla ihop alla delar av spelet, särskilt kopplingen till rum 6, ses fortfarande som en risk.
-    • Det finns en risk att logik och kod kan krocka när allt ska integreras senare i projektet.
-    • Att knyta ihop alla delar till en helhet mot slutet kan bli utmanande.
-    • Om vi inte håller koll på varandras arbete finns risk för missförstånd kring hur olika delar fungerar.
-
-### Förslag på konkreta actions
-
-    • Fortsätta kommunicera tydligt när något är oklart, särskilt kring logik och implementation.
-    • Fortsätta använda backloggen aktivt för att hålla struktur och prioritera rätt saker.
-    • Bryta ner integrationsarbetet i mindre delar så att inte allt hamnar i slutet av projektet.
-    • Fortsätta hjälpa varandra vid problem, särskilt vid mergekonflikter eller buggar.
-
-## V5:
-
-![Retro-shot](/dokumentation/Retrospektiv/retrospektiv5.jpg)
+![Retro-shot](/dokumentation/Retrospektiv/retrospektiv4.jpg)
 
 ### Glad + Vind i seglen
 
