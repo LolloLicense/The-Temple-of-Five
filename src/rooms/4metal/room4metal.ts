@@ -1,13 +1,13 @@
-import * as dataJSON from "../../data.json";
 import { playBgm, playSfx } from "../../audio/index.ts";
-import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
-import { startTimer, stopTimer, TimeIsUp } from "../../script/helper/utils.ts";
-import { showMsg } from "../../script/helper/showMsg.ts";
-import { setRoomResult, getRoomResults } from "../../script/helper/storage.ts";
-import { room5waterFunc } from "../5water/room5water.ts";
+import * as dataJSON from "../../data.json";
 import { showGameHeader } from "../../script/helper/gameHeader.ts";
-import { goToSection } from "../../script/helper/transitions.ts";
 import { updateProgressBar } from "../../script/helper/progressbar.ts";
+import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
+import { showMsg } from "../../script/helper/showMsg.ts";
+import { getRoomResults, setRoomResult } from "../../script/helper/storage.ts";
+import { goToSection } from "../../script/helper/transitions.ts";
+import { startTimer, stopTimer, TimeIsUp } from "../../script/helper/utils.ts";
+import { room5waterFunc } from "../5water/room5water.ts";
 
 //-------------------------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------------- Modul variabler -------------------------------------------------------------

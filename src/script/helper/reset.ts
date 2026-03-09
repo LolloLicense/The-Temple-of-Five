@@ -1,6 +1,6 @@
+import { updateProgressBar } from "./progressbar";
 import { resetRunKeepHighscores } from "./storage";
 import { getCurrentPage, goToSection, showSection } from "./transitions";
-import { updateProgressBar } from "./progressbar";
 
 // preventin listerners to multiply
 let resetBound = false;

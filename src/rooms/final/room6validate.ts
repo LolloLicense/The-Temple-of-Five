@@ -1,15 +1,15 @@
-import * as dataJSON from "../../data.json";
 import { playBgm } from "../../audio/index.ts";
-import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
-import { startTimer, stopTimer } from "../../script/helper/utils.ts";
-import { showGameHeader } from "../../script/helper/gameHeader.ts";
-import { getRoomResults } from "../../script/helper/storage.ts";
+import * as dataJSON from "../../data.json";
 import { getArtifactIcon } from "../../script/helper/artifacts.ts";
+import { showGameHeader } from "../../script/helper/gameHeader.ts";
+import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
+import { getRoomResults } from "../../script/helper/storage.ts";
 import { goToSection } from "../../script/helper/transitions.ts";
+import { startTimer, stopTimer } from "../../script/helper/utils.ts";
 import { gameOverRoomFunc } from "../gameConclusion/gameOverRoom.ts";
 import { gameWinFunc } from "../gameConclusion/gameWin.ts";
 
-// Typ som bara innehåller de fem elementrummen (inte "final")
+// Typ som bara innehåller de fem elementrummen
 type TElementRoomId = "wood" | "fire" | "earth" | "metal" | "water";
 
 // Standardtid för övergång till nästa sektion
@@ -26,7 +26,8 @@ export function room6finalFunc(): void {
   //------------------ Initiera rummet ---------------------------//
   //--------------------------------------------------------------//
 
-  const finalSection = document.querySelector<HTMLElement>("#finalRoom"); // Hämta finalrummet
+  // Hämta finalrummet
+  const finalSection = document.querySelector<HTMLElement>("#finalRoom");
   if (!finalSection) return;
 
   // Nollställ resolving-flaggan varje gång rummet startas
@@ -70,7 +71,8 @@ export function room6finalFunc(): void {
   //---------------------------------------------------------//
 
   const state = getRoomResults(); // Hämta spelstatet från storage
-  const rooms: TElementRoomId[] = ["wood", "fire", "earth", "metal", "water"]; // Rummen i korrekt ordning
+  // Rummen i korrekt ordning
+  const rooms: TElementRoomId[] = ["wood", "fire", "earth", "metal", "water"];
 
   // Bygg artifactPool = lista med { roomId, kind, icon }
   const artifactPool = rooms.map((roomId) => {
@@ -86,9 +88,9 @@ export function room6finalFunc(): void {
   const slots = Array.from(
     finalSection.querySelectorAll(".finalSlots .slot"),
   ) as HTMLElement[]; // Hämta alla slot-element
-
-  let slotSelections: (number | null)[] = [null, null, null, null, null]; // Vilken artifact ligger i vilken slot
-  let activeSlotIndex = 0; // Vilken slot är aktiv (highlightad)
+  // Vilken artifact ligger i vilken slot
+  let slotSelections: (number | null)[] = [null, null, null, null, null];
+  let activeSlotIndex = 0; // Vilken slot är aktiv
 
   const validateBtnEl =
     finalSection.querySelector<HTMLButtonElement>("#validateBtn"); // Validateknappen
@@ -143,7 +145,7 @@ export function room6finalFunc(): void {
   //-------------- Byt artifact i slot -----------------------//
   //----------------------------------------------------------//
 
-  // Skapa en Set (samling utan dubbletter) med alla artifacts som redan används i någon slot
+  // Skapa en Set samling utan dubbletter med alla artifacts som redan används i någon slot
   function cycleArtifact(direction: number): void {
     // Om rummet redan håller på att avgöras ska inga fler byten kunna göras
     if (isResolvingFinalRoom) return;
@@ -161,21 +163,21 @@ export function room6finalFunc(): void {
           slotSelections[activeSlotIndex] === artifactIndex, // Eller så är det samma artifact som redan ligger i denna slot
       );
 
-    // Om det inte finns några artifacts att välja → avbryt funktionen
+    // Om det inte finns några artifacts att välja: avbryt funktionen
     if (availableArtifactIndexes.length === 0) return;
 
-    // Hämta artifact-index som ligger i den aktiva sloten just nu (kan vara null)
+    // Hämta artifact-index som ligger i den aktiva sloten just nu
     const currentArtifactIndex = slotSelections[activeSlotIndex];
 
     // Hitta positionen i listan över tillgängliga artifacts
-    // Om sloten är tom → börja på -1 (innan första artifacten)
+    // Om sloten är tom → börja på -1
     // Annars → hitta indexet i availableArtifactIndexes
     let newIndexInAvailableList =
       currentArtifactIndex === null
         ? -1
         : availableArtifactIndexes.indexOf(currentArtifactIndex);
 
-    // Flytta upp eller ner i listan beroende på direction (+1 eller -1)
+    // Flytta upp eller ner i listan beroende på direction +1 eller -1
     newIndexInAvailableList += direction;
 
     // Wrap-around: om vi går förbi sista artifacten → hoppa till första

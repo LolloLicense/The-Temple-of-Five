@@ -21,10 +21,9 @@ import { initExitDialog } from "./script/helper/exitDialog";
 import { initLoginFlow } from "./script/helper/loginFlow";
 //resetBTNs
 import { initResetButtons } from "./script/helper/reset";
+import { goToSection } from "./script/helper/transitions.ts";
 //import { startTimer, stopTimer } from "./script/utils.ts";
 import { startTimer } from "./script/helper/utils.ts";
-
-import { goToSection } from "./script/helper/transitions.ts";
 
 /* Event listeners for temporary menu
 (Remove when menu is to be removed) */
