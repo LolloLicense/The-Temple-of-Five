@@ -73,7 +73,7 @@ export function room3earthFunc(): void {
   } // IF earthSection END
 } // room3earthFunc END
 
-function slateClick(slate: HTMLElement | null, count: number): void {
+function slateClick(_slate: HTMLElement | null, count: number): void {
   //console.log(`Slate ${count} was clicked!`);
 
   //winner(); (For testing end of game)
