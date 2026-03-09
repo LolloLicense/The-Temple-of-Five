@@ -2,7 +2,7 @@
 
 [Miro](https://miro.com/app/board/uXjVGD_af74=/?share_link_id=396365481063)
 
-![daily monday 19 feb](image4.png)
+![daily thursday 5 mars](backlog-2026-03-05.png)
 
 ---
 

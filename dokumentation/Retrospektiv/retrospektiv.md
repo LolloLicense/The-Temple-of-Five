@@ -124,3 +124,30 @@ Kunde inte göras första veckan då vi inte kommit så långt i det skedet.
     • Fortsätta använda backloggen aktivt för att hålla struktur och prioritera rätt saker.
     • Bryta ner integrationsarbetet i mindre delar så att inte allt hamnar i slutet av projektet.
     • Fortsätta hjälpa varandra vid problem, särskilt vid mergekonflikter eller buggar.
+
+## V5:
+
+![Retro-shot](/dokumentation/Retrospektiv/retrospektiv5.jpg)
+
+### Glad + Vind i seglen
+
+    • Gruppen upplever ett visst lugn iom att globala funktioner börjar komma på plats
+    • Att förra veckans buggar nu borde vara lösta
+    • Och att vi fortsatt har ett bra teamwork
+
+### Sad/Mad” + Ankare
+
+    • Vissa har känt att det var lite svårt att prioritera rätt
+    • Att våra transitions mellan rum inte riktigt fungerat så som vi vill
+    • Att "livet" kommer och stör lite då och då
+    • Och att början av veckan kändes tung och inte så motiverande
+
+### Isberg
+
+    • Ser risker med att koppla ihop spelflödet med transitions
+    • Att vi inte är blir riktigt nöjda när deadline är passerad
+    • Att vi riskerar att introducera nya buggar när vi försöker knyta ihop spelflödet
+
+### Förslag på konkreta actions
+
+    • Vi har diskuterat planen för veckan och fördelat arbetsuppgifterna samt diskuterat vad som bör prioriteras
