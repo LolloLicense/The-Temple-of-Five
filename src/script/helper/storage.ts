@@ -42,6 +42,7 @@ export const LS_KEY = {
   totalTime: "tempelTotalTime",
   roomTime: "tempelRoomTime",
   highscores: "tempelHighscores",
+  finalScore: "tempelFinalScore",
   // for replay mode
   replayMode: "tempelReplayMode",
   replayRoom: "tempelReplayRoom",

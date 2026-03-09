@@ -13,6 +13,8 @@ import {
   initHighscoreRenderListener,
   renderHighscoreList,
 } from "./renderHighscoreList";
+// import { testSaveFinalScoreFlow } from "./testSaveFinalScoreFlow";
+import { debugScoreBreakdown } from "./debugScoreBreakdown";
 
 const TRANSITION_MS = 1200;
 
@@ -70,6 +72,9 @@ export function highscoreRoomFunc(): void {
       });
     }
   }
+
+  debugScoreBreakdown();
+  // testSaveFinalScoreFlow();
 
   console.log("Hello from the highscore room");
 }
