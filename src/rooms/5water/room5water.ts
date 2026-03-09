@@ -109,7 +109,6 @@ const TARGET_INDEX = GRID_SIZE - 1;
 const FIXED_CELLS = new Set<string>([`0,0`, `${TARGET_INDEX},${TARGET_INDEX}`]);
 const MAX_SCORE = 1000;
 const SCORE_PER_SECOND = 3;
-const ARTIFACT_THRESHOLD = 110; // seconds (1 min 50 s) — below this threshold gives the correct artifact
 const TRANSITION_MS = 1200; // FIX 3: Shared transition constant
 
 // ── MODULE STATE ───────────────────────────────────────────────────────────
@@ -497,10 +496,10 @@ function goToNextRoom(nextSelector: string, nextRoomFunc: () => void): void {
   const nextSection = document.querySelector<HTMLElement>(nextSelector);
   if (!nextSection) return;
 
-  // Water äger transitionen först
+  // Water handles the transition first
   goToSection(nextSection, TRANSITION_MS);
 
-  // Starta nästa rum först när transitionen är klar
+  // Start the next room only after the transition is complete
   window.setTimeout(() => {
     nextRoomFunc();
   }, TRANSITION_MS);
@@ -548,12 +547,10 @@ function solvePuzzle(): void {
   stopSharedTimer(5);
 
   const score = calcScore();
-  const artifact: "true" | "false" =
-    secondsElapsed <= ARTIFACT_THRESHOLD ? "true" : "false";
 
   setRoomResult("water", {
     status: "completed",
-    artifact,
+    artifact: "true",
     mistakes: 0,
     score,
     roomTimeSec: secondsElapsed,
