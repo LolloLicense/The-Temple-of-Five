@@ -42,10 +42,21 @@ const LS_KEY = {
   totalTime: "tempelTotalTime",
   roomTime: "tempelRoomTime",
   highscores: "tempelHighscores",
+  // for replay mode
+  replayMode: "tempelReplayMode",
+  replayRoom: "tempelReplayRoom",
 } as const;
 
+// variable for all rooms except final
+const ELEMENT_ROOM_IDS: Exclude<TRoomId, "final">[] = [
+  "wood",
+  "fire",
+  "earth",
+  "metal",
+  "water",
+];
 //-----------------------------------------------------------
-//------------------- DEAFAUL GAME STATE---------------------
+//------------------- DEFAULT GAME STATE---------------------
 //-----------------------------------------------------------
 
 // create default state for one room
@@ -200,7 +211,7 @@ export function clearUserName(): void {
 //----------------------- LOGIN STATE -----------------------
 //-----------------------------------------------------------
 
-/* If user has logged in before and has NOT logged out visit site againg
+/* If user has logged in before and has NOT logged out visit site again
 NO need to log in again*/
 export function setLoggedIn(value: boolean): void {
   localStorage.setItem(LS_KEY.isLoggedIn, value ? "true" : "false");
@@ -229,4 +240,63 @@ export function resetRunKeepHighscores(): void {
   // Reset timers för AKTIV user (om du vill spara dem per user)
   localStorage.removeItem(scopedKey(LS_KEY.totalTime));
   localStorage.removeItem(scopedKey(LS_KEY.roomTime));
+}
+
+//-----------------------------------------------------------
+//----------------------- REPLAY ----------------------------
+//-----------------------------------------------------------
+
+/**
+ *Turns on replay mode and saves which room the player need to replay
+ * When player clicks a failed room to replay in game over-section
+ * */
+
+export function setReplayMode(roomId: TRoomId): void {
+  // tells game that we are now in replay-mode
+  localStorage.setItem(scopedKey(LS_KEY.replayMode), "true");
+  // saves witch room needs to be re-played by roomId
+  localStorage.setItem(scopedKey(LS_KEY.replayRoom), roomId);
+}
+
+/**
+ * check if replay-mode is active for current user
+ * true : is active false: NOT
+ */
+export function isReplayMode(): boolean {
+  return localStorage.getItem(scopedKey(LS_KEY.replayMode)) === "true";
+}
+
+/**
+ * Returns what room is marked for replay by TRoomId
+ */
+export function getReplayRoom(): TRoomId | null {
+  // reading re-playable room from storage key
+  const raw = localStorage.getItem(scopedKey(LS_KEY.replayRoom));
+  // if nothing is saved - no rooms needs replay
+  if (!raw) return null;
+  // if there is rooms to replay: return the saved roomId
+  return raw as TRoomId;
+}
+
+/**
+ * Clear mode for the active user
+ * will be called when the replayed rooms are completed
+ *
+ */
+export function clearReplayMode(): void {
+  // removes active replay-mode
+  localStorage.removeItem(scopedKey(LS_KEY.replayMode));
+  // Removes the saved replay roomId
+  localStorage.removeItem(scopedKey(LS_KEY.replayRoom));
+}
+
+/**
+ * Checks if all five element rooms have earned a true artifact.
+ * Used in the game over room to decide if the validation / final button should be unlocked.
+ */
+
+export function areAllElementsTrue(): boolean {
+  const state = getRoomResults();
+
+  return ELEMENT_ROOM_IDS.every((roomId) => state[roomId].artifact === "true");
 }
