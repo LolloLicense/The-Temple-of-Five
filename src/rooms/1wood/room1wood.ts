@@ -59,27 +59,19 @@ function stopTimeUpWatcher(): void {
     timeUpIntervalId = null;
   }
 }
-
 function stopCompleteTimeout(): void {
   if (completeTimeoutId !== null) {
     window.clearTimeout(completeTimeoutId);
     completeTimeoutId = null;
   }
 }
-
 function stopFailTimeout(): void {
   if (failTimeoutId !== null) {
     window.clearTimeout(failTimeoutId);
     failTimeoutId = null;
   }
 }
-
-/**
- * Cleanup function for Wood room.
- *
- * Stops any "alive" room logic that should not continue
- * after the player has left the room.
- */
+// Cleanup function for Wood room
 function cleanupWoodRoom(): void {
   stopTimeUpWatcher();
   stopCompleteTimeout();
@@ -328,16 +320,13 @@ export function room1woodFunc(): void {
       activeSlotIndex++;
       return;
     }
-
     // Last input filled → validate level
     validateLevel();
   }
 
   function validateLevel(): void {
     const expectedLevel = LEVELS[currentLevelIndex].map(String);
-
     const levelOk = slotValues.every((value, i) => value === expectedLevel[i]);
-
     if (!levelOk) {
       mistakes++;
       resetLevelInput();
@@ -354,7 +343,6 @@ export function room1woodFunc(): void {
       });
       return;
     }
-
     // All levels completed
     ifRoomCompleted();
   }
@@ -409,7 +397,6 @@ export function room1woodFunc(): void {
 
   function ifRoomCompleted(): void {
     if (isTransitioning) return;
-
     // Block input while we show final state + delay
     isTransitioning = true;
 
@@ -537,14 +524,12 @@ export function room1woodFunc(): void {
 
     // Only arrow keys move keypad focus
     if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
-
     e.preventDefault();
 
     const nextKeyIndex =
       e.key === "ArrowRight"
         ? Math.min(currentKeyIndex + 1, keyBtns.length - 1)
         : Math.max(currentKeyIndex - 1, 0);
-
     if (nextKeyIndex === currentKeyIndex) return;
 
     // Roving tabindex

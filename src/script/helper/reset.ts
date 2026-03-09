@@ -1,5 +1,6 @@
 import { resetRunKeepHighscores } from "./storage";
 import { getCurrentPage, goToSection, showSection } from "./transitions";
+import { updateProgressBar } from "./progressbar";
 
 // preventin listerners to multiply
 let resetBound = false;
@@ -18,7 +19,7 @@ export function initResetButtons(): void {
 
     // only reset current run-state on clickBTN
     resetRunKeepHighscores();
-
+    updateProgressBar();
     // Back to welcome after resetclick - trasiteffect
     const welcome = document.querySelector<HTMLElement>("#welcomePage");
     // Figure out what page is currently visible

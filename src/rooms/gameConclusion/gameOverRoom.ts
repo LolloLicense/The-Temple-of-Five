@@ -3,7 +3,41 @@ import { hideGameHeader } from "../../script/helper/gameHeader.ts";
 import {
   areAllElementsTrue,
   getRoomResults,
+  setReplayMode,
 } from "../../script/helper/storage.ts";
+
+//-----------------------------------------------------------
+//------------------- REPLAY ROOM HELPER --------------------
+//-----------------------------------------------------------
+
+// Starts correct replay room from the correct id selected in game over page
+function startReplayRoom(
+  roomId: "wood" | "fire" | "earth" | "metal" | "water",
+): void {
+  // check what room is due for replay
+  switch (roomId) {
+    // wood room selected
+    case "wood":
+      console.log("[GAME OVER] Start replay: wood");
+      break;
+    // fire room selected
+    case "fire":
+      console.log("[GAME OVER] Start replay:fire");
+      break;
+    // earth room selected
+    case "earth":
+      console.log("[GAME OVER] Start replay: earth");
+      break;
+    // metal room selected
+    case "metal":
+      console.log("[GAME OVER] Start replay: wood");
+      break;
+    // water room selected
+    case "water":
+      console.log("[GAME OVER] Start replay: wood");
+      break;
+  }
+}
 
 export function gameOverRoomFunc(): void {
   const gameOverSection = document.querySelector<HTMLElement>("#gameOverRoom");
@@ -21,7 +55,7 @@ export function gameOverRoomFunc(): void {
     "#retryValidationBtn",
   );
   if (!retryValidationBtn) {
-    console.log("missing validation btn");
+    console.log("[GAME OVER] Missing validation button");
     return;
   }
 
@@ -104,7 +138,33 @@ export function gameOverRoomFunc(): void {
     console.log("[GAME OVER] Validation button locked");
   }
 
-  // remove when flow is finished
+  //-----------------------------------------------------------
+  //----------------- REPLAY BTN EVENTS -----------------------
+  //-----------------------------------------------------------
+
+  //  What buttons should get a click listener
+  replayBtns.forEach((button) => {
+    // only click for re-playable failed rooms
+    if (!button.classList.contains("isFailed")) return;
+
+    // Prevent more than one listener on re-enter
+    if (button.dataset.bound === "true") return;
+    button.dataset.bound = "true";
+
+    button.addEventListener("click", () => {
+      // finds the id the clicked button has
+      const roomId = button.dataset.roomId;
+      // if room has no id - abort mission
+      if (!roomId) return;
+
+      // set the mode to right room that needs to be replayed
+      setReplayMode(roomId as "wood" | "fire" | "earth" | "metal" | "water");
+      // init replay for failed rooms
+      startReplayRoom(roomId as "wood" | "fire" | "earth" | "metal" | "water");
+    });
+  });
+
+  // remove CONSOLE.LOG when flow is finished
   console.log("GAME OVER state:", state);
   console.log("GAME OVER replay buttons found:", replayBtns.length);
   console.log("GAME OVER all elements fixed:", allElementsOk);
