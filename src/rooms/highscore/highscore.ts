@@ -36,6 +36,14 @@ export function highscoreRoomFunc(): void {
     showSection(highscoreSection);
   }
 
+  // Hide the secret reset button every time the room opens
+  const resetHighscoreBtn =
+    document.querySelector<HTMLButtonElement>("#resetHighscoreBtn");
+
+  if (resetHighscoreBtn) {
+    resetHighscoreBtn.hidden = true;
+  }
+
   initHighscoreRenderListener();
   renderHighscoreList();
 

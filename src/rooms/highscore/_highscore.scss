@@ -76,6 +76,16 @@
         @include mix.button($radius: var.$bigRadius);
         min-width: 220px;
     }
+
+    /* Secret code button */
+    .resetHighscoreBtn {
+        @include mix.button($radius: var.$bigRadius);
+        min-width: 220px;
+    }
+
+    .resetHighscoreBtn[hidden] {
+        display: none !important;
+    }
 }
 
 /* SHARE MODAL */
