@@ -5,7 +5,7 @@
 //------------------- Global for conclucion -----------------
 //-----------------------------------------------------------
 
-.conclusoinHeading {
+.conclusionHeading {
   margin-top: 5rem;
   display: flex;
   align-items: center;
@@ -44,9 +44,9 @@
     justify-content: end;
     align-items: center;
     gap: 2.5rem;
-  }
-  button {
-    @include mix.button();
+    button {
+      @include mix.button();
+    }
   }
 }
 
@@ -61,6 +61,27 @@
     z-index: 1;
     pointer-events: none;
     contain: paint;
+  }
+
+  .gameOverActions {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 2rem;
+    margin-top: 3rem;
+
+    .replayChamberBtn,
+    .validationReplayBtn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem 1rem;
+      border: none;
+      border-radius: var.$smallRadius;
+      cursor: pointer;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+    }
   }
 
   .overFx__embers {
