@@ -88,17 +88,7 @@ export function hideSection(
 //------------------- GO TO SECTION -------------------------
 //-----------------------------------------------------------
 
-/**
- * Byter från aktuell sida till nästa sida.
- *
- * Helpern:
- * - hittar själv "from"-sidan
- * - visar nästa sektion
- * - fadar ut föregående sektion
- * - uppdaterar currentPage
- *
- * Detta är den funktion som rummen helst ska använda framöver.
- */
+// makes the switch from currentpage to next page
 export function goToSection(
   to: HTMLElement,
   durationMs = 1200,
@@ -153,9 +143,7 @@ export function goToSection(
 //-------------- SPLASH HEADING FADE HELPERS ----------------
 //-----------------------------------------------------------
 
-/**
- * Fade in splash-rubrik efter liten delay.
- */
+// SPLASHPAGE FADE-IN
 export function revealSplashHeading(delayMs = 200): void {
   const splashHeading = document.querySelector<HTMLElement>(".splashHeading");
   if (!splashHeading) return;
@@ -165,9 +153,7 @@ export function revealSplashHeading(delayMs = 200): void {
   }, delayMs);
 }
 
-/**
- * Fade out splash-rubrik.
- */
+// FADE OUT SPLASH
 export function hideSplashHeading(delayMs = 0): void {
   const splashHeading = document.querySelector<HTMLElement>(".splashHeading");
   if (!splashHeading) return;

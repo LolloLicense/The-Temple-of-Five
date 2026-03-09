@@ -490,17 +490,20 @@ function ifRoomFailed(): void {
 }
 
 // ── NAVIGATION ─────────────────────────────────────────────────────────────
+
 function goToNextRoom(nextSelector: string, nextRoomFunc: () => void): void {
   if (!waterSection) return;
 
   const nextSection = document.querySelector<HTMLElement>(nextSelector);
   if (!nextSection) return;
 
-  // Build next room first
-  nextRoomFunc();
-
-  // Let Water own the transition
+  // Water äger transitionen först
   goToSection(nextSection, TRANSITION_MS);
+
+  // Starta nästa rum först när transitionen är klar
+  window.setTimeout(() => {
+    nextRoomFunc();
+  }, TRANSITION_MS);
 }
 
 // ── SCORE ──────────────────────────────────────────────────────────────────

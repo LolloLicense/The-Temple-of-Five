@@ -125,11 +125,13 @@ export function room4metalFunc() {
     const nextSection = document.querySelector<HTMLElement>(nextSelector);
     if (!nextSection) return;
 
-    // Build the next room first
-    nextRoomFunc();
-
-    // Then let Metal own the transition to the next room
+    // Metal äger transitionen först
     goToSection(nextSection, TRANSITION_MS);
+
+    // Starta nästa rum först när transitionen är klar
+    window.setTimeout(() => {
+      nextRoomFunc();
+    }, TRANSITION_MS);
   }
 
   metalSection.style.backgroundImage = `url("${dataJSON.room4metal.backgroundImg}")`; // Sätter bakgrundsbilden för metallrummet från JSON-data
