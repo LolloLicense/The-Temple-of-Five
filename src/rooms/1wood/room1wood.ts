@@ -338,11 +338,11 @@ export function room1woodFunc() {
     const nextSection = document.querySelector<HTMLElement>(nextSelector);
     if (!nextSection) return;
 
-    // Build the next room before it fades in
-    nextRoomFunc();
-
-    // Then run the visual transition
     goToSection(nextSection, TRANSITIONTIME);
+
+    window.setTimeout(() => {
+      nextRoomFunc();
+    }, TRANSITIONTIME);
   }
 
   //-----------------------------------------------------------
