@@ -1,7 +1,7 @@
 import { playBgm } from "../../audio/index.ts";
 import * as dataJSON from "../../data.json";
 import { showGameHeader } from "../../script/helper/gameHeader.ts";
-// Uppdaterar progressbaren i UI utifrån sparad room-status
+// Updates the progress bar in the UI based on saved room status
 import { updateProgressBar } from "../../script/helper/progressbar.ts";
 import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
 import { showMsg } from "../../script/helper/showMsg.ts";
@@ -10,32 +10,48 @@ import {
   resetSingleRoomResult,
   setRoomResult,
 } from "../../script/helper/storage.ts";
-import { goToSection } from "../../script/helper/transitions.ts";
-//import { startTimer, stopTimer } from "./script/utils.ts";
+import {
+  getCurrentPage,
+  goToSection,
+} from "../../script/helper/transitions.ts";
 import { startTimer, stopTimer, TimeIsUp } from "../../script/helper/utils.ts";
 import { room2fireFunc } from "../2fire/room2fire.ts";
 
 //-----------------------------------------------------------
-//----------------------CONFIG / RULES-----------------------
+//---------------------- CONFIG / RULES ----------------------
 //-----------------------------------------------------------
 
-// Levels = 3 levels/ stages. Each level contains 6 fibenacci numbers
-// [] = Outer array Levels [] = Inner array
+// Levels = 3 stages. Each level contains 6 Fibonacci numbers
 const LEVELS: number[][] = [
   [0, 1, 1, 2, 3, 5],
   [8, 13, 21, 34, 55, 89],
   [144, 233, 377, 610, 987, 1597],
 ];
 
-// numer of "inputboxes"
+// Number of input slots
 const SLOTS_PER_STAGE = 6;
-// In Room Balance
+
+// Balance / UI tuning
 const MISTAKE_PENALTY = 4;
 const WOBBLEBALANCE = 1.5;
 const TRANSITIONTIME = 1200;
 
+//-----------------------------------------------------------
+//------------------- CLEANUP-RELATED STATE -----------------
+//-----------------------------------------------------------
+
 // If we re-enter, clear previous watcher (prevents double fail triggers)
 let timeUpIntervalId: number | null = null;
+
+// Timeout used when room is completed
+let completeTimeoutId: number | null = null;
+
+// Timeout used when room is failed
+let failTimeoutId: number | null = null;
+
+//-----------------------------------------------------------
+//----------------------- CLEANUP HELPERS -------------------
+//-----------------------------------------------------------
 
 function stopTimeUpWatcher(): void {
   if (timeUpIntervalId !== null) {
@@ -44,74 +60,108 @@ function stopTimeUpWatcher(): void {
   }
 }
 
-export function room1woodFunc() {
-  // reset so we hade default state for artefacts
+function stopCompleteTimeout(): void {
+  if (completeTimeoutId !== null) {
+    window.clearTimeout(completeTimeoutId);
+    completeTimeoutId = null;
+  }
+}
+
+function stopFailTimeout(): void {
+  if (failTimeoutId !== null) {
+    window.clearTimeout(failTimeoutId);
+    failTimeoutId = null;
+  }
+}
+
+/**
+ * Cleanup function for Wood room.
+ *
+ * Stops any "alive" room logic that should not continue
+ * after the player has left the room.
+ */
+function cleanupWoodRoom(): void {
+  stopTimeUpWatcher();
+  stopCompleteTimeout();
+  stopFailTimeout();
+}
+
+export function room1woodFunc(): void {
+  // Reset single room result so we start from default artifact state
   resetSingleRoomResult("wood");
 
   //----------------------------------------------------------
-  //----------------------SETUP ROOM DOM----------------------
+  //---------------------- SETUP ROOM DOM --------------------
   //----------------------------------------------------------
 
   const woodSection = document.querySelector<HTMLElement>("#room1Wood");
   if (!woodSection) return;
+
+  // If we enter the room again, stop old Wood-specific async logic first
+  cleanupWoodRoom();
 
   woodSection.style.backgroundImage = `url("${dataJSON.room1wood.backgroundImg}")`;
 
   // Let transition helper handle showing / switching to this room
   goToSection(woodSection, TRANSITIONTIME);
 
-  // Allow entering room every time - transition + header + timer)
+  // Allow entering room every time (transition + header + timer)
   // But only create heavy stuff once (particles + event listeners)
   const isFirstInit = woodSection.dataset.woodInit !== "true";
   if (isFirstInit) woodSection.dataset.woodInit = "true";
 
   //-----------------------------------------------------------
-  //-------------------------TIMER SETUP-----------------------
+  //------------------------- TIMER SETUP ---------------------
   //-----------------------------------------------------------
 
-  //Stop timer
-  stopTimeUpWatcher();
   // Start timer for room 1
   startTimer(1);
 
+  // Watch shared TimeIsUp flag while this room is active
   timeUpIntervalId = window.setInterval(() => {
+    // Ignore if timer is not up yet
     if (!TimeIsUp) return;
+
+    // Ignore if Wood is no longer the current visible room
+    if (getCurrentPage() !== woodSection) return;
+
     ifRoomFailed();
   }, 200);
 
   woodSection.dataset.timeUpWatcherId = String(timeUpIntervalId);
 
   //-----------------------------------------------------------
-  //----------------------ROOM UI------------------------------
+  //-------------------------- ROOM UI ------------------------
   //-----------------------------------------------------------
 
-  /* Play the background music for woodroom */
+  /* Play the background music for wood room */
   const bgmId = dataJSON.room1wood.bgmId;
   if (bgmId) {
-    void playBgm(bgmId, 650); // play the background music for the wood room, with a fade-in duration of 650ms
+    void playBgm(bgmId, 650); // Fade in background music
   }
 
   showGameHeader();
 
-  // fireflie animation
+  // Firefly animation
   const particlesWrap =
     woodSection.querySelector<HTMLDivElement>(".woodParticles");
+
+  // Prevent adding particles again on re-enter
   if (particlesWrap && particlesWrap.childElementCount === 0) {
-    // pervents adding amout after re-entering room
     for (let i = 0; i < 12; i++) {
       const particle = document.createElement("div");
       particle.className = "woodParticle";
 
-      // size of fireflies
+      // Size of fireflies
       const size = 2 + Math.random() * 6; // 2px – 8px
       particle.style.width = `${size}px`;
       particle.style.height = `${size}px`;
 
-      // start position
+      // Start position
       particle.style.left = `${Math.random() * 100}%`;
-      particle.style.top = `${60 + Math.random() * 40}%`; // start lower part of screen
+      particle.style.top = `${60 + Math.random() * 40}%`; // Start in lower part of screen
 
-      // animation speed + delay
+      // Animation speed + delay
       const floatSeconds = 6 + Math.random() * 10; // 6–16s
       const flickerSeconds = 1.5 + Math.random() * 2.5; // 1.5–4s
       particle.style.animationDuration = `${floatSeconds}s, ${flickerSeconds}s`;
@@ -121,11 +171,11 @@ export function room1woodFunc() {
     }
   }
 
-  // render desc from JSON into <div id="roomDesc">
+  // Render description from JSON into room description area
   renderRoomDesc(woodSection, dataJSON.room1wood.desc);
 
   //-----------------------------------------------------------
-  //-------------------------DOM-------------------------------
+  //--------------------------- DOM ---------------------------
   //-----------------------------------------------------------
 
   const slots = Array.from(
@@ -140,7 +190,7 @@ export function room1woodFunc() {
   const roomBalanceEl =
     woodSection.querySelector<HTMLDivElement>("#balanceFill");
 
-  // guard if not HTML match and prevents errors for properties of null
+  // Guard against missing DOM
   if (
     !keypad ||
     slots.length !== SLOTS_PER_STAGE ||
@@ -151,37 +201,40 @@ export function room1woodFunc() {
     throw new Error("Wood room DOM mismatch");
   }
 
-  // Make “safe” non-null variables AFTER guard
+  // Safe non-null variables after guard
   const levelText = levelTextEl;
   const mistakesText = mistakesTextEl;
   const balanceFill = roomBalanceEl;
 
-  // Array with all my buttons class=key 0-9 & backspace
+  // Array with all keypad buttons
   const keyBtns = Array.from(
     keypad.querySelectorAll<HTMLButtonElement>("button.key"),
   );
 
   //-----------------------------------------------------------
-  //-------------------------STATE-----------------------------
+  //-------------------------- STATE --------------------------
   //-----------------------------------------------------------
 
-  // levels (0-2)
+  // Current level index (0-2)
   let currentLevelIndex = 0;
-  // witch of the 6 inputs are we writing in atm (index 0-5)
+
+  // Which of the 6 slots are we writing in right now
   let activeSlotIndex = 0;
-  // store string so we can compare digit to digit and compare to expectedStr
+
+  // Store strings so we can compare typed digits to expected strings
   let slotValues: string[] = Array(SLOTS_PER_STAGE).fill("");
-  // Mistake counter state
+
+  // Mistake counter
   let mistakes = 0;
-  // levels transition - letting player see the last digits before next level
+
+  // Prevent input during short transitions between levels / room result
   let isTransitioning = false;
 
   //-----------------------------------------------------------
-  //-------------------------RENDER UI-------------------------
+  //------------------------ RENDER UI ------------------------
   //-----------------------------------------------------------
 
   function renderSlots(): void {
-    // writing the soltsvalue to input
     slots.forEach((slot, i) => {
       slot.textContent = slotValues[i] || "";
       slot.classList.toggle("is-active", i === activeSlotIndex);
@@ -190,136 +243,135 @@ export function room1woodFunc() {
       slot.dataset.digits = String(expectedStr.length);
     });
   }
-  // HUD IN roomprogressbar
+
   function renderHUD(): void {
     levelText.textContent = `${currentLevelIndex + 1}/${LEVELS.length}`;
     mistakesText.textContent = String(mistakes);
 
-    // Percent balance calc
-
-    // startmode 5% minimum
+    // Balance bar percentage calc
     const MIN_START = 5;
-    // base calc on levels done
     const progressBase =
       MIN_START + (currentLevelIndex / LEVELS.length) * (100 - MIN_START);
-    // penalty for number of mistakes
     const penalty = mistakes * MISTAKE_PENALTY;
-    // smooth wobble for the nerves ( Math.sin = value between -1 & 1)
     const balanceWobble =
       Math.sin((currentLevelIndex + 1) * 2 + mistakes * 1.5) * WOBBLEBALANCE;
-    // calc for % in balancebar (Math.max = never returns value < 0 (Math.min always returns < 100))
+
     const balancePercent = Math.max(
       0,
       Math.min(100, progressBase - penalty + balanceWobble),
     );
+
     balanceFill.style.width = `${balancePercent}%`;
   }
 
-  function updtUI(): void {
+  function updateUI(): void {
     renderSlots();
     renderHUD();
   }
 
   //-----------------------------------------------------------
-  //-------------------------HELPERS---------------------------
+  //-------------------------- HELPERS ------------------------
   //-----------------------------------------------------------
 
-  // Delay helper - pause transition so player can see all digits before next level
+  /**
+   * Small delay helper for level transitions.
+   * Blocks input briefly so player can see completed numbers.
+   */
   function delayTransit(ms: number, after: () => void): void {
-    // block input so player dont spam buttons while transit
     isTransitioning = true;
-    // wait ms , then run after
-    setTimeout(() => {
-      after(); // run transit
-      isTransitioning = false; // un-block input
+
+    window.setTimeout(() => {
+      // Ignore if Wood is no longer active
+      if (getCurrentPage() !== woodSection) return;
+
+      after();
+      isTransitioning = false;
     }, ms);
   }
 
-  // reset inputs for current level
+  // Reset inputs for current level
   function resetLevelInput(): void {
     slotValues = Array(SLOTS_PER_STAGE).fill("");
     activeSlotIndex = 0;
   }
 
   //-----------------------------------------------------------
-  //-------------------------LOGICS----------------------------
+  //--------------------------- LOGIC -------------------------
   //-----------------------------------------------------------
 
-  // add number in active slot as string
+  // Add number to active slot as string
   function pushDigit(digit: string): void {
-    // If we are currently delaying a transition, ignore clicks/keys
+    // Ignore input during delayed transitions
     if (isTransitioning) return;
-    // controls how many digits a slot should have ( 1 , 2 or 3)
+
+    // Ignore if Wood is no longer active
+    if (getCurrentPage() !== woodSection) return;
+
     const expectedStr = String(LEVELS[currentLevelIndex][activeSlotIndex]);
-    // only expected amout of digits allowed
+
+    // Only allow expected number of digits in slot
     if (slotValues[activeSlotIndex].length >= expectedStr.length) return;
-    // add number in current slot
+
     slotValues[activeSlotIndex] += digit;
-    //Upd UI to show all state changes
-    updtUI();
-    // if slot is full - move to next slot
+    updateUI();
+
+    // If slot is full, move forward or validate level
     if (slotValues[activeSlotIndex].length === expectedStr.length) {
       advanceOrValidateLevel();
     }
-    //RENDER AGAIN because advanceOrValidateLevel() changes state
-    // (activeSlotIndex++ or new level / reset)
-    updtUI();
+
+    updateUI();
   }
 
-  // when slot full - move on or validate and advance
   function advanceOrValidateLevel(): void {
     if (activeSlotIndex < SLOTS_PER_STAGE - 1) {
       activeSlotIndex++;
       return;
     }
-    // last input filled - validate level
+
+    // Last input filled → validate level
     validateLevel();
   }
 
-  // Level validation
   function validateLevel(): void {
     const expectedLevel = LEVELS[currentLevelIndex].map(String);
-    //compare slots value to expected value
+
     const levelOk = slotValues.every((value, i) => value === expectedLevel[i]);
 
     if (!levelOk) {
-      // failing level & count/add mistakes +1
       mistakes++;
-      // play level untill finnished
       resetLevelInput();
-      // resets level
-      updtUI();
+      updateUI();
       return;
     }
-    // if level completed - move on to next and clear inputs
+
+    // If level is completed → move to next level
     if (currentLevelIndex < LEVELS.length - 1) {
-      // small pause for player UI
       delayTransit(700, () => {
-        //After pause - move on to next level
         currentLevelIndex++;
-        // clear slots
         resetLevelInput();
-        // re-render UI for next level
-        updtUI();
+        updateUI();
       });
       return;
     }
 
-    // all levels completed
+    // All levels completed
     ifRoomCompleted();
   }
 
-  // Backspace button
+  // Backspace button logic
   function backspace(): void {
-    // If we are currently delaying a transition, ignore backspace too
     if (isTransitioning) return;
-    // Case 1 : if the input/ slot have content - remove last digit.
+    if (getCurrentPage() !== woodSection) return;
+
+    // If active slot has content, remove last digit
     if (slotValues[activeSlotIndex].length > 0) {
       slotValues[activeSlotIndex] = slotValues[activeSlotIndex].slice(0, -1);
-      updtUI();
+      updateUI();
       return;
     }
-    // case 2: if empty slot
+
+    // If current slot is empty, move back one slot
     if (activeSlotIndex > 0) {
       activeSlotIndex--;
     }
@@ -327,39 +379,49 @@ export function room1woodFunc() {
     if (slotValues[activeSlotIndex].length > 0) {
       slotValues[activeSlotIndex] = slotValues[activeSlotIndex].slice(0, -1);
     }
-    updtUI();
+
+    updateUI();
   }
 
   //-----------------------------------------------------------
-  //--------------------- Go to next room ---------------------
+  //---------------------- GO TO NEXT ROOM --------------------
   //-----------------------------------------------------------
 
   function goToNextRoom(nextSelector: string, nextRoomFunc: () => void): void {
     const nextSection = document.querySelector<HTMLElement>(nextSelector);
     if (!nextSection) return;
 
+    // Clean up Wood-specific async logic before leaving
+    cleanupWoodRoom();
+
+    // First: transition to the next room section
     goToSection(nextSection, TRANSITIONTIME);
 
+    // Then: start the next room logic after transition is done
     window.setTimeout(() => {
       nextRoomFunc();
     }, TRANSITIONTIME);
   }
 
   //-----------------------------------------------------------
-  //--------------------- ROOMCOMPLETE ------------------------
+  //---------------------- ROOM COMPLETE ----------------------
   //-----------------------------------------------------------
 
   function ifRoomCompleted(): void {
     if (isTransitioning) return;
-    // Block input while we show the final state + delay
+
+    // Block input while we show final state + delay
     isTransitioning = true;
-    //Render the very last digit + final UI state
-    updtUI();
-    if (mistakes === 0) balanceFill.style.width = "100%";
+
+    // Render final UI state
+    updateUI();
+
+    if (mistakes === 0) {
+      balanceFill.style.width = "100%";
+    }
 
     stopTimeUpWatcher();
 
-    // TEST
     setRoomResult("wood", {
       status: "completed",
       artifact: "true",
@@ -370,40 +432,40 @@ export function room1woodFunc() {
 
     stopTimer(1);
     updateProgressBar();
-    // show msg to player
+
     showMsg("Well done — next chamber awaits", TRANSITIONTIME * 2);
     console.log("Wood result:", getRoomResults().wood);
 
-    window.setTimeout(() => {
-      // Reset wood state
+    completeTimeoutId = window.setTimeout(() => {
+      // Ignore if player already left Wood in some unexpected way
+      if (getCurrentPage() !== woodSection) return;
+
       currentLevelIndex = 0;
       mistakes = 0;
       resetLevelInput();
-      // Allow input again wood is about to be hidden anyway
       isTransitioning = false;
-      updtUI();
+      updateUI();
 
-      // go next room
       goToNextRoom("#room2Fire", room2fireFunc);
     }, TRANSITIONTIME);
   }
 
   //-----------------------------------------------------------
-  //--------------------- ROOMFAIL ----------------------------
+  //----------------------- ROOM FAIL -------------------------
   //-----------------------------------------------------------
 
   // Called when the room timer hits 0
   function ifRoomFailed(): void {
     if (isTransitioning) return;
+
     // Block input so player can't keep interacting
     isTransitioning = true;
-    //timer stuff
+
     stopTimeUpWatcher();
 
     // Update UI one last time
-    updtUI();
+    updateUI();
 
-    // TEST
     setRoomResult("wood", {
       status: "failed",
       artifact: "false",
@@ -411,80 +473,85 @@ export function room1woodFunc() {
       score: 0,
       roomTimeSec: 0,
     });
+
     stopTimer(1);
     updateProgressBar();
+
     console.log("Wood fail result:", getRoomResults().wood);
-    // Show fail message
+
     showMsg("Time's up — next chamber awaits", TRANSITIONTIME * 2);
 
-    // Reset AFTER message is shown
-    window.setTimeout(() => {
+    failTimeoutId = window.setTimeout(() => {
+      // Ignore if player already left Wood in some unexpected way
+      if (getCurrentPage() !== woodSection) return;
+
       currentLevelIndex = 0;
       mistakes = 0;
       resetLevelInput();
-
       isTransitioning = false;
-      updtUI();
+      updateUI();
+
       goToNextRoom("#room2Fire", room2fireFunc);
     }, TRANSITIONTIME);
   }
 
   //-----------------------------------------------------------
-  //-------------------------KEY EVENTS------------------------
+  //------------------------ KEY EVENTS -----------------------
   //-----------------------------------------------------------
 
   function handleKeypadClick(e: MouseEvent): void {
-    // any click inside keypad container
+    // Ignore clicks if Wood is no longer active
+    if (getCurrentPage() !== woodSection) return;
+
     const target = e.target as HTMLElement | null;
     if (!target) return;
-    // closest to find a button with .key
+
     const btn = target.closest<HTMLButtonElement>("button.key");
     if (!btn) return;
-    // move focus to the targeted btn
+
     btn.focus();
-    // find the number assigned by data-key= i HTML
+
     const digit = btn.dataset.key;
-    // find the assumed data-action assigned to btn data-action= i HTML
     const action = btn.dataset.action;
-    // if the btn has a digit - include it to the game-logic
+
     if (digit) pushDigit(digit);
-    // if the btn is the backspace button - run game backspace logic
     if (action === "back") backspace();
   }
 
   function handleKeyDownEvent(e: KeyboardEvent): void {
-    // keypad btns i HTML gets action when focused on
+    // Ignore keyboard events if Wood is no longer active
+    if (getCurrentPage() !== woodSection) return;
+
     const active = document.activeElement as HTMLButtonElement | null;
     if (!active || !active.classList.contains("key")) return;
-    // what button is active atm
+
     const currentKeyIndex = keyBtns.indexOf(active);
     if (currentKeyIndex === -1) return;
 
-    // enterkey to submit digit on keypad as a click
+    // Enter / space triggers click on focused keypad button
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       active.click();
       return;
     }
-    // Only arrows keys moves focus
+
+    // Only arrow keys move keypad focus
     if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
 
     e.preventDefault();
-    // Calc for next focus position clamp-style
+
     const nextKeyIndex =
       e.key === "ArrowRight"
-        ? // Right arrow key goes one step forward (+1) But never past last index
-          Math.min(currentKeyIndex + 1, keyBtns.length - 1)
-        : // Left arrow key goes one step back (-1) but not futher than 0 index
-          Math.max(currentKeyIndex - 1, 0);
-    // if focus in on last and press arrow right - do nothing and vice versa
+        ? Math.min(currentKeyIndex + 1, keyBtns.length - 1)
+        : Math.max(currentKeyIndex - 1, 0);
+
     if (nextKeyIndex === currentKeyIndex) return;
-    // only one key is tabbable
+
+    // Roving tabindex
     keyBtns[currentKeyIndex].tabIndex = -1;
     keyBtns[nextKeyIndex].tabIndex = 0;
     keyBtns[nextKeyIndex].focus();
   }
-
   // Prevent adding event listeners twice if player re-enters the room
   if (isFirstInit) {
     keypad.addEventListener("click", handleKeypadClick);
@@ -492,13 +559,16 @@ export function room1woodFunc() {
   }
 
   function initKeypadFocus(): void {
-    // give one button at a time tabIndex 0. all others -0(not able to be tabbed to)
-    // "roving tabIndex"
+    // Only one button should be tabbable at a time
     keyBtns.forEach((btn, i) => {
       btn.tabIndex = i === 0 ? 0 : -1;
     });
   }
 
+  //-----------------------------------------------------------
+  //--------------------------- INIT --------------------------
+  //-----------------------------------------------------------
+
   initKeypadFocus();
-  updtUI();
+  updateUI();
 }

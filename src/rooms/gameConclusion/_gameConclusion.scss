@@ -67,20 +67,72 @@
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    gap: 2rem;
+    gap: 1.5rem;
     margin-top: 3rem;
 
-    .replayChamberBtn,
-    .validationReplayBtn {
+    .replayChamberBtn {
       display: flex;
       justify-content: center;
       align-items: center;
+      height: clamp(14rem, 30vw, 22rem);
+      width: clamp(3.5rem, 6vw, 5rem);
       padding: 1rem 1rem;
       border: none;
       border-radius: var.$smallRadius;
       cursor: pointer;
-      writing-mode: vertical-rl;
-      text-orientation: mixed;
+      background-color: var.$lightColor;
+      color: var.$lightColor;
+      .buttonLabel {
+        display: block;
+        color: inherit;
+        font-size: clamp(1.2rem, 1.7vw, 1.6rem);
+        line-height: 1;
+        text-transform: uppercase;
+        white-space: nowrap;
+        transform: rotate(-90deg);
+      }
+      &.isFailed {
+        background-color: var.$redColor;
+        color: var.$lightColor;
+        cursor: pointer;
+      }
+
+      &.isFixed {
+        background-color: var.$lightColor;
+        color: var.$lightColor;
+        cursor: default;
+      }
+    }
+    .validationReplayBtn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: clamp(14rem, 30vw, 22rem);
+      width: clamp(3.5rem, 6vw, 5rem);
+      padding: 1rem 1rem;
+      background: transparent;
+      border: 2px solid var.$lightColor;
+      border-radius: var.$smallRadius;
+      cursor: default;
+      .buttonLabel {
+        opacity: 0;
+        visibility: hidden;
+        font-size: clamp(1.2rem, 1.7vw, 1.6rem);
+        line-height: 1;
+        text-transform: uppercase;
+        transition: opacity 0.25s ease;
+        white-space: nowrap;
+        transform: rotate(-90deg);
+        color: var.$lightColor;
+      }
+      &.isUnlocked {
+        cursor: pointer;
+
+        .buttonLabel {
+          opacity: 1;
+          visibility: visible;
+        }
+      }
     }
   }
 
