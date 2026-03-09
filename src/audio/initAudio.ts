@@ -70,9 +70,9 @@ export function initAudio(): void {
       volume: 0.5,
     },
     {
-      id: "bgm_game_over",
-      src: withBaseUrl("/audiofiles/bgm_gameover.mp3"),
-      kind: "bgm",
+      id: "sfx_transition",
+      src: withBaseUrl("/audiofiles/sfx_transition.mp3"),
+      kind: "sfx",
     },
 
     // Fill in your rooms below:

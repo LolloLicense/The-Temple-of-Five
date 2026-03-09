@@ -1,3 +1,5 @@
+import { playSfx } from "../../audio/index.ts";
+
 /**
  * transitions.ts
  *
@@ -112,6 +114,7 @@ export function goToSection(
   }
 
   isTransitioning = true;
+  void playSfx("sfx_transition");
 
   // prepp next page by removing display none
   to.classList.remove("hidden");
