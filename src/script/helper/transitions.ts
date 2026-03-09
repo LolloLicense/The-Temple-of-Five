@@ -3,7 +3,7 @@
  *
  * Gemensam helper för att visa och byta mellan sektioner.
  *
- * Tanken:
+ * Tanke:
  * - showSection() används när vi bara vill visa en sektion direkt
  * - goToSection() används när vi vill byta från nuvarande sida till nästa
  * - helpern håller själv reda på currentPage
@@ -15,23 +15,20 @@
 //------------------- CURRENT PAGE STATE --------------------
 //-----------------------------------------------------------
 
-// Håller reda på vilken sektion som just nu är aktiv
+// keeps in mid what sections is current
 let currentPage: HTMLElement | null = null;
 
-// Låser nya transitions medan en redan pågår
+// Lock trasition while ongoing
 let isTransitioning = false;
 
 /**
- * Sparar vilken sida som just nu är aktiv.
+ * Saves the active/ current page
  */
 function setCurrentPage(page: HTMLElement): void {
   currentPage = page;
 }
 
-/**
- * Returnerar aktuell aktiv sida.
- * Bra att ha kvar om något rum senare verkligen behöver läsa den.
- */
+// Returns currentpage
 export function getCurrentPage(): HTMLElement | null {
   return currentPage;
 }
@@ -40,12 +37,7 @@ export function getCurrentPage(): HTMLElement | null {
 //------------------- FIND ACTIVE PAGE ----------------------
 //-----------------------------------------------------------
 
-/**
- * Försöker hitta aktiv sida.
- *
- * 1. Använd currentPage om vi redan har den
- * 2. Annars leta i DOM efter en sektion som är synlig
- */
+// finds out what section currently has .isVisible
 function getActivePage(): HTMLElement | null {
   if (currentPage) return currentPage;
 
@@ -56,26 +48,20 @@ function getActivePage(): HTMLElement | null {
 //------------------- SHOW SECTION DIRECT -------------------
 //-----------------------------------------------------------
 
-/**
- * Visar en sektion direkt.
- *
- * Används när:
- * - sidan laddas första gången
- * - det inte finns någon tidigare sida att fada från
- */
+//showSection directly
 export function showSection(
   section: HTMLElement,
   visibleClass = "isVisible",
 ): void {
-  // Se till att sektionen faktiskt renderas
+  // make sure sections removes hidden
   section.classList.remove("hidden");
 
-  // Nästa frame -> lägg på synlighetsklass så CSS-transition kan triggas
+  // conects the page.isVisible opactiy scss
   requestAnimationFrame(() => {
     section.classList.add(visibleClass);
   });
 
-  // Spara sektionen som aktuell sida
+  // makes section current
   setCurrentPage(section);
 }
 
@@ -83,21 +69,16 @@ export function showSection(
 //------------------- HIDE SECTION DIRECT -------------------
 //-----------------------------------------------------------
 
-/**
- * Döljer en sektion med fade out.
- *
- * Den här kan vara bra att ha kvar om du vill dölja en sektion
- * utan att direkt visa en ny.
- */
+// Hides section with fade out
 export function hideSection(
   section: HTMLElement,
   durationMs = 600,
   visibleClass = "isVisible",
 ): void {
-  // Ta bort synlighetsklass -> startar fade out i CSS
+  // removes opacity 0 and trigger opacity 1 scss
   section.classList.remove(visibleClass);
 
-  // Efter animationen: dölj helt
+  // after animation add hidden
   window.setTimeout(() => {
     section.classList.add("hidden");
   }, durationMs);
@@ -123,19 +104,18 @@ export function goToSection(
   durationMs = 1200,
   visibleClass = "isVisible",
 ): void {
-  // Stoppa nya transitions medan en redan körs
   if (isTransitioning) return;
 
-  // Hitta nuvarande aktiv sida
+  // find / get current page/section
   const from = getActivePage();
 
-  // Om det inte finns någon aktiv sida ännu -> visa direkt
+  // if no page is active / current - show right away
   if (!from) {
     showSection(to, visibleClass);
     return;
   }
 
-  // Om vi redan är på samma sida -> säkerställ bara att den syns
+  // make sure section is showed
   if (from === to) {
     showSection(to, visibleClass);
     return;
@@ -143,53 +123,30 @@ export function goToSection(
 
   isTransitioning = true;
 
-  // Förbered nästa sida så att den finns i DOM innan faden startar
+  // prepp next page by removing display none
   to.classList.remove("hidden");
 
-  // Tvinga nästa sida till startläge
+  // trigger next page to transition
   to.classList.remove(visibleClass);
 
-  // Denna sida blir nu vår nya currentPage
+  // and then set the next page as currentPage
   setCurrentPage(to);
 
-  // Starta fade in på nästa sida
+  // Staring fade-in
   requestAnimationFrame(() => {
     to.classList.add(visibleClass);
 
-    // Starta fade out på föregående sida i nästa frame
+    // start fade out on previous page
     requestAnimationFrame(() => {
       from.classList.remove(visibleClass);
     });
   });
 
-  // När transitionen är klar -> dölj gamla sidan helt
+  // when trasition is done - add display:none to previous page
   window.setTimeout(() => {
     from.classList.add("hidden");
     isTransitioning = false;
   }, durationMs);
-}
-
-//-----------------------------------------------------------
-//------------------- BACKWARD COMPAT -----------------------
-//-----------------------------------------------------------
-
-/**
- * Behåller gamla namnet transitSections tills vi hunnit uppdatera alla rum.
- *
- * Den här wrappern gör att gammal kod fortfarande fungerar,
- * men internt använder vi nu goToSection().
- */
-export function transitSections(
-  from: HTMLElement,
-  to: HTMLElement,
-  durationMs = 1200,
-  visibleClass = "isVisible",
-): void {
-  // Vi ignorerar "from"-argumentet i nya logiken,
-  // eftersom helpern själv hittar aktiv sida.
-  void from;
-
-  goToSection(to, durationMs, visibleClass);
 }
 
 //-----------------------------------------------------------

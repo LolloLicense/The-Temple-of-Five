@@ -1,5 +1,5 @@
 import { resetRunKeepHighscores } from "./storage";
-import { getCurrentPage, showSection, transitSections } from "./transitions";
+import { getCurrentPage, goToSection, showSection } from "./transitions";
 
 // preventin listerners to multiply
 let resetBound = false;
@@ -27,7 +27,7 @@ export function initResetButtons(): void {
       document.querySelector<HTMLElement>("main > section.page.isVisible");
 
     if (welcome && fromPage && fromPage !== welcome) {
-      transitSections(fromPage, welcome, 1200);
+      goToSection(welcome, 1200);
     } else if (welcome) {
       showSection(welcome);
     }

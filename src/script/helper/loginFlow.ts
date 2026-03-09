@@ -9,9 +9,9 @@ import {
 } from "./storage";
 import {
   getCurrentPage,
+  goToSection,
   revealSplashHeading,
   showSection,
-  transitSections,
 } from "./transitions";
 
 //-----------------------------------------------------------
@@ -72,7 +72,7 @@ function handleLogout(): void {
 
   // Om vi inte redan är på splash → fade dit
   if (fromPage !== splashSection) {
-    transitSections(fromPage, splashSection, 1200);
+    goToSection(splashSection, 1200);
   } else {
     // Annars visa splash direkt
     showSection(splashSection);
@@ -83,7 +83,7 @@ function handleLogout(): void {
 
   // Efter 4 sek → gå från splash till login
   logoutToLoginTimeoutId = window.setTimeout(() => {
-    transitSections(splashSection, loginSection, 2000);
+    goToSection(loginSection, 2000);
   }, 4000);
 }
 
@@ -119,7 +119,7 @@ function handleLeaveRoom(): void {
   }
 
   // Annars fade till welcome
-  transitSections(fromPage, welcomeSection, 1200);
+  goToSection(welcomeSection, 1200);
 }
 
 //-----------------------------------------------------------
@@ -150,7 +150,7 @@ function onLoginSubmit(e: SubmitEvent): void {
 
   // Hämta welcome-sidan
   const welcomeSection = document.querySelector<HTMLElement>("#welcomePage")!;
-  const loginSection = document.querySelector<HTMLElement>("#loginPage")!;
+  // const loginSection = document.querySelector<HTMLElement>("#loginPage")!;
 
   // Sätt användarnamnet i welcome-sidan
   const welcomeNameEl =
@@ -161,7 +161,7 @@ function onLoginSubmit(e: SubmitEvent): void {
   clearLoginFlowTimeouts();
 
   // Fade från login → welcome
-  transitSections(loginSection, welcomeSection, 1200);
+  goToSection(welcomeSection, 1200);
 }
 
 //-----------------------------------------------------------
@@ -230,6 +230,6 @@ export function initLoginFlow(): void {
     if (getCurrentPage() !== splashSection) return;
     if (isLoggedIn() && getUserName()) return;
 
-    transitSections(splashSection, loginSection, 1200);
+    goToSection(loginSection, 1200);
   }, 4000);
 }

@@ -2,7 +2,7 @@ import * as dataJSON from "../../data.json";
 import {
   getCurrentPage,
   showSection,
-  transitSections,
+  goToSection,
 } from "../../script/helper/transitions.ts";
 import {
   initHighscoreResetButton,
@@ -31,7 +31,7 @@ export function highscoreRoomFunc(): void {
 
   // Transition
   if (fromPage && fromPage !== highscoreSection) {
-    transitSections(fromPage, highscoreSection, TRANSITION_MS);
+    goToSection(highscoreSection, TRANSITION_MS);
   } else {
     showSection(highscoreSection);
   }
@@ -66,7 +66,7 @@ export function highscoreRoomFunc(): void {
 
       backBtn.addEventListener("click", () => {
         // Always transition from highscore section to welcome page
-        transitSections(highscoreSection, welcomePage, TRANSITION_MS);
+        goToSection(welcomePage, TRANSITION_MS);
       });
     }
   }
