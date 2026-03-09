@@ -39,6 +39,7 @@
  * --------------------------------------------------------------------------------------------------
  */
 
+import * as dataJSON from "../../data.json";
 import { room1woodFunc } from "../../rooms/1wood/room1wood.ts";
 import { room2fireFunc } from "../../rooms/2fire/room2fire.ts";
 import { room3earthFunc } from "../../rooms/3earth/room3earth.ts";
@@ -47,10 +48,10 @@ import { room5waterFunc } from "../../rooms/5water/room5water.ts";
 import { room6finalFunc } from "../../rooms/final/room6validate.ts";
 import type { TArtifactKind, TRoomId, TRoomResult } from "./storage.ts";
 import {
-  getRoomResults,
-  resetRoomResults,
-  resetSingleRoomResult,
-  setRoomResult,
+    getRoomResults,
+    resetRoomResults,
+    resetSingleRoomResult,
+    setRoomResult,
 } from "./storage.ts";
 import { getCurrentPage, transitSections } from "./transitions.ts";
 
@@ -69,12 +70,12 @@ const TRANSITION_MS = 1200;
 
 // From storage (rooms)
 const ALL_ROOMS: TRoomId[] = [
-  "wood",
-  "fire",
-  "earth",
-  "metal",
-  "water",
-  "final",
+    "wood",
+    "fire",
+    "earth",
+    "metal",
+    "water",
+    "final",
 ];
 
 /**
@@ -82,12 +83,12 @@ const ALL_ROOMS: TRoomId[] = [
  * Used for the "full flow" button (transition + start next room logic).
  */
 const ROOM_STARTERS: Record<TRoomId, () => void> = {
-  wood: room1woodFunc,
-  fire: room2fireFunc,
-  earth: room3earthFunc,
-  metal: room4metalFunc,
-  water: room5waterFunc,
-  final: room6finalFunc,
+    wood: room1woodFunc,
+    fire: room2fireFunc,
+    earth: room3earthFunc,
+    metal: room4metalFunc,
+    water: room5waterFunc,
+    final: room6finalFunc,
 };
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -102,7 +103,7 @@ const ROOM_STARTERS: Record<TRoomId, () => void> = {
  * The panel itself is created only after successful unlock.
  */
 export function initDevCheats(): void {
-  attachSecretListener();
+    attachSecretListener();
 }
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -110,40 +111,40 @@ export function initDevCheats(): void {
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 function attachSecretListener(): void {
-  // Variable to track what the user is writing.
-  let buffer = "";
-  // Keep track of how fast user is typing
-  let lastKeyAt = 0;
+    // Variable to track what the user is writing.
+    let buffer = "";
+    // Keep track of how fast user is typing
+    let lastKeyAt = 0;
 
-  window.addEventListener("keydown", (e: KeyboardEvent) => {
-    // Ignore if user is typing in an input/textarea/contenteditable
-    const target = e.target as HTMLElement | null;
-    const tag = target?.tagName?.toLowerCase();
-    const isTypingField =
-      tag === "input" ||
-      tag === "textarea" ||
-      target?.isContentEditable === true;
-    if (isTypingField) return;
+    window.addEventListener("keydown", (e: KeyboardEvent) => {
+        // Ignore if user is typing in an input/textarea/contenteditable
+        const target = e.target as HTMLElement | null;
+        const tag = target?.tagName?.toLowerCase();
+        const isTypingField =
+            tag === "input" ||
+            tag === "textarea" ||
+            target?.isContentEditable === true;
+        if (isTypingField) return;
 
-    // Only accept single-character keys
-    const key = e.key.toLowerCase();
-    if (key.length !== 1) return;
+        // Only accept single-character keys
+        const key = e.key.toLowerCase();
+        if (key.length !== 1) return;
 
-    // Reset buffer if user pauses too long
-    const now = Date.now();
-    if (now - lastKeyAt > 900) buffer = ""; // If user is taking more than 900ms between each "keydown" - buffer is cleared
-    lastKeyAt = now;
+        // Reset buffer if user pauses too long
+        const now = Date.now();
+        if (now - lastKeyAt > 900) buffer = ""; // If user is taking more than 900ms between each "keydown" - buffer is cleared
+        lastKeyAt = now;
 
-    // Add to buffer
-    buffer += key;
-    if (buffer.length > 16) buffer = buffer.slice(-16); // make maximum 16 letters so it doesnt grow forever
+        // Add to buffer
+        buffer += key;
+        if (buffer.length > 16) buffer = buffer.slice(-16); // make maximum 16 letters so it doesnt grow forever
 
-    // Unlock flow if buffer ends with our secret sequence
-    if (buffer.endsWith(SECRET_SEQUENCE)) {
-      buffer = "";
-      unlockFlow();
-    }
-  });
+        // Unlock flow if buffer ends with our secret sequence
+        if (buffer.endsWith(SECRET_SEQUENCE)) {
+            buffer = "";
+            unlockFlow();
+        }
+    });
 }
 
 /**
@@ -153,15 +154,15 @@ function attachSecretListener(): void {
  * - wrong code = dont do anything
  */
 function unlockFlow(): void {
-  const code = window.prompt("CHEATING TIME 🙈 \nEnter code phrase:", "");
-  if (!code) return;
+    const code = window.prompt("CHEATING TIME 🙈 \nEnter code phrase:", "");
+    if (!code) return;
 
-  if (code.trim().toLowerCase() !== CODE_PHRASE) {
-    console.log("[DEV CHEATS] Wrong code phrase 🔒️");
-    return;
-  }
+    if (code.trim().toLowerCase() !== CODE_PHRASE) {
+        console.log("[DEV CHEATS] Wrong code phrase 🔒️");
+        return;
+    }
 
-  openDevPanel();
+    openDevPanel();
 }
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -184,265 +185,265 @@ let panelRoot: HTMLDivElement | null = null;
  * If it already exists, we simply show it again.
  */
 function openDevPanel(): void {
-  //-----------------------------------------------------------
-  // If panel already exists -> show it again
-  //-----------------------------------------------------------
+    //-----------------------------------------------------------
+    // If panel already exists -> show it again
+    //-----------------------------------------------------------
 
-  if (panelRoot) {
-    panelRoot.style.display = "block";
-    return;
-  }
+    if (panelRoot) {
+        panelRoot.style.display = "block";
+        return;
+    }
 
-  //-----------------------------------------------------------
-  // Create root container
-  //-----------------------------------------------------------
+    //-----------------------------------------------------------
+    // Create root container
+    //-----------------------------------------------------------
 
-  const root = document.createElement("div");
-  panelRoot = root;
+    const root = document.createElement("div");
+    panelRoot = root;
 
-  root.style.position = "fixed";
-  root.style.right = "16px";
-  root.style.bottom = "16px";
-  root.style.width = "340px";
-  root.style.maxWidth = "92vw";
-  root.style.zIndex = "99999";
-  root.style.background = "rgba(10,10,12,0.92)";
-  root.style.border = "1px solid rgba(255,255,255,0.14)";
-  root.style.borderRadius = "14px";
-  root.style.padding = "12px";
-  root.style.fontFamily = "system-ui, Arial";
-  root.style.color = "white";
-  root.style.boxShadow = "0 10px 30px rgba(0,0,0,0.35)";
+    root.style.position = "fixed";
+    root.style.right = "16px";
+    root.style.bottom = "16px";
+    root.style.width = "340px";
+    root.style.maxWidth = "92vw";
+    root.style.zIndex = "99999";
+    root.style.background = "rgba(10,10,12,0.92)";
+    root.style.border = "1px solid rgba(255,255,255,0.14)";
+    root.style.borderRadius = "14px";
+    root.style.padding = "12px";
+    root.style.fontFamily = "system-ui, Arial";
+    root.style.color = "white";
+    root.style.boxShadow = "0 10px 30px rgba(0,0,0,0.35)";
 
-  //-----------------------------------------------------------
-  // Header (title + close button)
-  //-----------------------------------------------------------
+    //-----------------------------------------------------------
+    // Header (title + close button)
+    //-----------------------------------------------------------
 
-  const header = document.createElement("div");
+    const header = document.createElement("div");
 
-  header.style.display = "flex";
-  header.style.alignItems = "center";
-  header.style.justifyContent = "space-between";
+    header.style.display = "flex";
+    header.style.alignItems = "center";
+    header.style.justifyContent = "space-between";
 
-  const title = document.createElement("div");
-  title.textContent = "POGO-STICK CHEAT CORNER 🪄";
-  title.style.fontWeight = "700";
+    const title = document.createElement("div");
+    title.textContent = "POGO-STICK CHEAT CORNER 🪄";
+    title.style.fontWeight = "700";
 
-  const closeBtn = document.createElement("button");
-  closeBtn.textContent = "✕";
-  closeBtn.style.cursor = "pointer";
-  closeBtn.style.background = "transparent";
-  closeBtn.style.color = "white";
-  closeBtn.style.border = "1px solid rgba(255,255,255,0.18)";
-  closeBtn.style.borderRadius = "10px";
-  closeBtn.style.padding = "6px 10px";
+    const closeBtn = document.createElement("button");
+    closeBtn.textContent = "✕";
+    closeBtn.style.cursor = "pointer";
+    closeBtn.style.background = "transparent";
+    closeBtn.style.color = "white";
+    closeBtn.style.border = "1px solid rgba(255,255,255,0.18)";
+    closeBtn.style.borderRadius = "10px";
+    closeBtn.style.padding = "6px 10px";
 
-  closeBtn.addEventListener("click", () => {
-    if (!panelRoot) return;
-    panelRoot.style.display = "none";
-  });
-
-  header.append(title, closeBtn);
-
-  //-----------------------------------------------------------
-  // Description text
-  //-----------------------------------------------------------
-
-  const hint = document.createElement("div");
-  hint.textContent =
-    "State cheats and FULL FLOW (transition + start next room).";
-
-  hint.style.fontSize = "12px";
-  hint.style.opacity = "0.8";
-  hint.style.marginTop = "6px";
-  hint.style.marginBottom = "10px";
-
-  //-----------------------------------------------------------
-  // ROOM SELECTOR (custom dropdown)
-  //-----------------------------------------------------------
-
-  /**
-   * Native <select> caused a white OS dropdown.
-   * Instead we create a small custom dropdown.
-   */
-
-  const selectRow = document.createElement("div");
-  selectRow.style.display = "flex";
-  selectRow.style.gap = "8px";
-  selectRow.style.alignItems = "center";
-  selectRow.style.marginBottom = "10px";
-
-  const label = document.createElement("span");
-  label.textContent = "Room:";
-  label.style.fontSize = "12px";
-  label.style.opacity = "0.85";
-
-  // currently selected room
-  let selectedRoom: TRoomId = getCurrentRoomId() ?? "wood";
-
-  const dropdownWrap = document.createElement("div");
-  dropdownWrap.style.position = "relative";
-  dropdownWrap.style.flex = "1";
-
-  const dropdownBtn = document.createElement("button");
-  dropdownBtn.textContent = selectedRoom;
-  dropdownBtn.style.width = "100%";
-  dropdownBtn.style.padding = "10px";
-  dropdownBtn.style.borderRadius = "12px";
-  dropdownBtn.style.border = "1px solid rgba(255,255,255,0.18)";
-  dropdownBtn.style.background = "rgba(255,255,255,0.06)";
-  dropdownBtn.style.color = "white";
-  dropdownBtn.style.cursor = "pointer";
-  dropdownBtn.style.textAlign = "left";
-
-  const dropdownMenu = document.createElement("div");
-  dropdownMenu.style.position = "absolute";
-  dropdownMenu.style.left = "0";
-  dropdownMenu.style.right = "0";
-  dropdownMenu.style.top = "calc(100% + 6px)";
-  dropdownMenu.style.background = "rgba(10,10,12,0.96)";
-  dropdownMenu.style.border = "1px solid rgba(255,255,255,0.14)";
-  dropdownMenu.style.borderRadius = "12px";
-  dropdownMenu.style.padding = "6px";
-  dropdownMenu.style.display = "none";
-  dropdownMenu.style.zIndex = "100000";
-
-  //-----------------------------------------------------------
-  // Create one dropdown item per room
-  //-----------------------------------------------------------
-
-  for (const id of ALL_ROOMS) {
-    const item = document.createElement("button");
-
-    item.textContent = id;
-    item.style.width = "100%";
-    item.style.padding = "10px";
-    item.style.borderRadius = "10px";
-    item.style.border = "1px solid rgba(255,255,255,0.10)";
-    item.style.background = "rgba(255,255,255,0.04)";
-    item.style.color = "white";
-    item.style.cursor = "pointer";
-    item.style.textAlign = "left";
-
-    item.addEventListener("click", () => {
-      selectedRoom = id;
-      dropdownBtn.textContent = id;
-
-      dropdownMenu.style.display = "none";
+    closeBtn.addEventListener("click", () => {
+        if (!panelRoot) return;
+        panelRoot.style.display = "none";
     });
 
-    dropdownMenu.appendChild(item);
-  }
+    header.append(title, closeBtn);
 
-  //-----------------------------------------------------------
-  // Toggle dropdown open/close
-  //-----------------------------------------------------------
+    //-----------------------------------------------------------
+    // Description text
+    //-----------------------------------------------------------
 
-  dropdownBtn.addEventListener("click", () => {
-    dropdownMenu.style.display =
-      dropdownMenu.style.display === "none" ? "block" : "none";
-  });
+    const hint = document.createElement("div");
+    hint.textContent =
+        "State cheats and FULL FLOW (transition + start next room).";
 
-  //-----------------------------------------------------------
-  // Close dropdown if clicking outside
-  //-----------------------------------------------------------
+    hint.style.fontSize = "12px";
+    hint.style.opacity = "0.8";
+    hint.style.marginTop = "6px";
+    hint.style.marginBottom = "10px";
 
-  window.addEventListener("click", (e) => {
-    const target = e.target as Node;
+    //-----------------------------------------------------------
+    // ROOM SELECTOR (custom dropdown)
+    //-----------------------------------------------------------
 
-    if (!dropdownWrap.contains(target)) {
-      dropdownMenu.style.display = "none";
+    /**
+     * Native <select> caused a white OS dropdown.
+     * Instead we create a small custom dropdown.
+     */
+
+    const selectRow = document.createElement("div");
+    selectRow.style.display = "flex";
+    selectRow.style.gap = "8px";
+    selectRow.style.alignItems = "center";
+    selectRow.style.marginBottom = "10px";
+
+    const label = document.createElement("span");
+    label.textContent = "Room:";
+    label.style.fontSize = "12px";
+    label.style.opacity = "0.85";
+
+    // currently selected room
+    let selectedRoom: TRoomId = getCurrentRoomId() ?? "wood";
+
+    const dropdownWrap = document.createElement("div");
+    dropdownWrap.style.position = "relative";
+    dropdownWrap.style.flex = "1";
+
+    const dropdownBtn = document.createElement("button");
+    dropdownBtn.textContent = selectedRoom;
+    dropdownBtn.style.width = "100%";
+    dropdownBtn.style.padding = "10px";
+    dropdownBtn.style.borderRadius = "12px";
+    dropdownBtn.style.border = "1px solid rgba(255,255,255,0.18)";
+    dropdownBtn.style.background = "rgba(255,255,255,0.06)";
+    dropdownBtn.style.color = "white";
+    dropdownBtn.style.cursor = "pointer";
+    dropdownBtn.style.textAlign = "left";
+
+    const dropdownMenu = document.createElement("div");
+    dropdownMenu.style.position = "absolute";
+    dropdownMenu.style.left = "0";
+    dropdownMenu.style.right = "0";
+    dropdownMenu.style.top = "calc(100% + 6px)";
+    dropdownMenu.style.background = "rgba(10,10,12,0.96)";
+    dropdownMenu.style.border = "1px solid rgba(255,255,255,0.14)";
+    dropdownMenu.style.borderRadius = "12px";
+    dropdownMenu.style.padding = "6px";
+    dropdownMenu.style.display = "none";
+    dropdownMenu.style.zIndex = "100000";
+
+    //-----------------------------------------------------------
+    // Create one dropdown item per room
+    //-----------------------------------------------------------
+
+    for (const id of ALL_ROOMS) {
+        const item = document.createElement("button");
+
+        item.textContent = id;
+        item.style.width = "100%";
+        item.style.padding = "10px";
+        item.style.borderRadius = "10px";
+        item.style.border = "1px solid rgba(255,255,255,0.10)";
+        item.style.background = "rgba(255,255,255,0.04)";
+        item.style.color = "white";
+        item.style.cursor = "pointer";
+        item.style.textAlign = "left";
+
+        item.addEventListener("click", () => {
+            selectedRoom = id;
+            dropdownBtn.textContent = id;
+
+            dropdownMenu.style.display = "none";
+        });
+
+        dropdownMenu.appendChild(item);
     }
-  });
 
-  dropdownWrap.append(dropdownBtn, dropdownMenu);
-  selectRow.append(label, dropdownWrap);
+    //-----------------------------------------------------------
+    // Toggle dropdown open/close
+    //-----------------------------------------------------------
 
-  //-----------------------------------------------------------
-  // Button helper
-  //-----------------------------------------------------------
+    dropdownBtn.addEventListener("click", () => {
+        dropdownMenu.style.display =
+            dropdownMenu.style.display === "none" ? "block" : "none";
+    });
 
-  function makeBtn(text: string, onClick: () => void): HTMLButtonElement {
-    const btn = document.createElement("button");
+    //-----------------------------------------------------------
+    // Close dropdown if clicking outside
+    //-----------------------------------------------------------
 
-    btn.textContent = text;
-    btn.style.cursor = "pointer";
-    btn.style.padding = "10px";
-    btn.style.borderRadius = "12px";
-    btn.style.border = "1px solid rgba(255,255,255,0.18)";
-    btn.style.background = "rgba(255,255,255,0.06)";
-    btn.style.color = "white";
-    btn.style.fontSize = "12px";
-    btn.style.textAlign = "left";
+    window.addEventListener("click", (e) => {
+        const target = e.target as Node;
 
-    btn.addEventListener("click", onClick);
+        if (!dropdownWrap.contains(target)) {
+            dropdownMenu.style.display = "none";
+        }
+    });
 
-    return btn;
-  }
+    dropdownWrap.append(dropdownBtn, dropdownMenu);
+    selectRow.append(label, dropdownWrap);
 
-  //-----------------------------------------------------------
-  // Grid with main actions
-  //-----------------------------------------------------------
+    //-----------------------------------------------------------
+    // Button helper
+    //-----------------------------------------------------------
 
-  const grid = document.createElement("div");
+    function makeBtn(text: string, onClick: () => void): HTMLButtonElement {
+        const btn = document.createElement("button");
 
-  grid.style.display = "grid";
-  grid.style.gridTemplateColumns = "1fr 1fr";
-  grid.style.gap = "8px";
+        btn.textContent = text;
+        btn.style.cursor = "pointer";
+        btn.style.padding = "10px";
+        btn.style.borderRadius = "12px";
+        btn.style.border = "1px solid rgba(255,255,255,0.18)";
+        btn.style.background = "rgba(255,255,255,0.06)";
+        btn.style.color = "white";
+        btn.style.fontSize = "12px";
+        btn.style.textAlign = "left";
 
-  grid.append(
-    makeBtn("1) Complete CURRENT (artifact TRUE)", () =>
-      completeCurrentRoom("true"),
-    ),
+        btn.addEventListener("click", onClick);
 
-    makeBtn("2) Complete CURRENT (artifact FALSE)", () =>
-      completeCurrentRoom("false"),
-    ),
+        return btn;
+    }
 
-    makeBtn("3) Complete ALL (artifact TRUE)", () => completeAllRooms("true")),
+    //-----------------------------------------------------------
+    // Grid with main actions
+    //-----------------------------------------------------------
 
-    makeBtn("4) Complete ALL (artifact FALSE)", () =>
-      completeAllRooms("false"),
-    ),
+    const grid = document.createElement("div");
 
-    makeBtn("5) Reset CURRENT", () => resetCurrentRoom()),
+    grid.style.display = "grid";
+    grid.style.gridTemplateColumns = "1fr 1fr";
+    grid.style.gap = "8px";
 
-    makeBtn("6) Reset ALL", () => resetAllRooms()),
-  );
+    grid.append(
+        makeBtn("1) Complete CURRENT (artifact TRUE)", () =>
+            completeCurrentRoom("true"),
+        ),
 
-  //-----------------------------------------------------------
-  // Extra actions
-  //-----------------------------------------------------------
+        makeBtn("2) Complete CURRENT (artifact FALSE)", () =>
+            completeCurrentRoom("false"),
+        ),
 
-  const extra = document.createElement("div");
+        makeBtn("3) Complete ALL (artifact TRUE)", () => completeAllRooms("true")),
 
-  extra.style.display = "grid";
-  extra.style.gap = "8px";
-  extra.style.marginTop = "10px";
+        makeBtn("4) Complete ALL (artifact FALSE)", () =>
+            completeAllRooms("false"),
+        ),
 
-  extra.append(
-    makeBtn("7) Complete SELECTED (TRUE)", () =>
-      completeSpecificRoom(selectedRoom, "true"),
-    ),
+        makeBtn("5) Reset CURRENT", () => resetCurrentRoom()),
 
-    makeBtn("7) Complete SELECTED (FALSE)", () =>
-      completeSpecificRoom(selectedRoom, "false"),
-    ),
+        makeBtn("6) Reset ALL", () => resetAllRooms()),
+    );
 
-    makeBtn("▶ Complete CURRENT + Go NEXT (FULL FLOW)", () =>
-      completeCurrentAndGoNextFullFlow("true"),
-    ),
-  );
+    //-----------------------------------------------------------
+    // Extra actions
+    //-----------------------------------------------------------
 
-  //-----------------------------------------------------------
-  // Assemble panel
-  //-----------------------------------------------------------
+    const extra = document.createElement("div");
 
-  root.append(header, hint, selectRow, grid, extra);
+    extra.style.display = "grid";
+    extra.style.gap = "8px";
+    extra.style.marginTop = "10px";
 
-  document.body.appendChild(root);
+    extra.append(
+        makeBtn("7) Complete SELECTED (TRUE)", () =>
+            completeSpecificRoom(selectedRoom, "true"),
+        ),
 
-  console.log("[DEV CHEATS] Panel opened");
+        makeBtn("7) Complete SELECTED (FALSE)", () =>
+            completeSpecificRoom(selectedRoom, "false"),
+        ),
+
+        makeBtn("▶ Complete CURRENT + Go NEXT (FULL FLOW)", () =>
+            completeCurrentAndGoNextFullFlow("true"),
+        ),
+    );
+
+    //-----------------------------------------------------------
+    // Assemble panel
+    //-----------------------------------------------------------
+
+    root.append(header, hint, selectRow, grid, extra);
+
+    document.body.appendChild(root);
+
+    console.log("[DEV CHEATS] Panel opened");
 }
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -451,12 +452,12 @@ function openDevPanel(): void {
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 function completeCurrentRoom(artifact: Exclude<TArtifactKind, null>): void {
-  const roomId = getCurrentRoomId();
-  if (!roomId) {
-    console.log("[DEV CHEATS] No active room detected.");
-    return;
-  }
-  completeSpecificRoom(roomId, artifact);
+    const roomId = getCurrentRoomId();
+    if (!roomId) {
+        console.log("[DEV CHEATS] No active room detected.");
+        return;
+    }
+    completeSpecificRoom(roomId, artifact);
 }
 
 /**
@@ -464,60 +465,60 @@ function completeCurrentRoom(artifact: Exclude<TArtifactKind, null>): void {
  * Preserves mistakes/score/time so we can test highscores
  */
 function completeSpecificRoom(
-  roomId: TRoomId,
-  artifact: Exclude<TArtifactKind, null>,
+    roomId: TRoomId,
+    artifact: Exclude<TArtifactKind, null>,
 ): void {
-  const state = getRoomResults();
-  const prev = state[roomId];
-
-  const next: TRoomResult = {
-    ...prev,
-    status: "completed",
-    artifact,
-    mistakes: prev.mistakes ?? 0,
-    score: prev.score ?? 0,
-    roomTimeSec: prev.roomTimeSec ?? 0,
-  };
-
-  setRoomResult(roomId, next);
-  console.log(`[DEV CHEATS] Completed: ${roomId} | artifact=${artifact}`);
-}
-
-function completeAllRooms(artifact: Exclude<TArtifactKind, null>): void {
-  const state = getRoomResults();
-
-  for (const roomId of ALL_ROOMS) {
+    const state = getRoomResults();
     const prev = state[roomId];
 
     const next: TRoomResult = {
-      ...prev,
-      status: "completed",
-      artifact,
-      mistakes: prev.mistakes ?? 0,
-      score: prev.score ?? 0,
-      roomTimeSec: prev.roomTimeSec ?? 0,
+        ...prev,
+        status: "completed",
+        artifact,
+        mistakes: prev.mistakes ?? 0,
+        score: prev.score ?? 0,
+        roomTimeSec: prev.roomTimeSec ?? 0,
     };
 
     setRoomResult(roomId, next);
-  }
+    console.log(`[DEV CHEATS] Completed: ${roomId} | artifact=${artifact}`);
+}
 
-  console.log(`[DEV CHEATS] Completed ALL rooms | artifact=${artifact}`);
+function completeAllRooms(artifact: Exclude<TArtifactKind, null>): void {
+    const state = getRoomResults();
+
+    for (const roomId of ALL_ROOMS) {
+        const prev = state[roomId];
+
+        const next: TRoomResult = {
+            ...prev,
+            status: "completed",
+            artifact,
+            mistakes: prev.mistakes ?? 0,
+            score: prev.score ?? 0,
+            roomTimeSec: prev.roomTimeSec ?? 0,
+        };
+
+        setRoomResult(roomId, next);
+    }
+
+    console.log(`[DEV CHEATS] Completed ALL rooms | artifact=${artifact}`);
 }
 
 function resetCurrentRoom(): void {
-  const roomId = getCurrentRoomId();
-  if (!roomId) {
-    console.log("[DEV CHEATS] No active room detected.");
-    return;
-  }
+    const roomId = getCurrentRoomId();
+    if (!roomId) {
+        console.log("[DEV CHEATS] No active room detected.");
+        return;
+    }
 
-  resetSingleRoomResult(roomId);
-  console.log(`[DEV CHEATS] Reset CURRENT: ${roomId}`);
+    resetSingleRoomResult(roomId);
+    console.log(`[DEV CHEATS] Reset CURRENT: ${roomId}`);
 }
 
 function resetAllRooms(): void {
-  resetRoomResults();
-  console.log("[DEV CHEATS] Reset ALL rooms");
+    resetRoomResults();
+    console.log("[DEV CHEATS] Reset ALL rooms");
 }
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -534,47 +535,53 @@ function resetAllRooms(): void {
  * - Get the actual room
  */
 function completeCurrentAndGoNextFullFlow(
-  artifact: Exclude<TArtifactKind, null>,
+    artifact: Exclude<TArtifactKind, null>,
 ): void {
-  const currentRoomId = getCurrentRoomId();
-  const currentSection = getCurrentPage();
+    const currentRoomId = getCurrentRoomId();
+    const currentSection = getCurrentPage();
 
-  if (!currentRoomId || !currentSection) {
-    console.log("[DEV CHEATS] Cannot FULL FLOW: no current room/section.");
-    return;
-  }
+    if (!currentRoomId || !currentSection) {
+        console.log("[DEV CHEATS] Cannot FULL FLOW: no current room/section.");
+        return;
+    }
 
-  // Complete current room state (storage)
-  completeSpecificRoom(currentRoomId, artifact);
+    // Complete current room state (storage)
+    completeSpecificRoom(currentRoomId, artifact);
 
-  // Find next room id
-  const nextRoomId = getNextRoomId(currentRoomId);
-  if (!nextRoomId) {
-    console.log("[DEV CHEATS] No next room (already final).");
-    return;
-  }
+    // Find next room id
+    const nextRoomId = getNextRoomId(currentRoomId);
+    if (!nextRoomId) {
+        console.log("[DEV CHEATS] No next room (already final).");
+        return;
+    }
 
-  // Find next section in DOM
-  const nextSelector = mapRoomIdToSelector(nextRoomId);
-  const nextSection = document.querySelector<HTMLElement>(nextSelector);
+    // Find next section in DOM
+    const nextSelector = mapRoomIdToSelector(nextRoomId);
+    const nextSection = document.querySelector<HTMLElement>(nextSelector);
 
-  if (!nextSection) {
-    console.log(`[DEV CHEATS] Next section not found: ${nextSelector}`);
-    return;
-  }
+    if (!nextSection) {
+        console.log(`[DEV CHEATS] Next section not found: ${nextSelector}`);
+        return;
+    }
 
-  // Transition UI
-  transitSections(currentSection, nextSection, TRANSITION_MS);
+    // Transition UI
+    transitSections(currentSection, nextSection, TRANSITION_MS);
 
-  // Start next room logic AFTER transition ends
-  window.setTimeout(() => {
-    const startNext = ROOM_STARTERS[nextRoomId];
-    startNext();
-    console.log(`[DEV CHEATS] Started next room: ${nextRoomId}`);
-  }, TRANSITION_MS);
+    // Start next room logic AFTER transition ends
+    window.setTimeout(() => {
+        const startNext = ROOM_STARTERS[nextRoomId];
+        startNext();
+        console.log(`[DEV CHEATS] Started next room: ${nextRoomId}`);
+    }, TRANSITION_MS);
 
-  console.log(`[DEV CHEATS] FULL FLOW: ${currentRoomId} -> ${nextRoomId}`);
+    console.log(`[DEV CHEATS] FULL FLOW: ${currentRoomId} -> ${nextRoomId}`);
 }
+
+/* ----------------------------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------- GO TO FINAL ROOM ------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------------------------------------- */
+
+
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 /* --------------------------------------------------- HELPERS ----------------------------------------------------------------- */
@@ -587,10 +594,10 @@ function completeCurrentAndGoNextFullFlow(
  * return DOM-id to section id (for example room2fire -> fire)
  */
 function getCurrentRoomId(): TRoomId | null {
-  const current = getCurrentPage();
-  const sectionId = current?.id;
-  if (!sectionId) return null;
-  return mapSectionIdToRoomId(sectionId);
+    const current = getCurrentPage();
+    const sectionId = current?.id;
+    if (!sectionId) return null;
+    return mapSectionIdToRoomId(sectionId);
 }
 
 /**
@@ -600,47 +607,47 @@ function getCurrentRoomId(): TRoomId | null {
  * - storage.ts uses short keys (wood,fire,etc)
  */
 function mapSectionIdToRoomId(sectionId: string): TRoomId | null {
-  switch (sectionId) {
-    case "room1Wood":
-      return "wood";
+    switch (sectionId) {
+        case "room1Wood":
+            return "wood";
 
-    case "room2Fire":
-      return "fire";
+        case "room2Fire":
+            return "fire";
 
-    case "room3Earth":
-      return "earth";
+        case "room3Earth":
+            return "earth";
 
-    case "room4Metal":
-      return "metal";
+        case "room4Metal":
+            return "metal";
 
-    case "room5Water":
-      return "water";
+        case "room5Water":
+            return "water";
 
-    case "finalRoom":
-      return "final";
+        case "finalRoom":
+            return "final";
 
-    default:
-      return null;
-  }
+        default:
+            return null;
+    }
 }
 
 function mapRoomIdToSelector(roomId: TRoomId): string {
-  switch (roomId) {
-    case "wood":
-      return "#room1Wood";
-    case "fire":
-      return "#room2Fire";
-    case "earth":
-      return "#room3Earth";
-    case "metal":
-      return "#room4Metal";
-    case "water":
-      return "#room5Water";
-    case "final":
-      return "#finalRoom";
-    default:
-      throw new Error("Unknown roomId");
-  }
+    switch (roomId) {
+        case "wood":
+            return "#room1Wood";
+        case "fire":
+            return "#room2Fire";
+        case "earth":
+            return "#room3Earth";
+        case "metal":
+            return "#room4Metal";
+        case "water":
+            return "#room5Water";
+        case "final":
+            return "#finalRoom";
+        default:
+            throw new Error("Unknown roomId");
+    }
 }
 
 /**
@@ -648,7 +655,7 @@ function mapRoomIdToSelector(roomId: TRoomId): string {
  * wood -> fire -> earth -> metal -> water -> final -> null
  */
 function getNextRoomId(current: TRoomId): TRoomId | null {
-  const idx = ALL_ROOMS.indexOf(current);
-  if (idx === -1) return null;
-  return ALL_ROOMS[idx + 1] ?? null;
+    const idx = ALL_ROOMS.indexOf(current);
+    if (idx === -1) return null;
+    return ALL_ROOMS[idx + 1] ?? null;
 }
