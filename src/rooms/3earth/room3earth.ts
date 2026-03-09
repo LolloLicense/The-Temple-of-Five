@@ -8,7 +8,7 @@ import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
 import { goToSection } from "../../script/helper/transitions.ts";
 import { setRoomResult } from "../../script/helper/storage.ts";
 import { updateProgressBar } from "../../script/helper/progressbar.ts";
-import { playBgm, playSfx } from "../../audio/index.ts";
+import { playBgm, playSfx, stopAll } from "../../audio/index.ts";
 import { showMsg } from "../../script/helper/showMsg.ts";
 import { room4metalFunc } from "../4metal/room4metal.ts";
 
@@ -34,7 +34,7 @@ export function room3earthFunc(): void {
     timerCheckInterval = setInterval(timerCheck, 1000);
     startTimer(3); // Start timer for room 3
     showGameHeader(); // Show game header
-
+    stopAll(); // Stop music
     audioHandler("bgm");
 
     const gameDiv: HTMLElement | null = document.querySelector("#gameDiv");
@@ -295,6 +295,7 @@ function winner(): void {
     roomTimeSec: 0, // Set by stopTimer function
   });
   stopTimer(3);
+  stopAll(); // Stop music
   updateProgressBar();
 } // winner END
 
@@ -328,6 +329,7 @@ function looser(): void {
     roomTimeSec: 0, //Set in stop timer function
   });
   stopTimer(3);
+  stopAll(); // stop music
 } // looser END
 
 function checkTextContent(textContent: string, target: number): void {

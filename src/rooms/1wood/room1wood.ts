@@ -1,4 +1,4 @@
-import { playBgm } from "../../audio/index.ts";
+import { playBgm, stopAll } from "../../audio/index.ts";
 import * as dataJSON from "../../data.json";
 import { showGameHeader } from "../../script/helper/gameHeader.ts";
 // Updates the progress bar in the UI based on saved room status
@@ -126,6 +126,7 @@ export function room1woodFunc(): void {
   //-------------------------- ROOM UI ------------------------
   //-----------------------------------------------------------
 
+  stopAll(); // Stop music (even if it's first room)
   /* Play the background music for wood room */
   const bgmId = dataJSON.room1wood.bgmId;
   if (bgmId) {
@@ -418,6 +419,7 @@ export function room1woodFunc(): void {
     });
 
     stopTimer(1);
+    stopAll(); // Stop music
     updateProgressBar();
 
     showMsg("Well done — next chamber awaits", TRANSITIONTIME * 2);
@@ -462,6 +464,7 @@ export function room1woodFunc(): void {
     });
 
     stopTimer(1);
+    stopAll(); // Stop music
     updateProgressBar();
 
     console.log("Wood fail result:", getRoomResults().wood);

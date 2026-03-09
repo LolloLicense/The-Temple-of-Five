@@ -1,3 +1,5 @@
+import { stopAll } from  "../../audio/index.ts";
+
 type ExitMode = "welcome" | "room";
 
 let exitDialogBound = false;
@@ -61,6 +63,7 @@ export function initExitDialog(): void {
 
     if (action === "leaveRoom") {
       dialog.close();
+      stopAll(); // Stop music when exit room
       console.log("leave room");
       document.dispatchEvent(new CustomEvent("exit:leaveRoom"));
       return;

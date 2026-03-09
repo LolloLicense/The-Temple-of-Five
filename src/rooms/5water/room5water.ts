@@ -20,7 +20,7 @@
  */
 
 import * as dataJSON from "../../data.json";
-import { playBgm } from "../../audio/index.ts";
+import { playBgm, stopAll } from "../../audio/index.ts";
 import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
 import { showGameHeader } from "../../script/helper/gameHeader.ts";
 import {
@@ -562,6 +562,7 @@ function ifRoomFailed(): void {
   updateProgressBar();
   announce("Time is up. The vessel remains empty.");
   showMsg("Time's up — the final chamber awaits", 2400);
+  stopAll();
 
   failTimeoutId = window.setTimeout(() => {
     // Ignore if Water is no longer the current room
@@ -648,6 +649,7 @@ function solvePuzzle(): void {
 
   updateProgressBar();
   showMsg("Well done — the final chamber awaits", 2400);
+  stopAll(); // Stop music
 
   solveTimeoutId = window.setTimeout(() => {
     // Ignore if Water is no longer the current room
@@ -846,6 +848,8 @@ export function room5waterFunc(): void {
   // Remove old bubbles before spawning new ones
   clearBubbles(section);
   spawnBubbles(section);
+
+  stopAll();
 
   // Start background music immediately when entering the room
   playBgm("bgm_water");

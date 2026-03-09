@@ -1,4 +1,4 @@
-import { playBgm } from "../../audio/index.ts";
+import { playBgm, stopAll } from "../../audio/index.ts";
 import * as dataJSON from "../../data.json";
 import { getArtifactIcon } from "../../script/helper/artifacts.ts";
 import { showGameHeader } from "../../script/helper/gameHeader.ts";
@@ -59,6 +59,7 @@ export function room6finalFunc(): void {
   showGameHeader(); // Visa UI-header
   renderRoomDesc(finalSection, dataJSON.room6validate.desc); // Visa rumsbeskrivning
 
+  stopAll(); // Stop old music
   const bgmId = dataJSON.room6validate.bgmId; // Spela bakgrundsmusik
   if (bgmId) void playBgm(bgmId, 650);
 
@@ -312,6 +313,7 @@ export function room6finalFunc(): void {
 
       // Stoppa finalrummets timer innan vi går vidare
       stopTimer(6);
+      stopAll(); // Stopp music
 
       // Finalrummet äger transitionen till win-sidan
       window.setTimeout(() => {
@@ -323,6 +325,7 @@ export function room6finalFunc(): void {
 
       // Stoppa finalrummets timer innan vi går vidare
       stopTimer(6);
+      stopAll(); // Stop music
 
       // Finalrummet äger transitionen till game-over-sidan
       window.setTimeout(() => {
