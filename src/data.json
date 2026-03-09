@@ -11,6 +11,7 @@
   "room1wood": {
     "backgroundImg": "./images/woodroom.jpg",
     "bgmId": "bgm_wood",
+    "sfxId": "sfx_click",
     "timeLimitMinutes": 6,
     "timeLimitSeconds": 0,
     "desc": {

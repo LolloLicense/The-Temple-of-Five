@@ -1,4 +1,4 @@
-import { playBgm, stopAll } from "../../audio/index.ts";
+import { playBgm, playSfx, stopAll } from "../../audio/index.ts";
 import * as dataJSON from "../../data.json";
 import { showGameHeader } from "../../script/helper/gameHeader.ts";
 // Updates the progress bar in the UI based on saved room status
@@ -129,6 +129,7 @@ export function room1woodFunc(): void {
   stopAll(); // Stop music (even if it's first room)
   /* Play the background music for wood room */
   const bgmId = dataJSON.room1wood.bgmId;
+  const sfxId = dataJSON.room1wood.sfxId;
   if (bgmId) {
     void playBgm(bgmId, 650); // Fade in background music
   }
@@ -504,8 +505,16 @@ export function room1woodFunc(): void {
     const digit = btn.dataset.key;
     const action = btn.dataset.action;
 
-    if (digit) pushDigit(digit);
-    if (action === "back") backspace();
+    // sound & event
+    if (digit) {
+      if (sfxId) void playSfx(sfxId);
+      pushDigit(digit);
+    }
+
+    if (action === "back") {
+      if (sfxId) void playSfx(sfxId);
+      backspace();
+    }
   }
 
   function handleKeyDownEvent(e: KeyboardEvent): void {
