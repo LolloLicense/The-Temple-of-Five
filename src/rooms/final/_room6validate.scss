@@ -9,7 +9,7 @@
   color: var.$lightColor;
   background-color: rgba(0, 0, 0, 0.3);
   background-blend-mode: multiply;
-  gap: 1rem;
+  gap: 2rem;
 
   .finalContainer {
     display: flex;
@@ -21,7 +21,7 @@
 
   .finalSlots {
     border: 2px solid var.$lightColor;
-    border-radius: var.$smallRadius;
+    border-radius: 2rem;
     padding: 1.5rem 2rem;
     display: flex;
     gap: 3rem;
@@ -30,9 +30,9 @@
   .slot {
     @include mix.glass();
     border: 1px solid var.$lightColor;
-    border-radius: var.$smallRadius;
-    width: 70px;
-    height: 70px;
+    border-radius: 50%;
+    width: 75px;
+    height: 75px;
     cursor: pointer;
     transition: box-shadow 0.3s, background 0.3s, transform 0.1s;
     display: flex;
@@ -60,7 +60,7 @@
     @include mix.glass();
     padding: 1rem 2rem;
     border: 1px solid var.$lightColor;
-    border-radius: var.$smallRadius;
+    border-radius: 2rem;
     color: var.$lightColor;
     cursor: pointer;
     transition: opacity 0.3s;
