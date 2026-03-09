@@ -2,7 +2,10 @@ import * as dataJSON from "../../data.json";
 import {
   setRoomResult,
   getRoomResults,
+  getUserName,
   type TGameState,
+  scopedKey,
+  LS_KEY,
 } from "../../script/helper/storage.ts";
 
 //let localStorage: Array = [];
@@ -42,12 +45,68 @@ export function startTimer(id: number): void {
 export function stopTimer(id: number): void {
   if (id === 0) {
     clearInterval(totalTimerInterval);
+    setUserTotalTime();
   } else {
     clearInterval(roomTimerInterval);
     setRoomTime(id);
     TimeIsUp = true;
   }
 }
+
+function setUserTotalTime(): void {
+  const totalMinutesSpan: HTMLElement | null =
+    document.querySelector("#totalMinutesSpan");
+  const totalSecondsSpan: HTMLElement | null =
+    document.querySelector("#totalSecondsSpan");
+
+  if (totalMinutesSpan && totalSecondsSpan) {
+    const totalMinutes = parseInt(totalMinutesSpan.innerHTML);
+    const totalSeconds = parseInt(totalSecondsSpan.innerHTML);
+    const totalTimeSeconds = totalSeconds + totalMinutes * 60;
+
+    const userName = getUserName();
+    if (userName) {
+      localStorage.setItem(
+        scopedKey(LS_KEY.totalTime),
+        JSON.stringify(totalTimeSeconds),
+      );
+    } // IF userName END
+  } // IF totalMinutesSpan && totalSecondsSpan END
+  //getUserTotalTime(); (For testing: updates the displayed total time immediately after saving)
+} // setUserTotalTime END
+
+export function getUserTotalTime(): void {
+  const totalMinutesSpan: HTMLElement | null =
+    document.querySelector("#totalMinutesSpan");
+  const totalSecondsSpan: HTMLElement | null =
+    document.querySelector("#totalSecondsSpan");
+
+  const userName = getUserName();
+  if (userName) {
+    const totalTimeSeconds = localStorage.getItem(scopedKey(LS_KEY.totalTime));
+    //console.log("Retrieved total time from localStorage:", totalTimeSeconds);
+    totalMinutes = totalTimeSeconds
+      ? Math.floor(parseInt(totalTimeSeconds) / 60)
+      : 0;
+    totalSeconds = totalTimeSeconds ? parseInt(totalTimeSeconds) % 60 : 0;
+    //console.log("Parsed total time:", totalMinutes, totalSeconds);
+
+    if (totalMinutesSpan && totalSecondsSpan) {
+      if (totalMinutes > 9) {
+        // Add leading zero if minutes are less than 10 for consistent formatting
+        totalMinutesSpan.innerHTML = totalMinutes as unknown as string;
+      } else {
+        totalMinutesSpan.innerHTML = `0${totalMinutes}` as unknown as string;
+      }
+      if (totalSeconds < 10) {
+        // Add leading zero if seconds are less than 10 for consistent formatting
+        totalSecondsSpan.innerHTML = `0${totalSeconds}` as unknown as string;
+      } else {
+        totalSecondsSpan.innerHTML = totalSeconds as unknown as string;
+      }
+    } // IF totalMinutesSpan && totalSecondsSpan END
+  } // IF userName END
+} // getUserTotalTime
 
 function setRoomTime(id: number): void {
   const roomMinutesSpan: HTMLElement | null =
@@ -242,17 +301,19 @@ function setTimeLimits(id: number) {
   roomSeconds = roomTimeLimitSeconds; //Set timer seconds to limit
   roomMinutes = roomTimeLimitMinutes; //Set timer minutes to limit
 
-  /* Minutes */
+  /* Print out Minutes */
   if (roomMinutesSpan) {
     if (roomMinutes < 10) {
+      // Add leading zero if minutes are less than 10 for consistent formatting
       roomMinutesSpan.innerHTML = `0${roomMinutes}` as unknown as string;
     } else {
       roomMinutesSpan.innerHTML = roomMinutes as unknown as string;
     }
   }
-  /* Seconds */
+  /* Print out Seconds */
   if (roomSecondsSpan) {
     if (roomSeconds < 10) {
+      // Add leading zero if seconds are less than 10 for consistent formatting
       roomSecondsSpan.innerHTML = `0${roomSeconds}` as unknown as string;
     } else {
       roomSecondsSpan.innerHTML = roomSeconds as unknown as string;

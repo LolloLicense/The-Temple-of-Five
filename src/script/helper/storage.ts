@@ -34,7 +34,7 @@ export type TGameState = Record<TRoomId, TRoomResult>;
 //---------------LocalStorage KEY------------------
 //-----------------------------------------------------------
 
-const LS_KEY = {
+export const LS_KEY = {
   userName: "tempelUserName",
   //for already login users so skip loginpage when re-entering
   isLoggedIn: "tempelIsLoggedIn", //// TODO -REMOVE WHEN flow should work as normal
@@ -110,7 +110,7 @@ function getActiveUserId(): string {
  * Makes a localStorage-key - unique for the user
  *
  */
-function scopedKey(baseKey: string): string {
+export function scopedKey(baseKey: string): string {
   return `${baseKey}::${getActiveUserId()}`;
 }
 
