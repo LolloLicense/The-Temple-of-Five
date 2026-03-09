@@ -12,7 +12,7 @@ import { playBgm, playSfx } from "../../audio/index.ts";
 import { showMsg } from "../../script/helper/showMsg.ts";
 import { room4metalFunc } from "../4metal/room4metal.ts";
 
-const mistakes: number = 0; //TODO COUNT MISTAKES
+let moves: number = 0;
 const slateNumbersArray: number[] = [
   1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
 ];
@@ -74,17 +74,19 @@ export function room3earthFunc(): void {
 } // room3earthFunc END
 
 function slateClick(slate: HTMLElement | null, count: number): void {
-  console.log(`Slate ${count} was clicked!`);
+  //console.log(`Slate ${count} was clicked!`);
 
-  winner();
+  //winner(); (For testing end of game)
 
   const currentSlate = document.querySelector(`.slate${count}`);
   const slateNumber: number = count;
   const emptySlate = document.querySelector(".slate16");
 
+  /*
   if (slate?.classList[2] === emptySlate?.classList[2]) {
     console.log("LavaSlate was clicked");
   }
+  */
 
   if (emptySlate && currentSlate) {
     const lavaX: number = parseInt(emptySlate?.classList[2].substring(1, 2));
@@ -122,6 +124,8 @@ function moveSlate(
     const dirPoint: [x: number, y: number] = [dirX, dirY];
 
     if (matchTuples(dirPoint, lavaPos)) {
+      moves++;
+      //console.log(`moves: ${moves}`);
       animateMove(currentPos, dirPoint);
 
       if (getRandomInt(1, 2) === 1) {
@@ -255,7 +259,7 @@ function checkSlateLock(movedSlate: HTMLElement | null): void {
       break;
   } // Switch END
 
-  console.log(correctSlatesArr);
+  //console.log(correctSlatesArr); // For testing, shows which slates are currently correct
   if (correctSlatesArr.length === 15) {
     winner();
   } // IF win END
@@ -286,7 +290,7 @@ function winner(): void {
   setRoomResult("earth", {
     status: "completed",
     artifact: "true",
-    mistakes: mistakes,
+    mistakes: moves,
     score: 0, // TODO: define rule later
     roomTimeSec: 0, // Set by stopTimer function
   });
@@ -319,7 +323,7 @@ function looser(): void {
   setRoomResult("earth", {
     status: "completed",
     artifact: "false",
-    mistakes: mistakes,
+    mistakes: moves,
     score: 0, // TODO: define rule later
     roomTimeSec: 0, //Set in stop timer function
   });
