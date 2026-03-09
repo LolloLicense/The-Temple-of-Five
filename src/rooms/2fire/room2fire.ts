@@ -803,11 +803,11 @@ function goToNextRoom(nextSelector: string, nextRoomFunc: () => void): void {
   const nextSection = document.querySelector<HTMLElement>(nextSelector);
   if (!nextSection) return;
 
-  // Build the next room first
-  nextRoomFunc();
-
-  // Then let THIS room own the transition
   goToSection(nextSection, TRANSITION_MS);
+
+  window.setTimeout(() => {
+    nextRoomFunc();
+  }, TRANSITION_MS);
 }
 
 function ifRoomCompleted(): void {
