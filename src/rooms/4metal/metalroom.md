@@ -1,43 +1,55 @@
-# Metallrummet
+# Metalroom
 
-Detta är ett sekvenspussel med blinkande färg som liknar leken Simons Says.
+The Metalroom is a memory challenge inspired by Simon Says, where the player must observe and reproduce a sequence of color signals. The room introduces time pressure, increasing difficulty across three levels, and strict input control to ensure the player cannot interact until each sequence has fully played. Using keyboard navigation, the player selects colors in the correct order to progress, with mistakes tracked and immediate feedback provided. Completing all levels successfully unlocks the next chamber.
 
-Användaren ska:
-- Få tid att läsa beskrivningen, men under tidspress 10 sek
-- En färgsignal kommer blinka en sekvens av färger inspirerat av metall.
-- Användaren ska fylla i slotsen under med färger i den sekvens det spelades.
-- Det är 3 nivåer med olika mönster som ska motsvara en svårighetsgrad.
-- Det finns en progressbar som visar vilken sekvens/level man är på och hur många misstag man begått.
-- Det är tangentbordsstyrning (vänster/höger för att byta slot, upp/ner för att byta färg, Enter för att validera).
+## Short description of what happens:
 
-## Psuedokod
+- Read the room description under a 10 second time limit.
+- Watch a blinking sequence of colors.
+- Reproduce the sequence by filling the slots with colors in the same order.
+- Progress through 3 levels, each with it's own pattern and difficulty.
+- Track progress through a level indicator and a mistake counter.
+- Use keyboard controls:
+  - Left/Right arrows: move between slots
+  - Up/Down arrows: change the color in the active slot
+  - Enter: validate the chosen sequence
 
-När metallrummet startar:
-- Timer börjar räkna ned
-- Färgsignalen spelar upp sekvens 1 av 3
 
-När den spelar upp sekvenserna (oavsett level):
-- Ska användarens kontroller blockeras så man inte kan fylla i slotsen innan sekvensen är slut.
-- Signal elementet visar en färg, paus och visar nästa
+## Pseudocode to break down the room into functions
 
-När sekvensen är klar:
-- Användarens kontroller blir upplåsta
-- Vänsterpil, flytta aktiv slot åt vänster
-- Högerpil, flytta aktiv slot åt höger
-- Uppil, byt färg i aktiv slot till nästa färg
-- Nedpil, byt färg i aktiv slot till föregående färg
-- Enter, validera spelaren val
+### When the Metal Room starts:
+- Start the room timer.
+- The color signal plays sequence 1 of 3.
 
-När användaren klickat enter:
-- Användarens valda färger valideras mot sekvensen för den aktuella leveln
-Om det är fel:
-- Ökar misstag med 1
-- Den ger feedback via text som säger "Incorrect! Try again."
-- Återställer slotsen och spelar upp samma sekvens igen
-Om det är rätt:
-- Visar den feedback "Correct" och går vidare till nästa level
+### While the sequence is playing (any level):
+- Player input is locked.
+- The signal element:
+  - Shows one color  
+  - Pauses  
+  - Shows the next color  
+  - Continues until the full sequence is displayed.
 
-När alla sista leveln spelas och den är rätt:
-- Visas ett medelande "Metal chamber complete"
+### When the sequence is finished:
+- Player input becomes unlocked.
+- Controls:
+  - Left arrow, move active slot left
+  - Right arrow, move active slot right
+  - Up arrow, change active slot to the next color
+  - Down arrow, change active slot to the previous color
+  - Enter, validate the chosen sequence
 
-Finns lite kvar att kompletera 
+### When the player presses Enter:
+- Compare the player’s chosen colors to the correct sequence for the current level.
+
+#### If the sequence is incorrect:
+- Increase mistake counter by 1.
+- Display feedback: **"Incorrect! Try again."**
+- Reset all slots.
+- Replay the same sequence.
+
+#### If the sequence is correct:
+- Display feedback: **"Correct!"**
+- Move to the next level.
+
+### When the final level is completed correctly:
+- Display the message: **"Metal chamber complete"**

@@ -2,7 +2,7 @@
 @use "../../sass/mixins" as mix;
 
 
-// För hela rummet
+// The whole room
 .room4Metal {
     display: flex;
     justify-content: center;
@@ -13,14 +13,14 @@
     background-color: rgba(0, 0, 0, 0.3); 
     background-blend-mode: multiply;
     
-    // För innehållet i containern
+    // For the container
     .metalContainer { 
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 3rem;
         
-        //Färgsignalen som börjar som glasikon
+        // Colorsignal start as a glassicon (empty)
         .colorSignal { 
             @include mix.glass();
             width: 70px;
@@ -31,7 +31,7 @@
             border-radius: var.$smallRadius; 
         }
 
-        //Färger som är valbara i slotsen, metall aktiga inte ren metallfärg
+        // Colors that you can chose in the slots, a bit metalic.
         .iron {
            background: #535252; /* mörk, neutral grå */ 
            box-shadow: 0 0 10px #2f2f2f;
@@ -64,7 +64,7 @@
         font-size: 1.2rem;  
     }
 
-    //Spelaren väljer färgen i dessa slots
+    // User chose color in this slot
     .colorSlots {        
         @include mix.glass();
         border: 2px solid var.$lightColor;
@@ -84,7 +84,7 @@
         transition: box-shadow 0.3s, background 0.3s, transform 0.1s;
         transform: rotate(45deg);
 
-        //Tydlig highlight på vald slot
+        // A highlight on current slot
         &.is-active { 
             outline: 4px solid #ffffff; 
             outline-offset: 4px; 

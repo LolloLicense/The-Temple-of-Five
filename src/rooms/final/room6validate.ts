@@ -9,242 +9,243 @@ import { startTimer, stopTimer } from "../../script/helper/utils.ts";
 import { gameOverRoomFunc } from "../gameConclusion/gameOverRoom.ts";
 import { gameWinFunc } from "../gameConclusion/gameWin.ts";
 
-// Typ som bara innehåller de fem elementrummen
-type TElementRoomId = "wood" | "fire" | "earth" | "metal" | "water";
+// Type that only contains the five elemental rooms
+type TElementRoomId = "wood" | "fire" | "earth" | "metal" | "water"; 
 
-// Standardtid för övergång till nästa sektion
+// Default transition time to the next section
 const TRANSITION_MS = 1200;
 
-// Hindrar att tangentbordslyssnaren binds flera gånger
+// Prevents the keyboard listener from being bound multiple times
 let finalKeyboardHandler: ((event: KeyboardEvent) => void) | null = null;
 
-// Hindrar att validate/logik körs flera gånger snabbt efter varandra
+// Prevents validate/logic from running multiple times in quick succession
 let isResolvingFinalRoom = false;
 
 export function room6finalFunc(): void {
-  //---------------------------------------------------------------//
-  //------------------ Initiera rummet ---------------------------//
-  //--------------------------------------------------------------//
+  //---------------------------------------------------------------
+  //------------------ Initialize the room ------------------------
+  //---------------------------------------------------------------
 
-  // Hämta finalrummet
+  // Get the final room section
   const finalSection = document.querySelector<HTMLElement>("#finalRoom");
   if (!finalSection) return;
 
-  // Nollställ resolving-flaggan varje gång rummet startas
-  // så att validate-knappen kan användas på nytt när man kommer tillbaka hit.
+  // Reset the resolving flag every time the room starts
+  // so the validate button can be used again when returning here.
   isResolvingFinalRoom = false;
 
-  // Finalrummet äger transitionen vidare till nästa sektion.
-  // Viktigt:
-  // - först transition till nästa sektion
-  // - sedan startas nästa rums logik
-  // Detta minskar risken att nästa rum börjar köra timers / logik
-  // innan själva sidbytet är klart.
+  // The final room owns the transition to the next section.
+  // Important:
+  // - first transition to the next section
+  // - then start the next room’s logic
+  // This reduces the risk of the next room starting timers/logic
+  // before the page transition is complete.
   function goToNextRoom(nextSelector: string, nextRoomFunc: () => void): void {
     const nextSection = document.querySelector<HTMLElement>(nextSelector);
     if (!nextSection) return;
 
-    // Låt finalrummet äga transitionen dit först
+    // Let the final room handle the transition first
     goToSection(nextSection, TRANSITION_MS);
 
-    // Starta nästa rum efter att transitionen är klar
+    // Start the next room after the transition is complete
     window.setTimeout(() => {
       nextRoomFunc();
     }, TRANSITION_MS);
   }
 
-  finalSection.style.backgroundImage = `url("${dataJSON.room6validate.backgroundImg}")`; // Sätt bakgrundsbild
+  finalSection.style.backgroundImage = `url("${dataJSON.room6validate.backgroundImg}")`; // Set background image
 
-  startTimer(6); // Starta timer för rum 6
-  showGameHeader(); // Visa UI-header
-  renderRoomDesc(finalSection, dataJSON.room6validate.desc); // Visa rumsbeskrivning
+  startTimer(6); // Start timer for room 6
+  showGameHeader(); // Show UI header
+  renderRoomDesc(finalSection, dataJSON.room6validate.desc); // Show room description
 
   stopAll(); // Stop old music
-  const bgmId = dataJSON.room6validate.bgmId; // Spela bakgrundsmusik
+  const bgmId = dataJSON.room6validate.bgmId; // Play background music
   if (bgmId) void playBgm(bgmId, 650);
 
-  // Gör sektionen fokuserbar så tangentbordet fungerar
+  // Make the section focusable so keyboard navigation works
   finalSection.tabIndex = -1;
   finalSection.focus();
 
-  //---------------------------------------------------------//
-  //---------------- Hämta artifacts ------------------------//
-  //---------------------------------------------------------//
+  //-----------------------------------------------------------
+  //------------------ Fetch artifacts ------------------------
+  //-----------------------------------------------------------
 
-  const state = getRoomResults(); // Hämta spelstatet från storage
-  // Rummen i korrekt ordning
+  const state = getRoomResults(); // Get game state from storage
+  // Rooms in correct order
   const rooms: TElementRoomId[] = ["wood", "fire", "earth", "metal", "water"];
 
-  // Bygg artifactPool = lista med { roomId, kind, icon }
+  // Build artifactPool = list of { roomId, kind, icon }
   const artifactPool = rooms.map((roomId) => {
     const kind = state[roomId].artifact; // "true" | "false" | null
-    const icon = getArtifactIcon(roomId, kind); // Hämta ikon
+    const icon = getArtifactIcon(roomId, kind); // Get icon
     return { roomId, kind, icon };
   });
 
-  //---------------------------------------------------------//
-  //-------------------- Slots & State ----------------------//
-  //---------------------------------------------------------//
+  //-----------------------------------------------------------
+  //-------------------- Slots & State ------------------------
+  //-----------------------------------------------------------
 
   const slots = Array.from(
     finalSection.querySelectorAll(".finalSlots .slot"),
-  ) as HTMLElement[]; // Hämta alla slot-element
-  // Vilken artifact ligger i vilken slot
+  ) as HTMLElement[]; // Get all slot elements
+
+  // Which artifact is placed in which slot
   let slotSelections: (number | null)[] = [null, null, null, null, null];
-  let activeSlotIndex = 0; // Vilken slot är aktiv
+  let activeSlotIndex = 0; // Which slot is active
 
   const validateBtnEl =
-    finalSection.querySelector<HTMLButtonElement>("#validateBtn"); // Validateknappen
+    finalSection.querySelector<HTMLButtonElement>("#validateBtn"); // Validate button
 
   const feedbackElNode =
-    finalSection.querySelector<HTMLElement>("#finalFeedback"); // Feedbacktext
+    finalSection.querySelector<HTMLElement>("#finalFeedback"); // Feedback text
 
-  // Om någon viktig del saknas ska vi inte fortsätta
+  // If any important part is missing, do not continue
   if (!validateBtnEl || !feedbackElNode) return;
 
-  // Säkra referenser utan null efter guard
+  // Safe references after null guard
   const validateBtn = validateBtnEl;
   const feedbackEl = feedbackElNode;
 
-  //------------------------------------------------------------//
-  //-------------------------- Render --------------------------//
-  //------------------------------------------------------------//
+  //------------------------------------------------------------
+  //-------------------------- Render --------------------------
+  //------------------------------------------------------------
 
   function renderSlots(): void {
     slots.forEach((slotElement, slotIndex) => {
-      // Gå igenom varje slot
-      slotElement.classList.remove("is-active"); // Ta bort highlight
-      slotElement.innerHTML = ""; // Töm sloten
+      // Loop through each slot
+      slotElement.classList.remove("is-active"); // Remove highlight
+      slotElement.innerHTML = ""; // Clear slot
 
-      const selectedArtifactIndex = slotSelections[slotIndex]; // Artifact-index i denna slot
+      const selectedArtifactIndex = slotSelections[slotIndex]; // Artifact index in this slot
 
       if (selectedArtifactIndex !== null) {
-        const artifact = artifactPool[selectedArtifactIndex]; // Hämta artifact-objektet
-        slotElement.innerHTML = `<img src="${artifact.icon}" alt="${artifact.roomId}" />`; // Visa ikon
+        const artifact = artifactPool[selectedArtifactIndex]; // Get artifact object
+        slotElement.innerHTML = `<img src="${artifact.icon}" alt="${artifact.roomId}" />`; // Display icon
       }
 
       if (slotIndex === activeSlotIndex) {
-        slotElement.classList.add("is-active"); // Highlighta aktiv slot
+        slotElement.classList.add("is-active"); // Highlight active slot
       }
     });
   }
 
-  //----------------------------------------------------//
-  //------------------ Validate-knapp ------------------//
-  //----------------------------------------------------//
+  //-----------------------------------------------------------
+  //---------------------- Validate button --------------------
+  //-----------------------------------------------------------
 
   function updateValidate(): void {
     const allSlotsAreFilled = slotSelections.every(
       (selection) => selection !== null,
-    ); // Är alla slots fyllda?
+    ); // Are all slots filled?
 
-    // Om vi redan håller på att avsluta rummet ska knappen hållas låst
-    validateBtn.disabled = !allSlotsAreFilled || isResolvingFinalRoom; // Aktivera/inaktivera knappen
+    // If the room is already resolving, keep the button disabled
+    validateBtn.disabled = !allSlotsAreFilled || isResolvingFinalRoom; // Enable/disable button
   }
 
-  //----------------------------------------------------------//
-  //-------------- Byt artifact i slot -----------------------//
-  //----------------------------------------------------------//
+  //-----------------------------------------------------------
+  //---------------- Cycle artifact in slot -------------------
+  //-----------------------------------------------------------
 
-  // Skapa en Set samling utan dubbletter med alla artifacts som redan används i någon slot
+  // Create a Set of all artifacts already used in any slot (no duplicates)
   function cycleArtifact(direction: number): void {
-    // Om rummet redan håller på att avgöras ska inga fler byten kunna göras
+    // If the room is resolving, no more changes allowed
     if (isResolvingFinalRoom) return;
 
     const usedArtifactIndexes = new Set(
-      slotSelections.filter((selection) => selection !== null), // Ta bort tomma slots (null)
+      slotSelections.filter((selection) => selection !== null), // Remove empty slots (null)
     );
 
-    // Skapa en lista med alla artifacts som är tillgängliga att välja i den aktiva sloten
+    // Create a list of all artifacts available for the active slot
     const availableArtifactIndexes = artifactPool
-      .map((_, artifactIndex) => artifactIndex) // Gör en lista [0,1,2,3,4] baserat på artifactPool
+      .map((_, artifactIndex) => artifactIndex) // Create list [0,1,2,3,4]
       .filter(
         (artifactIndex) =>
-          !usedArtifactIndexes.has(artifactIndex) || // Artifacten är inte upptagen av en annan slot
-          slotSelections[activeSlotIndex] === artifactIndex, // Eller så är det samma artifact som redan ligger i denna slot
+          !usedArtifactIndexes.has(artifactIndex) || // Artifact not used in another slot
+          slotSelections[activeSlotIndex] === artifactIndex, // Or it's the same artifact already in this slot
       );
 
-    // Om det inte finns några artifacts att välja: avbryt funktionen
+    // If no artifacts available, abort
     if (availableArtifactIndexes.length === 0) return;
 
-    // Hämta artifact-index som ligger i den aktiva sloten just nu
+    // Get the artifact currently in the active slot
     const currentArtifactIndex = slotSelections[activeSlotIndex];
 
-    // Hitta positionen i listan över tillgängliga artifacts
-    // Om sloten är tom → börja på -1
-    // Annars → hitta indexet i availableArtifactIndexes
+    // Find its position in the available list
+    // If slot is empty → start at -1
+    // Otherwise → find its index
     let newIndexInAvailableList =
       currentArtifactIndex === null
         ? -1
         : availableArtifactIndexes.indexOf(currentArtifactIndex);
 
-    // Flytta upp eller ner i listan beroende på direction +1 eller -1
+    // Move up or down depending on direction (+1 or -1)
     newIndexInAvailableList += direction;
 
-    // Wrap-around: om vi går förbi sista artifacten → hoppa till första
+    // Wrap-around: past the end → go to first
     if (newIndexInAvailableList >= availableArtifactIndexes.length)
       newIndexInAvailableList = 0;
 
-    // Wrap-around: om vi går före första artifacten → hoppa till sista
+    // Wrap-around: before first → go to last
     if (newIndexInAvailableList < 0)
       newIndexInAvailableList = availableArtifactIndexes.length - 1;
 
-    // Sätt den nya artifacten i den aktiva sloten
+    // Set the new artifact in the active slot
     slotSelections[activeSlotIndex] =
       availableArtifactIndexes[newIndexInAvailableList];
 
-    renderSlots(); // Rita om slotarna så spelaren ser ändringen
-    updateValidate(); // Uppdatera Validate-knappen (kan bli aktiv om alla slots är fyllda)
+    renderSlots(); // Re-render slots so the player sees the change
+    updateValidate(); // Update validate button (may become enabled)
   }
+  
+  //-----------------------------------------------------------
+  //---------------------- Keyboard --------------------------
+  //-----------------------------------------------------------
 
-  //-------------------------------------------------------//
-  //------------- Tangentbord -----------------------------//
-  //-------------------------------------------------------//
-
-  // Om det redan finns en gammal handler från tidigare init,
-  // ta bort den först så vi inte bygger upp flera document-keydown-lyssnare.
+  // If an old handler from a previous initialization exists,
+  // remove it first so we don’t accumulate multiple document-keydown listeners.
   if (finalKeyboardHandler) {
     document.removeEventListener("keydown", finalKeyboardHandler);
     finalKeyboardHandler = null;
   }
 
-  // Skapa en ny handler som använder den här körningens lokala state
+  // Create a new handler that uses this run’s local state
   finalKeyboardHandler = (event: KeyboardEvent) => {
-    if (!finalSection.classList.contains("isVisible")) return; // Tangentbordet ska bara fungera när finalrummet är synligt
-    if (isResolvingFinalRoom) return; // När rummet avgörs ska inga fler inputs tas emot
+    if (!finalSection.classList.contains("isVisible")) return; // Keyboard should only work when the final room is visible
+    if (isResolvingFinalRoom) return; // When the room is resolving, no more input should be accepted
 
     if (event.key === "ArrowLeft") {
-      // Om spelaren trycker vänsterpil
-      activeSlotIndex = Math.max(0, activeSlotIndex - 1); // Flytta highlight åt vänster, men aldrig under 0
-      renderSlots(); // Rita om så highlight syns
+      // If the player presses the left arrow
+      activeSlotIndex = Math.max(0, activeSlotIndex - 1); // Move highlight left, but never below 0
+      renderSlots(); // Re-render so the highlight updates
     }
 
     if (event.key === "ArrowRight") {
-      // Om spelaren trycker högerpil
-      activeSlotIndex = Math.min(4, activeSlotIndex + 1); // Flytta highlight åt höger, men aldrig över 4
-      renderSlots(); // Rita om så highlight syns
+      // If the player presses the right arrow
+      activeSlotIndex = Math.min(4, activeSlotIndex + 1); // Move highlight right, but never above 4
+      renderSlots(); // Re-render so the highlight updates
     }
 
     if (event.key === "ArrowUp") {
-      // Om spelaren trycker uppåt → byt artifact uppåt i listan
+      // If the player presses up → cycle artifact upward in the list
       cycleArtifact(-1);
     }
 
     if (event.key === "ArrowDown") {
-      // Om spelaren trycker nedåt → byt artifact nedåt i listan
+      // If the player presses down → cycle artifact downward in the list
       cycleArtifact(1);
     }
   };
 
-  // Bind tangentbordslyssnaren
+  // Bind the keyboard listener
   document.addEventListener("keydown", finalKeyboardHandler);
+  
+  //-----------------------------------------------------------
+  //----------------------- Validate --------------------------
+  //-----------------------------------------------------------
 
-  //---------------------------------------------------------//
-  //----------------- Validate ------------------------------//
-  //---------------------------------------------------------//
-
-  // Om en gammal listener redan bundits tidigare, klona knappen och ersätt den.
-  // Då får vi bort gamla listeners utan att behöva spara referenser till dem.
+  // If an old listener was already bound earlier, clone the button and replace it.
+  // This removes old listeners without needing to store references to them.
   let currentValidateBtn = validateBtn;
 
   if (currentValidateBtn.dataset.bound === "true") {
@@ -257,7 +258,7 @@ export function room6finalFunc(): void {
 
   currentValidateBtn.dataset.bound = "true";
 
-  // Spara rätt knappreferens till updateValidate genom att jobba mot den aktuella knappen
+  // Save the correct button reference for updateValidate by working with the current button
   function syncValidateButtonState(): void {
     const allSlotsAreFilled = slotSelections.every(
       (selection) => selection !== null,
@@ -266,7 +267,7 @@ export function room6finalFunc(): void {
   }
 
   currentValidateBtn.addEventListener("click", () => {
-    // Om vi redan håller på att avgöra rummet ska klick ignoreras
+    // If the room is already resolving, ignore clicks
     if (isResolvingFinalRoom) return;
 
     const correctOrder: TElementRoomId[] = [
@@ -275,70 +276,70 @@ export function room6finalFunc(): void {
       "earth",
       "metal",
       "water",
-    ]; // Den korrekta ordningen av artifacts baserat på rummen
+    ]; // The correct order of artifacts based on the rooms
 
     const selectedArtifacts = slotSelections.map(
-      // Hämta artifacts i den ordning spelaren har placerat dem i slotsen
-      (artifactIndex) => artifactPool[artifactIndex!], // artifactIndex! = vi lovar att det inte är null
+      // Get the artifacts in the order the player placed them in the slots
+      (artifactIndex) => artifactPool[artifactIndex!], // artifactIndex! = we guarantee it’s not null
     );
 
     const orderIsCorrect = selectedArtifacts.every(
-      // Kontrollera ordningen
-      (artifact, slotIndex) => artifact.roomId === correctOrder[slotIndex], // Jämför varje artifact med rätt position
+      // Check the order
+      (artifact, slotIndex) => artifact.roomId === correctOrder[slotIndex], // Compare each artifact with the correct position
     );
 
     if (!orderIsCorrect) {
-      // Om ordningen är fel
-      feedbackEl.textContent = "Wrong order. Try again."; // Visa feedback
-      slotSelections = [null, null, null, null, null]; // Töm alla slots
-      activeSlotIndex = 0; // Flytta highlight till första sloten
+      // If the order is wrong
+      feedbackEl.textContent = "Wrong order. Try again."; // Show feedback
+      slotSelections = [null, null, null, null, null]; // Clear all slots
+      activeSlotIndex = 0; // Move highlight back to the first slot
 
-      renderSlots(); // Rita om
-      syncValidateButtonState(); // Inaktivera Validate-knappen
-      return; // Avsluta funktionen här
+      renderSlots(); // Re-render
+      syncValidateButtonState(); // Disable the Validate button
+      return; // Exit the function here
     }
 
     const allArtifactsAreTrue = selectedArtifacts.every(
-      // Kontrollera om artifacts är "true"
+      // Check if all artifacts are "true"
       (artifact) => artifact.kind === "true",
     );
 
-    // Lås rummet så att vi inte kan klicka eller navigera flera gånger
+    // Lock the room so no more clicks or navigation can happen
     isResolvingFinalRoom = true;
     currentValidateBtn.disabled = true;
 
     if (allArtifactsAreTrue) {
-      // Om spelaren vann
+      // If the player won
       feedbackEl.textContent = "You win!";
 
-      // Stoppa finalrummets timer innan vi går vidare
+      // Stop the final room’s timer before moving on
       stopTimer(6);
-      stopAll(); // Stopp music
+      stopAll(); // Stop music
 
-      // Finalrummet äger transitionen till win-sidan
+      // The final room owns the transition to the win screen
       window.setTimeout(() => {
         goToNextRoom("#gameWinRoom", gameWinFunc);
       }, TRANSITION_MS);
     } else {
-      // Om ordningen var rätt men någon artifact var falsk
+      // If the order was correct but one or more artifacts were false
       feedbackEl.textContent = "Incorrect artifacts. Game Over.";
 
-      // Stoppa finalrummets timer innan vi går vidare
+      // Stop the final room’s timer before moving on
       stopTimer(6);
       stopAll(); // Stop music
 
-      // Finalrummet äger transitionen till game-over-sidan
+      // The final room owns the transition to the game-over screen
       window.setTimeout(() => {
         goToNextRoom("#gameOverRoom", gameOverRoomFunc);
       }, TRANSITION_MS);
     }
   });
 
-  //-------------------------------------------------------------//
-  //------------------------- Init ------------------------------//
-  //-------------------------------------------------------------//
+  //-----------------------------------------------------------
+  //------------------------- Init ----------------------------
+  //-----------------------------------------------------------
 
-  renderSlots(); // Rita första gången
-  updateValidate(); // Inaktivera Validate från start
-  syncValidateButtonState(); // Säkerställ rätt state på aktuell validate-knapp
+  renderSlots(); // Render for the first time
+  updateValidate(); // Disable Validate at start
+  syncValidateButtonState(); // Ensure the correct state for the current Validate button
 }
