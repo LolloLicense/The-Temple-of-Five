@@ -27,6 +27,7 @@ const slateNumbersArray: number[] = [
 ];
 let timerCheckInterval: number;
 const correctSlatesArr: number[] = [];
+let moving: boolean = false; // Flag to prevent multiple moves at once
 
 // Keep track of the active Earth keydown handler so we can remove it on re-enter
 let earthKeydownHandler: ((event: KeyboardEvent) => void) | null = null;
@@ -186,7 +187,14 @@ function keyPressHandler(event: KeyboardEvent): void {
           const clickSlate: HTMLElement | null = document.querySelector(
             `.c${dirrX}${dirrY}`,
           );
-          clickSlate?.click();
+          if (!moving) {
+            moving = true;
+            clickSlate?.click();
+            setTimeout(() => {
+              // Wait for animation to finish before allowing another key press to prevent move skipping
+              moving = false;
+            }, 750);
+          } // IF !moving END
         }
         break;
 
@@ -197,7 +205,14 @@ function keyPressHandler(event: KeyboardEvent): void {
           const clickSlate: HTMLElement | null = document.querySelector(
             `.c${dirrX}${dirrY}`,
           );
-          clickSlate?.click();
+          if (!moving) {
+            moving = true;
+            clickSlate?.click();
+            setTimeout(() => {
+              moving = false;
+              // Wait for animation to finish before allowing another key press to prevent move skipping
+            }, 750);
+          } // IF !moving END
         }
         break;
 
@@ -208,7 +223,14 @@ function keyPressHandler(event: KeyboardEvent): void {
           const clickSlate: HTMLElement | null = document.querySelector(
             `.c${dirrX}${dirrY}`,
           );
-          clickSlate?.click();
+          if (!moving) {
+            moving = true;
+            clickSlate?.click();
+            setTimeout(() => {
+              moving = false;
+              // Wait for animation to finish before allowing another key press to prevent move skipping
+            }, 750);
+          } // IF !moving END
         }
         break;
 
@@ -219,7 +241,14 @@ function keyPressHandler(event: KeyboardEvent): void {
           const clickSlate: HTMLElement | null = document.querySelector(
             `.c${dirrX}${dirrY}`,
           );
-          clickSlate?.click();
+          if (!moving) {
+            moving = true;
+            clickSlate?.click();
+            setTimeout(() => {
+              moving = false;
+              // Wait for animation to finish before allowing another key press to prevent move skipping
+            }, 750);
+          } // IF !moving END
         }
         break;
     } // Switch END
