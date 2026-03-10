@@ -5,6 +5,11 @@ import {
   getRoomResults,
   setReplayMode,
 } from "../../script/helper/storage.ts";
+import { room1woodFunc } from "../1wood/room1wood.ts";
+import { room2fireFunc } from "../2fire/room2fire.ts";
+import { room3earthFunc } from "../3earth/room3earth.ts";
+import { room4metalFunc } from "../4metal/room4metal.ts";
+import { room5waterFunc } from "../5water/room5water.ts";
 
 //-----------------------------------------------------------
 //------------------- REPLAY ROOM HELPER --------------------
@@ -18,23 +23,23 @@ function startReplayRoom(
   switch (roomId) {
     // wood room selected
     case "wood":
-      console.log("[GAME OVER] Start replay: wood");
+      room1woodFunc();
       break;
     // fire room selected
     case "fire":
-      console.log("[GAME OVER] Start replay:fire");
+      room2fireFunc();
       break;
     // earth room selected
     case "earth":
-      console.log("[GAME OVER] Start replay: earth");
+      room3earthFunc();
       break;
     // metal room selected
     case "metal":
-      console.log("[GAME OVER] Start replay: wood");
+      room4metalFunc();
       break;
     // water room selected
     case "water":
-      console.log("[GAME OVER] Start replay: wood");
+      room5waterFunc();
       break;
   }
 }

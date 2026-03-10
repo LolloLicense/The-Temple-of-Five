@@ -28,7 +28,7 @@ Länk till Mockup på [Figma](https://www.figma.com/design/OJgqdjOM1fksuh2Gh2rsA
 
 - Generade bilder av AI?
   Jordrummet har bilder generade av gemini som sedan manipulerats i GIMP
-- Ikoner från?
+- Ikoner från Iconify & Heroicons
 
 ### Ljudkällor
 

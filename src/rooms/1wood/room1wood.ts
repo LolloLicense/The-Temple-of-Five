@@ -6,10 +6,14 @@ import { updateProgressBar } from "../../script/helper/progressbar.ts";
 import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
 import { showMsg } from "../../script/helper/showMsg.ts";
 import {
+  clearReplayMode,
+  getReplayRoom,
   getRoomResults,
+  isReplayMode,
   resetSingleRoomResult,
   setRoomResult,
 } from "../../script/helper/storage.ts";
+import { gameOverRoomFunc } from "../gameConclusion/gameOverRoom.ts";
 import {
   getCurrentPage,
   goToSection,
@@ -18,7 +22,7 @@ import { startTimer, stopTimer, TimeIsUp } from "../../script/helper/utils.ts";
 import { room2fireFunc } from "../2fire/room2fire.ts";
 
 //-----------------------------------------------------------
-//---------------------- CONFIG / RULES ----------------------
+//---------------------- CONFIG / RULES ---------------------
 //-----------------------------------------------------------
 
 // Levels = 3 stages. Each level contains 6 Fibonacci numbers
@@ -373,6 +377,14 @@ export function room1woodFunc(): void {
   }
 
   //-----------------------------------------------------------
+  //---------------------- REPLAY MODE ------------------------
+  //-----------------------------------------------------------
+
+  function shouldReturnToGameOver(): boolean {
+    return isReplayMode() && getReplayRoom() === "wood";
+  }
+
+  //-----------------------------------------------------------
   //---------------------- GO TO NEXT ROOM --------------------
   //-----------------------------------------------------------
 
@@ -434,6 +446,15 @@ export function room1woodFunc(): void {
       isTransitioning = false;
       updateUI();
 
+      // If this room was replayed from Game Over,
+      // return there instead of continuing the normal room flow
+      if (shouldReturnToGameOver()) {
+        clearReplayMode();
+        goToNextRoom("#gameOverRoom", gameOverRoomFunc);
+        return;
+      }
+
+      // Otherwise continue normal flow
       goToNextRoom("#room2Fire", room2fireFunc);
     }, TRANSITIONTIME);
   }
@@ -477,6 +498,15 @@ export function room1woodFunc(): void {
       isTransitioning = false;
       updateUI();
 
+      // If this room was replayed from Game Over,
+      // return there instead of continuing the normal room flow
+      if (shouldReturnToGameOver()) {
+        clearReplayMode();
+        goToNextRoom("#gameOverRoom", gameOverRoomFunc);
+        return;
+      }
+
+      // Otherwise continue normal flow
       goToNextRoom("#room2Fire", room2fireFunc);
     }, TRANSITIONTIME);
   }

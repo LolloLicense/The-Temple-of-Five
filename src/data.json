@@ -12,7 +12,7 @@
     "backgroundImg": "./images/woodroom.jpg",
     "bgmId": "bgm_wood",
     "sfxId": "sfx_click",
-    "timeLimitMinutes": 6,
+    "timeLimitMinutes": 2,
     "timeLimitSeconds": 0,
     "desc": {
       "text": "The jungle didn't reclaim the world by chance. The temple runs on a growth pattern — an algorithm that never lies. Start from zero, let it grow, and keep track of what came before. The next step is always built from the last two. Enter the sequence in time to unlock the element of wood.",
