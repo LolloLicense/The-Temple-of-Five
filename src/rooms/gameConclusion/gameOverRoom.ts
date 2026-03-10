@@ -5,11 +5,13 @@ import {
   getRoomResults,
   setReplayMode,
 } from "../../script/helper/storage.ts";
+import { goToSection } from "../../script/helper/transitions.ts";
 import { room1woodFunc } from "../1wood/room1wood.ts";
 import { room2fireFunc } from "../2fire/room2fire.ts";
 import { room3earthFunc } from "../3earth/room3earth.ts";
 import { room4metalFunc } from "../4metal/room4metal.ts";
 import { room5waterFunc } from "../5water/room5water.ts";
+import { room6finalFunc } from "../final/room6validate.ts";
 
 //-----------------------------------------------------------
 //------------------- REPLAY ROOM HELPER --------------------
@@ -122,8 +124,6 @@ export function gameOverRoomFunc(): void {
     button.classList.add("isFixed");
     button.disabled = true;
     button.setAttribute("aria-disabled", "true");
-
-    console.log(`[GAME OVER] ${roomId} marked as FIXED`); // remove later
   });
 
   //-----------------------------------------------------------
@@ -134,13 +134,25 @@ export function gameOverRoomFunc(): void {
   if (allElementsOk) {
     retryValidationBtn.disabled = false;
     retryValidationBtn.classList.add("isUnlocked");
-
-    console.log("[GAME OVER] Validation button unlocked");
   } else {
     retryValidationBtn.disabled = true;
     retryValidationBtn.classList.remove("isUnlocked");
 
     console.log("[GAME OVER] Validation button locked");
+  }
+
+  if (retryValidationBtn.dataset.bound !== "true") {
+    retryValidationBtn.dataset.bound = "true";
+
+    retryValidationBtn.addEventListener("click", () => {
+      if (retryValidationBtn.disabled) return;
+
+      const finalSection = document.querySelector<HTMLElement>("#finalRoom");
+      if (!finalSection) return;
+
+      room6finalFunc();
+      goToSection(finalSection, 1200);
+    });
   }
 
   //-----------------------------------------------------------
@@ -168,9 +180,4 @@ export function gameOverRoomFunc(): void {
       startReplayRoom(roomId as "wood" | "fire" | "earth" | "metal" | "water");
     });
   });
-
-  // remove CONSOLE.LOG when flow is finished
-  console.log("GAME OVER state:", state);
-  console.log("GAME OVER replay buttons found:", replayBtns.length);
-  console.log("GAME OVER all elements fixed:", allElementsOk);
 }

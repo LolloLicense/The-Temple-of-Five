@@ -26,8 +26,10 @@ import { updateProgressBar } from "../../script/helper/progressbar.ts";
 import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
 import { showMsg } from "../../script/helper/showMsg.ts";
 import {
-  resetSingleRoomResult,
   setRoomResult,
+  clearReplayMode,
+  getReplayRoom,
+  isReplayMode,
 } from "../../script/helper/storage.ts";
 import {
   getCurrentPage,
@@ -39,6 +41,7 @@ import {
   TimeIsUp,
 } from "../../script/helper/utils.ts";
 import { room6finalFunc } from "../final/room6validate.ts";
+import { gameOverRoomFunc } from "../gameConclusion/gameOverRoom.ts";
 
 // ── TYPES ──────────────────────────────────────────────────────────────────
 
@@ -193,6 +196,11 @@ function cleanupWaterRoom(): void {
   stopFailTimeout();
   stopSolveTimeout();
   stopFocusTimeout();
+}
+
+// replay mode
+function shouldReturnToGameOver(): boolean {
+  return isReplayMode() && getReplayRoom() === "water";
 }
 
 // ── PUZZLE GENERATION ──────────────────────────────────────────────────────
@@ -558,12 +566,17 @@ function ifRoomFailed(): void {
   });
 
   updateProgressBar();
-  announce("Time is up. The vessel remains empty.");
   showMsg("Time's up — the final chamber awaits", 2400);
 
   failTimeoutId = window.setTimeout(() => {
     // Ignore if Water is no longer the current room
     if (getCurrentPage() !== waterSection) return;
+
+    if (shouldReturnToGameOver()) {
+      clearReplayMode();
+      goToNextRoom("#gameOverRoom", gameOverRoomFunc);
+      return;
+    }
 
     goToNextRoom("#finalRoom", room6finalFunc);
   }, TRANSITION_MS);
@@ -642,6 +655,12 @@ function solvePuzzle(): void {
   solveTimeoutId = window.setTimeout(() => {
     // Ignore if Water is no longer the current room
     if (getCurrentPage() !== waterSection) return;
+
+    if (shouldReturnToGameOver()) {
+      clearReplayMode();
+      goToNextRoom("#gameOverRoom", gameOverRoomFunc);
+      return;
+    }
 
     goToNextRoom("#finalRoom", room6finalFunc);
   }, TRANSITION_MS);
@@ -813,8 +832,6 @@ function handleCheck(): void {
 // ── EXPORTED ROOM FUNCTION ─────────────────────────────────────────────────
 
 export function room5waterFunc(): void {
-  resetSingleRoomResult("water");
-
   const section = document.querySelector<HTMLElement>("#room5Water");
   if (!section) return;
 
