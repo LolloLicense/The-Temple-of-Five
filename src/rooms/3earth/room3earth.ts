@@ -36,6 +36,8 @@ export function room3earthFunc(): void {
     document.querySelector("#room3Earth");
 
   if (earthSection) {
+    // Let transition helper handle showing / switching to this room
+    goToSection(earthSection, 1200);
     // Sets the background image from data.JSON
     earthSection.style.backgroundImage = `url("${dataJSON.room3earth.backgroundImg}")`;
     // Renders the room description from data.JSON
