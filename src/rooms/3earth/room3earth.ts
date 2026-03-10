@@ -77,19 +77,11 @@ export function room3earthFunc(): void {
 } // room3earthFunc END
 
 function slateClick(_slate: HTMLElement | null, count: number): void {
-  //console.log(`Slate ${count} was clicked!`);
-
   //winner(); (For testing end of game)
 
   const currentSlate = document.querySelector(`.slate${count}`);
   const slateNumber: number = count;
   const emptySlate = document.querySelector(".slate16");
-
-  /*
-  if (slate?.classList[2] === emptySlate?.classList[2]) {
-    console.log("LavaSlate was clicked");
-  }
-  */
 
   if (emptySlate && currentSlate) {
     const lavaX: number = parseInt(emptySlate?.classList[2].substring(1, 2));
@@ -192,7 +184,6 @@ function moveSlate(
 
     if (matchTuples(dirPoint, lavaPos)) {
       moves++;
-      //console.log(`moves: ${moves}`);
       animateMove(currentPos, dirPoint);
 
       if (getRandomInt(1, 2) === 1) {
@@ -325,8 +316,6 @@ function checkSlateLock(movedSlate: HTMLElement | null): void {
       checkTextContent(slateText, 15);
       break;
   } // Switch END
-
-  //console.log(correctSlatesArr); // For testing, shows which slates are currently correct
   if (correctSlatesArr.length === 15) {
     winner();
   } // IF win END
