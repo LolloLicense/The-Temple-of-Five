@@ -1,4 +1,4 @@
-import { stopAll } from  "../../audio/index.ts";
+import { stopAll } from "../../audio/index.ts";
 
 type ExitMode = "welcome" | "room";
 
@@ -64,13 +64,10 @@ export function initExitDialog(): void {
     if (action === "leaveRoom") {
       dialog.close();
       stopAll(); // Stop music when exit room
-      console.log("leave room");
       document.dispatchEvent(new CustomEvent("exit:leaveRoom"));
       return;
     }
   });
   // Close dialog
-  dialog.addEventListener("close", () => {
-    // här kan du återställa text om du vill (valfritt)
-  });
+  dialog.addEventListener("close", () => {});
 }

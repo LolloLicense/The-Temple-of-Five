@@ -133,9 +133,6 @@ export function renderArtifactsToSlots(): void {
     //Store debug info directly on the element
     slot.dataset.room = roomId;
     slot.dataset.artifact = kind ?? "empty";
-
-    // USE FOR DEBUG
-    console.log(`${roomId}:`, kind, icon ?? "(empty)");
   });
 }
 

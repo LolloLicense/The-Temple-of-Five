@@ -2,11 +2,12 @@
 //------------------------ SHOW MSG -------------------------
 //-----------------------------------------------------------
 
+const TRANSITION_MS = 1200;
 /**
  * Shows a short message overlay, then removes it.
  * Used between rooms (success/fail) before transitions.
  */
-export function showMsg(message: string, durationMs = 1200): void {
+export function showMsg(message: string, durationMs = TRANSITION_MS): void {
   // Find or create the message element
   let msgEl = document.querySelector<HTMLElement>("#gameMsg");
 
