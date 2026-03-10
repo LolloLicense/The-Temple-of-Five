@@ -21,6 +21,17 @@ let finalKeyboardHandler: ((event: KeyboardEvent) => void) | null = null;
 // Prevents validate/logic from running multiple times in quick succession
 let isResolvingFinalRoom = false;
 
+// Cleanup function
+export function cleanupFinalRoom(): void {
+  // Ta bort keyboard-lyssnaren om den finns
+  if (finalKeyboardHandler) {
+    document.removeEventListener("keydown", finalKeyboardHandler);
+    finalKeyboardHandler = null;
+  }
+
+  isResolvingFinalRoom = false;
+}
+
 export function room6finalFunc(): void {
   //---------------------------------------------------------------
   //------------------ Initialize the room ------------------------
