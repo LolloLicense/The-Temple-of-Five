@@ -434,9 +434,6 @@ export function room2fireFunc(): void {
 
   // always a reset when entering
   resetRoom();
-
-  console.log("Hello from the fire room");
-  console.log("Calling playBgm with:", bgmId);
 }
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -502,13 +499,21 @@ function resetRoom(): void {
 
   fireSlots?.classList.remove(PUZZLE_FOCUS_CLASS); // Fokus off until intro is done
 
+  setIntroVisualState(true);
+
   introTimeoutId = window.setTimeout(() => {
-    // After intro - Show level 1 instruction - release locked input and focus input
+    // After intro - show level 1 instruction
     updateDescText(FIRE_LEVEL_TEXT[0] ?? "");
 
     locked = false;
     isTransitioning = false;
+
+    // Turn OFF intro visuals when the puzzle becomes active
+    setIntroVisualState(false);
+
+    // Turn ON puzzle focus when gameplay starts
     fireSlots?.classList.add(PUZZLE_FOCUS_CLASS);
+
     setActiveSlotClass();
   }, INTRO_MS);
 }
@@ -527,6 +532,18 @@ function updateDescText(text: string): void {
   }
 
   textEl.textContent = text;
+}
+
+function setIntroVisualState(isIntro: boolean): void {
+  if (!fireSection) return;
+
+  const descEl = fireSection.querySelector<HTMLElement>(".roomDesc");
+
+  // Dim the puzzle UI during intro so the player looks at the text
+  fireSection.classList.toggle("intro-mode", isIntro);
+
+  // Add/remove visual focus on the description block
+  descEl?.classList.toggle("intro-focus", isIntro);
 }
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
