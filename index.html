@@ -1,930 +1,1394 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- FONT -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Asimovian&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32" />
+    <meta
+      name="description"
+      content="The temple of Five — a Wu Xing-inspired puzzle game where you restore balance through timed trials."
+    />
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- FONT -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Asimovian&display=swap" rel="stylesheet" />
-  <link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32" />
-  <meta name="description"
-    content="The temple of Five — a Wu Xing-inspired puzzle game where you restore balance through timed trials." />
+    <title>The Temple of Five</title>
+  </head>
 
-  <title>The Temple of Five</title>
-</head>
-
-<body>
-  <!-- Site Header -->
-  <header id="gameHeader" class="gameHeader hidden">
-    <nav class="gameHeaderNav">
-      <!-- Progressbar -->
-      <div class="progress" data-total="6">
-        <p id="progressLabel" class="visuallyHidden">
-          Progress through rooms
-        </p>
-        <div class="progressTrack" role="progressbar" aria-valuemin="1" aria-valuemax="6" aria-valuenow="1"
-          aria-describedby="progressText" aria-labelledby="progressLabel">
-          <span class="roomProgress" aria-label="room 1 of 6"></span>
-          <span class="roomProgress" aria-label="room 2 of 6"></span>
-          <span class="roomProgress" aria-label="room 3 of 6"></span>
-          <span class="roomProgress" aria-label="room 4 of 6"></span>
-          <span class="roomProgress" aria-label="room 5 of 6"></span>
-          <span class="roomProgress" aria-label="Final room"></span>
+  <body>
+    <!-- Site Header -->
+    <header id="gameHeader" class="gameHeader hidden">
+      <nav class="gameHeaderNav">
+        <!-- Progressbar -->
+        <div class="progress" data-total="6">
+          <p id="progressLabel" class="visuallyHidden">
+            Progress through rooms
+          </p>
+          <div
+            class="progressTrack"
+            role="progressbar"
+            aria-valuemin="1"
+            aria-valuemax="6"
+            aria-valuenow="1"
+            aria-describedby="progressText"
+            aria-labelledby="progressLabel"
+          >
+            <span class="roomProgress" aria-label="room 1 of 6"></span>
+            <span class="roomProgress" aria-label="room 2 of 6"></span>
+            <span class="roomProgress" aria-label="room 3 of 6"></span>
+            <span class="roomProgress" aria-label="room 4 of 6"></span>
+            <span class="roomProgress" aria-label="room 5 of 6"></span>
+            <span class="roomProgress" aria-label="Final room"></span>
+          </div>
         </div>
-      </div>
-      <!-- room timer -->
-      <div class="roomTimer">
-        Room time: <span id="roomMinutesSpan">00</span>:<span id="roomSecondsSpan">00</span>
-      </div>
-      <!-- total timer -->
-      <div class="totalTimer">
-        Total time: <span id="totalMinutesSpan">00</span>:<span id="totalSecondsSpan">00</span>
-      </div>
-
-      <!-- <div class="score">Score:<span id="scoreSpan">0</span></div> -->
-
-      <!-- Buttons -->
-      <div class="headerBtns">
-        <!-- ArtifactBtn -->
-        <button id="itemListBtn" class="itemListBtn" aria-label="show collected elements">
-          <svg width="28" height="35" viewBox="0 0 30 40" fill="none" xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true">
-            <path
-              d="M5.1 18.5749C5.43966 16.1912 6.62796 14.0101 8.44663 12.4322C10.2653 10.8543 12.5922 9.9856 15 9.9856C17.4078 9.9856 19.7347 10.8543 21.5534 12.4322C23.372 14.0101 24.5603 16.1912 24.9 18.5749C24.9261 18.7388 24.9193 18.9063 24.8799 19.0675C24.8406 19.2288 24.7696 19.3806 24.6709 19.5141C24.5723 19.6476 24.4481 19.7601 24.3055 19.8451C24.163 19.9301 24.0049 19.9858 23.8406 20.009C23.6762 20.0323 23.5089 20.0226 23.3484 19.9804C23.1878 19.9383 23.0373 19.8647 22.9055 19.7638C22.7737 19.6628 22.6634 19.5367 22.5809 19.3927C22.4984 19.2486 22.4454 19.0896 22.425 18.9249C22.1703 17.1372 21.279 15.5013 19.915 14.3179C18.551 13.1345 16.8058 12.4829 15 12.4829C13.1942 12.4829 11.449 13.1345 10.085 14.3179C8.72097 15.5013 7.82974 17.1372 7.575 18.9249C7.55461 19.0896 7.50162 19.2486 7.41912 19.3927C7.33663 19.5367 7.22627 19.6628 7.0945 19.7638C6.96274 19.8647 6.81219 19.9383 6.65165 19.9804C6.4911 20.0226 6.32378 20.0323 6.15944 20.009C5.9951 19.9858 5.83704 19.9301 5.69447 19.8451C5.5519 19.7601 5.42768 19.6476 5.32906 19.5141C5.23044 19.3806 5.15939 19.2288 5.12007 19.0675C5.08074 18.9063 5.07392 18.7388 5.1 18.5749ZM5 23.7499C5 23.4184 5.1317 23.1005 5.36612 22.866C5.60054 22.6316 5.91848 22.4999 6.25 22.4999H23.75C24.0815 22.4999 24.3995 22.6316 24.6339 22.866C24.8683 23.1005 25 23.4184 25 23.7499V33.7499C25 34.0814 24.8683 34.3994 24.6339 34.6338C24.3995 34.8682 24.0815 34.9999 23.75 34.9999H6.25C5.91848 34.9999 5.60054 34.8682 5.36612 34.6338C5.1317 34.3994 5 34.0814 5 33.7499V23.7499ZM7.5 24.9999V32.4999H22.5V24.9999H20V26.2499C20 26.5814 19.8683 26.8994 19.6339 27.1338C19.3995 27.3682 19.0815 27.4999 18.75 27.4999C18.4185 27.4999 18.1005 27.3682 17.8661 27.1338C17.6317 26.8994 17.5 26.5814 17.5 26.2499V24.9999H7.5Z"
-              fill="#ECF5F1" />
-            <path
-              d="M10 5.8525V5C10 3.67392 10.5268 2.40215 11.4645 1.46447C12.4021 0.526784 13.6739 0 15 0C16.3261 0 17.5979 0.526784 18.5355 1.46447C19.4732 2.40215 20 3.67392 20 5V5.8525C25.825 7.9125 30 13.47 30 20V33.75C30 35.4076 29.3415 36.9973 28.1694 38.1694C26.9973 39.3415 25.4076 40 23.75 40H6.25C4.5924 40 3.00269 39.3415 1.83058 38.1694C0.658481 36.9973 9.59625e-07 35.4076 9.59625e-07 33.75V20C-0.00110862 16.8972 0.960035 13.8703 2.751 11.3366C4.54197 8.8028 7.07462 6.88678 10 5.8525ZM12.5 5V5.2075C14.1549 4.92777 15.8451 4.92777 17.5 5.2075V5C17.5 4.33696 17.2366 3.70107 16.7678 3.23223C16.2989 2.76339 15.663 2.5 15 2.5C14.337 2.5 13.7011 2.76339 13.2322 3.23223C12.7634 3.70107 12.5 4.33696 12.5 5ZM15 7.5C11.6848 7.5 8.50537 8.81696 6.16117 11.1612C3.81696 13.5054 2.5 16.6848 2.5 20V33.75C2.5 34.7446 2.89509 35.6984 3.59835 36.4017C4.30161 37.1049 5.25544 37.5 6.25 37.5H23.75C24.7446 37.5 25.6984 37.1049 26.4017 36.4017C27.1049 35.6984 27.5 34.7446 27.5 33.75V20C27.5 16.6848 26.183 13.5054 23.8388 11.1612C21.4946 8.81696 18.3152 7.5 15 7.5Z"
-              fill="#ECF5F1" />
-          </svg>
-          <span id="artifactBadge" class="badge" aria-hidden="true"></span>
-        </button>
-        <!-- Sound-->
-        <button id="toggleSoundBtn" class="toggleSoundBtn" aria-label="toggle sound on/off button">
-          <!-- Sound off -->
-          <svg id="soundIconInactive" aria-hidden="true" width="40" height="30" viewBox="0 0 40 33" fill="none"
-            xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M30.9738 20.1846L34.658 16.5004M34.658 16.5004L38.3422 12.8162M34.658 16.5004L30.9738 12.8162M34.658 16.5004L38.3422 20.1846"
-              stroke="#ECF5F1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-            <path
-              d="M1.5 19.9208V13.0792C1.5 12.1021 1.88816 11.165 2.57908 10.4741C3.27001 9.78314 4.2071 9.39498 5.18422 9.39498H10.5263C10.8865 9.39489 11.2388 9.28922 11.5395 9.09103L22.5922 1.80364C22.8699 1.62076 23.1919 1.51646 23.5241 1.50179C23.8563 1.48713 24.1862 1.56265 24.479 1.72035C24.7717 1.87805 25.0163 2.11205 25.1868 2.39752C25.3573 2.68299 25.4474 3.00929 25.4474 3.34181V29.6582C25.4474 29.9907 25.3573 30.317 25.1868 30.6025C25.0163 30.8879 24.7717 31.1219 24.479 31.2796C24.1862 31.4373 23.8563 31.5129 23.5241 31.4982C23.1919 31.4835 22.8699 31.3792 22.5922 31.1964L11.5395 23.909C11.2388 23.7108 10.8865 23.6051 10.5263 23.605H5.18422C4.2071 23.605 3.27001 23.2169 2.57908 22.5259C1.88816 21.835 1.5 20.8979 1.5 19.9208Z"
-              stroke="#ECF5F1" stroke-width="3" />
-          </svg>
-          <!-- Sound on -->
-          <svg id="soundIconActive" aria-hidden="true" class="hidden" width="41" height="30" viewBox="0 0 44 33"
-            fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M1.5 19.9208V13.0792C1.5 12.1021 1.88816 11.165 2.57908 10.4741C3.27001 9.78314 4.2071 9.39498 5.18422 9.39498H10.5263C10.8865 9.39489 11.2388 9.28922 11.5395 9.09103L22.5922 1.80364C22.8699 1.62076 23.1919 1.51646 23.5241 1.50179C23.8563 1.48713 24.1862 1.56265 24.479 1.72035C24.7717 1.87805 25.0163 2.11205 25.1868 2.39752C25.3573 2.68299 25.4474 3.00929 25.4474 3.34181V29.6582C25.4474 29.9907 25.3573 30.317 25.1868 30.6025C25.0163 30.8879 24.7717 31.1219 24.479 31.2796C24.1862 31.4373 23.8563 31.5129 23.5241 31.4982C23.1919 31.4835 22.8699 31.3792 22.5922 31.1964L11.5395 23.909C11.2388 23.7108 10.8865 23.6051 10.5263 23.605H5.18422C4.2071 23.605 3.27001 23.2169 2.57908 22.5259C1.88816 21.835 1.5 20.8979 1.5 19.9208Z"
-              stroke="#ECF5F1" stroke-width="3" />
-            <path
-              d="M31.8948 8.2109C31.8948 8.2109 34.658 10.9741 34.658 15.5793C34.658 20.1846 31.8948 22.9478 31.8948 22.9478M37.4212 2.68457C37.4212 2.68457 42.0264 7.28985 42.0264 15.5793C42.0264 23.8688 37.4212 28.4741 37.4212 28.4741"
-              stroke="#ECF5F1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-        </button>
-        <!-- About button -->
-        <button id="aboutBtn" class="iconBtn aboutBtn" type="button" aria-label="about page button"
-          data-action="openAbout">
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true">
-            <path
-              d="M28.8 0H3.2C2.352 0 1.536 0.336 0.944 0.944C0.336 1.536 0 2.352 0 3.2V22.4C0 23.248 0.336 24.064 0.944 24.656C1.536 25.264 2.352 25.6 3.2 25.6H9.6L16 32L22.4 25.6H28.8C29.648 25.6 30.464 25.264 31.056 24.656C31.648 24.048 32 23.248 32 22.4V3.2C32 2.352 31.664 1.536 31.056 0.944C30.464 0.336 29.648 0 28.8 0ZM3.2 22.4V3.2H28.8V22.4H21.072L16 27.472L10.928 22.4M12.88 6.464C13.744 5.888 14.88 5.6 16.304 5.6C17.808 5.6 19.008 5.936 19.872 6.592C20.736 7.264 21.168 8.16 21.168 9.28C21.168 9.984 20.928 10.608 20.464 11.2C20 11.776 19.392 12.224 18.656 12.56C18.24 12.8 17.968 13.04 17.824 13.312C17.68 13.6 17.6 13.952 17.6 14.4H14.4C14.4 13.6 14.56 13.056 14.864 12.672C15.2 12.288 15.744 11.84 16.576 11.328C16.992 11.104 17.328 10.816 17.6 10.464C17.824 10.128 17.952 9.728 17.952 9.28C17.952 8.8 17.808 8.448 17.52 8.176C17.232 7.888 16.8 7.76 16.304 7.76C15.872 7.76 15.52 7.872 15.2 8.096C14.944 8.32 14.784 8.656 14.784 9.104H11.632C11.552 8 12 7.04 12.88 6.464ZM14.4 19.2V16H17.6V19.2H14.4Z"
-              fill="#ECF5F1" />
-          </svg>
-        </button>
-        <!-- EXIT button -->
-        <button id="exitMenuBtn" class="iconBtn exitMenuBtn" type="button" aria-label="Exit menu"
-          data-action="openExitDialog" data-exit-mode="room">
-          <svg aria-hidden="true" width="30" height="30" viewBox="0 0 25 25" fill="none"
-            xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M15.1528 7.51389L13.1944 5.55556L6.25 12.5L13.1944 19.4444L15.1528 17.4861L11.5694 13.8889L25 13.8889V11.1111L11.5694 11.1111L15.1528 7.51389ZM2.77778 25L22.2222 25C22.9589 25 23.6655 24.7073 24.1864 24.1864C24.7073 23.6655 25 22.9589 25 22.2222V16.6667H22.2222V22.2222L2.77778 22.2222L2.77778 2.77778L22.2222 2.77778V8.33333H25V2.77778C25 2.04107 24.7073 1.33453 24.1864 0.813594C23.6655 0.292659 22.9589 9.53674e-07 22.2222 9.53674e-07L2.77778 9.53674e-07C1.25 9.53674e-07 9.53674e-07 1.25 9.53674e-07 2.77778L9.53674e-07 22.2222C9.53674e-07 23.75 1.25 25 2.77778 25Z"
-              fill="#ECF5F1" />
-          </svg>
-        </button>
-      </div>
-    </nav>
-  </header>
-
-  <div id="itemDropdown" class="item-dropdown">
-    <div class="artifact-slot empty"></div>
-    <!--- Ge två klasser för div hållaren-->
-    <div class="artifact-slot empty"></div>
-    <div class="artifact-slot empty"></div>
-    <div class="artifact-slot empty"></div>
-    <div class="artifact-slot empty"></div>
-  </div>
-
-  <!-- Main content -->
-  <main>
-    <!-- Splash -->
-    <section id="splashPage" class="pageSplash splashPage hidden page">
-      <div class="splashHeading">
-        <h1>The Tempel of five</h1>
-        <div class="symbols">
-          <span>木</span>
-          <span>火</span>
-          <span>土</span>
-          <span>金</span>
-          <span>水</span>
+        <!-- room timer -->
+        <div class="roomTimer">
+          Room time: <span id="roomMinutesSpan">00</span>:<span
+            id="roomSecondsSpan"
+            >00</span
+          >
         </div>
-      </div>
-    </section>
-    <!-- Login page -->
-    <section id="loginPage" class="loginPage page hidden">
-      <div class="loginPlate">
-        <div class="loginCta">
-          <figure>
-            <svg width="53" height="48" viewBox="0 0 53 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- total timer -->
+        <div class="totalTimer">
+          Total time: <span id="totalMinutesSpan">00</span>:<span
+            id="totalSecondsSpan"
+            >00</span
+          >
+        </div>
+
+        <!-- <div class="score">Score:<span id="scoreSpan">0</span></div> -->
+
+        <!-- Buttons -->
+        <div class="headerBtns">
+          <!-- ArtifactBtn -->
+          <button
+            id="itemListBtn"
+            class="itemListBtn"
+            aria-label="show collected elements"
+          >
+            <svg
+              width="28"
+              height="35"
+              viewBox="0 0 30 40"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
               <path
-                d="M34.45 5.33333V24H18.55V5.33333H34.45ZM34.45 0H18.55C17.1444 0 15.7963 0.561903 14.8023 1.5621C13.8084 2.56229 13.25 3.91885 13.25 5.33333V29.3333H39.75V5.33333C39.75 3.91885 39.1916 2.56229 38.1977 1.5621C37.2037 0.561903 35.8556 0 34.45 0ZM53 18.6667H45.05V26.6667H53V18.6667ZM7.95 18.6667H0V26.6667H7.95V18.6667ZM47.7 32H5.3V48H10.6V37.3333H42.4V48H47.7V32Z"
-                fill="#ECF5F1" />
+                d="M5.1 18.5749C5.43966 16.1912 6.62796 14.0101 8.44663 12.4322C10.2653 10.8543 12.5922 9.9856 15 9.9856C17.4078 9.9856 19.7347 10.8543 21.5534 12.4322C23.372 14.0101 24.5603 16.1912 24.9 18.5749C24.9261 18.7388 24.9193 18.9063 24.8799 19.0675C24.8406 19.2288 24.7696 19.3806 24.6709 19.5141C24.5723 19.6476 24.4481 19.7601 24.3055 19.8451C24.163 19.9301 24.0049 19.9858 23.8406 20.009C23.6762 20.0323 23.5089 20.0226 23.3484 19.9804C23.1878 19.9383 23.0373 19.8647 22.9055 19.7638C22.7737 19.6628 22.6634 19.5367 22.5809 19.3927C22.4984 19.2486 22.4454 19.0896 22.425 18.9249C22.1703 17.1372 21.279 15.5013 19.915 14.3179C18.551 13.1345 16.8058 12.4829 15 12.4829C13.1942 12.4829 11.449 13.1345 10.085 14.3179C8.72097 15.5013 7.82974 17.1372 7.575 18.9249C7.55461 19.0896 7.50162 19.2486 7.41912 19.3927C7.33663 19.5367 7.22627 19.6628 7.0945 19.7638C6.96274 19.8647 6.81219 19.9383 6.65165 19.9804C6.4911 20.0226 6.32378 20.0323 6.15944 20.009C5.9951 19.9858 5.83704 19.9301 5.69447 19.8451C5.5519 19.7601 5.42768 19.6476 5.32906 19.5141C5.23044 19.3806 5.15939 19.2288 5.12007 19.0675C5.08074 18.9063 5.07392 18.7388 5.1 18.5749ZM5 23.7499C5 23.4184 5.1317 23.1005 5.36612 22.866C5.60054 22.6316 5.91848 22.4999 6.25 22.4999H23.75C24.0815 22.4999 24.3995 22.6316 24.6339 22.866C24.8683 23.1005 25 23.4184 25 23.7499V33.7499C25 34.0814 24.8683 34.3994 24.6339 34.6338C24.3995 34.8682 24.0815 34.9999 23.75 34.9999H6.25C5.91848 34.9999 5.60054 34.8682 5.36612 34.6338C5.1317 34.3994 5 34.0814 5 33.7499V23.7499ZM7.5 24.9999V32.4999H22.5V24.9999H20V26.2499C20 26.5814 19.8683 26.8994 19.6339 27.1338C19.3995 27.3682 19.0815 27.4999 18.75 27.4999C18.4185 27.4999 18.1005 27.3682 17.8661 27.1338C17.6317 26.8994 17.5 26.5814 17.5 26.2499V24.9999H7.5Z"
+                fill="#ECF5F1"
+              />
+              <path
+                d="M10 5.8525V5C10 3.67392 10.5268 2.40215 11.4645 1.46447C12.4021 0.526784 13.6739 0 15 0C16.3261 0 17.5979 0.526784 18.5355 1.46447C19.4732 2.40215 20 3.67392 20 5V5.8525C25.825 7.9125 30 13.47 30 20V33.75C30 35.4076 29.3415 36.9973 28.1694 38.1694C26.9973 39.3415 25.4076 40 23.75 40H6.25C4.5924 40 3.00269 39.3415 1.83058 38.1694C0.658481 36.9973 9.59625e-07 35.4076 9.59625e-07 33.75V20C-0.00110862 16.8972 0.960035 13.8703 2.751 11.3366C4.54197 8.8028 7.07462 6.88678 10 5.8525ZM12.5 5V5.2075C14.1549 4.92777 15.8451 4.92777 17.5 5.2075V5C17.5 4.33696 17.2366 3.70107 16.7678 3.23223C16.2989 2.76339 15.663 2.5 15 2.5C14.337 2.5 13.7011 2.76339 13.2322 3.23223C12.7634 3.70107 12.5 4.33696 12.5 5ZM15 7.5C11.6848 7.5 8.50537 8.81696 6.16117 11.1612C3.81696 13.5054 2.5 16.6848 2.5 20V33.75C2.5 34.7446 2.89509 35.6984 3.59835 36.4017C4.30161 37.1049 5.25544 37.5 6.25 37.5H23.75C24.7446 37.5 25.6984 37.1049 26.4017 36.4017C27.1049 35.6984 27.5 34.7446 27.5 33.75V20C27.5 16.6848 26.183 13.5054 23.8388 11.1612C21.4946 8.81696 18.3152 7.5 15 7.5Z"
+                fill="#ECF5F1"
+              />
             </svg>
-          </figure>
-          <h2 class="loginTilte">
-            Sign in to begin — the time has come to restore the balance.
-          </h2>
-        </div>
-        <form action="" id="loginForm" class="loginForm">
-          <label for="userName">Username</label>
-          <input id="userName" name="userName" placeholder="Type a cool name..." autocomplete="nickname" type="text" />
-          <button class="loginBtn" type="submit">Lets play</button>
-        </form>
-      </div>
-    </section>
-    <!-- Welcome page with menu -->
-    <section id="welcomePage" class="page welcomePage hidden">
-      <header class="welcomeHeader">
-        <div class="welcomeCta">
-          <p class="userName">Welcome: <span class="userNameValue"></span></p>
+            <span id="artifactBadge" class="badge" aria-hidden="true"></span>
+          </button>
+          <!-- Sound-->
+          <button
+            id="toggleSoundBtn"
+            class="toggleSoundBtn"
+            aria-label="toggle sound on/off button"
+          >
+            <!-- Sound off -->
+            <svg
+              id="soundIconInactive"
+              aria-hidden="true"
+              width="40"
+              height="30"
+              viewBox="0 0 40 33"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M30.9738 20.1846L34.658 16.5004M34.658 16.5004L38.3422 12.8162M34.658 16.5004L30.9738 12.8162M34.658 16.5004L38.3422 20.1846"
+                stroke="#ECF5F1"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M1.5 19.9208V13.0792C1.5 12.1021 1.88816 11.165 2.57908 10.4741C3.27001 9.78314 4.2071 9.39498 5.18422 9.39498H10.5263C10.8865 9.39489 11.2388 9.28922 11.5395 9.09103L22.5922 1.80364C22.8699 1.62076 23.1919 1.51646 23.5241 1.50179C23.8563 1.48713 24.1862 1.56265 24.479 1.72035C24.7717 1.87805 25.0163 2.11205 25.1868 2.39752C25.3573 2.68299 25.4474 3.00929 25.4474 3.34181V29.6582C25.4474 29.9907 25.3573 30.317 25.1868 30.6025C25.0163 30.8879 24.7717 31.1219 24.479 31.2796C24.1862 31.4373 23.8563 31.5129 23.5241 31.4982C23.1919 31.4835 22.8699 31.3792 22.5922 31.1964L11.5395 23.909C11.2388 23.7108 10.8865 23.6051 10.5263 23.605H5.18422C4.2071 23.605 3.27001 23.2169 2.57908 22.5259C1.88816 21.835 1.5 20.8979 1.5 19.9208Z"
+                stroke="#ECF5F1"
+                stroke-width="3"
+              />
+            </svg>
+            <!-- Sound on -->
+            <svg
+              id="soundIconActive"
+              aria-hidden="true"
+              class="hidden"
+              width="41"
+              height="30"
+              viewBox="0 0 44 33"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M1.5 19.9208V13.0792C1.5 12.1021 1.88816 11.165 2.57908 10.4741C3.27001 9.78314 4.2071 9.39498 5.18422 9.39498H10.5263C10.8865 9.39489 11.2388 9.28922 11.5395 9.09103L22.5922 1.80364C22.8699 1.62076 23.1919 1.51646 23.5241 1.50179C23.8563 1.48713 24.1862 1.56265 24.479 1.72035C24.7717 1.87805 25.0163 2.11205 25.1868 2.39752C25.3573 2.68299 25.4474 3.00929 25.4474 3.34181V29.6582C25.4474 29.9907 25.3573 30.317 25.1868 30.6025C25.0163 30.8879 24.7717 31.1219 24.479 31.2796C24.1862 31.4373 23.8563 31.5129 23.5241 31.4982C23.1919 31.4835 22.8699 31.3792 22.5922 31.1964L11.5395 23.909C11.2388 23.7108 10.8865 23.6051 10.5263 23.605H5.18422C4.2071 23.605 3.27001 23.2169 2.57908 22.5259C1.88816 21.835 1.5 20.8979 1.5 19.9208Z"
+                stroke="#ECF5F1"
+                stroke-width="3"
+              />
+              <path
+                d="M31.8948 8.2109C31.8948 8.2109 34.658 10.9741 34.658 15.5793C34.658 20.1846 31.8948 22.9478 31.8948 22.9478M37.4212 2.68457C37.4212 2.68457 42.0264 7.28985 42.0264 15.5793C42.0264 23.8688 37.4212 28.4741 37.4212 28.4741"
+                stroke="#ECF5F1"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
           <!-- About button -->
-          <button id="aboutBtnWelcome" class="iconBtn aboutBtn" type="button" aria-label="about page button"
-            data-action="openAbout">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true">
+          <button
+            id="aboutBtn"
+            class="iconBtn aboutBtn"
+            type="button"
+            aria-label="about page button"
+            data-action="openAbout"
+          >
+            <svg
+              width="32"
+              height="32"
+              viewBox="0 0 32 32"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
               <path
                 d="M28.8 0H3.2C2.352 0 1.536 0.336 0.944 0.944C0.336 1.536 0 2.352 0 3.2V22.4C0 23.248 0.336 24.064 0.944 24.656C1.536 25.264 2.352 25.6 3.2 25.6H9.6L16 32L22.4 25.6H28.8C29.648 25.6 30.464 25.264 31.056 24.656C31.648 24.048 32 23.248 32 22.4V3.2C32 2.352 31.664 1.536 31.056 0.944C30.464 0.336 29.648 0 28.8 0ZM3.2 22.4V3.2H28.8V22.4H21.072L16 27.472L10.928 22.4M12.88 6.464C13.744 5.888 14.88 5.6 16.304 5.6C17.808 5.6 19.008 5.936 19.872 6.592C20.736 7.264 21.168 8.16 21.168 9.28C21.168 9.984 20.928 10.608 20.464 11.2C20 11.776 19.392 12.224 18.656 12.56C18.24 12.8 17.968 13.04 17.824 13.312C17.68 13.6 17.6 13.952 17.6 14.4H14.4C14.4 13.6 14.56 13.056 14.864 12.672C15.2 12.288 15.744 11.84 16.576 11.328C16.992 11.104 17.328 10.816 17.6 10.464C17.824 10.128 17.952 9.728 17.952 9.28C17.952 8.8 17.808 8.448 17.52 8.176C17.232 7.888 16.8 7.76 16.304 7.76C15.872 7.76 15.52 7.872 15.2 8.096C14.944 8.32 14.784 8.656 14.784 9.104H11.632C11.552 8 12 7.04 12.88 6.464ZM14.4 19.2V16H17.6V19.2H14.4Z"
-                fill="#ECF5F1" />
+                fill="#ECF5F1"
+              />
             </svg>
           </button>
           <!-- EXIT button -->
-          <button id="exitBtn" class="iconBtn exitBtn" type="button" data-action="openExitDialog"
-            data-exit-mode="welcome" aria-label="logout button">
-            <svg aria-hidden="true" width="28" height="28" viewBox="0 0 25 25" fill="none"
-              xmlns="http://www.w3.org/2000/svg">
+          <button
+            id="exitMenuBtn"
+            class="iconBtn exitMenuBtn"
+            type="button"
+            aria-label="Exit menu"
+            data-action="openExitDialog"
+            data-exit-mode="room"
+          >
+            <svg
+              aria-hidden="true"
+              width="30"
+              height="30"
+              viewBox="0 0 25 25"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <path
                 d="M15.1528 7.51389L13.1944 5.55556L6.25 12.5L13.1944 19.4444L15.1528 17.4861L11.5694 13.8889L25 13.8889V11.1111L11.5694 11.1111L15.1528 7.51389ZM2.77778 25L22.2222 25C22.9589 25 23.6655 24.7073 24.1864 24.1864C24.7073 23.6655 25 22.9589 25 22.2222V16.6667H22.2222V22.2222L2.77778 22.2222L2.77778 2.77778L22.2222 2.77778V8.33333H25V2.77778C25 2.04107 24.7073 1.33453 24.1864 0.813594C23.6655 0.292659 22.9589 9.53674e-07 22.2222 9.53674e-07L2.77778 9.53674e-07C1.25 9.53674e-07 9.53674e-07 1.25 9.53674e-07 2.77778L9.53674e-07 22.2222C9.53674e-07 23.75 1.25 25 2.77778 25Z"
-                fill="#ECF5F1" />
+                fill="#ECF5F1"
+              />
             </svg>
           </button>
         </div>
-      </header>
-      <div class="mainMenu">
-        <button id="woodRoomBtn" class="woodRoomBtn">Wood</button>
-        <button id="fireRoomBtn" class="fireRoomBtn">Fire</button>
-        <button id="earthRoomBtn" class="earthRoomBtn">Earth</button>
-        <button id="metalRoomBtn" class="metalRoomBtn">Metal</button>
-        <button id="waterRoomBtn" class="waterRoomBtn">Water</button>
-        <button id="finalRoomBtn" class="finalRoomBtn">Final</button>
-        <button id="openHighScoreBtn" type="button">Highscore</button>
-        <button id="gameWinBtn" type="button">Game Won</button>
-        <button id="gameOverBtn" class="gameOverRoomBtn">Game Over</button>
-      </div>
-    </section>
+      </nav>
+    </header>
 
-    <!------------------------------------------------------------------->
-    <!---------------------------- Wood room ---------------------------->
-    <!------------------------------------------------------------------->
+    <div id="itemDropdown" class="item-dropdown">
+      <div class="artifact-slot empty"></div>
+      <!--- Ge två klasser för div hållaren-->
+      <div class="artifact-slot empty"></div>
+      <div class="artifact-slot empty"></div>
+      <div class="artifact-slot empty"></div>
+      <div class="artifact-slot empty"></div>
+    </div>
 
-    <section id="room1Wood" class="room1Wood page hidden">
-      <!-- Keypad -->
-      <div class="keypad" role="group" aria-label="Numeric keypad">
-        <button class="key numbKey" type="button" data-key="0">0</button>
-        <button class="key numbKey" type="button" data-key="1">1</button>
-        <button class="key numbKey" type="button" data-key="2">2</button>
-        <button class="key numbKey" type="button" data-key="3">3</button>
-        <button class="key numbKey" type="button" data-key="4">4</button>
-        <button class="key numbKey" type="button" data-key="5">5</button>
-        <button class="key numbKey" type="button" data-key="6">6</button>
-        <button class="key numbKey" type="button" data-key="7">7</button>
-        <button class="key numbKey" type="button" data-key="8">8</button>
-        <button class="key numbKey" type="button" data-key="9">9</button>
-
-        <button class="key keyBackspace" type="button" data-action="back" aria-label="backspace button">
-          <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M26.4 11.5333V14.8667L6.4 14.8667L15.5667 24.0333L13.2 26.4L0 13.2L13.2 -1.91371e-06L15.5667 2.36666L6.4 11.5333L26.4 11.5333Z"
-              fill="#ECF5F1" />
-          </svg>
-        </button>
-      </div>
-      <!-- Input slots -->
-      <div class="slots" aria-label="Input slots">
-        <!-- 6 slots = 1 1 2 3 5 8 -->
-        <div class="slot" data-slot="0" aria-hidden="true"></div>
-        <div class="slot" data-slot="1" aria-hidden="true"></div>
-        <div class="slot" data-slot="2" aria-hidden="true"></div>
-        <div class="slot" data-slot="3" aria-hidden="true"></div>
-        <div class="slot" data-slot="4" aria-hidden="true"></div>
-        <div class="slot" data-slot="5" aria-hidden="true"></div>
-      </div>
-      <!-- In room balance -->
-      <div class="inRoombar" aria-label="Room status">
-        <!-- Levels -->
-        <div class="inRoombarProgress" aria-label="Level progress">
-          <span>Level:</span>
-          <span id="levelText">1/3</span>
-        </div>
-        <!-- Mistakecounter -->
-        <div class="inroomBarMistakes" aria-label="Mistakes">
-          Mistakes: <span id="mistakesText">0</span>
-        </div>
-        <!-- In room balance -->
-        <div class="balance">
-          <span class="blanaceLabel">Balance:</span>
-
-          <div class="balanceBar" role="progressbar" aria-label="Progressbar" aria-valuemin="0" aria-valuemax="100"
-            aria-valuenow="0">
-            <div id="balanceFill" class="balanceFill"></div>
+    <!-- Main content -->
+    <main>
+      <!-- Splash -->
+      <section id="splashPage" class="pageSplash splashPage hidden page">
+        <div class="splashHeading">
+          <h1>The Tempel of five</h1>
+          <div class="symbols">
+            <span>木</span>
+            <span>火</span>
+            <span>土</span>
+            <span>金</span>
+            <span>水</span>
           </div>
         </div>
-      </div>
-      <!-- Fireflies layer (decorative) -->
-      <div class="woodParticles" aria-hidden="true"></div>
-      <!-- Room description -->
-      <div class="roomDesc" id=""></div>
-    </section>
-
-    <!------------------------------------------------------------------->
-    <!---------------------------- Fire Room ---------------------------->
-    <!------------------------------------------------------------------->
-
-    <section id="room2Fire" class="room room2Fire page hidden" aria-label="Fire room">
-      <div class="fireParticles" aria-hidden="true"></div>
-      <!------------- FIRE ROOM UI ------------->
-      <div class="room2FireUi">
-        <!--------------- ELEMENTS --------------->
-        <div class="keypad" role="group" aria-label="Elements">
-          <!-- AIR -->
-          <button type="button" class="key fireKey" data-fire-pick="A" aria-label="Air (A)">
-            <svg class="fireKey__icon" viewBox="0 0 52 43" fill="none" aria-hidden="true" focusable="false"
-              xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M38.9792 11.4789C39.65 10.833 40.4681 10.3603 41.3627 10.1019C42.2573 9.84337 43.2014 9.80684 44.1133 9.99543C45.0252 10.184 45.8773 10.592 46.596 11.1842C47.3147 11.7763 47.8782 12.5347 48.2378 13.3936C48.5974 14.2526 48.7422 15.1863 48.6596 16.1138C48.577 17.0413 48.2697 17.9347 47.764 18.7167C47.2584 19.4987 46.5698 20.1456 45.7578 20.6015C44.9459 21.0574 44.035 21.3085 43.1042 21.333H3"
-                stroke="#FED7AA" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
-              <path
-                d="M20.4167 4.37455C20.9476 3.83304 21.6046 3.43173 22.3288 3.20661C23.053 2.98148 23.8217 2.93957 24.5661 3.08463C25.3104 3.22969 26.0072 3.55719 26.5938 4.03776C27.1805 4.51834 27.6387 5.13698 27.9275 5.83823C28.2162 6.53948 28.3265 7.30142 28.2483 8.05575C28.1701 8.81008 27.906 9.53322 27.4796 10.1604C27.0532 10.7875 26.4779 11.299 25.8051 11.6491C25.1324 11.9992 24.3833 12.1769 23.625 12.1662H3"
-                stroke="#FED7AA" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
-              <path
-                d="M27.2917 38.2914C27.8226 38.8329 28.4796 39.2342 29.2038 39.4593C29.928 39.6845 30.6967 39.7264 31.4411 39.5813C32.1854 39.4362 32.8822 39.1088 33.4688 38.6282C34.0555 38.1476 34.5137 37.529 34.8025 36.8277C35.0912 36.1265 35.2015 35.3645 35.1233 34.6102C35.0451 33.8559 34.781 33.1327 34.3546 32.5056C33.9282 31.8784 33.3529 31.3669 32.6801 31.0168C32.0074 30.6667 31.2583 30.4891 30.5 30.4997H3"
-                stroke="#FED7AA" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-
-            <span class="fireKey__text">A = Air</span>
-          </button>
-
-          <!-- TIMBER -->
-          <button type="button" class="key fireKey" data-fire-pick="T" aria-label="Timber (T)">
-            <svg class="fireKey__icon" viewBox="0 0 44 48" fill="none" aria-hidden="true" focusable="false"
-              xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-              <path
-                d="M7.27979 8.47222C7.27979 10.0562 8.7899 11.5752 11.4779 12.6952C14.1659 13.8152 17.8117 14.4444 21.6131 14.4444C25.4146 14.4444 29.0603 13.8152 31.7483 12.6952C34.4363 11.5752 35.9465 10.0562 35.9465 8.47222C35.9465 6.88829 34.4363 5.36923 31.7483 4.24922C29.0603 3.12921 25.4146 2.5 21.6131 2.5C17.8117 2.5 14.1659 3.12921 11.4779 4.24922C8.7899 5.36923 7.27979 6.88829 7.27979 8.47222Z"
-                stroke="#F2C078" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
-              <path
-                d="M35.9464 8.47217V19.5232C36.6399 19.2091 37.419 19.1383 38.1578 19.3222C38.8965 19.5062 39.5515 19.9341 40.0167 20.5367C40.4819 21.1393 40.7301 21.8813 40.721 22.6425C40.712 23.4037 40.4463 24.1396 39.9669 24.731L39.7352 24.989L35.9464 28.7777V38.3333C35.9464 42.1794 29.8786 45.3208 22.27 45.5H21.6131C13.6963 45.5 7.27974 42.2917 7.27974 38.3333V33.5555L3.49096 29.7667C2.93062 29.2071 2.5847 28.4685 2.51363 27.6797C2.44257 26.891 2.65087 26.1024 3.10215 25.4517C3.55343 24.8009 4.219 24.3294 4.98259 24.1195C5.74618 23.9096 6.55924 23.9747 7.27974 24.3033V8.47217M16.8353 25.1944V28.7777M26.3908 33.5555V35.9444"
-                stroke="#F2C078" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-
-            <span class="fireKey__text">T = timber</span>
-          </button>
-
-          <!-- FLAME -->
-          <button type="button" class="key fireKey" data-fire-pick="F" aria-label="Flame (F)">
-            <svg class="fireKey__icon" viewBox="0 0 39 50" fill="none" aria-hidden="true" focusable="false"
-              xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M11.0208 29.3542C12.5403 29.3542 13.9975 28.7506 15.072 27.6761C16.1464 26.6017 16.75 25.1445 16.75 23.625C16.75 20.4625 15.6042 19.0417 14.4583 16.75C12.0017 11.839 13.945 7.45958 19.0417 3C20.1875 8.72917 23.625 14.2292 28.2083 17.8958C32.7917 21.5625 35.0833 25.9167 35.0833 30.5C35.0833 32.6066 34.6684 34.6926 33.8622 36.6389C33.0561 38.5851 31.8744 40.3536 30.3848 41.8432C28.8952 43.3328 27.1268 44.5144 25.1805 45.3206C23.2343 46.1267 21.1483 46.5417 19.0417 46.5417C16.935 46.5417 14.849 46.1267 12.9028 45.3206C10.9565 44.5144 9.1881 43.3328 7.69849 41.8432C6.20889 40.3536 5.02727 38.5851 4.2211 36.6389C3.41493 34.6926 3 32.6066 3 30.5C3 27.8577 3.99229 25.2429 5.29167 23.625C5.29167 25.1445 5.89527 26.6017 6.9697 27.6761C8.04413 28.7506 9.50136 29.3542 11.0208 29.3542Z"
-                stroke="#F97316" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-
-            <span class="fireKey__text">F = flame</span>
-          </button>
-
-          <!-- EMBER -->
-          <button type="button" class="key fireKey" data-fire-pick="E" aria-label="Ember (E)">
-            <svg class="fireKey__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true" focusable="false"
-              xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M23.625 3L19.2433 16.3215C19.0191 17.0032 18.6379 17.6228 18.1304 18.1304C17.6228 18.6379 17.0032 19.0191 16.3215 19.2433L3 23.625L16.3215 28.0067C17.0032 28.2309 17.6228 28.6121 18.1304 29.1196C18.6379 29.6272 19.0191 30.2468 19.2433 30.9285L23.625 44.25L28.0067 30.9285C28.2309 30.2468 28.6121 29.6272 29.1196 29.1196C29.6272 28.6121 30.2468 28.2309 30.9285 28.0067L44.25 23.625L30.9285 19.2433C30.2468 19.0191 29.6272 18.6379 29.1196 18.1304C28.6121 17.6228 28.2309 17.0032 28.0067 16.3215L23.625 3Z"
-                stroke="#DC2626" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-
-            <span class="fireKey__text">E = ember</span>
-          </button>
-
-          <!-- STONE -->
-          <button type="button" class="key fireKey" data-fire-pick="S" aria-label="Stone (S)">
-            <svg class="fireKey__icon" viewBox="0 0 43 40" fill="none" aria-hidden="true" focusable="false"
-              xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M12.6716 6.21421L2.21719 17.1454C0.793857 18.6324 0.000169875 20.6052 0 22.6563V34.6651C0 36.08 0.566293 37.437 1.5743 38.4375C2.58231 39.4379 3.94946 40 5.375 40H25.7624C24.2547 39.5732 22.6717 39.1037 21.0915 38.6049C17.3774 37.4313 13.6041 36.0709 10.7366 34.6491C9.31219 33.9422 8.041 33.1847 7.10844 32.3871C6.235 31.6322 5.375 30.6053 5.375 29.3302C5.375 26.7055 7.44706 25.2277 9.6105 24.3608C11.8223 23.4725 14.7114 22.9684 17.4741 22.5523L19.1565 22.3015C21.3737 21.9788 23.4458 21.6747 25.1389 21.2452C26.1924 20.9785 26.995 20.686 27.5469 20.3676C28.0978 20.0476 28.2268 19.7968 28.2591 19.6714C28.2967 19.5221 28.2967 19.2527 27.9312 18.7565C27.5549 18.2461 26.9117 17.6593 26.0016 16.996C24.8352 16.1451 23.4404 15.3048 21.9542 14.4086C21.0834 13.8804 20.1804 13.3363 19.2694 12.7548C16.9366 11.2743 14.534 9.55118 13.3031 7.55327C13.0412 7.13262 12.8293 6.68328 12.6716 6.21421ZM36.4344 40L36.2544 39.96C36.0376 39.9066 35.7276 39.8337 35.3245 39.7413C30.8127 38.662 26.3382 37.4343 21.9085 36.0602C18.232 34.8999 14.6146 33.5928 11.9379 32.2644C10.5941 31.5976 9.55406 30.9574 8.86606 30.3705C8.12969 29.733 8.0625 29.3863 8.0625 29.3302C8.0625 28.4393 8.68869 27.6071 10.6156 26.8335C12.4969 26.0786 15.0849 25.6118 17.8799 25.1877C18.4049 25.1077 18.937 25.0294 19.4763 24.953C21.7042 24.6275 23.9618 24.2968 25.8027 23.8326C26.9476 23.5392 28.0333 23.1765 28.9041 22.6696C29.7748 22.1628 30.5891 21.4213 30.8659 20.317C31.1696 19.1166 30.7316 18.039 30.1027 17.1827C29.4819 16.3398 28.5735 15.5636 27.5926 14.8487C26.3429 13.9364 24.7599 12.9788 23.1904 12.0292C22.3596 11.5332 21.5353 11.0264 20.7179 10.5088C18.3476 9.00169 16.4636 7.56927 15.5929 6.16086C15.1871 5.49934 15.0554 4.92584 15.1306 4.38702C15.1871 3.98423 15.3752 3.49876 15.8132 2.92793L16.6276 2.07701C17.2553 1.42083 18.0109 0.898289 18.8486 0.541216C19.6863 0.184142 20.5884 0 21.5 0C22.4116 0 23.3137 0.184142 24.1514 0.541216C24.9891 0.898289 25.7447 1.42083 26.3724 2.07701L40.7855 17.148C42.2066 18.6342 42.9992 20.6047 43 22.6536V34.6651C43 36.08 42.4337 37.437 41.4257 38.4375C40.4177 39.4379 39.0505 40 37.625 40H36.4344Z"
-                fill="#C6C1B8" />
-            </svg>
-
-            <span class="fireKey__text">S = stone</span>
-          </button>
-
-          <!-- WATER -->
-          <button type="button" class="key fireKey" data-fire-pick="W" aria-label="Water (W)">
-            <svg class="fireKey__icon" viewBox="0 0 43 51" fill="none" aria-hidden="true" focusable="false"
-              xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M21.4884 3L34.5772 16.1841C37.1657 18.7897 38.9288 22.1101 39.6436 25.7253C40.3584 29.3404 39.9928 33.0878 38.5929 36.4936C37.1931 39.8994 34.8219 42.8105 31.7793 44.8586C28.7367 46.9068 25.1595 48 21.5 48C17.8405 48 14.2633 46.9068 11.2207 44.8586C8.17812 42.8105 5.80694 39.8994 4.40708 36.4936C3.00721 33.0878 2.64156 29.3404 3.35637 25.7253C4.07118 22.1101 5.83434 18.7897 8.42282 16.1841L21.4884 3Z"
-                stroke="#8ED4FF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-
-            <span class="fireKey__text">W = water</span>
-          </button>
-        </div>
-
-        <!---------------------------------------------->
-        <!--------------- TS SLOTS BELOW --------------->
-        <!---------------------------------------------->
-
-        <div class="slots fireSlots" id="fireSlots" role="group" aria-label="Sequence slots"></div>
-
-        <!--------------- PROGRESSBAR --------------->
-
-        <div class="inRoombar fireInRoombar" aria-label="Progress">
-          <!-- Level (TS uppdaterar 1 / 4) -->
-          <div class="progressItem">
-            <span class="progressLabel">Level:</span>
-            <span class="progressValue" id="fireLevelValue">1 / 4</span>
-          </div>
-
-          <!-- Mistakes -->
-          <div class="progressItem">
-            <span class="progressLabel">Mistakes:</span>
-            <span class="progressValue" id="fireMistakes">0</span>
-          </div>
-
-          <!-- Balance bar (TS control width + aria-valuenow) -->
-          <div class="balance">
-            <span class="progressLabel">Balance</span>
-
-            <div class="balanceBar" role="progressbar" aria-label="Balance" aria-valuemin="0" aria-valuemax="100"
-              aria-valuenow="0">
-              <div class="balanceFill" id="fireBalanceFill"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!---------------------------------------------->
-      <!---------------RoomDesc below ---------------->
-      <!---------------------------------------------->
-
-      <div class="roomDesc" id="fireRoomDesc"></div>
-    </section>
-
-    <!------------------------------------------------------------------->
-    <!--------------------------- Earth Room ---------------------------->
-    <!------------------------------------------------------------------->
-
-    <section id="room3Earth" class="room3Earth page hidden">
-      <div id="gameBoard" class="gameBoard">
-        <div id="gameDiv" class="gameDiv"></div>
-      </div>
-      <div id="roomDesc" class="roomDesc"></div>
-    </section>
-
-    <!------------------------------------------------------------------->
-    <!--------------------------- Metal Room ---------------------------->
-    <!------------------------------------------------------------------->
-    <section id="room4Metal" class="room4Metal hidden page">
-      <div class="metalContainer">
-        <!-- Färgsignal -->
-        <div id="colorSignal" class="colorSignal"></div>
-
-        <!-- Meddelande rätt/fel -->
-        <div id="feedback" class="feedback"></div>
-
-        <!-- Slots för färger -->
-        <div class="colorSlots">
-          <div class="colorSlot1"></div>
-          <div class="colorSlot2"></div>
-          <div class="colorSlot3"></div>
-          <div class="colorSlot4"></div>
-          <div class="colorSlot5"></div>
-          <div class="colorSlot6"></div>
-        </div>
-
-        <!-- Sekvens och misstagsräknare -->
-        <div class="inRoombar" aria-label="Room status">
-          <!-- Sekvens -->
-          <div class="inRoombarProgress" aria-label="Level progress">
-            <span>Level:</span>
-            <span id="levelText1">1/3</span>
-          </div>
-          <!-- Misstag -->
-          <div class="inroomBarMistakes" aria-label="Mistakes">
-            <span>Mistakes:</span>
-            <span id="mistakesText1">0</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Innehåll från JSON-->
-      <div class="roomDesc"></div>
-    </section>
-
-    <!------------------------------------------------------------------->
-    <!--------------------------- Water Room ---------------------------->
-    <!------------------------------------------------------------------->
-
-    <section id="room5Water" class="room5Water page hidden">
-      <div class="w-container">
-        <!-- Water room puzzle -->
-        <!-- Pipe grid -->
-        <div id="w-pipe-grid" class="w-pipe-grid" role="grid"
-          aria-label="Pipe puzzle grid — navigate with arrow keys, rotate with Enter or Space"></div>
-
-        <!-- Status message -->
-        <p id="w-status" class="w-status" aria-live="polite" aria-atomic="true"></p>
-
-        <!-- Action buttons + warning in same container -->
-        <div class="w-btns-warning">
-          <div class="w-btns">
-            <button id="w-reset-btn" class="w-reset-btn" type="button">
-              Reset Pipes
-            </button>
-            <button id="w-check-btn" class="w-check-btn" type="button">
-              Check Flow
-            </button>
-          </div>
-          <!-- Time warning -->
-          <div id="w-time-warning" class="w-time-warning" aria-live="polite" aria-atomic="true">
-            ⚠️ The temple grows impatient — solve quickly or the artifact may
-            be impure.
-          </div>
-        </div>
-      </div>
-
-      <!-- ARIA live region for screen readers -->
-      <div id="w-aria-live" class="visuallyHidden" aria-live="assertive" aria-atomic="true"></div>
-
-      <!-- Room description (injected from JSON) -->
-      <div class="roomDesc" id=""></div>
-    </section>
-
-    <!------------------------------------------------------------------->
-    <!--------------------------- Final Room ---------------------------->
-    <!------------------------------------------------------------------->
-
-    <section id="finalRoom" class="finalRoom page hidden">
-      <div class="finalContainer">
-        <div class="finalSlots">
-          <div class="slot"></div>
-          <div class="slot"></div>
-          <div class="slot"></div>
-          <div class="slot"></div>
-          <div class="slot"></div>
-        </div>
-      </div>
-
-      <button id="validateBtn" class="validateBtn">Validate</button>
-      <div id="finalFeedback" class="finalFeedback"></div>
-      <div class="roomDesc" id=""></div>
-    </section>
-
-    <!------------------------------------------------------------------->
-    <!----------------------- Game Win Room ----------------------------->
-    <!------------------------------------------------------------------->
-
-    <section id="gameWinRoom" class="gameWinRoom page hidden">
-      <div class="winFx" aria-hidden="true">
-        <div class="winFx__stars"></div>
-        <div class="winFx__sparkles"></div>
-      </div>
-      <div class="conclusionHeading">
-        <h2>Balance Restored</h2>
-        <p>Wood, Fire, Earth, Metal, and Water align — the cycle holds</p>
-      </div>
-      <div class="ctaBtnsConc">
-        <button type="button" data-action="reset" class="resetBtn">
-          Reset
-        </button>
-        <button type="button" data-action="highscore" class="highScoreBtn">
-          High Score
-        </button>
-        <button type="button" data-action="openAbout" class="gameAboutBtn">
-          About
-        </button>
-      </div>
-    </section>
-
-    <!------------------------------------------------------------------->
-    <!----------------------- Game Over Room ---------------------------->
-    <!------------------------------------------------------------------->
-
-    <section id="gameOverRoom" class="gameOverRoom page hidden">
-      <div class="overFx" aria-hidden="true">
-        <div class="overFx__embers"></div>
-        <div class="overFx__glow"></div>
-      </div>
-
-      <div class="conclusionHeading">
-        <h2>Balance distorted</h2>
-        <p>
-          The cycle breaks. Balance remains unrestored. The Water and metall
-          elements are corrupted
-        </p>
-      </div>
-      <!-- Replay buttons for each room -->
-      <div class="gameOverActions" aria-label="Replay chambers and validation">
-        <button type="button" class="replayChamberBtn" data-room-id="wood" aria-label="Replay Wood Chamber">
-          <span class="buttonLabel">REPLAY WOOD CHAMBER</span>
-        </button>
-
-        <button type="button" class="replayChamberBtn" data-room-id="fire" aria-label="Replay Fire Chamber">
-          <span class="buttonLabel">REPLAY FIRE CHAMBER</span>
-        </button>
-
-        <button type="button" class="replayChamberBtn" data-room-id="earth" aria-label="Replay Earth Chamber">
-          <span class="buttonLabel">REPLAY EARTH CHAMBER</span>
-        </button>
-
-        <button type="button" class="replayChamberBtn" data-room-id="metal" aria-label="Replay Metal Chamber">
-          <span class="buttonLabel">REPLAY METAL CHAMBER</span>
-        </button>
-
-        <button type="button" class="replayChamberBtn" data-room-id="water" aria-label="Replay Water Chamber">
-          <span class="buttonLabel">REPLAY WATER CHAMBER</span>
-        </button>
-
-        <button type="button" id="retryValidationBtn" class="validationReplayBtn" aria-label="Return to validation"
-          disabled>
-          <span class="buttonLabel">RETURN TO VALIDATION</span>
-        </button>
-      </div>
-
-      <div class="ctaBtnsConc">
-        <button type="button" data-action="reset" class="resetBtn">
-          Reset
-        </button>
-        <button type="button" data-action="highscore" class="highScoreBtn">
-          High Score
-        </button>
-        <button type="button" data-action="openAbout" class="gameAboutBtn">
-          About
-        </button>
-      </div>
-    </section>
-
-    <!------------------------------------------------------------------->
-    <!----------------------- HighScore Room ---------------------------->
-    <!------------------------------------------------------------------->
-
-    <section id="highscoreRoom" class="highscoreRoom page hidden" aria-labelledby="highscoreTitle">
-      <!-- Title -->
-      <h2 id="highscoreTitle" class="highscoreTitle">THE TEMPLE OF FIVE</h2>
-
-      <!-- Glass plate -->
-      <div class="highscorePlate" aria-label="Highscore panel">
-        <h3 class="highscoreHeading">HIGHSCORE</h3>
-
-        <!-- Placeholder list for now -->
-        <ol id="highscoreList" class="highscoreList"></ol>
-      </div>
-
-      <!-- Actions -->
-      <div class="highscoreActions">
-        <button id="shareResultBtn" class="shareBtn" type="button">
-          Share result
-        </button>
-
-        <button id="backToMainMenuBtn" class="backBtn" type="button">
-          Back to main menu
-        </button>
-      </div>
-
-      <!-- Secret function for reseting highscore -->
-      <button id="resetHighscoreBtn" class="resetHighscoreBtn" type="button" hidden>
-        Reset leaderboard
-      </button>
-
-      <!-- Share modal -->
-      <div id="shareModal" class="shareModal hidden" role="dialog" aria-modal="true" aria-labelledby="shareModalTitle">
-        <div class="sharePlate">
-          <div class="shareHeader">
-            <h3 id="shareModalTitle">Share your result</h3>
-
-            <button id="shareModalClose" class="modalClose" type="button"
-              aria-label="Close share dialog and return to highscore">
-              <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+      </section>
+      <!-- Login page -->
+      <section id="loginPage" class="loginPage page hidden">
+        <div class="loginPlate">
+          <div class="loginCta">
+            <figure>
+              <svg
+                width="53"
+                height="48"
+                viewBox="0 0 53 48"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <path
-                  d="M26.4 11.5333V14.8667L6.4 14.8667L15.5667 24.0333L13.2 26.4L0 13.2L13.2 -1.91371e-06L15.5667 2.36666L6.4 11.5333L26.4 11.5333Z"
-                  fill="#ECF5F1"></path>
+                  d="M34.45 5.33333V24H18.55V5.33333H34.45ZM34.45 0H18.55C17.1444 0 15.7963 0.561903 14.8023 1.5621C13.8084 2.56229 13.25 3.91885 13.25 5.33333V29.3333H39.75V5.33333C39.75 3.91885 39.1916 2.56229 38.1977 1.5621C37.2037 0.561903 35.8556 0 34.45 0ZM53 18.6667H45.05V26.6667H53V18.6667ZM7.95 18.6667H0V26.6667H7.95V18.6667ZM47.7 32H5.3V48H10.6V37.3333H42.4V48H47.7V32Z"
+                  fill="#ECF5F1"
+                />
+              </svg>
+            </figure>
+            <h2 class="loginTilte">
+              Sign in to begin — the time has come to restore the balance.
+            </h2>
+          </div>
+          <form action="" id="loginForm" class="loginForm">
+            <label for="userName">Username</label>
+            <input
+              id="userName"
+              name="userName"
+              placeholder="Type a cool name..."
+              autocomplete="nickname"
+              type="text"
+            />
+            <button class="loginBtn" type="submit">Lets play</button>
+          </form>
+        </div>
+      </section>
+      <!-- Welcome page with menu -->
+      <section id="welcomePage" class="page welcomePage hidden">
+        <header class="welcomeHeader">
+          <div class="welcomeCta">
+            <p class="userName">Welcome: <span class="userNameValue"></span></p>
+            <!-- About button -->
+            <button
+              id="aboutBtnWelcome"
+              class="iconBtn aboutBtn"
+              type="button"
+              aria-label="about page button"
+              data-action="openAbout"
+            >
+              <svg
+                width="32"
+                height="32"
+                viewBox="0 0 32 32"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  d="M28.8 0H3.2C2.352 0 1.536 0.336 0.944 0.944C0.336 1.536 0 2.352 0 3.2V22.4C0 23.248 0.336 24.064 0.944 24.656C1.536 25.264 2.352 25.6 3.2 25.6H9.6L16 32L22.4 25.6H28.8C29.648 25.6 30.464 25.264 31.056 24.656C31.648 24.048 32 23.248 32 22.4V3.2C32 2.352 31.664 1.536 31.056 0.944C30.464 0.336 29.648 0 28.8 0ZM3.2 22.4V3.2H28.8V22.4H21.072L16 27.472L10.928 22.4M12.88 6.464C13.744 5.888 14.88 5.6 16.304 5.6C17.808 5.6 19.008 5.936 19.872 6.592C20.736 7.264 21.168 8.16 21.168 9.28C21.168 9.984 20.928 10.608 20.464 11.2C20 11.776 19.392 12.224 18.656 12.56C18.24 12.8 17.968 13.04 17.824 13.312C17.68 13.6 17.6 13.952 17.6 14.4H14.4C14.4 13.6 14.56 13.056 14.864 12.672C15.2 12.288 15.744 11.84 16.576 11.328C16.992 11.104 17.328 10.816 17.6 10.464C17.824 10.128 17.952 9.728 17.952 9.28C17.952 8.8 17.808 8.448 17.52 8.176C17.232 7.888 16.8 7.76 16.304 7.76C15.872 7.76 15.52 7.872 15.2 8.096C14.944 8.32 14.784 8.656 14.784 9.104H11.632C11.552 8 12 7.04 12.88 6.464ZM14.4 19.2V16H17.6V19.2H14.4Z"
+                  fill="#ECF5F1"
+                />
+              </svg>
+            </button>
+            <!-- EXIT button -->
+            <button
+              id="exitBtn"
+              class="iconBtn exitBtn"
+              type="button"
+              data-action="openExitDialog"
+              data-exit-mode="welcome"
+              aria-label="logout button"
+            >
+              <svg
+                aria-hidden="true"
+                width="28"
+                height="28"
+                viewBox="0 0 25 25"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M15.1528 7.51389L13.1944 5.55556L6.25 12.5L13.1944 19.4444L15.1528 17.4861L11.5694 13.8889L25 13.8889V11.1111L11.5694 11.1111L15.1528 7.51389ZM2.77778 25L22.2222 25C22.9589 25 23.6655 24.7073 24.1864 24.1864C24.7073 23.6655 25 22.9589 25 22.2222V16.6667H22.2222V22.2222L2.77778 22.2222L2.77778 2.77778L22.2222 2.77778V8.33333H25V2.77778C25 2.04107 24.7073 1.33453 24.1864 0.813594C23.6655 0.292659 22.9589 9.53674e-07 22.2222 9.53674e-07L2.77778 9.53674e-07C1.25 9.53674e-07 9.53674e-07 1.25 9.53674e-07 2.77778L9.53674e-07 22.2222C9.53674e-07 23.75 1.25 25 2.77778 25Z"
+                  fill="#ECF5F1"
+                />
               </svg>
             </button>
           </div>
-
-          <p id="sharePreview" class="sharePreview"></p>
-
-          <div class="shareActions">
-            <button id="shareCopyBtn" class="shareBtn" type="button">
-              Copy caption
-            </button>
-
-            <button id="shareFacebookBtn" class="shareBtn" type="button">
-              Facebook
-            </button>
-
-            <button id="shareLinkedInBtn" class="shareBtn" type="button">
-              LinkedIn
-            </button>
-          </div>
-
-          <p id="shareStatus" class="shareStatus" aria-live="polite"></p>
+        </header>
+        <div class="mainMenu">
+          <button id="woodRoomBtn" class="woodRoomBtn">Start new run</button>
+          <button id="fireRoomBtn" class="fireRoomBtn">Fire</button>
+          <button id="earthRoomBtn" class="earthRoomBtn">Earth</button>
+          <button id="metalRoomBtn" class="metalRoomBtn">Metal</button>
+          <button id="waterRoomBtn" class="waterRoomBtn">Water</button>
+          <button id="finalRoomBtn" class="finalRoomBtn">Final</button>
+          <button id="openHighScoreBtn" type="button">Highscore</button>
+          <button id="gameWinBtn" type="button">Game Won</button>
+          <button id="gameOverBtn" class="gameOverRoomBtn">Game Over</button>
         </div>
-      </div>
-    </section>
-  </main>
+      </section>
 
-  <!------------------------------------------------------------------->
-  <!------------------------- EXITdialog ------------------------------>
-  <!------------------------------------------------------------------->
+      <!------------------------------------------------------------------->
+      <!---------------------------- Wood room ---------------------------->
+      <!------------------------------------------------------------------->
 
-  <dialog class="exitDialog" id="exitDialog" aria-labelledby="exitTitle">
-    <h2 id="exitTitle" class="visuallyHidden">Exit</h2>
+      <section id="room1Wood" class="room1Wood page hidden">
+        <!-- Keypad -->
+        <div class="keypad" role="group" aria-label="Numeric keypad">
+          <button class="key numbKey" type="button" data-key="0">0</button>
+          <button class="key numbKey" type="button" data-key="1">1</button>
+          <button class="key numbKey" type="button" data-key="2">2</button>
+          <button class="key numbKey" type="button" data-key="3">3</button>
+          <button class="key numbKey" type="button" data-key="4">4</button>
+          <button class="key numbKey" type="button" data-key="5">5</button>
+          <button class="key numbKey" type="button" data-key="6">6</button>
+          <button class="key numbKey" type="button" data-key="7">7</button>
+          <button class="key numbKey" type="button" data-key="8">8</button>
+          <button class="key numbKey" type="button" data-key="9">9</button>
 
-    <div class="exitDialogInner">
-      <p class="exitDialogText">Are you sure you want to log out?</p>
-
-      <div class="exitDialogBtns">
-        <button type="button" class="btn" data-action="leaveRoom">
-          Leave room
-        </button>
-        <button type="button" class="btn" data-action="logout">
-          Log out
-        </button>
-        <button type="button" class="btn btnGhost" data-action="closeExitDialog">
-          Cancel
-        </button>
-      </div>
-    </div>
-  </dialog>
-
-  <!------------------------------------------------------------------->
-  <!------------------------- About dialog ---------------------------->
-  <!------------------------------------------------------------------->
-
-  <dialog id="aboutDialog" class="aboutDialog" aria-labelledby="dialogTitle">
-    <button type="button" class="modalClose" id="closeAbout" aria-label="Close and go back to landningpage">
-      <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-          d="M26.4 11.5333V14.8667L6.4 14.8667L15.5667 24.0333L13.2 26.4L0 13.2L13.2 -1.91371e-06L15.5667 2.36666L6.4 11.5333L26.4 11.5333Z"
-          fill="#ECF5F1" />
-      </svg>
-    </button>
-    <div class="dialogInner">
-      <h2 id="dialogTitle" class="modalTitle visuallyHidden">
-        The Temple of Five About page
-      </h2>
-
-      <!-- Tabs -->
-      <div class="tabs" data-tabs>
-        <div class="tabsList" role="tablist" aria-label="About navigation">
-          <button type="button" class="tabsTab currentTab" role="tab" id="tabStory" aria-selected="true"
-            aria-controls="panelStory" tabindex="0">
-            Story
-          </button>
-
-          <button type="button" class="tabsTab" role="tab" id="tabFeatures" aria-selected="false"
-            aria-controls="panelFeatures" tabindex="-1">
-            Features
-          </button>
-
-          <button type="button" class="tabsTab" role="tab" id="tabControls" aria-selected="false"
-            aria-controls="panelControls" tabindex="-1">
-            Controls
-          </button>
-
-          <button type="button" class="tabsTab" role="tab" id="tabDev" aria-selected="false" aria-controls="panelDev"
-            tabindex="-1">
-            Dev
+          <button
+            class="key keyBackspace"
+            type="button"
+            data-action="back"
+            aria-label="backspace button"
+          >
+            <svg
+              width="27"
+              height="27"
+              viewBox="0 0 27 27"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M26.4 11.5333V14.8667L6.4 14.8667L15.5667 24.0333L13.2 26.4L0 13.2L13.2 -1.91371e-06L15.5667 2.36666L6.4 11.5333L26.4 11.5333Z"
+                fill="#ECF5F1"
+              />
+            </svg>
           </button>
         </div>
-
-        <!-- Panels -->
-        <!-- Story -->
-        <section class="tabsPanel" role="tabpanel" id="panelStory" aria-labelledby="tabStory">
-          <div class="tabsPannelScroll">
-            <h3>The Temple of Five — Wu Xing Trials</h3>
-            <p>
-              In a future where cities collapsed and the jungle reclaimed the
-              world, one structure still breathes with dormant power. The
-              Temple of Five Elements holds ancient survival tech — sealed
-              behind trials of Wood, Fire, Earth, Metal, and Water.
-            </p>
-            <p>
-              These are the Wu Xing, the Five Phases: not just elements, but
-              forces in motion — growth, transformation, stability, structure,
-              and flow. To restore balance, you must pass each chamber and
-              retrieve the tool bound to its phase.
-            </p>
-            <p>
-              But the temple doesn't reward effort alone. It rewards timing.
-              Move too slowly, and a mechanism misaligns. A seal cracks. An
-              element comes out… imperfect. Collect the true five, complete
-              the cycle, and the final altar will open. Fail, and the temple
-              will demand you return to the chamber that broke the balance.
-            </p>
+        <!-- Input slots -->
+        <div class="slots" aria-label="Input slots">
+          <!-- 6 slots = 1 1 2 3 5 8 -->
+          <div class="slot" data-slot="0" aria-hidden="true"></div>
+          <div class="slot" data-slot="1" aria-hidden="true"></div>
+          <div class="slot" data-slot="2" aria-hidden="true"></div>
+          <div class="slot" data-slot="3" aria-hidden="true"></div>
+          <div class="slot" data-slot="4" aria-hidden="true"></div>
+          <div class="slot" data-slot="5" aria-hidden="true"></div>
+        </div>
+        <!-- In room balance -->
+        <div class="inRoombar" aria-label="Room status">
+          <!-- Levels -->
+          <div class="inRoombarProgress" aria-label="Level progress">
+            <span>Level:</span>
+            <span id="levelText">1/3</span>
           </div>
-
-          <p>Restore the balance — or leave with nothing.</p>
-        </section>
-
-        <!-- Features -->
-        <section class="tabsPanel" role="tabpanel" id="panelFeatures" aria-labelledby="tabFeatures" hidden>
-          <div class="tabsPannelScroll">
-            <h3>Game Features</h3>
-
-            <h4>Gameplay</h4>
-            <p>
-              Five unique puzzle rooms inspired by Wu Xing — the five Chinese
-              elements: Wood, Fire, Earth, Metal and Water. Each room has its
-              own mechanics and challenge. Collect one artifact per room — the
-              correct artifacts unlock the final altar.
-            </p>
-
-            <h4>Scoring &amp; Timers</h4>
-            <p>
-              Score is based on how fast you solve each room — the faster, the
-              higher. A per-room timer and a total timer track your full run.
-            </p>
-
-            <h4>Progression</h4>
-            <p>
-              A progress bar shows how many rooms you've completed. Progress
-              is saved automatically — close the browser and pick up where you
-              left off. Wrong artifact? Replay just that room without losing
-              progress in the others.
-            </p>
-
-            <h4>Accessibility</h4>
-            <p>
-              Fully keyboard navigable throughout the entire game. Screen
-              reader support with ARIA labels and live regions. Focus
-              management between all interactive elements.
-            </p>
-
-            <h4>Sound &amp; Music</h4>
-            <p>
-              Immersive background music and sound effects enhance the
-              atmosphere in each room. In accordance with game rules, audio is
-              set to off by default to ensure a controlled start. Sound can be
-              toggled on or off at any time.
-            </p>
+          <!-- Mistakecounter -->
+          <div class="inroomBarMistakes" aria-label="Mistakes">
+            Mistakes: <span id="mistakesText">0</span>
           </div>
-        </section>
+          <!-- In room balance -->
+          <div class="balance">
+            <span class="blanaceLabel">Balance:</span>
 
-        <!-- Controls -->
-        <section class="tabsPanel panelControls" role="tabpanel" id="panelControls" aria-labelledby="Controls" hidden>
-          <div class="tabsPannelScroll">
-            <h3>Temple Key Commands</h3>
-
-            <div class="controlsGrid">
-              <article class="controlsCard">
-                <h4>1: Wood Chamber</h4>
-                <p>
-                  <kbd>← →</kbd> Navigate between number keys<br />
-                  <kbd>Enter</kbd> to use the focused number key<br />
-                  After 6 inputs, your sequence is validated automatically.
-                </p>
-              </article>
-
-              <article class="controlsCard">
-                <h4>2: Fire Chamber</h4>
-                <p>
-                  <kbd>← →</kbd> Move between element keys<br />
-                  <kbd>Enter</kbd> or <kbd>Space</kbd> to place the focused element <br />
-                  <kbd>Backspace</kbd> Remove the last element <br />
-                  <kbd>A T F E S W</kbd> Quick input using keyboard letters
-                </p>
-              </article>
-
-              <article class="controlsCard">
-                <h4>3: Earth Chamber</h4>
-                <p>Your text here</p>
-              </article>
-
-              <article class="controlsCard">
-                <h4>4: Metal Chamber</h4>
-                <p>
-                  <kbd>← →</kbd> Navigate between slots
-                  <br />
-                  <kbd>↑ ↓ </kbd> Change the color of the slot
-                  <br />
-                  <kbd>Enter</kbd> to validate the slots
-                  <br />
-                </p>
-              </article>
-
-              <article class="controlsCard">
-                <h4>5: Water Chamber</h4>
-                <p>
-                  <kbd>↑ ↓ ← →</kbd> Navigate between pipe segments<br />
-                  <kbd>Enter</kbd> / <kbd>Space</kbd> Rotate the focused
-                  pipe<br />
-                  <kbd>R</kbd> Reset all pipes to a new scrambled state<br />
-                  Use the <strong>Check Flow</strong> button to test your
-                  solution, or <strong>Reset Pipes</strong> to start over.
-                </p>
-              </article>
-
-              <article class="controlsCard">
-                <h4>6: Altar Chamber</h4>
-                <p>
-                  <kbd>← →</kbd> Move between slots<br />
-                  <kbd>↑ ↓</kbd> Change the artifact in the selected slot<br />
-                  <kbd>Enter</kbd> to validate your selection (or use the Validate button)<br />
-                  All slots must be filled to validate.<br />
-                </p>
-              </article>
+            <div
+              class="balanceBar"
+              role="progressbar"
+              aria-label="Progressbar"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-valuenow="0"
+            >
+              <div id="balanceFill" class="balanceFill"></div>
             </div>
           </div>
-        </section>
+        </div>
+        <!-- Fireflies layer (decorative) -->
+        <div class="woodParticles" aria-hidden="true"></div>
+        <!-- Room description -->
+        <div class="roomDesc" id=""></div>
+      </section>
 
-        <!-- Dev -->
-        <section class="tabsPanel panelDev" role="tabpanel" id="panelDev" aria-labelledby="tabDev" hidden>
-          <div class="tabsPannelScroll">
-            <div class="controlItem">
-              <h3>About Us</h3>
+      <!------------------------------------------------------------------->
+      <!---------------------------- Fire Room ---------------------------->
+      <!------------------------------------------------------------------->
+
+      <section
+        id="room2Fire"
+        class="room room2Fire page hidden"
+        aria-label="Fire room"
+      >
+        <div class="fireParticles" aria-hidden="true"></div>
+        <!------------- FIRE ROOM UI ------------->
+        <div class="room2FireUi">
+          <!--------------- ELEMENTS --------------->
+          <div class="keypad" role="group" aria-label="Elements">
+            <!-- AIR -->
+            <button
+              type="button"
+              class="key fireKey"
+              data-fire-pick="A"
+              aria-label="Air (A)"
+            >
+              <svg
+                class="fireKey__icon"
+                viewBox="0 0 52 43"
+                fill="none"
+                aria-hidden="true"
+                focusable="false"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M38.9792 11.4789C39.65 10.833 40.4681 10.3603 41.3627 10.1019C42.2573 9.84337 43.2014 9.80684 44.1133 9.99543C45.0252 10.184 45.8773 10.592 46.596 11.1842C47.3147 11.7763 47.8782 12.5347 48.2378 13.3936C48.5974 14.2526 48.7422 15.1863 48.6596 16.1138C48.577 17.0413 48.2697 17.9347 47.764 18.7167C47.2584 19.4987 46.5698 20.1456 45.7578 20.6015C44.9459 21.0574 44.035 21.3085 43.1042 21.333H3"
+                  stroke="#FED7AA"
+                  stroke-width="6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M20.4167 4.37455C20.9476 3.83304 21.6046 3.43173 22.3288 3.20661C23.053 2.98148 23.8217 2.93957 24.5661 3.08463C25.3104 3.22969 26.0072 3.55719 26.5938 4.03776C27.1805 4.51834 27.6387 5.13698 27.9275 5.83823C28.2162 6.53948 28.3265 7.30142 28.2483 8.05575C28.1701 8.81008 27.906 9.53322 27.4796 10.1604C27.0532 10.7875 26.4779 11.299 25.8051 11.6491C25.1324 11.9992 24.3833 12.1769 23.625 12.1662H3"
+                  stroke="#FED7AA"
+                  stroke-width="6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M27.2917 38.2914C27.8226 38.8329 28.4796 39.2342 29.2038 39.4593C29.928 39.6845 30.6967 39.7264 31.4411 39.5813C32.1854 39.4362 32.8822 39.1088 33.4688 38.6282C34.0555 38.1476 34.5137 37.529 34.8025 36.8277C35.0912 36.1265 35.2015 35.3645 35.1233 34.6102C35.0451 33.8559 34.781 33.1327 34.3546 32.5056C33.9282 31.8784 33.3529 31.3669 32.6801 31.0168C32.0074 30.6667 31.2583 30.4891 30.5 30.4997H3"
+                  stroke="#FED7AA"
+                  stroke-width="6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+
+              <span class="fireKey__text">A = Air</span>
+            </button>
+
+            <!-- TIMBER -->
+            <button
+              type="button"
+              class="key fireKey"
+              data-fire-pick="T"
+              aria-label="Timber (T)"
+            >
+              <svg
+                class="fireKey__icon"
+                viewBox="0 0 44 48"
+                fill="none"
+                aria-hidden="true"
+                focusable="false"
+                xmlns="http://www.w3.org/2000/svg"
+                preserveAspectRatio="xMidYMid meet"
+              >
+                <path
+                  d="M7.27979 8.47222C7.27979 10.0562 8.7899 11.5752 11.4779 12.6952C14.1659 13.8152 17.8117 14.4444 21.6131 14.4444C25.4146 14.4444 29.0603 13.8152 31.7483 12.6952C34.4363 11.5752 35.9465 10.0562 35.9465 8.47222C35.9465 6.88829 34.4363 5.36923 31.7483 4.24922C29.0603 3.12921 25.4146 2.5 21.6131 2.5C17.8117 2.5 14.1659 3.12921 11.4779 4.24922C8.7899 5.36923 7.27979 6.88829 7.27979 8.47222Z"
+                  stroke="#F2C078"
+                  stroke-width="5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M35.9464 8.47217V19.5232C36.6399 19.2091 37.419 19.1383 38.1578 19.3222C38.8965 19.5062 39.5515 19.9341 40.0167 20.5367C40.4819 21.1393 40.7301 21.8813 40.721 22.6425C40.712 23.4037 40.4463 24.1396 39.9669 24.731L39.7352 24.989L35.9464 28.7777V38.3333C35.9464 42.1794 29.8786 45.3208 22.27 45.5H21.6131C13.6963 45.5 7.27974 42.2917 7.27974 38.3333V33.5555L3.49096 29.7667C2.93062 29.2071 2.5847 28.4685 2.51363 27.6797C2.44257 26.891 2.65087 26.1024 3.10215 25.4517C3.55343 24.8009 4.219 24.3294 4.98259 24.1195C5.74618 23.9096 6.55924 23.9747 7.27974 24.3033V8.47217M16.8353 25.1944V28.7777M26.3908 33.5555V35.9444"
+                  stroke="#F2C078"
+                  stroke-width="5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+
+              <span class="fireKey__text">T = timber</span>
+            </button>
+
+            <!-- FLAME -->
+            <button
+              type="button"
+              class="key fireKey"
+              data-fire-pick="F"
+              aria-label="Flame (F)"
+            >
+              <svg
+                class="fireKey__icon"
+                viewBox="0 0 39 50"
+                fill="none"
+                aria-hidden="true"
+                focusable="false"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M11.0208 29.3542C12.5403 29.3542 13.9975 28.7506 15.072 27.6761C16.1464 26.6017 16.75 25.1445 16.75 23.625C16.75 20.4625 15.6042 19.0417 14.4583 16.75C12.0017 11.839 13.945 7.45958 19.0417 3C20.1875 8.72917 23.625 14.2292 28.2083 17.8958C32.7917 21.5625 35.0833 25.9167 35.0833 30.5C35.0833 32.6066 34.6684 34.6926 33.8622 36.6389C33.0561 38.5851 31.8744 40.3536 30.3848 41.8432C28.8952 43.3328 27.1268 44.5144 25.1805 45.3206C23.2343 46.1267 21.1483 46.5417 19.0417 46.5417C16.935 46.5417 14.849 46.1267 12.9028 45.3206C10.9565 44.5144 9.1881 43.3328 7.69849 41.8432C6.20889 40.3536 5.02727 38.5851 4.2211 36.6389C3.41493 34.6926 3 32.6066 3 30.5C3 27.8577 3.99229 25.2429 5.29167 23.625C5.29167 25.1445 5.89527 26.6017 6.9697 27.6761C8.04413 28.7506 9.50136 29.3542 11.0208 29.3542Z"
+                  stroke="#F97316"
+                  stroke-width="6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+
+              <span class="fireKey__text">F = flame</span>
+            </button>
+
+            <!-- EMBER -->
+            <button
+              type="button"
+              class="key fireKey"
+              data-fire-pick="E"
+              aria-label="Ember (E)"
+            >
+              <svg
+                class="fireKey__icon"
+                viewBox="0 0 48 48"
+                fill="none"
+                aria-hidden="true"
+                focusable="false"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M23.625 3L19.2433 16.3215C19.0191 17.0032 18.6379 17.6228 18.1304 18.1304C17.6228 18.6379 17.0032 19.0191 16.3215 19.2433L3 23.625L16.3215 28.0067C17.0032 28.2309 17.6228 28.6121 18.1304 29.1196C18.6379 29.6272 19.0191 30.2468 19.2433 30.9285L23.625 44.25L28.0067 30.9285C28.2309 30.2468 28.6121 29.6272 29.1196 29.1196C29.6272 28.6121 30.2468 28.2309 30.9285 28.0067L44.25 23.625L30.9285 19.2433C30.2468 19.0191 29.6272 18.6379 29.1196 18.1304C28.6121 17.6228 28.2309 17.0032 28.0067 16.3215L23.625 3Z"
+                  stroke="#DC2626"
+                  stroke-width="6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+
+              <span class="fireKey__text">E = ember</span>
+            </button>
+
+            <!-- STONE -->
+            <button
+              type="button"
+              class="key fireKey"
+              data-fire-pick="S"
+              aria-label="Stone (S)"
+            >
+              <svg
+                class="fireKey__icon"
+                viewBox="0 0 43 40"
+                fill="none"
+                aria-hidden="true"
+                focusable="false"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12.6716 6.21421L2.21719 17.1454C0.793857 18.6324 0.000169875 20.6052 0 22.6563V34.6651C0 36.08 0.566293 37.437 1.5743 38.4375C2.58231 39.4379 3.94946 40 5.375 40H25.7624C24.2547 39.5732 22.6717 39.1037 21.0915 38.6049C17.3774 37.4313 13.6041 36.0709 10.7366 34.6491C9.31219 33.9422 8.041 33.1847 7.10844 32.3871C6.235 31.6322 5.375 30.6053 5.375 29.3302C5.375 26.7055 7.44706 25.2277 9.6105 24.3608C11.8223 23.4725 14.7114 22.9684 17.4741 22.5523L19.1565 22.3015C21.3737 21.9788 23.4458 21.6747 25.1389 21.2452C26.1924 20.9785 26.995 20.686 27.5469 20.3676C28.0978 20.0476 28.2268 19.7968 28.2591 19.6714C28.2967 19.5221 28.2967 19.2527 27.9312 18.7565C27.5549 18.2461 26.9117 17.6593 26.0016 16.996C24.8352 16.1451 23.4404 15.3048 21.9542 14.4086C21.0834 13.8804 20.1804 13.3363 19.2694 12.7548C16.9366 11.2743 14.534 9.55118 13.3031 7.55327C13.0412 7.13262 12.8293 6.68328 12.6716 6.21421ZM36.4344 40L36.2544 39.96C36.0376 39.9066 35.7276 39.8337 35.3245 39.7413C30.8127 38.662 26.3382 37.4343 21.9085 36.0602C18.232 34.8999 14.6146 33.5928 11.9379 32.2644C10.5941 31.5976 9.55406 30.9574 8.86606 30.3705C8.12969 29.733 8.0625 29.3863 8.0625 29.3302C8.0625 28.4393 8.68869 27.6071 10.6156 26.8335C12.4969 26.0786 15.0849 25.6118 17.8799 25.1877C18.4049 25.1077 18.937 25.0294 19.4763 24.953C21.7042 24.6275 23.9618 24.2968 25.8027 23.8326C26.9476 23.5392 28.0333 23.1765 28.9041 22.6696C29.7748 22.1628 30.5891 21.4213 30.8659 20.317C31.1696 19.1166 30.7316 18.039 30.1027 17.1827C29.4819 16.3398 28.5735 15.5636 27.5926 14.8487C26.3429 13.9364 24.7599 12.9788 23.1904 12.0292C22.3596 11.5332 21.5353 11.0264 20.7179 10.5088C18.3476 9.00169 16.4636 7.56927 15.5929 6.16086C15.1871 5.49934 15.0554 4.92584 15.1306 4.38702C15.1871 3.98423 15.3752 3.49876 15.8132 2.92793L16.6276 2.07701C17.2553 1.42083 18.0109 0.898289 18.8486 0.541216C19.6863 0.184142 20.5884 0 21.5 0C22.4116 0 23.3137 0.184142 24.1514 0.541216C24.9891 0.898289 25.7447 1.42083 26.3724 2.07701L40.7855 17.148C42.2066 18.6342 42.9992 20.6047 43 22.6536V34.6651C43 36.08 42.4337 37.437 41.4257 38.4375C40.4177 39.4379 39.0505 40 37.625 40H36.4344Z"
+                  fill="#C6C1B8"
+                />
+              </svg>
+
+              <span class="fireKey__text">S = stone</span>
+            </button>
+
+            <!-- WATER -->
+            <button
+              type="button"
+              class="key fireKey"
+              data-fire-pick="W"
+              aria-label="Water (W)"
+            >
+              <svg
+                class="fireKey__icon"
+                viewBox="0 0 43 51"
+                fill="none"
+                aria-hidden="true"
+                focusable="false"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M21.4884 3L34.5772 16.1841C37.1657 18.7897 38.9288 22.1101 39.6436 25.7253C40.3584 29.3404 39.9928 33.0878 38.5929 36.4936C37.1931 39.8994 34.8219 42.8105 31.7793 44.8586C28.7367 46.9068 25.1595 48 21.5 48C17.8405 48 14.2633 46.9068 11.2207 44.8586C8.17812 42.8105 5.80694 39.8994 4.40708 36.4936C3.00721 33.0878 2.64156 29.3404 3.35637 25.7253C4.07118 22.1101 5.83434 18.7897 8.42282 16.1841L21.4884 3Z"
+                  stroke="#8ED4FF"
+                  stroke-width="6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+
+              <span class="fireKey__text">W = water</span>
+            </button>
+          </div>
+
+          <!---------------------------------------------->
+          <!--------------- TS SLOTS BELOW --------------->
+          <!---------------------------------------------->
+
+          <div
+            class="slots fireSlots"
+            id="fireSlots"
+            role="group"
+            aria-label="Sequence slots"
+          ></div>
+
+          <!--------------- PROGRESSBAR --------------->
+
+          <div class="inRoombar fireInRoombar" aria-label="Progress">
+            <!-- Level (TS uppdaterar 1 / 4) -->
+            <div class="progressItem">
+              <span class="progressLabel">Level:</span>
+              <span class="progressValue" id="fireLevelValue">1 / 4</span>
+            </div>
+
+            <!-- Mistakes -->
+            <div class="progressItem">
+              <span class="progressLabel">Mistakes:</span>
+              <span class="progressValue" id="fireMistakes">0</span>
+            </div>
+
+            <!-- Balance bar (TS control width + aria-valuenow) -->
+            <div class="balance">
+              <span class="progressLabel">Balance</span>
+
+              <div
+                class="balanceBar"
+                role="progressbar"
+                aria-label="Balance"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="0"
+              >
+                <div class="balanceFill" id="fireBalanceFill"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!---------------------------------------------->
+        <!---------------RoomDesc below ---------------->
+        <!---------------------------------------------->
+
+        <div class="roomDesc" id="fireRoomDesc"></div>
+      </section>
+
+      <!------------------------------------------------------------------->
+      <!--------------------------- Earth Room ---------------------------->
+      <!------------------------------------------------------------------->
+
+      <section id="room3Earth" class="room3Earth page hidden">
+        <div id="gameBoard" class="gameBoard">
+          <div id="gameDiv" class="gameDiv"></div>
+        </div>
+        <div id="roomDesc" class="roomDesc"></div>
+      </section>
+
+      <!------------------------------------------------------------------->
+      <!--------------------------- Metal Room ---------------------------->
+      <!------------------------------------------------------------------->
+      <section id="room4Metal" class="room4Metal hidden page">
+        <div class="metalContainer">
+          <!-- Färgsignal -->
+          <div id="colorSignal" class="colorSignal"></div>
+
+          <!-- Meddelande rätt/fel -->
+          <div id="feedback" class="feedback"></div>
+
+          <!-- Slots för färger -->
+          <div class="colorSlots">
+            <div class="colorSlot1"></div>
+            <div class="colorSlot2"></div>
+            <div class="colorSlot3"></div>
+            <div class="colorSlot4"></div>
+            <div class="colorSlot5"></div>
+            <div class="colorSlot6"></div>
+          </div>
+
+          <!-- Sekvens och misstagsräknare -->
+          <div class="inRoombar" aria-label="Room status">
+            <!-- Sekvens -->
+            <div class="inRoombarProgress" aria-label="Level progress">
+              <span>Level:</span>
+              <span id="levelText1">1/3</span>
+            </div>
+            <!-- Misstag -->
+            <div class="inroomBarMistakes" aria-label="Mistakes">
+              <span>Mistakes:</span>
+              <span id="mistakesText1">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Innehåll från JSON-->
+        <div class="roomDesc"></div>
+      </section>
+
+      <!------------------------------------------------------------------->
+      <!--------------------------- Water Room ---------------------------->
+      <!------------------------------------------------------------------->
+
+      <section id="room5Water" class="room5Water page hidden">
+        <div class="w-container">
+          <!-- Water room puzzle -->
+          <!-- Pipe grid -->
+          <div
+            id="w-pipe-grid"
+            class="w-pipe-grid"
+            role="grid"
+            aria-label="Pipe puzzle grid — navigate with arrow keys, rotate with Enter or Space"
+          ></div>
+
+          <!-- Status message -->
+          <p
+            id="w-status"
+            class="w-status"
+            aria-live="polite"
+            aria-atomic="true"
+          ></p>
+
+          <!-- Action buttons + warning in same container -->
+          <div class="w-btns-warning">
+            <div class="w-btns">
+              <button id="w-reset-btn" class="w-reset-btn" type="button">
+                Reset Pipes
+              </button>
+              <button id="w-check-btn" class="w-check-btn" type="button">
+                Check Flow
+              </button>
+            </div>
+            <!-- Time warning -->
+            <div
+              id="w-time-warning"
+              class="w-time-warning"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              ⚠️ The temple grows impatient — solve quickly or the artifact may
+              be impure.
+            </div>
+          </div>
+        </div>
+
+        <!-- ARIA live region for screen readers -->
+        <div
+          id="w-aria-live"
+          class="visuallyHidden"
+          aria-live="assertive"
+          aria-atomic="true"
+        ></div>
+
+        <!-- Room description (injected from JSON) -->
+        <div class="roomDesc" id=""></div>
+      </section>
+
+      <!------------------------------------------------------------------->
+      <!--------------------------- Final Room ---------------------------->
+      <!------------------------------------------------------------------->
+
+      <section id="finalRoom" class="finalRoom page hidden">
+        <div class="finalContainer">
+          <div class="finalSlots">
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+          </div>
+        </div>
+
+        <button id="validateBtn" class="validateBtn">Validate</button>
+        <div id="finalFeedback" class="finalFeedback"></div>
+        <div class="roomDesc" id=""></div>
+      </section>
+
+      <!------------------------------------------------------------------->
+      <!----------------------- Game Win Room ----------------------------->
+      <!------------------------------------------------------------------->
+
+      <section id="gameWinRoom" class="gameWinRoom page hidden">
+        <div class="winFx" aria-hidden="true">
+          <div class="winFx__stars"></div>
+          <div class="winFx__sparkles"></div>
+        </div>
+        <div class="conclusionHeading">
+          <h2>Balance Restored</h2>
+          <p>Wood, Fire, Earth, Metal, and Water align — the cycle holds</p>
+        </div>
+        <div class="ctaBtnsConc">
+          <button type="button" data-action="reset" class="resetBtn">
+            Reset
+          </button>
+          <button type="button" data-action="highscore" class="highScoreBtn">
+            High Score
+          </button>
+          <button type="button" data-action="openAbout" class="gameAboutBtn">
+            About
+          </button>
+        </div>
+      </section>
+
+      <!------------------------------------------------------------------->
+      <!----------------------- Game Over Room ---------------------------->
+      <!------------------------------------------------------------------->
+
+      <section id="gameOverRoom" class="gameOverRoom page hidden">
+        <div class="overFx" aria-hidden="true">
+          <div class="overFx__embers"></div>
+          <div class="overFx__glow"></div>
+        </div>
+
+        <div class="conclusionHeading">
+          <h2>Balance distorted</h2>
+          <p>
+            The cycle breaks. Balance remains unrestored. The Water and metall
+            elements are corrupted
+          </p>
+        </div>
+        <!-- Replay buttons for each room -->
+        <div
+          class="gameOverActions"
+          aria-label="Replay chambers and validation"
+        >
+          <button
+            type="button"
+            class="replayChamberBtn"
+            data-room-id="wood"
+            aria-label="Replay Wood Chamber"
+          >
+            <span class="buttonLabel">REPLAY WOOD CHAMBER</span>
+          </button>
+
+          <button
+            type="button"
+            class="replayChamberBtn"
+            data-room-id="fire"
+            aria-label="Replay Fire Chamber"
+          >
+            <span class="buttonLabel">REPLAY FIRE CHAMBER</span>
+          </button>
+
+          <button
+            type="button"
+            class="replayChamberBtn"
+            data-room-id="earth"
+            aria-label="Replay Earth Chamber"
+          >
+            <span class="buttonLabel">REPLAY EARTH CHAMBER</span>
+          </button>
+
+          <button
+            type="button"
+            class="replayChamberBtn"
+            data-room-id="metal"
+            aria-label="Replay Metal Chamber"
+          >
+            <span class="buttonLabel">REPLAY METAL CHAMBER</span>
+          </button>
+
+          <button
+            type="button"
+            class="replayChamberBtn"
+            data-room-id="water"
+            aria-label="Replay Water Chamber"
+          >
+            <span class="buttonLabel">REPLAY WATER CHAMBER</span>
+          </button>
+
+          <button
+            type="button"
+            id="retryValidationBtn"
+            class="validationReplayBtn"
+            aria-label="Return to validation"
+            disabled
+          >
+            <span class="buttonLabel">RETURN TO VALIDATION</span>
+          </button>
+        </div>
+
+        <div class="ctaBtnsConc">
+          <button type="button" data-action="reset" class="resetBtn">
+            Reset
+          </button>
+          <button type="button" data-action="highscore" class="highScoreBtn">
+            High Score
+          </button>
+          <button type="button" data-action="openAbout" class="gameAboutBtn">
+            About
+          </button>
+        </div>
+      </section>
+
+      <!------------------------------------------------------------------->
+      <!----------------------- HighScore Room ---------------------------->
+      <!------------------------------------------------------------------->
+
+      <section
+        id="highscoreRoom"
+        class="highscoreRoom page hidden"
+        aria-labelledby="highscoreTitle"
+      >
+        <!-- Title -->
+        <h2 id="highscoreTitle" class="highscoreTitle">THE TEMPLE OF FIVE</h2>
+
+        <!-- Glass plate -->
+        <div class="highscorePlate" aria-label="Highscore panel">
+          <h3 class="highscoreHeading">HIGHSCORE</h3>
+
+          <!-- Placeholder list for now -->
+          <ol id="highscoreList" class="highscoreList"></ol>
+        </div>
+
+        <!-- Actions -->
+        <div class="highscoreActions">
+          <button id="shareResultBtn" class="shareBtn" type="button">
+            Share result
+          </button>
+
+          <button id="backToMainMenuBtn" class="backBtn" type="button">
+            Back to main menu
+          </button>
+        </div>
+
+        <!-- Secret function for reseting highscore -->
+        <button
+          id="resetHighscoreBtn"
+          class="resetHighscoreBtn"
+          type="button"
+          hidden
+        >
+          Reset leaderboard
+        </button>
+
+        <!-- Share modal -->
+        <div
+          id="shareModal"
+          class="shareModal hidden"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="shareModalTitle"
+        >
+          <div class="sharePlate">
+            <div class="shareHeader">
+              <h3 id="shareModalTitle">Share your result</h3>
+
+              <button
+                id="shareModalClose"
+                class="modalClose"
+                type="button"
+                aria-label="Close share dialog and return to highscore"
+              >
+                <svg
+                  width="27"
+                  height="27"
+                  viewBox="0 0 27 27"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M26.4 11.5333V14.8667L6.4 14.8667L15.5667 24.0333L13.2 26.4L0 13.2L13.2 -1.91371e-06L15.5667 2.36666L6.4 11.5333L26.4 11.5333Z"
+                    fill="#ECF5F1"
+                  ></path>
+                </svg>
+              </button>
+            </div>
+
+            <p id="sharePreview" class="sharePreview"></p>
+
+            <div class="shareActions">
+              <button id="shareCopyBtn" class="shareBtn" type="button">
+                Copy caption
+              </button>
+
+              <button id="shareFacebookBtn" class="shareBtn" type="button">
+                Facebook
+              </button>
+
+              <button id="shareLinkedInBtn" class="shareBtn" type="button">
+                LinkedIn
+              </button>
+            </div>
+
+            <p id="shareStatus" class="shareStatus" aria-live="polite"></p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!------------------------------------------------------------------->
+    <!------------------------- EXITdialog ------------------------------>
+    <!------------------------------------------------------------------->
+
+    <dialog class="exitDialog" id="exitDialog" aria-labelledby="exitTitle">
+      <h2 id="exitTitle" class="visuallyHidden">Exit</h2>
+
+      <div class="exitDialogInner">
+        <p class="exitDialogText">Are you sure you want to log out?</p>
+
+        <div class="exitDialogBtns">
+          <button type="button" class="btn" data-action="leaveRoom">
+            Leave room
+          </button>
+          <button type="button" class="btn" data-action="logout">
+            Log out
+          </button>
+          <button
+            type="button"
+            class="btn btnGhost"
+            data-action="closeExitDialog"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </dialog>
+
+    <!------------------------------------------------------------------->
+    <!------------------------- About dialog ---------------------------->
+    <!------------------------------------------------------------------->
+
+    <dialog id="aboutDialog" class="aboutDialog" aria-labelledby="dialogTitle">
+      <button
+        type="button"
+        class="modalClose"
+        id="closeAbout"
+        aria-label="Close and go back to landningpage"
+      >
+        <svg
+          width="27"
+          height="27"
+          viewBox="0 0 27 27"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M26.4 11.5333V14.8667L6.4 14.8667L15.5667 24.0333L13.2 26.4L0 13.2L13.2 -1.91371e-06L15.5667 2.36666L6.4 11.5333L26.4 11.5333Z"
+            fill="#ECF5F1"
+          />
+        </svg>
+      </button>
+      <div class="dialogInner">
+        <h2 id="dialogTitle" class="modalTitle visuallyHidden">
+          The Temple of Five About page
+        </h2>
+
+        <!-- Tabs -->
+        <div class="tabs" data-tabs>
+          <div class="tabsList" role="tablist" aria-label="About navigation">
+            <button
+              type="button"
+              class="tabsTab currentTab"
+              role="tab"
+              id="tabStory"
+              aria-selected="true"
+              aria-controls="panelStory"
+              tabindex="0"
+            >
+              Story
+            </button>
+
+            <button
+              type="button"
+              class="tabsTab"
+              role="tab"
+              id="tabFeatures"
+              aria-selected="false"
+              aria-controls="panelFeatures"
+              tabindex="-1"
+            >
+              Features
+            </button>
+
+            <button
+              type="button"
+              class="tabsTab"
+              role="tab"
+              id="tabControls"
+              aria-selected="false"
+              aria-controls="panelControls"
+              tabindex="-1"
+            >
+              Controls
+            </button>
+
+            <button
+              type="button"
+              class="tabsTab"
+              role="tab"
+              id="tabDev"
+              aria-selected="false"
+              aria-controls="panelDev"
+              tabindex="-1"
+            >
+              Dev
+            </button>
+          </div>
+
+          <!-- Panels -->
+          <!-- Story -->
+          <section
+            class="tabsPanel"
+            role="tabpanel"
+            id="panelStory"
+            aria-labelledby="tabStory"
+          >
+            <div class="tabsPannelScroll">
+              <h3>The Temple of Five — Wu Xing Trials</h3>
               <p>
-                Built by The Pogo Stick Pioneers.
-                <br />Frontend Development students, class of FED25D,
-                Medieinstitutet &mdash; Sweden. <br />A collaborative project
-                focused on game flow, accessibility, and UI polish.
+                In a future where cities collapsed and the jungle reclaimed the
+                world, one structure still breathes with dormant power. The
+                Temple of Five Elements holds ancient survival tech — sealed
+                behind trials of Wood, Fire, Earth, Metal, and Water.
+              </p>
+              <p>
+                These are the Wu Xing, the Five Phases: not just elements, but
+                forces in motion — growth, transformation, stability, structure,
+                and flow. To restore balance, you must pass each chamber and
+                retrieve the tool bound to its phase.
+              </p>
+              <p>
+                But the temple doesn't reward effort alone. It rewards timing.
+                Move too slowly, and a mechanism misaligns. A seal cracks. An
+                element comes out… imperfect. Collect the true five, complete
+                the cycle, and the final altar will open. Fail, and the temple
+                will demand you return to the chamber that broke the balance.
               </p>
             </div>
 
-            <div class="controlTeamGrid">
+            <p>Restore the balance — or leave with nothing.</p>
+          </section>
+
+          <!-- Features -->
+          <section
+            class="tabsPanel"
+            role="tabpanel"
+            id="panelFeatures"
+            aria-labelledby="tabFeatures"
+            hidden
+          >
+            <div class="tabsPannelScroll">
+              <h3>Game Features</h3>
+
+              <h4>Gameplay</h4>
+              <p>
+                Five unique puzzle rooms inspired by Wu Xing — the five Chinese
+                elements: Wood, Fire, Earth, Metal and Water. Each room has its
+                own mechanics and challenge. Collect one artifact per room — the
+                correct artifacts unlock the final altar.
+              </p>
+
+              <h4>Scoring &amp; Timers</h4>
+              <p>
+                Score is based on how fast you solve each room — the faster, the
+                higher. A per-room timer and a total timer track your full run.
+              </p>
+
+              <h4>Progression</h4>
+              <p>
+                A progress bar shows how many rooms you've completed. Progress
+                is saved automatically — close the browser and pick up where you
+                left off. Wrong artifact? Replay just that room without losing
+                progress in the others.
+              </p>
+
+              <h4>Accessibility</h4>
+              <p>
+                Fully keyboard navigable throughout the entire game. Screen
+                reader support with ARIA labels and live regions. Focus
+                management between all interactive elements.
+              </p>
+
+              <h4>Sound &amp; Music</h4>
+              <p>
+                Immersive background music and sound effects enhance the
+                atmosphere in each room. In accordance with game rules, audio is
+                set to off by default to ensure a controlled start. Sound can be
+                toggled on or off at any time.
+              </p>
+            </div>
+          </section>
+
+          <!-- Controls -->
+          <section
+            class="tabsPanel panelControls"
+            role="tabpanel"
+            id="panelControls"
+            aria-labelledby="Controls"
+            hidden
+          >
+            <div class="tabsPannelScroll">
+              <h3>Temple Key Commands</h3>
+
+              <div class="controlsGrid">
+                <article class="controlsCard">
+                  <h4>1: Wood Chamber</h4>
+                  <p>
+                    <kbd>← →</kbd> Navigate between number keys<br />
+                    <kbd>Enter</kbd> to use the focused number key<br />
+                    After 6 inputs, your sequence is validated automatically.
+                  </p>
+                </article>
+
+                <article class="controlsCard">
+                  <h4>2: Fire Chamber</h4>
+                  <p>
+                    <kbd>← →</kbd> Move between element keys<br />
+                    <kbd>Enter</kbd> or <kbd>Space</kbd> to place the focused
+                    element <br />
+                    <kbd>Backspace</kbd> Remove the last element <br />
+                    <kbd>A T F E S W</kbd> Quick input using keyboard letters
+                  </p>
+                </article>
+
+                <article class="controlsCard">
+                  <h4>3: Earth Chamber</h4>
+                  <p>Your text here</p>
+                </article>
+
+                <article class="controlsCard">
+                  <h4>4: Metal Chamber</h4>
+                  <p>
+                    <kbd>← →</kbd> Navigate between slots
+                    <br />
+                    <kbd>↑ ↓ </kbd> Change the color of the slot
+                    <br />
+                    <kbd>Enter</kbd> to validate the slots
+                    <br />
+                  </p>
+                </article>
+
+                <article class="controlsCard">
+                  <h4>5: Water Chamber</h4>
+                  <p>
+                    <kbd>↑ ↓ ← →</kbd> Navigate between pipe segments<br />
+                    <kbd>Enter</kbd> / <kbd>Space</kbd> Rotate the focused
+                    pipe<br />
+                    <kbd>R</kbd> Reset all pipes to a new scrambled state<br />
+                    Use the <strong>Check Flow</strong> button to test your
+                    solution, or <strong>Reset Pipes</strong> to start over.
+                  </p>
+                </article>
+
+                <article class="controlsCard">
+                  <h4>6: Altar Chamber</h4>
+                  <p>
+                    <kbd>← →</kbd> Move between slots<br />
+                    <kbd>↑ ↓</kbd> Change the artifact in the selected slot<br />
+                    <kbd>Enter</kbd> to validate your selection (or use the
+                    Validate button)<br />
+                    All slots must be filled to validate.<br />
+                  </p>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          <!-- Dev -->
+          <section
+            class="tabsPanel panelDev"
+            role="tabpanel"
+            id="panelDev"
+            aria-labelledby="tabDev"
+            hidden
+          >
+            <div class="tabsPannelScroll">
               <div class="controlItem">
-                <h3>Tech Stack</h3>
-                <p>HTML5 · Sass · TypeScript · Vite · npm · Biome · GitHub</p>
+                <h3>About Us</h3>
+                <p>
+                  Built by The Pogo Stick Pioneers.
+                  <br />Frontend Development students, class of FED25D,
+                  Medieinstitutet &mdash; Sweden. <br />A collaborative project
+                  focused on game flow, accessibility, and UI polish.
+                </p>
+              </div>
+
+              <div class="controlTeamGrid">
+                <div class="controlItem">
+                  <h3>Tech Stack</h3>
+                  <p>HTML5 · Sass · TypeScript · Vite · npm · Biome · GitHub</p>
+                </div>
+
+                <div class="controlItem">
+                  <h3>Planning &amp; Design</h3>
+                  <ul>
+                    <li>
+                      <a
+                        href="https://miro.com/welcomeonboard/WWQxUmtDQk03bVljYzllZHRWRkQ1OXArZTVOSW9wVUcrY3pweWRBUUhLUGdhZ0t1em95cGZON3AzVHQ4a2xZZFVjZnV2bVMvQTRWY01JVW1mMHRtdnBmeG5VQ1BkalR6MG90Q2NWS2I4MWYyRy8yLzE0NmltYmozd2hNellJSytyVmtkMG5hNDA3dVlncnBvRVB2ZXBnPT0hdjE=?share_link_id=170887747902"
+                        target="_blank"
+                        rel="noopener"
+                        >Miro flow</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        href="https://www.figma.com/design/OJgqdjOM1fksuh2Gh2rsAX/The-temple-of-five?node-id=0-1&t=QRSCgQpighrHxX8w-1"
+                        target="_blank"
+                        rel="noopener"
+                        >Figma</a
+                      >
+                    </li>
+                  </ul>
+                </div>
               </div>
 
               <div class="controlItem">
-                <h3>Planning &amp; Design</h3>
-                <ul>
+                <h3>Team</h3>
+                <!-- For accessibility: All GitHub icons use alt="" as they are decorative -->
+                <ul class="devTeamList">
                   <li>
-                    <a href="https://miro.com/welcomeonboard/WWQxUmtDQk03bVljYzllZHRWRkQ1OXArZTVOSW9wVUcrY3pweWRBUUhLUGdhZ0t1em95cGZON3AzVHQ4a2xZZFVjZnV2bVMvQTRWY01JVW1mMHRtdnBmeG5VQ1BkalR6MG90Q2NWS2I4MWYyRy8yLzE0NmltYmozd2hNellJSytyVmtkMG5hNDA3dVlncnBvRVB2ZXBnPT0hdjE=?share_link_id=170887747902"
-                      target="_blank" rel="noopener">Miro flow</a>
+                    <img
+                      src="./icons/github-icon.svg"
+                      alt=""
+                      aria-hidden="true"
+                      width="30"
+                      height="30"
+                    />
+                    <a
+                      href="https://github.com/AlexJCodes"
+                      target="_blank"
+                      rel="noopener"
+                      >Alexander Johansson</a
+                    >
                   </li>
                   <li>
-                    <a href="https://www.figma.com/design/OJgqdjOM1fksuh2Gh2rsAX/The-temple-of-five?node-id=0-1&t=QRSCgQpighrHxX8w-1"
-                      target="_blank" rel="noopener">Figma</a>
+                    <img
+                      src="./icons/github-icon.svg"
+                      alt=""
+                      aria-hidden="true"
+                      width="30"
+                      height="30"
+                    />
+                    <a
+                      href="https://github.com/AlexandraHenriksson"
+                      target="_blank"
+                      rel="noopener"
+                      >Alexandra Henriksson</a
+                    >
+                  </li>
+                  <li>
+                    <img
+                      src="./icons/github-icon.svg"
+                      alt=""
+                      aria-hidden="true"
+                      width="30"
+                      height="30"
+                    />
+                    <a
+                      href="https://github.com/elychnell"
+                      target="_blank"
+                      rel="noopener"
+                      >Emil Lychnell</a
+                    >
+                  </li>
+                  <li>
+                    <img
+                      src="./icons/github-icon.svg"
+                      alt=""
+                      aria-hidden="true"
+                      width="30"
+                      height="30"
+                    />
+                    <a
+                      href="https://github.com/LolloLicense"
+                      target="_blank"
+                      rel="noopener"
+                      >Louise Sverkström</a
+                    >
+                  </li>
+                  <li>
+                    <img
+                      src="./icons/github-icon.svg"
+                      alt=""
+                      aria-hidden="true"
+                      width="30"
+                      height="30"
+                    />
+                    <a
+                      href="https://github.com/minza-42"
+                      target="_blank"
+                      rel="noopener"
+                    >
+                      Minai Karlsson</a
+                    >
                   </li>
                 </ul>
               </div>
             </div>
-
-            <div class="controlItem">
-              <h3>Team</h3>
-              <!-- For accessibility: All GitHub icons use alt="" as they are decorative -->
-              <ul class="devTeamList">
-                <li>
-                  <img src="./icons/github-icon.svg" alt="" aria-hidden="true" width="30" height="30" />
-                  <a href="https://github.com/AlexJCodes" target="_blank" rel="noopener">Alexander Johansson</a>
-                </li>
-                <li>
-                  <img src="./icons/github-icon.svg" alt="" aria-hidden="true" width="30" height="30" />
-                  <a href="https://github.com/AlexandraHenriksson" target="_blank" rel="noopener">Alexandra
-                    Henriksson</a>
-                </li>
-                <li>
-                  <img src="./icons/github-icon.svg" alt="" aria-hidden="true" width="30" height="30" />
-                  <a href="https://github.com/elychnell" target="_blank" rel="noopener">Emil Lychnell</a>
-                </li>
-                <li>
-                  <img src="./icons/github-icon.svg" alt="" aria-hidden="true" width="30" height="30" />
-                  <a href="https://github.com/LolloLicense" target="_blank" rel="noopener">Louise Sverkström</a>
-                </li>
-                <li>
-                  <img src="./icons/github-icon.svg" alt="" aria-hidden="true" width="30" height="30" />
-                  <a href="https://github.com/minza-42" target="_blank" rel="noopener">
-                    Minai Karlsson</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </section>
+          </section>
+        </div>
       </div>
-    </div>
-  </dialog>
-  <script type="module" src="/src/main.ts"></script>
-</body>
-
+    </dialog>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
 </html>

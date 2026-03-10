@@ -27,10 +27,19 @@ import { startTimer } from "./script/helper/utils.ts";
 
 /* Event listeners for temporary menu
 (Remove when menu is to be removed) */
+
+// change name to start new run game
+function handleStartGame(): void {
+  startTimer(0);
+  room1woodFunc();
+}
+
 const woodRoomBtn: HTMLElement | null = document.querySelector("#woodRoomBtn");
 if (woodRoomBtn) {
-  woodRoomBtn.addEventListener("click", room1woodFunc);
+  woodRoomBtn.addEventListener("click", handleStartGame);
 }
+
+// Resume button
 
 // FIRE
 const fireRoomBtn: HTMLElement | null = document.querySelector("#fireRoomBtn");
@@ -178,6 +187,5 @@ aboutTabs();
 initAboutDialog();
 initSoundToggle();
 initAudio();
-startTimer(0);
 initResetButtons();
 initDevCheats();

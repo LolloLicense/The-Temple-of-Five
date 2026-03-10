@@ -104,11 +104,14 @@ function handleLeaveRoom(e: Event): void {
   const customEvent = e as CustomEvent<{ roomId: string | null }>;
   const roomId = customEvent.detail?.roomId;
 
+  // Stop all timeouts
+  clearLoginFlowTimeouts();
+
   // Pause and save total time for resume
   stopTimer(0);
 
-  // Stop all timeouts
-  clearLoginFlowTimeouts();
+  // Stop current room timer without triggering fail/time-up state
+  clearRoomTimerOnLeave();
 
   // Hide the header
   hideGameHeader();
