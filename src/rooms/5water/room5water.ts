@@ -107,8 +107,6 @@ const OPPOSITE: Record<TDirection, TDirection> = {
 const GRID_SIZE = 5;
 const TARGET_INDEX = GRID_SIZE - 1;
 const FIXED_CELLS = new Set<string>([`0,0`, `${TARGET_INDEX},${TARGET_INDEX}`]);
-const MAX_SCORE = 1000;
-const SCORE_PER_SECOND = 3;
 const TRANSITION_MS = 1200;
 
 // ── MODULE STATE ───────────────────────────────────────────────────────────
@@ -591,12 +589,6 @@ function goToNextRoom(nextSelector: string, nextRoomFunc: () => void): void {
   }, TRANSITION_MS);
 }
 
-// ── SCORE ──────────────────────────────────────────────────────────────────
-
-function calcScore(): number {
-  return Math.max(0, MAX_SCORE - secondsElapsed * SCORE_PER_SECOND);
-}
-
 // ── HELPERS ────────────────────────────────────────────────────────────────
 
 function setStatus(msg: string, type = ""): void {
@@ -636,13 +628,11 @@ function solvePuzzle(): void {
 
   cleanupWaterRoom();
 
-  const score = calcScore();
-
   setRoomResult("water", {
     status: "completed",
     artifact: "true",
     mistakes: 0,
-    score,
+    score: 0, // Score can be calculated based on time or attempts if desired
     roomTimeSec: secondsElapsed,
   });
 
