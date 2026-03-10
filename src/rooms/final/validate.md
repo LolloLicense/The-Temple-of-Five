@@ -1,15 +1,14 @@
-# Validering/final rummet
+# Validation/Final Room
 
-Användaren ska ha med sig totalt 5 artifakter från alla rum den varit i (man kan få antingen en rätt eller fel artifakt i varje rum). Vilket innebär att användaren inte vet om artifakterna kommer godkännas. De 5 artifakterna visas i ryggsäcken, men de ska importeras och ligga i rummet så användaren kan "drag & drop" till rätt plats. När alla ligger på plats ska rummet valideras antingen automatiskt eller vid knapptryck. Om det lyckas gå vidare till highscore boarden, om inte visas gameover och man kan göra om de som gick snett.
+The user must bring a total of 5 artifacts from all the rooms they have visited (you can get either a correct or incorrect artifact in each room). This means the user does not know if the artifacts will be accepted. The 5 artifacts are shown in the backpack, but they must be imported and placed in the room so the user can "drag & drop" them to the correct spot. When all are in place, the room should be validated either automatically or by button press. If successful, proceed to the highscore board; if not, game over is shown and the user can retry the rooms where mistakes were made.
 
-## Psuedokod
+## Pseudocode
 
-- Skickas från vattenrummet, timern startar och tickar ned.
-Användaren har 5 artifakter som ska drag and drop till respektive rum.
-- När artifakterna är på plats ska de vid automatiskt eller vid knapptryck valideras.
-- Om det är rätt artifakter godkänns rummet och man kommer till highscore rummet
-- Om det är fel artifakter nekas rummet och man kommer till gameover rummet och kan spela om de rum som gav fel artifakt
-
+- Sent from the water room, the timer starts and counts down.
+  The user has 5 artifacts to drag and drop to their respective rooms.
+- When the artifacts are in place, they should be validated either automatically or by button press.
+- If the artifacts are correct, the room is approved and you proceed to the highscore room.
+- If the artifacts are incorrect, the room is denied and you go to the game over room and can replay the rooms that gave the wrong artifact.
 
 # Validate Room -- Flow & Pseudocode (Summary)
 
@@ -20,7 +19,7 @@ player: - Wins the game (`gameWin`) - Or fails and goes to `gameOver`
 
 The player must place **five collected artifacts** in the correct order.
 
-------------------------------------------------------------------------
+---
 
 # Data Sources
 
@@ -28,7 +27,7 @@ The player must place **five collected artifacts** in the correct order.
 
 Use:
 
--   `getRoomResults()`
+- `getRoomResults()`
 
 This returns the current run state.
 
@@ -46,7 +45,7 @@ Artifact values can be:
     "false"
     null
 
-------------------------------------------------------------------------
+---
 
 ## From `artifacts.ts`
 
@@ -62,7 +61,7 @@ Example:
 
     getArtifactIcon("wood", "true")
 
-------------------------------------------------------------------------
+---
 
 # Validate Room State
 
@@ -84,7 +83,7 @@ Structure concept:
 
 One artifact per elemental room.
 
-------------------------------------------------------------------------
+---
 
 ## Slot Selections
 
@@ -108,7 +107,7 @@ Meaning:
 
 Artifacts **may only appear once**.
 
-------------------------------------------------------------------------
+---
 
 ## Active Slot
 
@@ -116,7 +115,7 @@ Tracks which slot is currently focused.
 
     activeSlotIndex = 0
 
-------------------------------------------------------------------------
+---
 
 # Controls
 
@@ -130,7 +129,7 @@ Keyboard interaction:
 
 Artifacts already used in another slot **cannot be selected again**.
 
-------------------------------------------------------------------------
+---
 
 # Initialization Flow
 
@@ -144,7 +143,7 @@ When entering the Validate Room:
         -> render empty slots
         -> disable validate button
 
-------------------------------------------------------------------------
+---
 
 # Artifact Pool Builder
 
@@ -167,7 +166,7 @@ Pseudo flow:
             add to artifactPool:
                 {roomId, kind, icon}
 
-------------------------------------------------------------------------
+---
 
 # Slot Interaction Logic
 
@@ -187,7 +186,7 @@ Pseudo flow:
         update slotSelections
         re-render slots
 
-------------------------------------------------------------------------
+---
 
 ## Moving Between Slots (Left / Right)
 
@@ -203,7 +202,7 @@ Pseudo flow:
 
         update focus UI
 
-------------------------------------------------------------------------
+---
 
 # Validate Button Logic
 
@@ -218,7 +217,7 @@ Pseudo:
     else:
         disable validate button
 
-------------------------------------------------------------------------
+---
 
 # Validate Action
 
@@ -227,7 +226,7 @@ When the player presses **Validate**:
     selectedArtifacts =
         artifactPool mapped using slotSelections order
 
-------------------------------------------------------------------------
+---
 
 ## Step 1 -- Check Order
 
@@ -242,7 +241,7 @@ Pseudo:
             show "Wrong order, try again"
             stop validation
 
-------------------------------------------------------------------------
+---
 
 ## Step 2 -- Check Artifact Quality
 
@@ -253,7 +252,7 @@ If order is correct:
     else:
             go to gameOver
 
-------------------------------------------------------------------------
+---
 
 # Result Navigation
 
@@ -264,7 +263,7 @@ If order is correct:
     Wrong order               -> show error message
                                   stay in validate room
 
-------------------------------------------------------------------------
+---
 
 # High-Level System Flow
 
@@ -289,12 +288,14 @@ If order is correct:
     true → gameWin
     false → gameOver
 
-------------------------------------------------------------------------
+---
 
 # Responsibility Overview
 
-  System          Responsibility
-  --------------- --------------------------------
-  storage.ts      Save / load game state
-  artifacts.ts    Map artifact icons
-  validate room   Slot puzzle + validation logic
+System Responsibility
+
+---
+
+storage.ts Save / load game state
+artifacts.ts Map artifact icons
+validate room Slot puzzle + validation logic
