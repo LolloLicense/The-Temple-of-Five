@@ -1,4 +1,4 @@
-import { playBgm, stopAll } from "../../audio";
+import { playBgm } from "../../audio";
 import * as dataJSON from "../../data.json";
 import { hideGameHeader, showGameHeader } from "../../script/helper/gameHeader";
 import { updateProgressBar } from "../../script/helper/progressbar.ts";
@@ -388,7 +388,6 @@ export function room2fireFunc(): void {
     ifRoomFailed();
   }, 200);
 
-  stopAll(); // Stop music from previous room
 
   const bgmId = dataJSON.room2fire.bgmId; // Play the background music for the fire room
   if (bgmId) {
@@ -846,8 +845,6 @@ function ifRoomCompleted(): void {
   // Show msg - feedback to user/player
   showMsg("Well done — next chamber awaits", COMPLETE_MSG_MS);
 
-  stopAll(); // stop music
-
   window.setTimeout(() => {
     // CLEANUP so re-entering starts fresh.
     currentLevelIndex = 0;
@@ -892,7 +889,6 @@ function ifRoomFailed(): void {
 
   showMsg("Time's up — next chamber awaits", COMPLETE_MSG_MS);
 
-  stopAll(); // stop music
 
   //  Efter message -> reset -> transition till Earth
   window.setTimeout(() => {

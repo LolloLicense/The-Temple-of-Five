@@ -1,4 +1,4 @@
-import { playBgm, playSfx, stopAll } from "../../audio/index.ts";
+import { playBgm, playSfx } from "../../audio/index.ts";
 import * as dataJSON from "../../data.json";
 import { showGameHeader } from "../../script/helper/gameHeader.ts";
 import { updateProgressBar } from "../../script/helper/progressbar.ts";
@@ -111,7 +111,6 @@ export function room4metalFunc() {
   //-------------------------------------------------------------------------------------------------------------------------------------
   //---------------------------------------------------------------- Ljud ---------------------------------------------------------------
   //-------------------------------------------------------------------------------------------------------------------------------------
-  stopAll(); // Stop old music
   const bgmId = dataJSON.room4metal.bgmId; // Spela bakgrundsmusiken för metallrummet
   if (bgmId) {
     void playBgm(bgmId, 650); // Spela bakgrundsmusiken för metallrummet med fade in på 650ms
@@ -448,7 +447,6 @@ export function room4metalFunc() {
     });
 
     stopTimer(4); // Stoppar rummets huvudtimer (rum 4) (Behöver vara efter results så att dom inte skrivs över)
-    stopAll(); // Stop music
     updateProgressBar();
     showMsg("Well done — next chamber awaits", TRANSITION_MS * 2); // Visa meddelande om att rummet är klart
     console.log("Metal result:", getRoomResults().metal); // Logga resultatet i konsolen för felsökning
@@ -474,7 +472,6 @@ export function room4metalFunc() {
     });
 
     stopTimer(4); // Stoppar rummets huvudtimer (rum 4) (Behöver vara efter results så att dom inte skrivs över)
-    stopAll(); // Stop music
     updateProgressBar();
     showMsg("Time's up — next chamber awaits", TRANSITION_MS * 2); // Visa meddelande om att tiden är slut
 
