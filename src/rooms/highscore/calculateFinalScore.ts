@@ -2,7 +2,7 @@
 /* ------------------------------------------------------- CALCULATE FINAL SCORE -------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 
-/* 
+/*
  * PURPOSE
  * - Calculate the player's final score when the game run is finished.
  * - Read saved room data from LocalStorage through getRoomResults().
@@ -37,82 +37,77 @@
  * 6. Add total run bonus to total room score
  * 7. Clamp final total score to minimum 0
  * 8. Return full score result
-*/
+ */
 
 import { getRoomResults } from "../../script/helper/storage";
 import { getStoredTotalTimeSec } from "./getStoredTotalTimeSec";
 
-/* 
+/*
  * TYPE: Stored room ids
  * This matches the full room structure saved in LocalStorage.
  */
 export type TStoredRoomId =
-    | "wood"
-    | "fire"
-    | "earth"
-    | "metal"
-    | "water"
-    | "final";
+  | "wood"
+  | "fire"
+  | "earth"
+  | "metal"
+  | "water"
+  | "final";
 
-/* 
+/*
  * TYPE: Scorable room ids
  * These are the actual rooms that contribute to the final score.
  * The "final" room is intentionally excluded from score calculation.
  */
-export type TScorableRoomId =
-    | "wood"
-    | "fire"
-    | "earth"
-    | "metal"
-    | "water";
+export type TScorableRoomId = "wood" | "fire" | "earth" | "metal" | "water";
 
-/* 
+/*
  * TYPE: Single room result from storage
  * This matches the room result shape already used in the project.
  */
 export type TRoomResult = {
-    status: "pending" | "completed" | "failed";
-    artifact: "true" | "false" | null;
-    mistakes?: number;
-    score?: number;
-    roomTimeSec?: number;
+  status: "pending" | "completed" | "failed";
+  artifact: "true" | "false" | null;
+  mistakes?: number;
+  score?: number;
+  roomTimeSec?: number;
 };
 
-/* 
+/*
  * TYPE: Full saved game state from LocalStorage
  */
 export type TGameState = Record<TStoredRoomId, TRoomResult>;
 
-/* 
+/*
  * TYPE: Detailed room score breakdown
  * - debugging
  * - result screen rendering
  * - balancing score rules later
  */
 export type TRoomScoreBreakdown = {
-    roomId: TScorableRoomId;
-    status: "pending" | "completed" | "failed";
-    roomTimeSec: number;
-    mistakes: number;
-    baseScore: number;
-    timePenalty: number;
-    mistakePenalty: number;
-    speedBonus: number;
-    roomScore: number;
+  roomId: TScorableRoomId;
+  status: "pending" | "completed" | "failed";
+  roomTimeSec: number;
+  mistakes: number;
+  baseScore: number;
+  timePenalty: number;
+  mistakePenalty: number;
+  speedBonus: number;
+  roomScore: number;
 };
 
-/* 
+/*
  * TYPE: Final returned score result
  */
 export type TFinalScoreResult = {
-    totalScore: number;
-    totalRunTimeSec: number;
-    totalRunBonus: number;
-    totalBaseScore: number;
-    totalTimePenalty: number;
-    totalMistakePenalty: number;
-    totalRoomSpeedBonus: number;
-    perRoom: TRoomScoreBreakdown[];
+  totalScore: number;
+  totalRunTimeSec: number;
+  totalRunBonus: number;
+  totalBaseScore: number;
+  totalTimePenalty: number;
+  totalMistakePenalty: number;
+  totalRoomSpeedBonus: number;
+  perRoom: TRoomScoreBreakdown[];
 };
 
 /*
@@ -145,52 +140,52 @@ const MIN_TOTAL_SCORE = 0;
  * If roomTimeSec is less than or equal to the threshold, the room gets the speed bonus.
  */
 const ROOM_SPEED_THRESHOLDS: Record<TScorableRoomId, number> = {
-    water: 30,
-    wood: 180,
-    fire: 180,
-    earth: 600,
-    metal: 120,
+  water: 30,
+  wood: 180,
+  fire: 180,
+  earth: 600,
+  metal: 120,
 };
 
-/* 
+/*
  * TOTAL RUN BONUS RULES
  * First matching rule wins.
  * Rules must be ordered from fastest requirement to slowest requirement.
  */
 const TOTAL_RUN_BONUS_RULES = [
-    { maxTimeSec: 1140, bonus: 900 }, // under 19 minutes
-    { maxTimeSec: 1320, bonus: 600 }, // under 22 minutes
-    { maxTimeSec: 1500, bonus: 300 }, // under 25 minutes
+  { maxTimeSec: 1140, bonus: 900 }, // under 19 minutes
+  { maxTimeSec: 1320, bonus: 600 }, // under 22 minutes
+  { maxTimeSec: 1500, bonus: 300 }, // under 25 minutes
 ] as const;
 
-/* 
+/*
  * SCORABLE ROOMS
  * Fixed order used when calculating the final score.
  */
 const SCORABLE_ROOMS: TScorableRoomId[] = [
-    "wood",
-    "fire",
-    "earth",
-    "metal",
-    "water",
+  "wood",
+  "fire",
+  "earth",
+  "metal",
+  "water",
 ];
 
-/* 
+/*
  * HELPER: getRoomSpeedBonus
  * Returns the flat speed bonus for a room if the room was completed within its threshold.
  * Otherwise returns 0.
  */
 function getRoomSpeedBonus(
-    roomId: TScorableRoomId,
-    roomTimeSec: number,
+  roomId: TScorableRoomId,
+  roomTimeSec: number,
 ): number {
-    const threshold = ROOM_SPEED_THRESHOLDS[roomId];
+  const threshold = ROOM_SPEED_THRESHOLDS[roomId];
 
-    if (roomTimeSec <= threshold) {
-        return ROOM_SPEED_BONUS;
-    }
+  if (roomTimeSec <= threshold) {
+    return ROOM_SPEED_BONUS;
+  }
 
-    return 0;
+  return 0;
 }
 
 /*
@@ -199,16 +194,16 @@ function getRoomSpeedBonus(
  * First matching rule wins.
  */
 function getTotalRunBonus(totalRunTimeSec: number): number {
-    for (const rule of TOTAL_RUN_BONUS_RULES) {
-        if (totalRunTimeSec <= rule.maxTimeSec) {
-            return rule.bonus;
-        }
+  for (const rule of TOTAL_RUN_BONUS_RULES) {
+    if (totalRunTimeSec <= rule.maxTimeSec) {
+      return rule.bonus;
     }
+  }
 
-    return 0;
+  return 0;
 }
 
-/* 
+/*
  * HELPER: calculateRoomScore
  * Calculates score breakdown for a single room.
  *
@@ -222,56 +217,54 @@ function getTotalRunBonus(totalRunTimeSec: number): number {
  * - Final room score is clamped to minimum 0.
  */
 function calculateRoomScore(
-    roomId: TScorableRoomId,
-    roomResult: TRoomResult,
+  roomId: TScorableRoomId,
+  roomResult: TRoomResult,
 ): TRoomScoreBreakdown {
-    const status = roomResult.status;
-    const roomTimeSec = roomResult.roomTimeSec ?? 0;
-    const mistakes = roomResult.mistakes ?? 0;
+  const status = roomResult.status;
+  const roomTimeSec = roomResult.roomTimeSec ?? 0;
+  const mistakes = roomResult.mistakes ?? 0;
 
-    /* 
-     * Non-completed rooms give no score.
-     * Return a full breakdown object for consistency and easier debugging.
-     */
-    if (status !== "completed") {
-        return {
-            roomId,
-            status,
-            roomTimeSec,
-            mistakes,
-            baseScore: 0,
-            timePenalty: 0,
-            mistakePenalty: 0,
-            speedBonus: 0,
-            roomScore: 0,
-        };
-    }
-
-    const baseScore = BASE_SCORE_PER_ROOM;
-    const timePenalty = roomTimeSec * TIME_PENALTY_PER_SECOND;
-    const mistakePenalty = mistakes * MISTAKE_PENALTY_PER_MISTAKE;
-    const speedBonus = getRoomSpeedBonus(roomId, roomTimeSec);
-
-    const rawRoomScore =
-        baseScore - timePenalty - mistakePenalty + speedBonus;
-
-    const roomScore = Math.max(MIN_ROOM_SCORE, rawRoomScore);
-
+  /*
+   * Non-completed rooms give no score.
+   * Return a full breakdown object for consistency and easier debugging.
+   */
+  if (status !== "completed") {
     return {
-        roomId,
-        status,
-        roomTimeSec,
-        mistakes,
-        baseScore,
-        timePenalty,
-        mistakePenalty,
-        speedBonus,
-        roomScore,
+      roomId,
+      status,
+      roomTimeSec,
+      mistakes,
+      baseScore: 0,
+      timePenalty: 0,
+      mistakePenalty: 0,
+      speedBonus: 0,
+      roomScore: 0,
     };
+  }
+
+  const baseScore = BASE_SCORE_PER_ROOM;
+  const timePenalty = roomTimeSec * TIME_PENALTY_PER_SECOND;
+  const mistakePenalty = mistakes * MISTAKE_PENALTY_PER_MISTAKE;
+  const speedBonus = getRoomSpeedBonus(roomId, roomTimeSec);
+
+  const rawRoomScore = baseScore - timePenalty - mistakePenalty + speedBonus;
+
+  const roomScore = Math.max(MIN_ROOM_SCORE, rawRoomScore);
+
+  return {
+    roomId,
+    status,
+    roomTimeSec,
+    mistakes,
+    baseScore,
+    timePenalty,
+    mistakePenalty,
+    speedBonus,
+    roomScore,
+  };
 }
 
-
-/* 
+/*
  * MAIN: calculateFinalScore
  * Pure calculation function.
  *
@@ -285,53 +278,47 @@ function calculateRoomScore(
  */
 
 export function calculateFinalScore(
-    gameState: TGameState,
-    totalRunTimeSec: number,
+  gameState: TGameState,
+  totalRunTimeSec: number,
 ): TFinalScoreResult {
-    const perRoom = SCORABLE_ROOMS.map((roomId) =>
-        calculateRoomScore(roomId, gameState[roomId]),
-    );
+  const perRoom = SCORABLE_ROOMS.map((roomId) =>
+    calculateRoomScore(roomId, gameState[roomId]),
+  );
 
-    const totalBaseScore = perRoom.reduce(
-        (sum, room) => sum + room.baseScore,
-        0,
-    );
+  const totalBaseScore = perRoom.reduce((sum, room) => sum + room.baseScore, 0);
 
-    const totalTimePenalty = perRoom.reduce(
-        (sum, room) => sum + room.timePenalty,
-        0,
-    );
+  const totalTimePenalty = perRoom.reduce(
+    (sum, room) => sum + room.timePenalty,
+    0,
+  );
 
-    const totalMistakePenalty = perRoom.reduce(
-        (sum, room) => sum + room.mistakePenalty,
-        0,
-    );
+  const totalMistakePenalty = perRoom.reduce(
+    (sum, room) => sum + room.mistakePenalty,
+    0,
+  );
 
-    const totalRoomSpeedBonus = perRoom.reduce(
-        (sum, room) => sum + room.speedBonus,
-        0,
-    );
+  const totalRoomSpeedBonus = perRoom.reduce(
+    (sum, room) => sum + room.speedBonus,
+    0,
+  );
 
-    const totalRoomScore = perRoom.reduce(
-        (sum, room) => sum + room.roomScore,
-        0,
-    );
+  const totalRoomScore = perRoom.reduce((sum, room) => sum + room.roomScore, 0);
 
-    const totalRunBonus = getTotalRunBonus(totalRunTimeSec);
+  const totalRunBonus = getTotalRunBonus(totalRunTimeSec);
 
-    const rawTotalScore = totalRoomScore + totalRunBonus;
-    const totalScore = Math.max(MIN_TOTAL_SCORE, rawTotalScore);
+  const rawTotalScore = totalRoomScore + totalRunBonus;
+  const totalScore = Math.max(MIN_TOTAL_SCORE, rawTotalScore);
 
-    return {
-        totalScore,
-        totalRunTimeSec,
-        totalRunBonus,
-        totalBaseScore,
-        totalTimePenalty,
-        totalMistakePenalty,
-        totalRoomSpeedBonus,
-        perRoom,
-    };
+  return {
+    totalScore,
+    totalRunTimeSec,
+    totalRunBonus,
+    totalBaseScore,
+    totalTimePenalty,
+    totalMistakePenalty,
+    totalRoomSpeedBonus,
+    perRoom,
+  };
 }
 
 /* -------------------------------------------------------------------------------------------------
@@ -343,10 +330,8 @@ export function calculateFinalScore(
  *
  * ----------------------------------------------------------------------------------------------- */
 export function calculateFinalScoreFromStorage(): TFinalScoreResult {
-    const gameState = getRoomResults() as TGameState;
-    const totalRunTimeSec = getStoredTotalTimeSec();
+  const gameState = getRoomResults() as TGameState;
+  const totalRunTimeSec = getStoredTotalTimeSec();
 
-    return calculateFinalScore(gameState, totalRunTimeSec);
+  return calculateFinalScore(gameState, totalRunTimeSec);
 }
-
-

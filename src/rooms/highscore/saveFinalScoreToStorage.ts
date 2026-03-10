@@ -12,13 +12,13 @@ import { calculateFinalScoreFromStorage } from "./calculateFinalScore";
  * - the saved final score as a number
  */
 export function saveFinalScoreToStorage(): number {
-    const scoreResult = calculateFinalScoreFromStorage();
-    const finalScore = scoreResult.totalScore;
+  const scoreResult = calculateFinalScoreFromStorage();
+  const finalScore = scoreResult.totalScore;
 
-    localStorage.setItem(
-        scopedKey(LS_KEY.finalScore),
-        JSON.stringify(finalScore),
-    );
+  localStorage.setItem(
+    scopedKey(LS_KEY.finalScore),
+    JSON.stringify(finalScore),
+  );
 
-    return finalScore;
+  return finalScore;
 }

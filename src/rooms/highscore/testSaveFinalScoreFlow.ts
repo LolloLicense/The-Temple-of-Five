@@ -1,7 +1,7 @@
 import { getUserName } from "../../script/helper/storage";
+import { calculateFinalScoreFromStorage } from "./calculateFinalScore";
 import { pushHighscore } from "./highscoreStorage";
 import { saveFinalScoreToStorage } from "./saveFinalScoreToStorage";
-import { calculateFinalScoreFromStorage } from "./calculateFinalScore";
 
 /**
  * Test helper for the full score flow.
@@ -15,17 +15,17 @@ import { calculateFinalScoreFromStorage } from "./calculateFinalScore";
  * - to verify that score, LocalStorage, and leaderboard all work
  */
 export function testSaveFinalScoreFlow(): void {
-    const userName = getUserName();
-    if (!userName) return;
+  const userName = getUserName();
+  if (!userName) return;
 
-    const fullScoreResult = calculateFinalScoreFromStorage();
-    const finalScore = saveFinalScoreToStorage();
+  const fullScoreResult = calculateFinalScoreFromStorage();
+  const finalScore = saveFinalScoreToStorage();
 
-    pushHighscore({
-        name: userName,
-        score: finalScore,
-    });
+  pushHighscore({
+    name: userName,
+    score: finalScore,
+  });
 
-    console.log("Final score result:", fullScoreResult);
-    console.log("Saved final score:", finalScore);
+  console.log("Final score result:", fullScoreResult);
+  console.log("Saved final score:", finalScore);
 }

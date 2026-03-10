@@ -1,4 +1,4 @@
-import { playBgm, playSfx, stopAll } from "../../audio/index.ts";
+import { playBgm, playSfx } from "../../audio/index.ts";
 import * as dataJSON from "../../data.json";
 import { showGameHeader } from "../../script/helper/gameHeader.ts";
 // Updates the progress bar in the UI based on saved room status

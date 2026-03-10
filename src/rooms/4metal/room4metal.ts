@@ -474,7 +474,7 @@ export function room4metalFunc() {
     });
 
     stopTimer(4); // Stoppar rummets huvudtimer (rum 4) (Behöver vara efter results så att dom inte skrivs över)
-    stopAll();// Stop music
+    stopAll(); // Stop music
     updateProgressBar();
     showMsg("Time's up — next chamber awaits", TRANSITION_MS * 2); // Visa meddelande om att tiden är slut
 

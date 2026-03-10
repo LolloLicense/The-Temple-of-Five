@@ -33,47 +33,47 @@ let lastKeyAt = 0;
 const SECRET_CODE = "resethigh";
 
 export function initHighscoreSecret(): void {
-    // No double listeners if called several times
-    if (secretBound) return;
-    secretBound = true;
+  // No double listeners if called several times
+  if (secretBound) return;
+  secretBound = true;
 
-    window.addEventListener("keydown", (e: KeyboardEvent) => {
-        const target = e.target as HTMLElement | null;
-        const tag = target?.tagName?.toLowerCase();
+  window.addEventListener("keydown", (e: KeyboardEvent) => {
+    const target = e.target as HTMLElement | null;
+    const tag = target?.tagName?.toLowerCase();
 
-        // Ignore typing inside form fields, return.
-        const isTypingField =
-            tag === "input" ||
-            tag === "textarea" ||
-            target?.isContentEditable === true;
+    // Ignore typing inside form fields, return.
+    const isTypingField =
+      tag === "input" ||
+      tag === "textarea" ||
+      target?.isContentEditable === true;
 
-        if (isTypingField) return;
+    if (isTypingField) return;
 
-        // Only allow single-character keys
-        const key = e.key.toLowerCase();
-        if (key.length !== 1) return;
+    // Only allow single-character keys
+    const key = e.key.toLowerCase();
+    if (key.length !== 1) return;
 
-        // Reset buffer if user pauses too long between keys (same as in dev panel)
-        const now = Date.now();
-        if (now - lastKeyAt > 900) {
-            buffer = "";
-        }
-        lastKeyAt = now;
+    // Reset buffer if user pauses too long between keys (same as in dev panel)
+    const now = Date.now();
+    if (now - lastKeyAt > 900) {
+      buffer = "";
+    }
+    lastKeyAt = now;
 
-        // Add new key to the buffer
-        buffer += key;
+    // Add new key to the buffer
+    buffer += key;
 
-        // Keep the buffer from growing forever
-        if (buffer.length > 20) {
-            buffer = buffer.slice(-20);
-        }
+    // Keep the buffer from growing forever
+    if (buffer.length > 20) {
+      buffer = buffer.slice(-20);
+    }
 
-        // Reveal reset button when secret code is detected
-        if (buffer.endsWith(SECRET_CODE)) {
-            buffer = "";
-            revealHighscoreResetButton();
-        }
-    });
+    // Reveal reset button when secret code is detected
+    if (buffer.endsWith(SECRET_CODE)) {
+      buffer = "";
+      revealHighscoreResetButton();
+    }
+  });
 }
 
 /**
@@ -81,12 +81,12 @@ export function initHighscoreSecret(): void {
  * Button is already present in HTML but hidden by default.
  */
 function revealHighscoreResetButton(): void {
-    const resetBtn =
-        document.querySelector<HTMLButtonElement>("#resetHighscoreBtn");
+  const resetBtn =
+    document.querySelector<HTMLButtonElement>("#resetHighscoreBtn");
 
-    if (!resetBtn) return;
+  if (!resetBtn) return;
 
-    resetBtn.hidden = false;
+  resetBtn.hidden = false;
 }
 
 /**
@@ -95,23 +95,23 @@ function revealHighscoreResetButton(): void {
  * - hides itself again after use
  */
 export function initHighscoreResetButton(): void {
-    const resetBtn =
-        document.querySelector<HTMLButtonElement>("#resetHighscoreBtn");
+  const resetBtn =
+    document.querySelector<HTMLButtonElement>("#resetHighscoreBtn");
 
-    if (!resetBtn) return;
+  if (!resetBtn) return;
 
-    // No double listeners
-    if (resetBtn.dataset.bound === "true") return;
-    resetBtn.dataset.bound = "true";
+  // No double listeners
+  if (resetBtn.dataset.bound === "true") return;
+  resetBtn.dataset.bound = "true";
 
-    resetBtn.addEventListener("click", () => {
-        const confirmed = window.confirm("Reset the entire Highscore leaderboard?");
+  resetBtn.addEventListener("click", () => {
+    const confirmed = window.confirm("Reset the entire Highscore leaderboard?");
 
-        if (!confirmed) return;
+    if (!confirmed) return;
 
-        resetHighscores();
+    resetHighscores();
 
-        // Hide button again after reset
-        resetBtn.hidden = true;
-    });
+    // Hide button again after reset
+    resetBtn.hidden = true;
+  });
 }

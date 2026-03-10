@@ -19,25 +19,25 @@
  * - Cleanup so old room logic does not keep running after room leave
  */
 
-import * as dataJSON from "../../data.json";
 import { playBgm, stopAll } from "../../audio/index.ts";
-import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
+import * as dataJSON from "../../data.json";
 import { showGameHeader } from "../../script/helper/gameHeader.ts";
+import { updateProgressBar } from "../../script/helper/progressbar.ts";
+import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
+import { showMsg } from "../../script/helper/showMsg.ts";
 import {
   resetSingleRoomResult,
   setRoomResult,
 } from "../../script/helper/storage.ts";
-import { showMsg } from "../../script/helper/showMsg.ts";
+import {
+  getCurrentPage,
+  goToSection,
+} from "../../script/helper/transitions.ts";
 import {
   startTimer as startSharedTimer,
   stopTimer as stopSharedTimer,
   TimeIsUp,
 } from "../../script/helper/utils.ts";
-import {
-  getCurrentPage,
-  goToSection,
-} from "../../script/helper/transitions.ts";
-import { updateProgressBar } from "../../script/helper/progressbar.ts";
 import { room6finalFunc } from "../final/room6validate.ts";
 
 // ── TYPES ──────────────────────────────────────────────────────────────────

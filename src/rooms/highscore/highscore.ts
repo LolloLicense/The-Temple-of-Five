@@ -1,9 +1,11 @@
 import * as dataJSON from "../../data.json";
 import {
   getCurrentPage,
-  showSection,
   goToSection,
+  showSection,
 } from "../../script/helper/transitions.ts";
+// import { testSaveFinalScoreFlow } from "./testSaveFinalScoreFlow";
+import { debugScoreBreakdown } from "./debugScoreBreakdown";
 import {
   initHighscoreResetButton,
   initHighscoreSecret,
@@ -13,8 +15,6 @@ import {
   initHighscoreRenderListener,
   renderHighscoreList,
 } from "./renderHighscoreList";
-// import { testSaveFinalScoreFlow } from "./testSaveFinalScoreFlow";
-import { debugScoreBreakdown } from "./debugScoreBreakdown";
 
 const TRANSITION_MS = 1200;
 

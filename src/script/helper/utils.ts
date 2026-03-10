@@ -1,11 +1,11 @@
 import * as dataJSON from "../../data.json";
 import {
-  setRoomResult,
   getRoomResults,
   getUserName,
-  type TGameState,
-  scopedKey,
   LS_KEY,
+  scopedKey,
+  setRoomResult,
+  type TGameState,
 } from "../../script/helper/storage.ts";
 
 //let localStorage: Array = [];
