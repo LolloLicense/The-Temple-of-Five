@@ -5,12 +5,16 @@ import { updateProgressBar } from "../../script/helper/progressbar.ts";
 import { renderRoomDesc } from "../../script/helper/roomDesc";
 import { showMsg } from "../../script/helper/showMsg";
 import {
+  clearReplayMode,
+  getReplayRoom,
+  isReplayMode,
   resetSingleRoomResult,
   setRoomResult,
-} from "../../script/helper/storage";
+} from "../../script/helper/storage.ts";
 import { goToSection } from "../../script/helper/transitions";
 import { startTimer, stopTimer, TimeIsUp } from "../../script/helper/utils.ts";
 import { room3earthFunc } from "../3earth/room3earth.ts";
+import { gameOverRoomFunc } from "../gameConclusion/gameOverRoom.ts";
 
 /**
  * FIRE ROOM (2)
@@ -381,6 +385,8 @@ export function room2fireFunc(): void {
   fireSection = document.querySelector<HTMLElement>("#room2Fire");
   if (!fireSection) return;
 
+  goToSection(fireSection, TRANSITION_MS);
+
   // Stop old Fire async logic before starting a fresh enter
   cleanupFireRoom();
 
@@ -409,7 +415,6 @@ export function room2fireFunc(): void {
 
     ifRoomFailed();
   }, 200);
-
 
   const bgmId = dataJSON.room2fire.bgmId; // Play the background music for the fire room
   if (bgmId) {
@@ -822,6 +827,11 @@ function nextLevel(): void {
 /* ------------------------------------------------------- COMPLETE / FAIL ROOM --------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 
+// Replay mode
+function shouldReturnToGameOver(): boolean {
+  return isReplayMode() && getReplayRoom() === "fire";
+}
+
 function goToNextRoom(nextSelector: string, nextRoomFunc: () => void): void {
   const nextSection = document.querySelector<HTMLElement>(nextSelector);
   if (!nextSection) return;
@@ -891,7 +901,15 @@ function ifRoomCompleted(): void {
     locked = false;
     isTransitioning = false;
 
-    // Fire room owns the transition to Earth
+    // If this room was replayed from Game Over,
+    // return there instead of continuing the normal room flow
+    if (shouldReturnToGameOver()) {
+      clearReplayMode();
+      goToNextRoom("#gameOverRoom", gameOverRoomFunc);
+      return;
+    }
+
+    // Otherwise continue normal flow
     goToNextRoom("#room3Earth", room3earthFunc);
   }, COMPLETE_MSG_MS);
 }
@@ -951,7 +969,15 @@ function ifRoomFailed(): void {
     locked = false;
     isTransitioning = false;
 
-    // Fire room owns the transition to Earth
+    // If this room was replayed from Game Over,
+    // return there instead of continuing the normal room flow
+    if (shouldReturnToGameOver()) {
+      clearReplayMode();
+      goToNextRoom("#gameOverRoom", gameOverRoomFunc);
+      return;
+    }
+
+    // Otherwise continue normal flow
     goToNextRoom("#room3Earth", room3earthFunc);
   }, COMPLETE_MSG_MS);
 }

@@ -6,11 +6,17 @@ import {
 } from "../../script/helper/gameHeader.ts";
 import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
 import { goToSection } from "../../script/helper/transitions.ts";
-import { setRoomResult } from "../../script/helper/storage.ts";
+import {
+  clearReplayMode,
+  getReplayRoom,
+  isReplayMode,
+  setRoomResult,
+} from "../../script/helper/storage.ts";
 import { updateProgressBar } from "../../script/helper/progressbar.ts";
 import { playBgm, playSfx } from "../../audio/index.ts";
 import { showMsg } from "../../script/helper/showMsg.ts";
 import { room4metalFunc } from "../4metal/room4metal.ts";
+import { gameOverRoomFunc } from "../gameConclusion/gameOverRoom.ts";
 
 let moves: number = 0;
 const slateNumbersArray: number[] = [
@@ -18,6 +24,11 @@ const slateNumbersArray: number[] = [
 ];
 let timerCheckInterval: number;
 const correctSlatesArr: number[] = [];
+
+// REPLAY MODE
+function shouldReturnToGameOver(): boolean {
+  return isReplayMode() && getReplayRoom() === "earth";
+}
 
 export function room3earthFunc(): void {
   /* Sets the background for the room and shows room section */
@@ -340,8 +351,15 @@ function winner(): void {
     setTimeout(() => {
       hideGameHeader();
       showMsg("Well done — next chamber awaits", 1200 * 2);
+
+      if (shouldReturnToGameOver()) {
+        clearReplayMode();
+        goToNextRoom("#gameOverRoom", gameOverRoomFunc);
+        return;
+      }
+
       goToNextRoom("#room4Metal", room4metalFunc);
-    }, 4500);
+    }, 1200);
   } //IF lavaSlate END
   setRoomResult("earth", {
     status: "completed",
@@ -372,8 +390,15 @@ function looser(): void {
     setTimeout(() => {
       hideGameHeader();
       showMsg("Time's up — next chamber awaits", 1200 * 2);
+
+      if (shouldReturnToGameOver()) {
+        clearReplayMode();
+        goToNextRoom("#gameOverRoom", gameOverRoomFunc);
+        return;
+      }
+
       goToNextRoom("#room4Metal", room4metalFunc);
-    }, 4500);
+    }, 1200);
   } //IF lavaSlate END
 
   setRoomResult("earth", {
