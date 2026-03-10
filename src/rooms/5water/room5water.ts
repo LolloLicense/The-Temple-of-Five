@@ -30,6 +30,7 @@ import {
   clearReplayMode,
   getReplayRoom,
   isReplayMode,
+  resetSingleRoomResult,
 } from "../../script/helper/storage.ts";
 import {
   getCurrentPage,
@@ -832,6 +833,8 @@ function handleCheck(): void {
 // ── EXPORTED ROOM FUNCTION ─────────────────────────────────────────────────
 
 export function room5waterFunc(): void {
+  resetSingleRoomResult("water");
+
   const section = document.querySelector<HTMLElement>("#room5Water");
   if (!section) return;
 
@@ -839,6 +842,8 @@ export function room5waterFunc(): void {
 
   // Stop old Water-specific async logic before starting a fresh enter
   cleanupWaterRoom();
+
+  goToSection(section, TRANSITION_MS);
 
   section.style.backgroundImage = `url("${dataJSON.room5water.backgroundImg}")`;
   showGameHeader();
