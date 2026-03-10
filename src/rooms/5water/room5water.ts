@@ -19,7 +19,7 @@
  * - Cleanup so old room logic does not keep running after room leave
  */
 
-import { playBgm, stopAll } from "../../audio/index.ts";
+import { playBgm } from "../../audio/index.ts";
 import * as dataJSON from "../../data.json";
 import { showGameHeader } from "../../script/helper/gameHeader.ts";
 import { updateProgressBar } from "../../script/helper/progressbar.ts";
@@ -107,8 +107,6 @@ const OPPOSITE: Record<TDirection, TDirection> = {
 const GRID_SIZE = 5;
 const TARGET_INDEX = GRID_SIZE - 1;
 const FIXED_CELLS = new Set<string>([`0,0`, `${TARGET_INDEX},${TARGET_INDEX}`]);
-const MAX_SCORE = 1000;
-const SCORE_PER_SECOND = 3;
 const TRANSITION_MS = 1200;
 
 // ── MODULE STATE ───────────────────────────────────────────────────────────
@@ -562,7 +560,6 @@ function ifRoomFailed(): void {
   updateProgressBar();
   announce("Time is up. The vessel remains empty.");
   showMsg("Time's up — the final chamber awaits", 2400);
-  stopAll();
 
   failTimeoutId = window.setTimeout(() => {
     // Ignore if Water is no longer the current room
@@ -590,12 +587,6 @@ function goToNextRoom(nextSelector: string, nextRoomFunc: () => void): void {
   window.setTimeout(() => {
     nextRoomFunc();
   }, TRANSITION_MS);
-}
-
-// ── SCORE ──────────────────────────────────────────────────────────────────
-
-function calcScore(): number {
-  return Math.max(0, MAX_SCORE - secondsElapsed * SCORE_PER_SECOND);
 }
 
 // ── HELPERS ────────────────────────────────────────────────────────────────
@@ -637,19 +628,16 @@ function solvePuzzle(): void {
 
   cleanupWaterRoom();
 
-  const score = calcScore();
-
   setRoomResult("water", {
     status: "completed",
     artifact: "true",
     mistakes: 0,
-    score,
+    score: 0, // Score can be calculated based on time or attempts if desired
     roomTimeSec: secondsElapsed,
   });
 
   updateProgressBar();
   showMsg("Well done — the final chamber awaits", 2400);
-  stopAll(); // Stop music
 
   solveTimeoutId = window.setTimeout(() => {
     // Ignore if Water is no longer the current room
@@ -848,8 +836,6 @@ export function room5waterFunc(): void {
   // Remove old bubbles before spawning new ones
   clearBubbles(section);
   spawnBubbles(section);
-
-  stopAll();
 
   // Start background music immediately when entering the room
   playBgm("bgm_water");

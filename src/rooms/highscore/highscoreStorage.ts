@@ -115,7 +115,8 @@ export function pushHighscore(
  * Dispatch event so UI can update instantly.
  */
 export function resetHighscores(): void {
-  localStorage.removeItem("tempelHighscores");
+  localStorage.removeItem(HIGHSCORE_KEY);
+
 
   window.dispatchEvent(new Event("highscores:changed"));
 }

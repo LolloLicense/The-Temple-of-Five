@@ -1,11 +1,10 @@
-import { playBgm, stopAll } from "../../audio";
+import { playBgm } from "../../audio";
 import * as dataJSON from "../../data.json";
 import { hideGameHeader, showGameHeader } from "../../script/helper/gameHeader";
 import { updateProgressBar } from "../../script/helper/progressbar.ts";
 import { renderRoomDesc } from "../../script/helper/roomDesc";
 import { showMsg } from "../../script/helper/showMsg";
 import {
-  getRoomResults,
   resetSingleRoomResult,
   setRoomResult,
 } from "../../script/helper/storage";
@@ -191,6 +190,25 @@ function stopIntroTimeout(): void {
   }
 }
 
+/* COMPLETE / FAIL TIMEOUTS */
+
+let completeTimeoutId: number | null = null;
+let failTimeoutId: number | null = null;
+
+function stopCompleteTimeout(): void {
+  if (completeTimeoutId !== null) {
+    window.clearTimeout(completeTimeoutId);
+    completeTimeoutId = null;
+  }
+}
+
+function stopFailTimeout(): void {
+  if (failTimeoutId !== null) {
+    window.clearTimeout(failTimeoutId);
+    failTimeoutId = null;
+  }
+}
+
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------- KEYBOARD NAVIGATION STATE ---------------------------------------------------------- */
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -363,8 +381,8 @@ export function room2fireFunc(): void {
   fireSection = document.querySelector<HTMLElement>("#room2Fire");
   if (!fireSection) return;
 
-  const after = getRoomResults().fire;
-  console.log("Fire state AFTER reset:", after);
+  // Stop old Fire async logic before starting a fresh enter
+  cleanupFireRoom();
 
   resetSingleRoomResult("fire");
 
@@ -385,10 +403,13 @@ export function room2fireFunc(): void {
 
   timeUpIntervalId = window.setInterval(() => {
     if (!TimeIsUp) return;
+
+    // Only trigger if Fire room is still visible
+    if (!fireSection || !fireSection.classList.contains("isVisible")) return;
+
     ifRoomFailed();
   }, 200);
 
-  stopAll(); // Stop music from previous room
 
   const bgmId = dataJSON.room2fire.bgmId; // Play the background music for the fire room
   if (bgmId) {
@@ -805,6 +826,9 @@ function goToNextRoom(nextSelector: string, nextRoomFunc: () => void): void {
   const nextSection = document.querySelector<HTMLElement>(nextSelector);
   if (!nextSection) return;
 
+  // Clean up Fire async logic before leaving the room
+  cleanupFireRoom();
+
   goToSection(nextSection, TRANSITION_MS);
 
   window.setTimeout(() => {
@@ -813,43 +837,47 @@ function goToNextRoom(nextSelector: string, nextRoomFunc: () => void): void {
 }
 
 function ifRoomCompleted(): void {
+  // Guard: prevent double trigger
   if (isTransitioning) return;
 
-  // Block input
+  // Block all new input immediately
   isTransitioning = true;
   locked = true;
 
-  // Stop all timers so they cant trigger after complete
+  // Stop watcher + intro timeout so nothing else can trigger while finishing
   stopTimeUpWatcher();
   stopIntroTimeout();
 
-  // Update UI one last time (just for UX)
+  // Update UI one last time for the player
   updateHUD();
   setActiveSlotClass();
 
-  // Save room result (status, artifact boolean, mistakes, score, roomtimesec)
+  // Save room result first.
+  // roomTimeSec is a temporary placeholder here.
+  // stopTimer(2) will later overwrite roomTimeSec with the actual timer value.
   setRoomResult("fire", {
     status: "completed",
     artifact: "true",
     mistakes,
-    score: 0, // TODO, define scoring rules
-    roomTimeSec: 0, // TODO, define timing rules
+    score: 0, // TODO: define scoring rules later
+    roomTimeSec: 0, // TODO: stopTimer(2) overwrites this with actual room time
   });
 
-  // Stop timer AFTER saving status/artifact/mistakes/score.
-  // The timer helper will then store roomTimeSec while keeping the other fields.
+  // Stop room timer AFTER saving result
   stopTimer(2);
 
-  //update progress bar
+  // Progress bar reads from storage, so update it after setRoomResult + stopTimer
   updateProgressBar();
 
-  // Show msg - feedback to user/player
+  // Show feedback message
   showMsg("Well done — next chamber awaits", COMPLETE_MSG_MS);
 
-  stopAll(); // stop music
+  // Store timeout id so it can be cleaned up if player leaves the room early
+  completeTimeoutId = window.setTimeout(() => {
+    // Ignore if Fire room is no longer active
+    if (!fireSection || !fireSection.classList.contains("isVisible")) return;
 
-  window.setTimeout(() => {
-    // CLEANUP so re-entering starts fresh.
+    // Reset local in-memory state so re-entering starts fresh
     currentLevelIndex = 0;
     attempt = [];
     mistakes = 0;
@@ -859,43 +887,57 @@ function ifRoomCompleted(): void {
     updateHUD();
     setActiveSlotClass();
 
-    // Fire ansvarar för transition till Earth
+    // Unlock/reset state before leaving
+    locked = false;
+    isTransitioning = false;
+
+    // Fire room owns the transition to Earth
     goToNextRoom("#room3Earth", room3earthFunc);
   }, COMPLETE_MSG_MS);
 }
 
 function ifRoomFailed(): void {
+  // Guard: prevent double trigger
   if (isTransitioning) return;
 
+  // Block all new input immediately
   isTransitioning = true;
   locked = true;
 
+  // Stop watcher + intro timeout so nothing else can trigger while failing
   stopTimeUpWatcher();
   stopIntroTimeout();
 
+  // Update UI one last time
   updateHUD();
   setActiveSlotClass();
 
+  // Save fail result first.
+  // roomTimeSec is a temporary placeholder here.
+  // stopTimer(2) will later overwrite roomTimeSec with the actual timer value.
   setRoomResult("fire", {
     status: "failed",
     artifact: "false",
     mistakes,
-    score: 0,
-    roomTimeSec: 0,
+    score: 0, // TODO: define scoring rules later
+    roomTimeSec: 0, // TODO: stopTimer(2) overwrites this with actual room time
   });
 
-  // Stop timer AFTER saving status/artifact/mistakes/score.
+  // Stop room timer AFTER saving result
   stopTimer(2);
 
-  //update progress bar
+  // Progress bar reads from storage, so update it after setRoomResult + stopTimer
   updateProgressBar();
 
+  // Show feedback message
   showMsg("Time's up — next chamber awaits", COMPLETE_MSG_MS);
 
-  stopAll(); // stop music
+  // Store timeout id so it can be cleaned up if player leaves the room early
+  failTimeoutId = window.setTimeout(() => {
+    // Ignore if Fire room is no longer active
+    if (!fireSection || !fireSection.classList.contains("isVisible")) return;
 
-  //  Efter message -> reset -> transition till Earth
-  window.setTimeout(() => {
+    // Reset local in-memory state so re-entering starts fresh
     currentLevelIndex = 0;
     attempt = [];
     mistakes = 0;
@@ -905,6 +947,11 @@ function ifRoomFailed(): void {
     updateHUD();
     setActiveSlotClass();
 
+    // Unlock/reset state before leaving
+    locked = false;
+    isTransitioning = false;
+
+    // Fire room owns the transition to Earth
     goToNextRoom("#room3Earth", room3earthFunc);
   }, COMPLETE_MSG_MS);
 }
@@ -914,20 +961,19 @@ function ifRoomFailed(): void {
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 export function exitFireRoom(): void {
-  console.log("EXIT FIRE ROOM CALLED");
   const welcomeSection = document.querySelector<HTMLElement>("#welcomePage");
   if (!welcomeSection) return;
 
-  // Stop timers/timeouts so nothing fires after exit
-  stopTimeUpWatcher();
-  stopIntroTimeout();
+  // Stop all Fire async logic so nothing can fire after exit
+  cleanupFireRoom();
+
+  // Stop room timer
   stopTimer(2);
 
-  // Reset THIS room in LS on exit
-  // Player can't "continue" into a half-finished Fire.
+  // Reset this room in storage so player cannot continue half-finished Fire
   resetSingleRoomResult("fire");
 
-  // Optional: also reset in-memory state so re-enter is always clean
+  // Reset local in-memory state so re-entering starts fresh
   currentLevelIndex = 0;
   attempt = [];
   mistakes = 0;
@@ -938,8 +984,20 @@ export function exitFireRoom(): void {
   focusedSlotIndex = 0;
 
   hideGameHeader();
-  // Let transition helper handle switching back to welcome
+
+  // Let transition helper show welcome page
   goToSection(welcomeSection, TRANSITION_MS);
+}
+
+/**
+ * Cleanup Fire room async logic so old timers / watchers
+ * do not continue after leaving the room.
+ */
+function cleanupFireRoom(): void {
+  stopTimeUpWatcher();
+  stopIntroTimeout();
+  stopCompleteTimeout();
+  stopFailTimeout();
 }
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
