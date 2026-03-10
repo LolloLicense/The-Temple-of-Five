@@ -424,6 +424,7 @@ export function room2fireFunc(): void {
   renderRoomDesc(fireSection, dataJSON.room2fire.desc); // Render description from helper function, with text and icons from JSON
 
   cacheDomOrThrow(); // Cashe DOM only once or throw error if missing
+  spawnEmbers();  // Spawn ember effect
   initKeypadFocus(); // Init key-controls
   applyKeyFocus(); // Focus on slots or buttons
 
@@ -549,6 +550,54 @@ function setIntroVisualState(isIntro: boolean): void {
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ---------------------------------------------------------- EMBER ANIMATION ----------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+/**
+ * Creates ember particles inside the Fire Room.
+ * Each particle gets a random size, horizontal position,
+ * rise duration and flicker timing for a more natural effect.
+ */
+function spawnEmbers(): void {
+  if (!fireSection) return;
+
+  const container =
+    fireSection.querySelector<HTMLDivElement>(".fireParticles");
+
+  if (!container) return;
+
+  // Clear old particles first so they do not stack up on re-enter/reset
+  container.replaceChildren();
+
+  const count = 26; // Start small for performance and visual clarity
+
+  for (let i = 0; i < count; i++) {
+    const ember = document.createElement("div");
+    ember.className = "fireParticle";
+
+    // Random size: between 3px and 8px
+    const size = Math.random() * 5 + 3;
+    ember.style.width = `${size}px`;
+    ember.style.height = `${size}px`;
+
+    // Random horizontal start position
+    ember.style.left = `${Math.random() * 100}%`;
+
+    // Start near the lower part of the room
+    ember.style.bottom = `${Math.random() * 60}px`;
+
+    // Random rise duration and flicker duration
+    const riseDuration = Math.random() * 6 + 6; // 6s to 12s
+    const flickerDuration = Math.random() * 2 + 2; // 2s to 4s
+
+    // Random animation delay so all particles do not move in sync
+    const riseDelay = Math.random() * 4;
+    const flickerDelay = Math.random() * 2;
+
+    ember.style.animationDuration = `${riseDuration}s, ${flickerDuration}s`;
+    ember.style.animationDelay = `${riseDelay}s, ${flickerDelay}s`;
+
+    container.appendChild(ember);
+  }
+}
 
 /**
  * Apply ember intensity class on section depending on level
