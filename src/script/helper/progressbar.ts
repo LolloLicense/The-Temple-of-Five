@@ -55,3 +55,7 @@ export function updateProgressBar(): void {
     }
   });
 }
+// Keep progressbar in sync when room results change
+window.addEventListener("roomResults:changed", () => {
+  updateProgressBar();
+});
