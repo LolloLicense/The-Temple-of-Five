@@ -24,7 +24,7 @@
  * -------------------------------------------------------------------------------------------------
  *
  * The panel will be invisible unless unlocked.
- * It never calls transitSections() unless you click the transition button. (made this because of testing)
+ * It never calls goToSection() unless you click the transition button. (made this because of testing)
  * -------------------------------------------------------------------------------------------------
  *
  * Dev panel buttons:
@@ -55,6 +55,7 @@ import {
   setRoomResult,
 } from "./storage.ts";
 import { getCurrentPage, goToSection } from "./transitions.ts";
+import { updateProgressBar } from "./progressbar.ts";
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 /* --------------------------------------------------- CONFIGS ----------------------------------------------------------------- */
@@ -558,15 +559,15 @@ function openDevPanel(): void {
       completeSpecificRoom(selectedRoom, "true", getOverridesFromInputs()),
     ),
 
-    makeBtn("7) Complete SELECTED (FALSE)", () =>
+    makeBtn("8) Complete SELECTED (FALSE)", () =>
       completeSpecificRoom(selectedRoom, "false", getOverridesFromInputs()),
     ),
 
-    makeBtn("▶ Complete CURRENT + Go NEXT (FULL FLOW)", () =>
+    makeBtn("9) ▶ Complete CURRENT + Go NEXT (FULL FLOW)", () =>
       completeCurrentAndGoNextFullFlow("true", getOverridesFromInputs()),
     ),
 
-    makeBtn("🏁 Go to FINAL ROOM", () => goToFinalRoomDirect()),
+    makeBtn("10) 🏁 Go to FINAL ROOM", () => goToFinalRoomDirect()),
   );
 
   //-----------------------------------------------------------
@@ -630,6 +631,9 @@ function completeSpecificRoom(
 
   setRoomResult(roomId, next);
 
+  // Force-refresh UI for dev testing
+  refreshDevUiAfterStateChange();
+
   console.log(
     `[DEV CHEATS] Completed: ${roomId} | artifact=${artifact} | mistakes=${next.mistakes} | roomTimeSec=${next.roomTimeSec}`,
   );
@@ -656,6 +660,9 @@ function completeAllRooms(
     setRoomResult(roomId, next);
   }
 
+  // Force-refresh UI for dev testing
+  refreshDevUiAfterStateChange();
+
   console.log(
     `[DEV CHEATS] Completed ALL rooms | artifact=${artifact} | mistakes=${overrides.mistakes} | roomTimeSec=${overrides.roomTimeSec}`,
   );
@@ -669,11 +676,20 @@ function resetCurrentRoom(): void {
   }
 
   resetSingleRoomResult(roomId);
+
+  // Force-refresh UI for dev testing
+  refreshDevUiAfterStateChange();
+
+
   console.log(`[DEV CHEATS] Reset CURRENT: ${roomId}`);
 }
 
 function resetAllRooms(): void {
   resetRoomResults();
+
+  // Force-refresh UI for dev testing
+  refreshDevUiAfterStateChange();
+
   console.log("[DEV CHEATS] Reset ALL rooms");
 }
 
@@ -852,4 +868,20 @@ function getNextRoomId(current: TRoomId): TRoomId | null {
   const idx = ALL_ROOMS.indexOf(current);
   if (idx === -1) return null;
   return ALL_ROOMS[idx + 1] ?? null;
+}
+
+
+/* ----------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------ DEV UI REFRESH HELPERS ----------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------------------------------------- */
+
+/**
+ * refreshDevUiAfterStateChange()
+ * 
+ * - Force-update UI parts that depend on room results
+ * - Useful during dev cheats when we want instant visual feedback
+ *
+ */
+function refreshDevUiAfterStateChange(): void {
+  updateProgressBar();
 }
