@@ -85,7 +85,6 @@ export type TGameState = Record<TStoredRoomId, TRoomResult>;
 
 /* 
  * TYPE: Detailed room score breakdown
- * This is useful for:
  * - debugging
  * - result screen rendering
  * - balancing score rules later
@@ -336,10 +335,9 @@ export function calculateFinalScore(
 }
 
 /* -------------------------------------------------------------------------------------------------
- * CONVENIENCE: calculateFinalScoreFromStorage
+ * calculateFinalScoreFromStorage
  * Reads everything from LocalStorage-related helpers.
  *
- * CURRENT BEHAVIOR
  * - Reads room results from getRoomResults()
  * - Reads total run time from LocalStorage through getStoredTotalTimeSec()
  *
