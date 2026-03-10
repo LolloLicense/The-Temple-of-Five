@@ -10,7 +10,7 @@ import { gameOverRoomFunc } from "../gameConclusion/gameOverRoom.ts";
 import { gameWinFunc } from "../gameConclusion/gameWin.ts";
 
 // Type that only contains the five elemental rooms
-type TElementRoomId = "wood" | "fire" | "earth" | "metal" | "water"; 
+type TElementRoomId = "wood" | "fire" | "earth" | "metal" | "water";
 
 // Default transition time to the next section
 const TRANSITION_MS = 1200;
@@ -197,7 +197,7 @@ export function room6finalFunc(): void {
     renderSlots(); // Re-render slots so the player sees the change
     updateValidate(); // Update validate button (may become enabled)
   }
-  
+
   //-----------------------------------------------------------
   //---------------------- Keyboard --------------------------
   //-----------------------------------------------------------
@@ -239,7 +239,7 @@ export function room6finalFunc(): void {
 
   // Bind the keyboard listener
   document.addEventListener("keydown", finalKeyboardHandler);
-  
+
   //-----------------------------------------------------------
   //----------------------- Validate --------------------------
   //-----------------------------------------------------------

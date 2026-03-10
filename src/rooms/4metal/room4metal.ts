@@ -5,19 +5,19 @@ import { updateProgressBar } from "../../script/helper/progressbar.ts";
 import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
 import { showMsg } from "../../script/helper/showMsg.ts";
 import {
-  getCurrentPage,
-  goToSection,
-} from "../../script/helper/transitions.ts";
-import {
   clearReplayMode,
   getReplayRoom,
   getRoomResults,
   isReplayMode,
   setRoomResult,
 } from "../../script/helper/storage.ts";
-import { gameOverRoomFunc } from "../gameConclusion/gameOverRoom.ts";
+import {
+  getCurrentPage,
+  goToSection,
+} from "../../script/helper/transitions.ts";
 import { startTimer, stopTimer, TimeIsUp } from "../../script/helper/utils.ts";
 import { room5waterFunc } from "../5water/room5water.ts";
+import { gameOverRoomFunc } from "../gameConclusion/gameOverRoom.ts";
 
 //-------------------------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------------- Module variables -------------------------------------------------------------

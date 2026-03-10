@@ -1,20 +1,20 @@
+import { playBgm, playSfx } from "../../audio/index.ts";
 import * as dataJSON from "../../data.json";
-import { startTimer, stopTimer, TimeIsUp } from "../../script/helper/utils.ts";
 import {
-  showGameHeader,
   hideGameHeader,
+  showGameHeader,
 } from "../../script/helper/gameHeader.ts";
+import { updateProgressBar } from "../../script/helper/progressbar.ts";
 import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
-import { goToSection } from "../../script/helper/transitions.ts";
+import { showMsg } from "../../script/helper/showMsg.ts";
 import {
   clearReplayMode,
   getReplayRoom,
   isReplayMode,
   setRoomResult,
 } from "../../script/helper/storage.ts";
-import { updateProgressBar } from "../../script/helper/progressbar.ts";
-import { playBgm, playSfx } from "../../audio/index.ts";
-import { showMsg } from "../../script/helper/showMsg.ts";
+import { goToSection } from "../../script/helper/transitions.ts";
+import { startTimer, stopTimer, TimeIsUp } from "../../script/helper/utils.ts";
 import { room4metalFunc } from "../4metal/room4metal.ts";
 import { gameOverRoomFunc } from "../gameConclusion/gameOverRoom.ts";
 

@@ -117,6 +117,5 @@ export function pushHighscore(
 export function resetHighscores(): void {
   localStorage.removeItem(HIGHSCORE_KEY);
 
-
   window.dispatchEvent(new Event("highscores:changed"));
 }

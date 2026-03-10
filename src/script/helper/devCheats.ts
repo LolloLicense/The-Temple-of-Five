@@ -46,6 +46,7 @@ import { room3earthFunc } from "../../rooms/3earth/room3earth.ts";
 import { room4metalFunc } from "../../rooms/4metal/room4metal.ts";
 import { room5waterFunc } from "../../rooms/5water/room5water.ts";
 import { room6finalFunc } from "../../rooms/final/room6validate.ts";
+import { updateProgressBar } from "./progressbar.ts";
 import { showMsg } from "./showMsg.ts";
 import type { TArtifactKind, TRoomId, TRoomResult } from "./storage.ts";
 import {
@@ -55,7 +56,6 @@ import {
   setRoomResult,
 } from "./storage.ts";
 import { getCurrentPage, goToSection } from "./transitions.ts";
-import { updateProgressBar } from "./progressbar.ts";
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 /* --------------------------------------------------- CONFIGS ----------------------------------------------------------------- */
@@ -680,7 +680,6 @@ function resetCurrentRoom(): void {
   // Force-refresh UI for dev testing
   refreshDevUiAfterStateChange();
 
-
   console.log(`[DEV CHEATS] Reset CURRENT: ${roomId}`);
 }
 
@@ -870,14 +869,13 @@ function getNextRoomId(current: TRoomId): TRoomId | null {
   return ALL_ROOMS[idx + 1] ?? null;
 }
 
-
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------ DEV UI REFRESH HELPERS ----------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 /**
  * refreshDevUiAfterStateChange()
- * 
+ *
  * - Force-update UI parts that depend on room results
  * - Useful during dev cheats when we want instant visual feedback
  *
