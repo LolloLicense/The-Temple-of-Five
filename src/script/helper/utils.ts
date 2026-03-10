@@ -84,12 +84,10 @@ export function getUserTotalTime(): void {
   const userName = getUserName();
   if (userName) {
     const totalTimeSeconds = localStorage.getItem(scopedKey(LS_KEY.totalTime));
-    //console.log("Retrieved total time from localStorage:", totalTimeSeconds);
     totalMinutes = totalTimeSeconds
       ? Math.floor(parseInt(totalTimeSeconds) / 60)
       : 0;
     totalSeconds = totalTimeSeconds ? parseInt(totalTimeSeconds) % 60 : 0;
-    //console.log("Parsed total time:", totalMinutes, totalSeconds);
 
     if (totalMinutesSpan && totalSecondsSpan) {
       if (totalMinutes > 9) {
