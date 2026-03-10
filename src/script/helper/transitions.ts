@@ -20,7 +20,7 @@
 // keeps in mid what sections is current
 let currentPage: HTMLElement | null = null;
 
-// Lock trasition while ongoing
+// Lock transition while ongoing
 let isTransitioning = false;
 
 /**
