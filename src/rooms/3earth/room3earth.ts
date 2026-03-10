@@ -67,8 +67,12 @@ export function room3earthFunc(): void {
         slates[i].addEventListener("click", () => {
           slateClick(slates[i], i + 1);
         });
-        //console.log(slates[i].textContent);
       }
+      document.body.addEventListener("keydown", (event) => {
+        event.preventDefault();
+        keyPressHandler(event);
+      });
+      // Listen for key presses and call the handler, prevent default to avoid scrolling with arrow keys
     } // IF gameDiv END
   } // IF earthSection END
 } // room3earthFunc END
@@ -101,6 +105,70 @@ function slateClick(_slate: HTMLElement | null, count: number): void {
     moveSlate(slateNumber, currentPos, lavaPos);
   }
 } // slateClick END
+
+function keyPressHandler(event: KeyboardEvent): void {
+  const key = event.key;
+  const emptySlate = document.querySelector(".slate16");
+  if (emptySlate) {
+    const lavaX: number = parseInt(emptySlate?.classList[2].substring(1, 2));
+    const lavaY: number = parseInt(emptySlate?.classList[2].substring(2));
+    //const lavaPos: [x: number, y: number] = [lavaX, lavaY];
+
+    switch (key) {
+      case "ArrowUp":
+        // Handle up arrow key press
+        {
+          // wrap in block to avoid variable redeclaration error
+          const dirrX: number = lavaX - 1;
+          const dirrY: number = lavaY + 0;
+          const clickSlate: HTMLElement | null = document.querySelector(
+            `.c${dirrX}${dirrY}`,
+          );
+          clickSlate?.click();
+        } // block wrap END
+        break;
+      case "ArrowDown":
+        // handle down arrow key press
+        {
+          // wrap in block to avoid variable redeclaration error
+          const dirrX: number = lavaX + 1;
+          const dirrY: number = lavaY + 0;
+          const clickSlate: HTMLElement | null = document.querySelector(
+            `.c${dirrX}${dirrY}`,
+          );
+          clickSlate?.click();
+        } // block wrap END
+        // Handle down arrow key press
+        break;
+      case "ArrowLeft":
+        // handle left arrow key press
+        {
+          // wrap in block to avoid variable redeclaration error
+          const dirrX: number = lavaX + 0;
+          const dirrY: number = lavaY - 1;
+          const clickSlate: HTMLElement | null = document.querySelector(
+            `.c${dirrX}${dirrY}`,
+          );
+          clickSlate?.click();
+        } // block wrap END
+        // Handle left arrow key press
+        break;
+      case "ArrowRight":
+        // handle right arrow key press
+        {
+          // wrap in block to avoid variable redeclaration error
+          const dirrX: number = lavaX + 0;
+          const dirrY: number = lavaY + 1;
+          const clickSlate: HTMLElement | null = document.querySelector(
+            `.c${dirrX}${dirrY}`,
+          );
+          clickSlate?.click();
+        } // block wrap END
+        // Handle right arrow key press
+        break;
+    } // Switch END
+  } // IF emptySlate END
+} // IF keyPressHandler END
 
 function moveSlate(
   slateNumber: number,
