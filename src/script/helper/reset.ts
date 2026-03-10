@@ -1,6 +1,7 @@
 import { updateProgressBar } from "./progressbar";
 import { resetRunKeepHighscores } from "./storage";
 import { getCurrentPage, goToSection, showSection } from "./transitions";
+import { resetTotalTimer } from "./utils";
 
 // preventin listerners to multiply
 let resetBound = false;
@@ -19,6 +20,7 @@ export function initResetButtons(): void {
 
     // only reset current run-state on clickBTN
     resetRunKeepHighscores();
+    resetTotalTimer();
     updateProgressBar();
     // Back to welcome after resetclick - trasiteffect
     const welcome = document.querySelector<HTMLElement>("#welcomePage");

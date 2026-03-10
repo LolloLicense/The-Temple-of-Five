@@ -46,6 +46,9 @@ export const LS_KEY = {
   // for replay mode
   replayMode: "tempelReplayMode",
   replayRoom: "tempelReplayRoom",
+  hasActiveRun: "tempelHasActiveRun",
+  resumeRoom: "tempelResumeRoom",
+  runStarted: "tempelRunStarted",
 } as const;
 
 // variable for all rooms except final
@@ -230,17 +233,94 @@ export function logoutUser(): void {
 }
 
 //-----------------------------------------------------------
+//----------------------- ACTIVE RUN / RESUME ---------------
+//-----------------------------------------------------------
+
+/**
+ * Save whether the current user has an active run.
+ */
+export function setHasActiveRun(value: boolean): void {
+  localStorage.setItem(
+    scopedKey(LS_KEY.hasActiveRun),
+    value ? "true" : "false",
+  );
+}
+
+/**
+ * Check if the current user has an active run.
+ */
+export function hasActiveRun(): boolean {
+  return localStorage.getItem(scopedKey(LS_KEY.hasActiveRun)) === "true";
+}
+
+/**
+ * Save which room should be resumed next.
+ * This should point to the room the player should restart from,
+ * not resume in the middle of.
+ */
+export function setResumeRoom(roomId: TRoomId): void {
+  localStorage.setItem(scopedKey(LS_KEY.resumeRoom), roomId);
+}
+
+/**
+ * Get the saved resume room for the current user.
+ */
+export function getResumeRoom(): TRoomId | null {
+  const raw = localStorage.getItem(scopedKey(LS_KEY.resumeRoom));
+  if (!raw) return null;
+  return raw as TRoomId;
+}
+
+/**
+ * Clear saved resume room for the current user.
+ */
+export function clearResumeRoom(): void {
+  localStorage.removeItem(scopedKey(LS_KEY.resumeRoom));
+}
+
+/**
+ * Marks that a run has been started for the current user.
+ * Can be useful if you want to distinguish a brand new player from a paused run.
+ */
+export function setRunStarted(value: boolean): void {
+  localStorage.setItem(scopedKey(LS_KEY.runStarted), value ? "true" : "false");
+}
+
+/**
+ * Check if the user has ever started the current run.
+ */
+export function hasRunStarted(): boolean {
+  return localStorage.getItem(scopedKey(LS_KEY.runStarted)) === "true";
+}
+
+//-----------------------------------------------------------
 //----------------------- RESETS ----------------------------
 //-----------------------------------------------------------
 
 // Reset RUN without clearing highscores
+/**
+ * Reset current run for active user,
+ * but keep saved highscores.
+ */
 export function resetRunKeepHighscores(): void {
-  // Reset roomResult
+  // Reset all room results to default state
   saveRoomResults(freshDefaultGameState());
 
-  // Reset timers för AKTIV user (om du vill spara dem per user)
+  // Clear saved timers for the active run
   localStorage.removeItem(scopedKey(LS_KEY.totalTime));
   localStorage.removeItem(scopedKey(LS_KEY.roomTime));
+
+  // Clear replay state
+  localStorage.removeItem(scopedKey(LS_KEY.replayMode));
+  localStorage.removeItem(scopedKey(LS_KEY.replayRoom));
+
+  // Clear temporary run score
+  localStorage.removeItem(scopedKey(LS_KEY.finalScore));
+
+  // Clear resume / active-run state
+  localStorage.removeItem(scopedKey(LS_KEY.resumeRoom));
+  setHasActiveRun(false);
+  localStorage.removeItem(scopedKey(LS_KEY.runStarted));
 }
 
 //-----------------------------------------------------------

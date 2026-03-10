@@ -26,7 +26,13 @@ export let TimeIsUp = false;
 
 export function startTimer(id: number): void {
   if (id === 0) {
-    totalTimerInterval = setInterval(() => {
+    // Load saved total time before starting again
+    getUserTotalTime();
+
+    // Clear old total timer so we do not stack intervals
+    clearInterval(totalTimerInterval);
+
+    totalTimerInterval = window.setInterval(() => {
       timerTick(0);
     }, 1000);
   } else {
@@ -36,7 +42,7 @@ export function startTimer(id: number): void {
     // reset room "time up" flag every time a room starts
     TimeIsUp = false;
     setTimeLimits(id);
-    roomTimerInterval = setInterval(() => {
+    roomTimerInterval = window.setInterval(() => {
       timerTick(id);
     }, 1000);
   }
@@ -50,6 +56,40 @@ export function stopTimer(id: number): void {
     clearInterval(roomTimerInterval);
     setRoomTime(id);
     TimeIsUp = true;
+  }
+}
+
+/**
+ * Stops the current room timer without saving room result
+ * and without setting TimeIsUp.
+ * Use this when player leaves a room and resume run later.
+ */
+export function clearRoomTimerOnLeave(): void {
+  clearInterval(roomTimerInterval);
+  TimeIsUp = false;
+}
+
+/**
+ * Reset the total timer completely.
+ * Use this for reset / start new run.
+ */
+export function resetTotalTimer(): void {
+  clearInterval(totalTimerInterval);
+
+  totalMinutes = 0;
+  totalSeconds = 0;
+
+  const totalMinutesSpan: HTMLElement | null =
+    document.querySelector("#totalMinutesSpan");
+  const totalSecondsSpan: HTMLElement | null =
+    document.querySelector("#totalSecondsSpan");
+
+  if (totalMinutesSpan) {
+    totalMinutesSpan.innerHTML = "00";
+  }
+
+  if (totalSecondsSpan) {
+    totalSecondsSpan.innerHTML = "00";
   }
 }
 

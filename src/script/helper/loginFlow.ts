@@ -4,8 +4,12 @@ import {
   getUserName,
   isLoggedIn,
   logoutUser,
+  resetSingleRoomResult,
   saveUserName,
+  setHasActiveRun,
   setLoggedIn,
+  setResumeRoom,
+  type TRoomId,
 } from "./storage";
 import {
   getCurrentPage,
@@ -13,30 +17,31 @@ import {
   revealSplashHeading,
   showSection,
 } from "./transitions";
+import { clearRoomTimerOnLeave, stopTimer } from "./utils";
 
 //-----------------------------------------------------------
 //------------------------- STATES --------------------------
 //-----------------------------------------------------------
 
-// Timeout-ID för splash → login-flödet
+// Timeout id for splash -> login flow
 let splashToLoginTimeoutId: number | null = null;
 
-// Timeout-ID för logout → splash → login-flödet
+// Timeout id for logout -> splash -> login flow
 let logoutToLoginTimeoutId: number | null = null;
 
 //-----------------------------------------------------------
-//-------------- Transitions "loop" CLEANUP------------------
+//-------------- TRANSITION FLOW CLEANUP --------------------
 //-----------------------------------------------------------
 
-// Funktion som avbryter alla pågående timeouts
+// Function that clears all running timeouts
 function clearLoginFlowTimeouts(): void {
-  // Avbryt splash→login timeout om den finns
+  // Clear splash -> login timeout if it exists
   if (splashToLoginTimeoutId !== null) {
     window.clearTimeout(splashToLoginTimeoutId);
     splashToLoginTimeoutId = null;
   }
 
-  // Avbryt logout→splash→login timeout om den finns
+  // Clear logout -> splash -> login timeout if it exists
   if (logoutToLoginTimeoutId !== null) {
     window.clearTimeout(logoutToLoginTimeoutId);
     logoutToLoginTimeoutId = null;
@@ -47,41 +52,44 @@ function clearLoginFlowTimeouts(): void {
 //------------------ LOGOUT HANDLER -------------------------
 //-----------------------------------------------------------
 
-// Körs när eventet "exit:logout" triggas
+// Runs when the "exit:logout" event is triggered
 function handleLogout(): void {
-  // Stoppa alla timeouts så inget gammalt flöde körs
+  // Stop all old timeouts so no old flow keeps running
   clearLoginFlowTimeouts();
 
-  // Rensa login-state i localStorage
+  // Clear logged-in state in localStorage
   logoutUser();
 
-  // Töm inputfältet i login-formuläret
+  // Empty the input field in the login form
   const input = document.querySelector<HTMLInputElement>("#userName");
   if (input) input.value = "";
 
-  // Dölj headern
+  // Stop current room timer without saving fail/time-up state
+  clearRoomTimerOnLeave();
+
+  // Hide the game header
   hideGameHeader();
 
-  // Hämta sektionerna
+  // Get the sections
   const splashSection = document.querySelector<HTMLElement>("#splashPage")!;
   const loginSection = document.querySelector<HTMLElement>("#loginPage")!;
   const welcomeSection = document.querySelector<HTMLElement>("#welcomePage")!;
 
-  // Hitta aktuell sida (fallback = welcome)
+  // Find current page (fallback = welcome)
   const fromPage = getCurrentPage() ?? welcomeSection;
 
-  // Om vi inte redan är på splash → fade dit
+  // If we are not already on splash -> fade there
   if (fromPage !== splashSection) {
     goToSection(splashSection, 1200);
   } else {
-    // Annars visa splash direkt
+    // Otherwise show splash directly
     showSection(splashSection);
   }
 
-  // Visa splash-titeln efter 600ms
+  // Show splash heading after 600ms
   revealSplashHeading(600);
 
-  // Efter 4 sek → gå från splash till login
+  // After 4 sec -> go from splash to login
   logoutToLoginTimeoutId = window.setTimeout(() => {
     goToSection(loginSection, 2000);
   }, 4000);
@@ -91,34 +99,50 @@ function handleLogout(): void {
 //------------------ LEAVE ROOM HANDLER ---------------------
 //-----------------------------------------------------------
 
-// Körs när eventet "exit:leaveRoom" triggas
-function handleLeaveRoom(): void {
-  // Stoppa alla timeouts
+// Runs when the "exit:leaveRoom" event is triggered
+function handleLeaveRoom(e: Event): void {
+  const customEvent = e as CustomEvent<{ roomId: string | null }>;
+  const roomId = customEvent.detail?.roomId;
+
+  // Pause and save total time for resume
+  stopTimer(0);
+
+  // Stop all timeouts
   clearLoginFlowTimeouts();
 
-  // Dölj headern
+  // Hide the header
   hideGameHeader();
 
-  // Hämta welcome-sidan
+  // If we got a roomId, save it as resume room
+  // and reset that room so it starts from the beginning next time
+  if (roomId) {
+    const typedRoomId = roomId as TRoomId;
+
+    setHasActiveRun(true);
+    setResumeRoom(typedRoomId);
+    resetSingleRoomResult(typedRoomId);
+  }
+
+  // Get the welcome page
   const welcomeSection = document.querySelector<HTMLElement>("#welcomePage")!;
 
-  // Hitta aktuell sida
+  // Find current page
   let fromPage = getCurrentPage();
 
-  // Om ingen sida hittas → ta första synliga sektionen
+  // If no page is found -> use first visible section
   if (!fromPage || fromPage === welcomeSection) {
     fromPage =
       document.querySelector<HTMLElement>("main > section:not(.hidden)") ??
       welcomeSection;
   }
 
-  // Om vi redan är på welcome → gör inget
+  // If we are already on welcome -> do nothing
   if (fromPage === welcomeSection) {
     showSection(welcomeSection);
     return;
   }
 
-  // Annars fade till welcome
+  // Otherwise fade to welcome
   goToSection(welcomeSection, 1200);
 }
 
@@ -126,41 +150,41 @@ function handleLeaveRoom(): void {
 //------------------ LOGIN SUBMIT HANDLER -------------------
 //-----------------------------------------------------------
 
-// Körs när användaren skickar login-formuläret
+// Runs when the user submits the login form
 function onLoginSubmit(e: SubmitEvent): void {
-  // Stoppa formens default reload
+  // Stop default form reload
   e.preventDefault();
 
-  // Hämta formuläret
+  // Get the form
   const form = e.currentTarget as HTMLFormElement;
 
-  // Hämta inputfältet
+  // Get the input field
   const input = form.querySelector<HTMLInputElement>("#userName");
   if (!input) return;
 
-  // Trimma namnet
+  // Trim the name
   const name = input.value.trim();
   if (!name) return;
 
-  // Spara användarnamnet i localStorage
+  // Save user name in localStorage
   saveUserName(name);
 
-  // Markera användaren som inloggad
+  // Mark user as logged in
   setLoggedIn(true);
 
-  // Hämta welcome-sidan
+  // Get the welcome page
   const welcomeSection = document.querySelector<HTMLElement>("#welcomePage")!;
   // const loginSection = document.querySelector<HTMLElement>("#loginPage")!;
 
-  // Sätt användarnamnet i welcome-sidan
+  // Put user name into the welcome page
   const welcomeNameEl =
     welcomeSection.querySelector<HTMLElement>(".userNameValue");
   if (welcomeNameEl) welcomeNameEl.textContent = name;
 
-  // Stoppa eventuella timeouts
+  // Stop old timeouts
   clearLoginFlowTimeouts();
 
-  // Fade från login → welcome
+  // Fade from login -> welcome
   goToSection(welcomeSection, 1200);
 }
 
@@ -168,13 +192,13 @@ function onLoginSubmit(e: SubmitEvent): void {
 //------------------ BIND LISTENERS (ONCE) ------------------
 //-----------------------------------------------------------
 
-// Bind logout-eventet EN gång
+// Bind logout event one time
 document.addEventListener("exit:logout", handleLogout);
 
-// Bind leaveRoom-eventet EN gång
+// Bind leaveRoom event one time
 document.addEventListener("exit:leaveRoom", handleLeaveRoom);
 
-// Bind login-submit EN gång
+// Bind login submit one time
 const loginForm = document.querySelector<HTMLFormElement>("#loginForm");
 if (loginForm) loginForm.addEventListener("submit", onLoginSubmit);
 
@@ -182,34 +206,34 @@ if (loginForm) loginForm.addEventListener("submit", onLoginSubmit);
 //------------------ INIT LOGIN FLOW ------------------------
 //-----------------------------------------------------------
 
-// Körs när loginflödet ska startas (t.ex. vid sidladdning)
+// Runs when login flow should start (for example on page load)
 export function initLoginFlow(): void {
-  // Stoppa gamla timeouts
+  // Stop old timeouts
   clearLoginFlowTimeouts();
 
-  // Hämta sektionerna
+  // Get the sections
   const splashSection = document.querySelector<HTMLElement>("#splashPage")!;
   const loginSection = document.querySelector<HTMLElement>("#loginPage")!;
   const welcomeSection = document.querySelector<HTMLElement>("#welcomePage")!;
 
-  // Dölj headern
+  // Hide the header
   hideGameHeader();
 
-  // Sätt bakgrundsbilder från JSON
+  // Set background images from JSON
   splashSection.style.backgroundImage = `url("${dataJSON.splash.backgroundImg}")`;
   loginSection.style.backgroundImage = `url("${dataJSON.login.backgroundImg}")`;
   welcomeSection.style.backgroundImage = `url("${dataJSON.welcome.backgroundImg}")`;
 
-  // Dölj alla sidor och nollställ state
+  // Hide all pages and reset state
   [splashSection, loginSection, welcomeSection].forEach((p) => {
     p.classList.add("hidden");
     p.classList.remove("isVisible");
   });
 
-  // Hämta ev. sparad användare
+  // Get saved user if there is one
   const savedUser = getUserName();
 
-  // Om användaren redan är inloggad → hoppa direkt till welcome
+  // If user is already logged in -> go straight to welcome
   if (isLoggedIn() && savedUser) {
     const welcomeNameEl =
       welcomeSection.querySelector<HTMLElement>(".userNameValue");
@@ -219,13 +243,13 @@ export function initLoginFlow(): void {
     return;
   }
 
-  // Visa splash-sidan
+  // Show splash page
   showSection(splashSection);
 
-  // Fade in splash-titeln
+  // Fade in splash heading
   revealSplashHeading(600);
 
-  // Efter 4 sek → gå till login (om vi fortfarande är på splash)
+  // After 4 sec -> go to login (if we are still on splash)
   splashToLoginTimeoutId = window.setTimeout(() => {
     if (getCurrentPage() !== splashSection) return;
     if (isLoggedIn() && getUserName()) return;

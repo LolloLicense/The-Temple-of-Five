@@ -3,6 +3,7 @@ import { stopAll } from "../../audio/index.ts";
 type ExitMode = "welcome" | "room";
 
 let exitDialogBound = false;
+let pendingLeaveRoomId: string | null = null;
 
 export function initExitDialog(): void {
   if (exitDialogBound) return;
@@ -29,6 +30,7 @@ export function initExitDialog(): void {
 
     // see what mode the button has (type ExitMode & data-set in html)
     const mode = (openBtn.dataset.exitMode as ExitMode) ?? "welcome";
+    pendingLeaveRoomId = openBtn.dataset.roomId ?? null;
     console.log("openExitDialog clicked. mode =", mode, "openBtn =", openBtn);
     // show the correct content in dialog depending on ExitMode
     if (mode === "welcome") {
@@ -64,7 +66,14 @@ export function initExitDialog(): void {
     if (action === "leaveRoom") {
       dialog.close();
       stopAll(); // Stop music when exit room
-      document.dispatchEvent(new CustomEvent("exit:leaveRoom"));
+
+      document.dispatchEvent(
+        new CustomEvent("exit:leaveRoom", {
+          detail: {
+            roomId: pendingLeaveRoomId,
+          },
+        }),
+      );
       return;
     }
   });
