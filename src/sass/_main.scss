@@ -109,6 +109,9 @@ body {
   z-index: 10;
   display: grid;
   place-items: center;
+  background-color: rgba(0, 0, 0, 0.2);
+  background-blend-mode: multiply;
+
   .loginPlate {
     padding: 2rem 3rem;
     display: flex;
