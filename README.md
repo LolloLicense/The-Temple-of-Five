@@ -1,8 +1,10 @@
-# 🏛️ The Temple of Five
+# The Temple of Five
+
+![The Temple of Five Startpage](/public/img/startpage.png)
 
 Welcome to **The Temple of Five**, an atmospheric puzzle adventure game created by **The Pogo Stick Pioneers**. Journey through five elemental chambers—Wood, Fire, Earth, Metal, and Water—each housing a unique challenge. Solve the puzzles, collect the sacred artifacts, and unlock the temple's final secret.
 
-## 🎮 About the Game
+## About the Game
 
 The Temple of Five is a browser-based experience built with modern web technologies. Each room is designed to test your logic, observation, and reflexes within a high-immersion environment.
 
@@ -14,20 +16,20 @@ The Temple of Five is a browser-based experience built with modern web technolog
 - **Full Accessibility:** Designed for both mouse and keyboard navigation (ARIA-compliant).
 - **Responsive Design:** Optimized for various screen sizes, from desktop to mobile.
 
-## 🕹️ How to Play
+## How to Play
 
 1.  **Enter the Temple:** Begin your adventure in the first elemental chamber.
 2.  **Solve to Advance:** Read the room's unique instructions, interact with the environment, and solve the puzzle to claim the artifact.
 3.  **Master the Elements:** Progress through all five rooms, adapting to different mechanics in each.
 4.  **The Final Challenge:** Complete the final trial to see your total score and escape the temple!
 
-## 🛠️ Technologies Used
+## Technologies Used
 
 ![HTML badge](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white) ![CSS badge](https://img.shields.io/badge/CSS-563d7c?&style=flat&logo=css3&logoColor=white) ![Sass badge](https://img.shields.io/badge/Sass-CC6699?style=flat&logo=sass&logoColor=white) ![Javascript badge](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black) ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white) ![Markdown badge](https://img.shields.io/badge/Markdown-000000?style=flat&logo=markdown&logoColor=white) ![Vite badge](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white) ![Biome](https://img.shields.io/badge/biome-%2360A5FA.svg?style=for-the-badge&logo=biome&logoColor=white)
 
 ---
 
-## 🖼️ Screenshots & Validation
+## Screenshots & Validation
 
 | Chrome Lighthouse                         | Firefox Rendering                   |
 | :---------------------------------------- | :---------------------------------- |
@@ -39,16 +41,34 @@ The Temple of Five is a browser-based experience built with modern web technolog
 
 ---
 
-## 📐 Design & Planning
+## What We Learned
+
+<!-- Add your learning points here -->
+
+- Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+- Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+- Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+- Duis aute irure dolor in reprehenderit in voluptate velit esse cillum.
+
+## Difficulties / Challenges
+
+<!-- Add your challenges here -->
+
+- Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+- Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+- Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+- Duis aute irure dolor in reprehenderit in voluptate velit esse cillum.
+
+## Design & Planning
 
 - **Logic & Flow:** [Miro Flowchart](https://miro.com/app/board/uXjVGD_af74=/?share_link_id=396365481063)
-- **Visual Identity:** [Figma Mockup](https://www.figma.com/design/OJgqdjOM1fksuh2Gh2rsAX/The-temple-of-five?node-id=0-1&p=f&t=egmRqjc28ihoVjQ9-0)
+- **Visual Identity:** [Figma Mockup](https://www.figma.com/proto/OJgqdjOM1fksuh2Gh2rsAX/The-temple-of-five?node-id=4-55&p=f&t=QRSCgQpighrHxX8w-0&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&device-frame=0)
 
 ---
 
-## 📜 Credits
+## Credits
 
-### 🛠️ The Team: The Pogo Stick Pioneers
+### The Team: The Pogo Stick Pioneers
 
 | Pioneer                  | Role / Profile                                                                                                                    |
 | :----------------------- | :-------------------------------------------------------------------------------------------------------------------------------- |
@@ -58,28 +78,22 @@ The Temple of Five is a browser-based experience built with modern web technolog
 | **Louise Sverkström**    | [![GitHub](https://img.shields.io/badge/GitHub-LolloLicense-181717?style=flat&logo=github)](https://github.com/LolloLicense)      |
 | **Minai Karlsson**       | [![GitHub](https://img.shields.io/badge/GitHub-minza--42-181717?style=flat&logo=github)](https://github.com/minza-42)             |
 
-### **Visuals**
+### Visuals
 
-- **Earth Room:** AI-generated imagery via Google Gemini, manually edited and refined in GIMP.
-- **Icons:** [Insert Icon Source Here]
+- **Images:** Generated using ChatGPT's image generator.
+- **Earth Room:** AI-generated imagery created with Google Gemini and manually edited/refined in GIMP.
+- **Icons:** Icons provided by [Iconify](https://iconify.design/) and [Heroicons](https://heroicons.com/). Layout and design work created in [Figma](https://www.figma.com/proto/OJgqdjOM1fksuh2Gh2rsAX/The-temple-of-five?node-id=20-467&p=f&t=QRSCgQpighrHxX8w-0&scaling=min-zoom&content-scaling=fixed&page-id=20%3A467).
 
-### **Audio (via Pixabay)**
+### Audio & Sound Effects (via Pixabay)
 
-| Room          | Track Title            | Artist                                                                                         |
-| :------------ | :--------------------- | :--------------------------------------------------------------------------------------------- |
-| **Wood**      | Shadowed Whispers      | [TrenoX8](https://pixabay.com/music/mystery-shadowed-whispers-321103/)                         |
-| **Fire**      | Ambient Burning Castle | [Sound Reality](https://pixabay.com/music/ambient-ambient-burning-castle-320841/)               |
-| **Earth**     | Abyssal Echoes         | [TrenoX8](https://pixabay.com/music/mystery-abyssal-echoes-dark-cinematic-suspenseful-316857/) |
-| **Metal**     | Veil of Darkness       | [TrenoX8](https://pixabay.com/music/mystery-veil-of-darkness-321167/)                          |
-| **Water**     | The Cave               | [Andrea Good](https://pixabay.com/music/ambient-the-cave-220274/)                              |
-| **Final**     | Cursed Forest          | [TrenoX8](https://pixabay.com/music/mystery-cursed-forest-305207/)                             |
-| **Game Over** | Ominous Soundscape     | [TrenoX8](https://pixabay.com/music/mystery-ominous-soundscape-321105/)                        |
-
-**Sound Effects:**
-
-- _Click (Earth):_ [arunangshubanerjee](https://pixabay.com/sound-effects/film-special-effects-cassette-recorder-stop-button-mechanical-click-sound-359987/)
-- _Stone Slide (Earth):_ [u_i15wxund59](https://pixabay.com/sound-effects/film-special-effects-stone-slide-sound-effects-322794/)
+| Room          | Music                                                                                                             | Sound Effects                                                                                                                                                                                                                                                                 |
+| ------------- | ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Wood**      | _Shadowed Whispers_ – [TrenoX8](https://pixabay.com/music/mystery-shadowed-whispers-321103/)                      | Click – [arunangshubanerjee](https://pixabay.com/sound-effects/film-special-effects-cassette-recorder-stop-button-mechanical-click-sound-359987/)                                                                                                                             |
+| **Fire**      | _Ambient Burning Castle_ – [Sound Reality](https://pixabay.com/music/ambient-ambient-burning-castle-320841/)      | —                                                                                                                                                                                                                                                                             |
+| **Earth**     | _Abyssal Echoes_ – [TrenoX8](https://pixabay.com/music/mystery-abyssal-echoes-dark-cinematic-suspenseful-316857/) | Click – [arunangshubanerjee](https://pixabay.com/sound-effects/film-special-effects-cassette-recorder-stop-button-mechanical-click-sound-359987/) <br> Stone Slide – [u_i15wxund59](https://pixabay.com/sound-effects/film-special-effects-stone-slide-sound-effects-322794/) |
+| **Metal**     | _Veil of Darkness_ – [TrenoX8](https://pixabay.com/music/mystery-veil-of-darkness-321167/)                        | Click – [arunangshubanerjee](https://pixabay.com/sound-effects/film-special-effects-cassette-recorder-stop-button-mechanical-click-sound-359987/)                                                                                                                             |
+| **Water**     | _The Cave_ – [Andrea Good](https://pixabay.com/music/ambient-the-cave-220274/)                                    | —                                                                                                                                                                                                                                                                             |
+| **Final**     | _Cursed Forest_ – [TrenoX8](https://pixabay.com/music/mystery-cursed-forest-305207/)                              | —                                                                                                                                                                                                                                                                             |
+| **Game Over** | _Ominous Soundscape_ – [TrenoX8](https://pixabay.com/music/mystery-ominous-soundscape-321105/)                    | —                                                                                                                                                                                                                                                                             |
 
 ---
-
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/PLwZQtiP)
