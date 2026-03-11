@@ -145,7 +145,7 @@ body {
   flex-direction: row;
   gap: 0.5rem;
   padding: 0.5rem;
-  z-index: 10; // Vi får ändra senare
+  z-index: 10; // We may change this later
   opacity: 0;
   transform: translateY(-5px);
   transition: opacity 0.25s ease, transform 0.25s ease;

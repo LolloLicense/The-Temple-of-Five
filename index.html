@@ -112,133 +112,95 @@
 
   <div id="itemDropdown" class="item-dropdown">
     <div class="artifact-slot empty"></div>
-    <!--- Ge två klasser för div hållaren-->
+    <!--- Give two classes to the div container-->
     <div class="artifact-slot empty"></div>
     <div class="artifact-slot empty"></div>
     <div class="artifact-slot empty"></div>
     <div class="artifact-slot empty"></div>
   </div>
 
-    <!------------------------------------------------------------------->
-    <!---------------------------- Wood room ---------------------------->
-    <!------------------------------------------------------------------->
+  <!------------------------------------------------------------------->
+  <!---------------------------- Wood room ---------------------------->
+  <!------------------------------------------------------------------->
 
-    <!-- Main content -->
-    <main>
-      <!-- Splash -->
-      <section id="splashPage" class="pageSplash splashPage hidden page">
-        <div class="splashHeading">
-          <h1>The Tempel of five</h1>
-          <div class="symbols">
-            <span>木</span>
-            <span>火</span>
-            <span>土</span>
-            <span>金</span>
-            <span>水</span>
-          </div>
+  <!-- Main content -->
+  <main>
+    <!-- Splash -->
+    <section id="splashPage" class="pageSplash splashPage hidden page">
+      <div class="splashHeading">
+        <h1>The Tempel of five</h1>
+        <div class="symbols">
+          <span>木</span>
+          <span>火</span>
+          <span>土</span>
+          <span>金</span>
+          <span>水</span>
         </div>
-      </section>
-      <!-- Login page -->
-      <section id="loginPage" class="loginPage page hidden">
-        <div class="loginPlate">
-          <div class="loginCta">
-            <figure>
-              <svg
-                width="53"
-                height="48"
-                viewBox="0 0 53 48"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M34.45 5.33333V24H18.55V5.33333H34.45ZM34.45 0H18.55C17.1444 0 15.7963 0.561903 14.8023 1.5621C13.8084 2.56229 13.25 3.91885 13.25 5.33333V29.3333H39.75V5.33333C39.75 3.91885 39.1916 2.56229 38.1977 1.5621C37.2037 0.561903 35.8556 0 34.45 0ZM53 18.6667H45.05V26.6667H53V18.6667ZM7.95 18.6667H0V26.6667H7.95V18.6667ZM47.7 32H5.3V48H10.6V37.3333H42.4V48H47.7V32Z"
-                  fill="#ECF5F1"
-                />
-              </svg>
-            </figure>
-            <h2 class="loginTilte">
-              Sign in to begin — the time has come to restore the balance.
-            </h2>
-          </div>
-          <form action="" id="loginForm" class="loginForm">
-            <label for="userName">Username</label>
-            <input
-              id="userName"
-              name="userName"
-              placeholder="Type a cool name..."
-              autocomplete="nickname"
-              type="text"
-            />
-            <button class="loginBtn" type="submit">Lets play</button>
-          </form>
+      </div>
+    </section>
+    <!-- Login page -->
+    <section id="loginPage" class="loginPage page hidden">
+      <div class="loginPlate">
+        <div class="loginCta">
+          <figure>
+            <svg width="53" height="48" viewBox="0 0 53 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M34.45 5.33333V24H18.55V5.33333H34.45ZM34.45 0H18.55C17.1444 0 15.7963 0.561903 14.8023 1.5621C13.8084 2.56229 13.25 3.91885 13.25 5.33333V29.3333H39.75V5.33333C39.75 3.91885 39.1916 2.56229 38.1977 1.5621C37.2037 0.561903 35.8556 0 34.45 0ZM53 18.6667H45.05V26.6667H53V18.6667ZM7.95 18.6667H0V26.6667H7.95V18.6667ZM47.7 32H5.3V48H10.6V37.3333H42.4V48H47.7V32Z"
+                fill="#ECF5F1" />
+            </svg>
+          </figure>
+          <h2 class="loginTilte">
+            Sign in to begin — the time has come to restore the balance.
+          </h2>
         </div>
-      </section>
-      <!-- Welcome page with menu -->
-      <section id="welcomePage" class="page welcomePage hidden">
-        <header class="welcomeHeader">
-          <div class="welcomeCta">
-            <p class="userName">Welcome: <span class="userNameValue"></span></p>
-            <!-- About button -->
-            <button
-              id="aboutBtnWelcome"
-              class="iconBtn aboutBtn"
-              type="button"
-              aria-label="about page button"
-              data-action="openAbout"
-            >
-              <svg
-                width="32"
-                height="32"
-                viewBox="0 0 32 32"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-              >
-                <path
-                  d="M28.8 0H3.2C2.352 0 1.536 0.336 0.944 0.944C0.336 1.536 0 2.352 0 3.2V22.4C0 23.248 0.336 24.064 0.944 24.656C1.536 25.264 2.352 25.6 3.2 25.6H9.6L16 32L22.4 25.6H28.8C29.648 25.6 30.464 25.264 31.056 24.656C31.648 24.048 32 23.248 32 22.4V3.2C32 2.352 31.664 1.536 31.056 0.944C30.464 0.336 29.648 0 28.8 0ZM3.2 22.4V3.2H28.8V22.4H21.072L16 27.472L10.928 22.4M12.88 6.464C13.744 5.888 14.88 5.6 16.304 5.6C17.808 5.6 19.008 5.936 19.872 6.592C20.736 7.264 21.168 8.16 21.168 9.28C21.168 9.984 20.928 10.608 20.464 11.2C20 11.776 19.392 12.224 18.656 12.56C18.24 12.8 17.968 13.04 17.824 13.312C17.68 13.6 17.6 13.952 17.6 14.4H14.4C14.4 13.6 14.56 13.056 14.864 12.672C15.2 12.288 15.744 11.84 16.576 11.328C16.992 11.104 17.328 10.816 17.6 10.464C17.824 10.128 17.952 9.728 17.952 9.28C17.952 8.8 17.808 8.448 17.52 8.176C17.232 7.888 16.8 7.76 16.304 7.76C15.872 7.76 15.52 7.872 15.2 8.096C14.944 8.32 14.784 8.656 14.784 9.104H11.632C11.552 8 12 7.04 12.88 6.464ZM14.4 19.2V16H17.6V19.2H14.4Z"
-                  fill="#ECF5F1"
-                />
-              </svg>
-            </button>
-            <!-- EXIT button -->
-            <button
-              id="exitBtn"
-              class="iconBtn exitBtn"
-              type="button"
-              data-action="openExitDialog"
-              data-exit-mode="welcome"
-              aria-label="logout button"
-            >
-              <svg
-                aria-hidden="true"
-                width="28"
-                height="28"
-                viewBox="0 0 25 25"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M15.1528 7.51389L13.1944 5.55556L6.25 12.5L13.1944 19.4444L15.1528 17.4861L11.5694 13.8889L25 13.8889V11.1111L11.5694 11.1111L15.1528 7.51389ZM2.77778 25L22.2222 25C22.9589 25 23.6655 24.7073 24.1864 24.1864C24.7073 23.6655 25 22.9589 25 22.2222V16.6667H22.2222V22.2222L2.77778 22.2222L2.77778 2.77778L22.2222 2.77778V8.33333H25V2.77778C25 2.04107 24.7073 1.33453 24.1864 0.813594C23.6655 0.292659 22.9589 9.53674e-07 22.2222 9.53674e-07L2.77778 9.53674e-07C1.25 9.53674e-07 9.53674e-07 1.25 9.53674e-07 2.77778L9.53674e-07 22.2222C9.53674e-07 23.75 1.25 25 2.77778 25Z"
-                  fill="#ECF5F1"
-                />
-              </svg>
-            </button>
-          </div>
-        </header>
-        <div class="mainMenu">
-          <button id="startGameBtn" class="startGameBtn">Start new run</button>
-          <button id="continueBtn" class="continueBtn">Continue game</button>
-          <!-- TEST -->
-          <!-- <button id="fireRoomBtn" class="fireRoomBtn">Fire</button> -->
-          <!-- <button id="earthRoomBtn" class="earthRoomBtn">Earth</button> -->
-          <!-- <button id="metalRoomBtn" class="metalRoomBtn">Metal</button> -->
-          <!-- <button id="waterRoomBtn" class="waterRoomBtn">Water</button> -->
-          <!-- <button id="finalRoomBtn" class="finalRoomBtn">Final</button> -->
-          <button id="openHighScoreBtn" type="button">Highscores</button>
-          <!-- <button id="gameWinBtn" type="button">Game Won</button> -->
-          <!-- <button id="gameOverBtn" class="gameOverRoomBtn">Game Over</button> -->
+        <form action="" id="loginForm" class="loginForm">
+          <label for="userName">Username</label>
+          <input id="userName" name="userName" placeholder="Type a cool name..." autocomplete="nickname" type="text" />
+          <button class="loginBtn" type="submit">Lets play</button>
+        </form>
+      </div>
+    </section>
+    <!-- Welcome page with menu -->
+    <section id="welcomePage" class="page welcomePage hidden">
+      <header class="welcomeHeader">
+        <div class="welcomeCta">
+          <p class="userName">Welcome: <span class="userNameValue"></span></p>
+          <!-- About button -->
+          <button id="aboutBtnWelcome" class="iconBtn aboutBtn" type="button" aria-label="about page button"
+            data-action="openAbout">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true">
+              <path
+                d="M28.8 0H3.2C2.352 0 1.536 0.336 0.944 0.944C0.336 1.536 0 2.352 0 3.2V22.4C0 23.248 0.336 24.064 0.944 24.656C1.536 25.264 2.352 25.6 3.2 25.6H9.6L16 32L22.4 25.6H28.8C29.648 25.6 30.464 25.264 31.056 24.656C31.648 24.048 32 23.248 32 22.4V3.2C32 2.352 31.664 1.536 31.056 0.944C30.464 0.336 29.648 0 28.8 0ZM3.2 22.4V3.2H28.8V22.4H21.072L16 27.472L10.928 22.4M12.88 6.464C13.744 5.888 14.88 5.6 16.304 5.6C17.808 5.6 19.008 5.936 19.872 6.592C20.736 7.264 21.168 8.16 21.168 9.28C21.168 9.984 20.928 10.608 20.464 11.2C20 11.776 19.392 12.224 18.656 12.56C18.24 12.8 17.968 13.04 17.824 13.312C17.68 13.6 17.6 13.952 17.6 14.4H14.4C14.4 13.6 14.56 13.056 14.864 12.672C15.2 12.288 15.744 11.84 16.576 11.328C16.992 11.104 17.328 10.816 17.6 10.464C17.824 10.128 17.952 9.728 17.952 9.28C17.952 8.8 17.808 8.448 17.52 8.176C17.232 7.888 16.8 7.76 16.304 7.76C15.872 7.76 15.52 7.872 15.2 8.096C14.944 8.32 14.784 8.656 14.784 9.104H11.632C11.552 8 12 7.04 12.88 6.464ZM14.4 19.2V16H17.6V19.2H14.4Z"
+                fill="#ECF5F1" />
+            </svg>
+          </button>
+          <!-- EXIT button -->
+          <button id="exitBtn" class="iconBtn exitBtn" type="button" data-action="openExitDialog"
+            data-exit-mode="welcome" aria-label="logout button">
+            <svg aria-hidden="true" width="28" height="28" viewBox="0 0 25 25" fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M15.1528 7.51389L13.1944 5.55556L6.25 12.5L13.1944 19.4444L15.1528 17.4861L11.5694 13.8889L25 13.8889V11.1111L11.5694 11.1111L15.1528 7.51389ZM2.77778 25L22.2222 25C22.9589 25 23.6655 24.7073 24.1864 24.1864C24.7073 23.6655 25 22.9589 25 22.2222V16.6667H22.2222V22.2222L2.77778 22.2222L2.77778 2.77778L22.2222 2.77778V8.33333H25V2.77778C25 2.04107 24.7073 1.33453 24.1864 0.813594C23.6655 0.292659 22.9589 9.53674e-07 22.2222 9.53674e-07L2.77778 9.53674e-07C1.25 9.53674e-07 9.53674e-07 1.25 9.53674e-07 2.77778L9.53674e-07 22.2222C9.53674e-07 23.75 1.25 25 2.77778 25Z"
+                fill="#ECF5F1" />
+            </svg>
+          </button>
         </div>
-      </section>
+      </header>
+      <div class="mainMenu">
+        <button id="startGameBtn" class="startGameBtn">Start new run</button>
+        <button id="continueBtn" class="continueBtn">Continue game</button>
+        <!-- TEST -->
+        <!-- <button id="fireRoomBtn" class="fireRoomBtn">Fire</button> -->
+        <!-- <button id="earthRoomBtn" class="earthRoomBtn">Earth</button> -->
+        <!-- <button id="metalRoomBtn" class="metalRoomBtn">Metal</button> -->
+        <!-- <button id="waterRoomBtn" class="waterRoomBtn">Water</button> -->
+        <!-- <button id="finalRoomBtn" class="finalRoomBtn">Final</button> -->
+        <button id="openHighScoreBtn" type="button">Highscores</button>
+        <!-- <button id="gameWinBtn" type="button">Game Won</button> -->
+        <!-- <button id="gameOverBtn" class="gameOverRoomBtn">Game Over</button> -->
+      </div>
+    </section>
     <section id="room1Wood" class="room1Wood page hidden">
       <!-- Keypad -->
       <div class="keypad" role="group" aria-label="Numeric keypad">
@@ -449,13 +411,13 @@
     <!------------------------------------------------------------------->
     <section id="room4Metal" class="room4Metal hidden page">
       <div class="metalContainer">
-        <!-- Färgsignal -->
+        <!-- Color signal -->
         <div id="colorSignal" class="colorSignal"></div>
 
-        <!-- Meddelande rätt/fel -->
+        <!-- Message correct/incorrect -->
         <div id="feedback" class="feedback"></div>
 
-        <!-- Slots för färger -->
+        <!-- Slots for colors -->
         <div class="colorSlots">
           <div class="colorSlot1"></div>
           <div class="colorSlot2"></div>
@@ -465,7 +427,7 @@
           <div class="colorSlot6"></div>
         </div>
 
-        <!-- Sekvens och misstagsräknare -->
+        <!-- Sequence and mistake counter -->
         <div class="inRoombar" aria-label="Room status">
           <!-- Sekvens -->
           <div class="inRoombarProgress" aria-label="Level progress">
@@ -480,7 +442,7 @@
         </div>
       </div>
 
-      <!-- Innehåll från JSON-->
+      <!-- Content from JSON-->
       <div class="roomDesc"></div>
     </section>
 

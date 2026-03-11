@@ -286,8 +286,8 @@ LAZY LOAD (Because we dont want all the audio to load at once)
 
 /**
  * getOrCreateAudio
- * - Hämtar Audio ur cache om den finns
- * - Annars skapar den från soundConfigs (lazy)
+ * - Retrieves Audio from cache if it exists
+ * - Otherwise creates it from soundConfigs (lazy)
  */
 
 function getOrCreateAudio(id: string): HTMLAudioElement | null {
@@ -299,10 +299,10 @@ function getOrCreateAudio(id: string): HTMLAudioElement | null {
 
   const audio = new Audio(cfg.src);
 
-  // Default loop: true för BGM, annars false
+  // Default loop: true for BGM, otherwise false
   audio.loop = cfg.loop ?? cfg.kind === "bgm";
 
-  // Volym från targetVolumes (registrerad i init)
+  // Volume from targetVolumes (registered in init)
   audio.volume = targetVolumes.get(id) ?? (cfg.kind === "bgm" ? 0.2 : 0.35);
 
   audio.muted = isMuted();

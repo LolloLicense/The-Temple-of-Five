@@ -90,16 +90,16 @@ function getActiveUserId(): string {
   // localStorage.getItem can be string || null
   const raw = localStorage.getItem(LS_KEY.userName);
 
-  // Om det inte finns något sparat alls -> fallback
+  // If nothing is saved at all -> fallback
   if (raw === null) return "guest";
 
-  // trim tar bort whitespace runtomkring (ex: "  Lollo  " -> "Lollo")
+  // trim removes whitespace around (ex: "  Lollo  " -> "Lollo")
   const name = raw.trim();
 
-  // Explicit check: om längden är 0 är det “tomt”
+  // Explicit check: if length is 0, it's "empty"
   if (name.length === 0) return "guest";
 
-  // Annars är det ett giltigt user-id
+  // Otherwise, it's a valid user id
   return name;
 }
 
@@ -114,7 +114,7 @@ export function scopedKey(baseKey: string): string {
 //-----------------------------------------------------------
 //----------------------- ROOM RESULT HELP ------------------
 //-----------------------------------------------------------
-// reurns new copy of default state
+// returns new copy of default state
 function freshDefaultGameState(): TGameState {
   return structuredClone(DEFAULT_GAME_STATE);
 }
@@ -132,7 +132,7 @@ function saveRoomResults(state: TGameState): void {
 
 /**
  * Read current run state
- * Nu läser vi från en user-specifik key,
+ * Now we read from a user-specific key,
  */
 export function getRoomResults(): TGameState {
   //  "tempelRoomResults:Lollo"
@@ -145,7 +145,7 @@ export function getRoomResults(): TGameState {
     //  TGameState ????
     return JSON.parse(raw) as TGameState;
   } catch {
-    // fall back till default
+    // fall back to default
     return freshDefaultGameState();
   }
 }
@@ -155,10 +155,10 @@ export function getRoomResults(): TGameState {
  * Saved on a user-specifik key.
  */
 export function setRoomResult(roomId: TRoomId, result: TRoomResult): void {
-  // active userns run state
+  // active user's run state
   const state = getRoomResults();
 
-  // create new updt room
+  // create new updated room
   const next: TGameState = { ...state, [roomId]: result };
 
   saveRoomResults(next);

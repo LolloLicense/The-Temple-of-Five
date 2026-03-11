@@ -1,5 +1,5 @@
 @use "var";
-// backgrund frosted glass
+// background frosted glass
 
 @mixin glass(
   $bg: rgba(9, 49, 52, 0.2),
@@ -10,16 +10,16 @@
 ) {
   background: $bg;
 
-  // “glaskänslan”
+  // "glass feeling"
   backdrop-filter: blur($blur);
   -webkit-backdrop-filter: blur($blur);
 
-  // lite definition
+  // some definition
   box-shadow: $shadow;
   border: $border;
   border-radius: $radius;
 
-  // Fallback om backdrop-filter saknas
+  // Fallback if backdrop-filter is missing
   @supports not (
     (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))
   ) {

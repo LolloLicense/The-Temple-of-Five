@@ -387,7 +387,7 @@
 @media (prefers-reduced-motion: reduce) {
   .room2Fire {
 
-    /* stäng state-animationer */
+    /* close state-animationer */
     .fireSlots .slot.is-active,
     .fireSlots .slot.just-filled,
     .fireSlots .slot.is-wrong,
@@ -397,7 +397,7 @@
       transition: none !important;
     }
 
-    /* stäng ambience-animationer */
+    /* close ambience-animationer */
     &::before,
     &::after {
       animation: none !important;

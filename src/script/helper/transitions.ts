@@ -3,14 +3,14 @@
 /**
  * transitions.ts
  *
- * Gemensam helper för att visa och byta mellan sektioner.
+ * Shared helper for showing and switching between sections.
  *
- * Tanke:
- * - showSection() används när vi bara vill visa en sektion direkt
- * - goToSection() används när vi vill byta från nuvarande sida till nästa
- * - helpern håller själv reda på currentPage
+ * Idea:
+ * - showSection() is used when we just want to show a section directly
+ * - goToSection() is used when we want to switch from the current page to the next
+ * - the helper itself keeps track of currentPage
  *
- * Då slipper varje rum själv leta upp "fromPage".
+ * This way, each room doesn't have to find "fromPage" itself.
  */
 
 //-----------------------------------------------------------
