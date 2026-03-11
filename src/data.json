@@ -75,7 +75,7 @@
     "backgroundImg": "./images/metalroom.jpg",
     "bgmId": "bgm_metal",
     "sfxId": "sfx_click",
-    "timeLimitMinutes": 3,
+    "timeLimitMinutes": 4,
     "timeLimitSeconds": 0,
     "desc": {
       "text": "Steel remembers every mistake. The universe's mechanisms answer only to rhythm and order. It does not reward errors. Observe the sequence. Repeat it to unlock the element of metal.",

@@ -25,7 +25,7 @@ The Temple of Five is a browser-based experience built with modern web technolog
 
 ## Technologies Used
 
-![HTML badge](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white) ![CSS badge](https://img.shields.io/badge/CSS-563d7c?&style=flat&logo=css3&logoColor=white) ![Sass badge](https://img.shields.io/badge/Sass-CC6699?style=flat&logo=sass&logoColor=white) ![Javascript badge](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black) ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white) ![Markdown badge](https://img.shields.io/badge/Markdown-000000?style=flat&logo=markdown&logoColor=white) ![Vite badge](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white) ![Biome](https://img.shields.io/badge/biome-%2360A5FA.svg?style=for-the-badge&logo=biome&logoColor=white)
+![HTML badge](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white) ![Sass badge](https://img.shields.io/badge/Sass-CC6699?style=flat&logo=sass&logoColor=white) ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white) ![Markdown badge](https://img.shields.io/badge/Markdown-000000?style=flat&logo=markdown&logoColor=white) ![Vite badge](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white) ![Biome](https://img.shields.io/badge/biome-%2360A5FA.svg?style=for-the-badge&logo=biome&logoColor=white)
 
 ---
 

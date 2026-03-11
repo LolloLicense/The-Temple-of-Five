@@ -43,13 +43,13 @@ The Metalroom is a memory challenge inspired by Simon Says, where the player mus
 
 #### If the sequence is incorrect:
 - Increase mistake counter by 1.
-- Display feedback: **"Incorrect! Try again."**
+- Display feedback: "Incorrect! Try again."
 - Reset all slots.
 - Replay the same sequence.
 
 #### If the sequence is correct:
-- Display feedback: **"Correct!"**
+- Display feedback: "Correct!"
 - Move to the next level.
 
 ### When the final level is completed correctly:
-- Display the message: **"Metal chamber complete"**
+- Display the message: "Metal chamber complete"

@@ -1,301 +1,56 @@
-# Validation/Final Room
-
-The user must bring a total of 5 artifacts from all the rooms they have visited (you can get either a correct or incorrect artifact in each room). This means the user does not know if the artifacts will be accepted. The 5 artifacts are shown in the backpack, but they must be imported and placed in the room so the user can "drag & drop" them to the correct spot. When all are in place, the room should be validated either automatically or by button press. If successful, proceed to the highscore board; if not, game over is shown and the user can retry the rooms where mistakes were made.
-
-## Pseudocode
-
-- Sent from the water room, the timer starts and counts down.
-  The user has 5 artifacts to drag and drop to their respective rooms.
-- When the artifacts are in place, they should be validated either automatically or by button press.
-- If the artifacts are correct, the room is approved and you proceed to the highscore room.
-- If the artifacts are incorrect, the room is denied and you go to the game over room and can replay the rooms that gave the wrong artifact.
-
-# Validate Room -- Flow & Pseudocode (Summary)
-
-## Goal
-
-The Validate Room is the final puzzle that determines whether the
-player: - Wins the game (`gameWin`) - Or fails and goes to `gameOver`
-
-The player must place **five collected artifacts** in the correct order.
-
----
-
-# Data Sources
-
-## From `storage.ts`
-
-Use:
-
-- `getRoomResults()`
-
-This returns the current run state.
-
-We read artifact results from:
-
-    state.wood.artifact
-    state.fire.artifact
-    state.earth.artifact
-    state.metal.artifact
-    state.water.artifact
-
-Artifact values can be:
-
-    "true"
-    "false"
-    null
-
----
-
-## From `artifacts.ts`
-
-Use:
-
-    getArtifactIcon(roomId, kind)
-
-Purpose:
-
-Convert a room + artifact type into the correct icon path.
-
-Example:
-
-    getArtifactIcon("wood", "true")
-
----
-
-# Validate Room State
-
-The room maintains three main pieces of state.
-
-## Artifact Pool
-
-Built from player progress.
-
-Structure concept:
-
-    artifactPool = [
-      { roomId, kind, icon },
-      { roomId, kind, icon },
-      { roomId, kind, icon },
-      { roomId, kind, icon },
-      { roomId, kind, icon }
-    ]
-
-One artifact per elemental room.
-
----
-
-## Slot Selections
-
-Represents what the player placed in each slot.
-
-Example structure:
-
-    slotSelections = [null, null, null, null, null]
-
-After player interaction:
-
-    slotSelections = [2,0,4,1,3]
-
-Meaning:
-
-    slot 0 shows artifactPool[2]
-    slot 1 shows artifactPool[0]
-    slot 2 shows artifactPool[4]
-    slot 3 shows artifactPool[1]
-    slot 4 shows artifactPool[3]
-
-Artifacts **may only appear once**.
-
----
-
-## Active Slot
-
-Tracks which slot is currently focused.
-
-    activeSlotIndex = 0
-
----
-
-# Controls
-
-Keyboard interaction:
-
-    ArrowLeft  -> move focus to previous slot
-    ArrowRight -> move focus to next slot
-
-    ArrowUp    -> change artifact in current slot (previous option)
-    ArrowDown  -> change artifact in current slot (next option)
-
-Artifacts already used in another slot **cannot be selected again**.
-
----
-
-# Initialization Flow
-
-When entering the Validate Room:
-
-    enter validate room
-        -> getRoomResults()
-        -> build artifactPool from storage
-        -> reset slotSelections to [null x5]
-        -> activeSlotIndex = 0
-        -> render empty slots
-        -> disable validate button
-
----
-
-# Artifact Pool Builder
-
-Pseudo flow:
-
-    function buildCollectedArtifacts:
-
-        state = getRoomResults()
-
-        rooms = [wood, fire, earth, metal, water]
-
-        for each room:
-            kind = state[room].artifact
-
-            if kind is null:
-                continue
-
-            icon = getArtifactIcon(room, kind)
-
-            add to artifactPool:
-                {roomId, kind, icon}
-
----
-
-# Slot Interaction Logic
-
-## Changing Artifact (Up / Down)
-
-    cycleArtifact(slotIndex, direction):
-
-        availableArtifacts =
-            all artifacts not already used in other slots
-
-        if slot empty:
-            choose first available artifact
-
-        else:
-            move to next/previous artifact in available list
-
-        update slotSelections
-        re-render slots
-
----
-
-## Moving Between Slots (Left / Right)
-
-    moveSlotFocus(direction):
-
-        if direction == right:
-            activeSlotIndex +1
-
-        if direction == left:
-            activeSlotIndex -1
-
-        clamp between 0 and 4
-
-        update focus UI
-
----
-
-# Validate Button Logic
-
-The button becomes active when:
-
-    every slotSelections entry != null
-
-Pseudo:
-
-    if all slots filled:
-        enable validate button
-    else:
-        disable validate button
-
----
-
-# Validate Action
-
-When the player presses **Validate**:
-
-    selectedArtifacts =
-        artifactPool mapped using slotSelections order
-
----
-
-## Step 1 -- Check Order
-
-Correct order:
-
-    [wood, fire, earth, metal, water]
-
-Pseudo:
-
-    for each slot index:
-        if selectedArtifacts[index].roomId != correctOrder[index]:
-            show "Wrong order, try again"
-            stop validation
-
----
-
-## Step 2 -- Check Artifact Quality
-
-If order is correct:
-
-    if every artifact.kind == "true":
-            go to gameWin
-    else:
-            go to gameOver
-
----
-
-# Result Navigation
-
-    Correct order + all true  -> gameWin
-
-    Correct order + any false -> gameOver
-
-    Wrong order               -> show error message
-                                  stay in validate room
-
----
-
-# High-Level System Flow
-
-    enter validate room
-        ↓
-    read storage (getRoomResults)
-        ↓
-    build artifactPool
-        ↓
-    player selects artifacts in slots
-        ↓
-    validate button activates when slots filled
-        ↓
-    player presses validate
-        ↓
-    check order
-        ↓
-    if wrong -> retry
-        ↓
-    if correct -> check artifact truth
-        ↓
-    true → gameWin
-    false → gameOver
-
----
-
-# Responsibility Overview
-
-System Responsibility
-
----
-
-storage.ts Save / load game state
-artifacts.ts Map artifact icons
-validate room Slot puzzle + validation logic
+# Final Room
+
+The Final Room is a logic‑based placement challenge where the player must arrange the five collected artifacts from the elemental chambers in the correct order. Each artifact reflects the player’s performance in its room and can be either correct or incorrect. Using keyboard navigation, the player places the artifacts into five slots and validates the arrangement. A perfect order with all true artifacts leads to victory, while any mistake sends the player to the Game Over room to replay failed chambers.
+
+## Short description of what happens:
+
+- Enter the final chamber with five artifacts collected during the run.
+- Each artifact represents one elemental room and can be true or false.
+- Place the artifacts into five slots in the correct elemental order.
+- Use keyboard controls:
+  - Left/Right arrows: move between slots
+  - Up/Down arrows: cycle through available artifacts
+- Artifacts cannot be used more than once.
+- When all slots are filled, the Validate button becomes active.
+- Validation checks:
+  - Are the artifacts placed in the correct order?
+  - Are all artifacts true?
+- Correct order + all true = Win (Highscore room)
+- Correct order + any false = Game Over (replay failed rooms)
+- Wrong order → Stay in the Final Room and try again
+
+## Pseudocode to break down the room into functions
+
+### When the Final Room starts:
+- Start the room timer.
+- Load stored results using `getRoomResults()`.
+- Build an artifact pool from the five elemental rooms.
+- Reset:
+  - `slotSelections = [null x5]`
+  - `activeSlotIndex = 0`
+- Render empty slots and disable the Validate button.
+
+### While the player interacts:
+- Left arrow, move active slot left  
+- Right arrow, move active slot right  
+- Up arrow, select previous available artifact  
+- Down arrow, select next available artifact  
+- Prevent selecting an artifact already used in another slot.
+
+### When all slots are filled:
+- Enable the Validate button.
+
+### When the player presses Validate:
+- Build the selected artifact sequence from `slotSelections`.
+
+#### If the order is wrong:
+- Show feedback: “Wrong order, try again.”
+- Stay in the Final Room.
+
+#### If the order is correct but any artifact is false:
+- Go to Game Over room.
+- Mark failed rooms for replay.
+
+#### If the order is correct and all artifacts are true:
+- Proceed to the Highscore room.
+- Display: “Final chamber complete.”
