@@ -445,6 +445,7 @@ kbd {
   font-size: 0.85em;
   color: var.$lightColor;
   letter-spacing: 0.03em;
+  font-weight: 500;
   line-height: 1.6;
 }
 
@@ -647,5 +648,45 @@ kbd {
 
   .gameHeader {
     font-size: 1rem;
+  }
+}
+
+//-----------------------------------------------------------
+//---------------------- SCREEN BLOCKING --------------------
+//-----------------------------------------------------------
+
+.screenBlock {
+  display: none;
+}
+
+@media only screen and (max-width: 900px) {
+  .screenBlock {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+    background: var.$lightColor;
+    color: var.$redColor;
+
+    p {
+      max-width: 28rem;
+      margin: 0;
+      font-size: var.$fs-h5;
+      line-height: 1.5;
+      text-transform: uppercase;
+    }
+  }
+
+  main,
+  .gameHeader,
+  .welcomeHeader,
+  .item-dropdown,
+  .aboutDialog,
+  .exitDialog {
+    display: none !important;
   }
 }

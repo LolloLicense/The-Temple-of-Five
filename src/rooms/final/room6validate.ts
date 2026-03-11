@@ -23,12 +23,13 @@ let isResolvingFinalRoom = false;
 
 // Cleanup function
 export function cleanupFinalRoom(): void {
-  // Ta bort keyboard-lyssnaren om den finns
+  // Remove the keyboard listener if it exists
   if (finalKeyboardHandler) {
     document.removeEventListener("keydown", finalKeyboardHandler);
     finalKeyboardHandler = null;
   }
 
+  // Reset resolving state when leaving the room
   isResolvingFinalRoom = false;
 }
 
@@ -44,25 +45,6 @@ export function room6finalFunc(): void {
   // Reset the resolving flag every time the room starts
   // so the validate button can be used again when returning here.
   isResolvingFinalRoom = false;
-
-  // The final room owns the transition to the next section.
-  // Important:
-  // - first transition to the next section
-  // - then start the next room’s logic
-  // This reduces the risk of the next room starting timers/logic
-  // before the page transition is complete.
-  function goToNextRoom(nextSelector: string, nextRoomFunc: () => void): void {
-    const nextSection = document.querySelector<HTMLElement>(nextSelector);
-    if (!nextSection) return;
-
-    // Let the final room handle the transition first
-    goToSection(nextSection, TRANSITION_MS);
-
-    // Start the next room after the transition is complete
-    window.setTimeout(() => {
-      nextRoomFunc();
-    }, TRANSITION_MS);
-  }
 
   finalSection.style.backgroundImage = `url("${dataJSON.room6validate.backgroundImg}")`; // Set background image
 
@@ -83,6 +65,7 @@ export function room6finalFunc(): void {
   //-----------------------------------------------------------
 
   const state = getRoomResults(); // Get game state from storage
+
   // Rooms in correct order
   const rooms: TElementRoomId[] = ["wood", "fire", "earth", "metal", "water"];
 
@@ -105,18 +88,27 @@ export function room6finalFunc(): void {
   let slotSelections: (number | null)[] = [null, null, null, null, null];
   let activeSlotIndex = 0; // Which slot is active
 
-  const validateBtnEl =
-    finalSection.querySelector<HTMLButtonElement>("#validateBtn"); // Validate button
+  const originalValidateBtn =
+    finalSection.querySelector<HTMLButtonElement>("#validateBtn");
 
   const feedbackElNode =
-    finalSection.querySelector<HTMLElement>("#finalFeedback"); // Feedback text
+    finalSection.querySelector<HTMLElement>("#finalFeedback");
 
-  // If any important part is missing, do not continue
-  if (!validateBtnEl || !feedbackElNode) return;
+  if (!originalValidateBtn || !feedbackElNode) return;
 
-  // Safe references after null guard
-  const validateBtn = validateBtnEl;
+  // Always create a fresh Validate button when the room starts.
+  // This removes any old click listeners from previous visits
+  // without needing to store and remove them manually.
+  const validateBtn = originalValidateBtn.cloneNode(true) as HTMLButtonElement;
+  originalValidateBtn.replaceWith(validateBtn);
+
   const feedbackEl = feedbackElNode;
+
+  // Reset room UI every time the room starts
+  // so old feedback or old selections do not remain.
+  slotSelections = [null, null, null, null, null];
+  activeSlotIndex = 0;
+  feedbackEl.textContent = "";
 
   //------------------------------------------------------------
   //-------------------------- Render --------------------------
@@ -150,8 +142,9 @@ export function room6finalFunc(): void {
       (selection) => selection !== null,
     ); // Are all slots filled?
 
-    // If the room is already resolving, keep the button disabled
-    validateBtn.disabled = !allSlotsAreFilled || isResolvingFinalRoom; // Enable/disable button
+    // If all slots are filled and the room is not currently resolving,
+    // enable the Validate button. Otherwise keep it disabled.
+    validateBtn.disabled = !allSlotsAreFilled || isResolvingFinalRoom;
   }
 
   //-----------------------------------------------------------
@@ -194,23 +187,25 @@ export function room6finalFunc(): void {
     newIndexInAvailableList += direction;
 
     // Wrap-around: past the end → go to first
-    if (newIndexInAvailableList >= availableArtifactIndexes.length)
+    if (newIndexInAvailableList >= availableArtifactIndexes.length) {
       newIndexInAvailableList = 0;
+    }
 
     // Wrap-around: before first → go to last
-    if (newIndexInAvailableList < 0)
+    if (newIndexInAvailableList < 0) {
       newIndexInAvailableList = availableArtifactIndexes.length - 1;
+    }
 
     // Set the new artifact in the active slot
     slotSelections[activeSlotIndex] =
       availableArtifactIndexes[newIndexInAvailableList];
 
     renderSlots(); // Re-render slots so the player sees the change
-    updateValidate(); // Update validate button (may become enabled)
+    updateValidate(); // Update validate button state
   }
 
   //-----------------------------------------------------------
-  //---------------------- Keyboard --------------------------
+  //---------------------- Keyboard ---------------------------
   //-----------------------------------------------------------
 
   // If an old handler from a previous initialization exists,
@@ -222,8 +217,11 @@ export function room6finalFunc(): void {
 
   // Create a new handler that uses this run’s local state
   finalKeyboardHandler = (event: KeyboardEvent) => {
-    if (!finalSection.classList.contains("isVisible")) return; // Keyboard should only work when the final room is visible
-    if (isResolvingFinalRoom) return; // When the room is resolving, no more input should be accepted
+    // Keyboard should only work when the final room is visible
+    if (!finalSection.classList.contains("isVisible")) return;
+
+    // When the room is resolving, no more input should be accepted
+    if (isResolvingFinalRoom) return;
 
     if (event.key === "ArrowLeft") {
       // If the player presses the left arrow
@@ -255,29 +253,10 @@ export function room6finalFunc(): void {
   //----------------------- Validate --------------------------
   //-----------------------------------------------------------
 
-  // If an old listener was already bound earlier, clone the button and replace it.
-  // This removes old listeners without needing to store references to them.
-  let currentValidateBtn = validateBtn;
-
-  if (currentValidateBtn.dataset.bound === "true") {
-    const freshValidateBtn = currentValidateBtn.cloneNode(
-      true,
-    ) as HTMLButtonElement;
-    currentValidateBtn.replaceWith(freshValidateBtn);
-    currentValidateBtn = freshValidateBtn;
-  }
-
-  currentValidateBtn.dataset.bound = "true";
-
-  // Save the correct button reference for updateValidate by working with the current button
-  function syncValidateButtonState(): void {
-    const allSlotsAreFilled = slotSelections.every(
-      (selection) => selection !== null,
-    );
-    currentValidateBtn.disabled = !allSlotsAreFilled || isResolvingFinalRoom;
-  }
-
-  currentValidateBtn.addEventListener("click", () => {
+  // Bind one fresh click listener to the freshly cloned button.
+  // Since the button is recreated on each room start,
+  // old listeners from previous visits are automatically removed.
+  validateBtn.addEventListener("click", () => {
     // If the room is already resolving, ignore clicks
     if (isResolvingFinalRoom) return;
 
@@ -306,7 +285,7 @@ export function room6finalFunc(): void {
       activeSlotIndex = 0; // Move highlight back to the first slot
 
       renderSlots(); // Re-render
-      syncValidateButtonState(); // Disable the Validate button
+      updateValidate(); // Disable the Validate button again
       return; // Exit the function here
     }
 
@@ -317,7 +296,7 @@ export function room6finalFunc(): void {
 
     // Lock the room so no more clicks or navigation can happen
     isResolvingFinalRoom = true;
-    currentValidateBtn.disabled = true;
+    updateValidate();
 
     if (allArtifactsAreTrue) {
       // If the player won
@@ -327,10 +306,16 @@ export function room6finalFunc(): void {
       stopTimer(6);
       stopAll(); // Stop music
 
-      // The final room owns the transition to the win screen
-      window.setTimeout(() => {
-        goToNextRoom("#gameWinRoom", gameWinFunc);
-      }, TRANSITION_MS);
+      // Get the win section
+      const gameWinSection =
+        document.querySelector<HTMLElement>("#gameWinRoom");
+      if (!gameWinSection) return;
+
+      // Build the win screen first so its UI is ready immediately
+      gameWinFunc();
+
+      // Then transition to the win screen
+      goToSection(gameWinSection, TRANSITION_MS);
     } else {
       // If the order was correct but one or more artifacts were false
       feedbackEl.textContent = "Incorrect artifacts. Game Over.";
@@ -339,10 +324,17 @@ export function room6finalFunc(): void {
       stopTimer(6);
       stopAll(); // Stop music
 
-      // The final room owns the transition to the game-over screen
-      window.setTimeout(() => {
-        goToNextRoom("#gameOverRoom", gameOverRoomFunc);
-      }, TRANSITION_MS);
+      // Get the game-over section
+      const gameOverSection =
+        document.querySelector<HTMLElement>("#gameOverRoom");
+      if (!gameOverSection) return;
+
+      // Build the game-over screen first so replay / done-room UI
+      // is ready as soon as the section becomes visible
+      gameOverRoomFunc();
+
+      // Then transition to the game-over screen
+      goToSection(gameOverSection, TRANSITION_MS);
     }
   });
 
@@ -352,5 +344,4 @@ export function room6finalFunc(): void {
 
   renderSlots(); // Render for the first time
   updateValidate(); // Disable Validate at start
-  syncValidateButtonState(); // Ensure the correct state for the current Validate button
 }
