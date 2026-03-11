@@ -12,6 +12,7 @@ import { room3earthFunc } from "../3earth/room3earth.ts";
 import { room4metalFunc } from "../4metal/room4metal.ts";
 import { room5waterFunc } from "../5water/room5water.ts";
 import { room6finalFunc } from "../final/room6validate.ts";
+import { highscoreRoomFunc } from "../highscore/highscore.ts";
 
 //-----------------------------------------------------------
 //------------------- REPLAY ROOM HELPER --------------------
@@ -180,4 +181,19 @@ export function gameOverRoomFunc(): void {
       startReplayRoom(roomId as "wood" | "fire" | "earth" | "metal" | "water");
     });
   });
+
+  //-----------------------------------------------------------
+  //----------------- HIGHSCORE BTN EVENT ---------------------
+  //-----------------------------------------------------------
+
+  const highscoreBtn =
+    gameOverSection.querySelector<HTMLButtonElement>('[data-action="highscore"]');
+
+  if (highscoreBtn && highscoreBtn.dataset.bound !== "true") {
+    highscoreBtn.dataset.bound = "true";
+
+    highscoreBtn.addEventListener("click", () => {
+      highscoreRoomFunc();
+    });
+  }
 }
