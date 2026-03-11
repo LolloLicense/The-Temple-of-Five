@@ -251,7 +251,7 @@ body {
 
   img {
     width: 112px;
-    height: 110px;
+    height: auto;
   }
 }
 
@@ -619,14 +619,6 @@ kbd {
     font-size: 1.2rem;
     width: 1165px;
   }
-  .balance img {
-    width: 95.2px;
-    height: 93.5px;
-  }
-
-  .gameHeader {
-    font-size: 1.2rem;
-  }
 }
 
 @media only screen and (max-width: 1200px) {
@@ -636,11 +628,7 @@ kbd {
   }
   .roomDesc img {
     width: 84px;
-    height: 82.5px;
-  }
-
-  .gameHeader {
-    font-size: 1.2rem;
+    height: auto;
   }
 }
 
@@ -649,24 +637,12 @@ kbd {
     font-size: 1rem;
     width: 950px;
   }
-  .roomDesc img {
-    width: 84px;
-    height: 82.5px;
-  }
-
-  .gameHeader {
-    font-size: 1.2rem;
-  }
 }
 
 @media only screen and (max-width: 950px) {
   .roomDesc {
     font-size: 1rem;
     width: 850px;
-  }
-  .roomDesc img {
-    width: 84px;
-    height: 82.5px;
   }
 
   .gameHeader {
