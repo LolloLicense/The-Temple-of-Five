@@ -68,7 +68,7 @@ The Temple of Five is a browser-based experience built with modern web technolog
 | Room          | Track Title            | Artist                                                                                         |
 | :------------ | :--------------------- | :--------------------------------------------------------------------------------------------- |
 | **Wood**      | Shadowed Whispers      | [TrenoX8](https://pixabay.com/music/mystery-shadowed-whispers-321103/)                         |
-| **Fire**      | Ambient Burning Castle | [Sound Reality](https://pixabay.com)                                                           |
+| **Fire**      | Ambient Burning Castle | [Sound Reality](https://pixabay.com/music/ambient-ambient-burning-castle-320841/)               |
 | **Earth**     | Abyssal Echoes         | [TrenoX8](https://pixabay.com/music/mystery-abyssal-echoes-dark-cinematic-suspenseful-316857/) |
 | **Metal**     | Veil of Darkness       | [TrenoX8](https://pixabay.com/music/mystery-veil-of-darkness-321167/)                          |
 | **Water**     | The Cave               | [Andrea Good](https://pixabay.com/music/ambient-the-cave-220274/)                              |
