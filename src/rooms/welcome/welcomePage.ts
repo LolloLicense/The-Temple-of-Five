@@ -12,6 +12,7 @@ import {
 import { goToSection } from "../../script/helper/transitions.ts";
 import { getUserTotalTime, startTimer } from "../../script/helper/utils.ts";
 
+let pendingRooms = 0;
 // animation state
 let welcomeBound = false;
 
@@ -31,8 +32,12 @@ export function welcomePageFunc(): void {
 
   for (const roomId of ROOMS) {
     if (state[roomId].status === "completed") {
-      console.log(`Room ${roomId} is completed. Enabling continue button.`);
       continueBtn?.removeAttribute("disabled");
+    } else if (state[roomId].status === "pending") {
+      pendingRooms++;
+    }
+    if (pendingRooms < 5) {
+      continueBtn?.setAttribute("disabled", "true");
     } // IF END
   } // LOOP END
 
