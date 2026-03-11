@@ -524,25 +524,17 @@ function openDevPanel(): void {
   grid.style.gap = "8px";
 
   grid.append(
-    makeBtn("1) Complete CURRENT (artifact TRUE)", () =>
-      completeCurrentRoom("true", getOverridesFromInputs()),
-    ),
-
-    makeBtn("2) Complete CURRENT (artifact FALSE)", () =>
-      completeCurrentRoom("false", getOverridesFromInputs()),
-    ),
-
-    makeBtn("3) Complete ALL (artifact TRUE)", () =>
+    makeBtn("1) Complete ALL (artifact TRUE)", () =>
       completeAllRooms("true", getOverridesFromInputs()),
     ),
 
-    makeBtn("4) Complete ALL (artifact FALSE)", () =>
+    makeBtn("2) Complete ALL (artifact FALSE)", () =>
       completeAllRooms("false", getOverridesFromInputs()),
     ),
 
-    makeBtn("5) Reset CURRENT", () => resetCurrentRoom()),
+    makeBtn("3) Reset CURRENT", () => resetCurrentRoom()),
 
-    makeBtn("6) Reset ALL", () => resetAllRooms()),
+    makeBtn("4) Reset ALL", () => resetAllRooms()),
   );
 
   //-----------------------------------------------------------
@@ -555,19 +547,23 @@ function openDevPanel(): void {
   extra.style.marginTop = "10px";
 
   extra.append(
-    makeBtn("7) Complete SELECTED (TRUE)", () =>
+    makeBtn("5) Complete SELECTED (TRUE)", () =>
       completeSpecificRoom(selectedRoom, "true", getOverridesFromInputs()),
     ),
 
-    makeBtn("8) Complete SELECTED (FALSE)", () =>
+    makeBtn("6) Complete SELECTED (FALSE)", () =>
       completeSpecificRoom(selectedRoom, "false", getOverridesFromInputs()),
     ),
 
-    makeBtn("9) ▶ Complete CURRENT + Go NEXT (FULL FLOW)", () =>
+    makeBtn("7) FULL FLOW (SUCCESS ARTIFACT)", () =>
       completeCurrentAndGoNextFullFlow("true", getOverridesFromInputs()),
     ),
 
-    makeBtn("10) 🏁 Go to FINAL ROOM", () => goToFinalRoomDirect()),
+    makeBtn("8) FULL FLOW (FAILED ARTIFACT)", () =>
+      completeCurrentAndGoNextFullFlow("false", getOverridesFromInputs()),
+    ),
+
+    makeBtn("9) 🏁 Go to FINAL ROOM", () => goToFinalRoomDirect()),
   );
 
   //-----------------------------------------------------------
@@ -594,18 +590,6 @@ function openDevPanel(): void {
 /* ------------------------------------------- WITHOUT ROOM LOGIC -------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
-function completeCurrentRoom(
-  artifact: Exclude<TArtifactKind, null>,
-  overrides: TDevOverrides,
-): void {
-  const roomId = getCurrentRoomId();
-  if (!roomId) {
-    console.log("[DEV CHEATS] No active room detected.");
-    return;
-  }
-
-  completeSpecificRoom(roomId, artifact, overrides);
-}
 
 /**
  * Completes a specific room by updating storage state only.
