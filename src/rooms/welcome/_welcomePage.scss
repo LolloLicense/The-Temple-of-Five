@@ -85,16 +85,6 @@
     transform: translateY(20px);
   }
   to {
-    transform: translateY(-110vh);
-  }
-}
-
-@keyframes welcomeFlicker {
-  0%,
-  100% {
-    opacity: 0.12;
-  }
-  50% {
-    opacity: 0.85;
+    transform: translateY(-100vh);
   }
 }

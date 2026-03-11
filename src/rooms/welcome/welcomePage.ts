@@ -141,8 +141,8 @@ function initWelcomeParticles(): void {
     particle.style.top = `${60 + Math.random() * 40}%`;
 
     // Movement speed + flicker timing
-    const floatSeconds = 6 + Math.random() * 10; // 6–16s
-    const flickerSeconds = 1.5 + Math.random() * 2.5; // 1.5–4s
+    const floatSeconds = 14 + Math.random() * 12; // 6–16s
+    const flickerSeconds = 3.5 + Math.random() * 2.5; // 1.5–4s
 
     particle.style.animationDuration = `${floatSeconds}s, ${flickerSeconds}s`;
     particle.style.animationDelay = `${Math.random() * 4}s, ${Math.random() * 2}s`;
