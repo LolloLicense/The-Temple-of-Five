@@ -4,6 +4,7 @@
 //-----------------------------------------------------------
 //-------------------------Global styles---------------------
 //-----------------------------------------------------------
+
 main {
   position: relative;
   height: 100vh;
@@ -20,33 +21,155 @@ body {
 }
 
 //-----------------------------------------------------------
-//-------------------------HEADERS---------------------------
+//-------Background image settings for each room ------------
 //-----------------------------------------------------------
 
-.welcomeHeader {
-  display: flex;
-  justify-content: end;
-  align-items: center;
-  padding: 1.5rem 3rem;
-  .welcomeCta {
+//fade effect for trasitions
+
+.page {
+  opacity: 0;
+  transition: opacity 1200ms ease;
+  pointer-events: none;
+}
+.page.isVisible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.splashPage,
+.loginPage,
+.welcomePage,
+.room1Wood,
+.room2Fire,
+.room3Earth,
+.room4Metal,
+.room5Water,
+.finalRoom,
+.gameOverRoom,
+.gameWinRoom,
+.highscoreRoom {
+  position: absolute;
+  inset: 0;
+  height: 100vh;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  overflow: hidden;
+}
+
+//-----------------------------------------------------------
+//---------------------- SplashPage -------------------------
+//-----------------------------------------------------------
+
+.splashPage {
+  z-index: 30;
+  .splashHeading {
+    color: var.$lightColor;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 2rem;
-    p {
-      color: var.$lightColor;
-      font-size: var.$fs-h5;
-      margin: 0;
-      line-height: 1;
-      text-transform: uppercase;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    text-transform: uppercase;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.55),
+      0 0 30px rgba(0, 180, 255, 0.25);
+    opacity: 0;
+    transition: none;
+    &.isVisible {
+      opacity: 1;
+      transition: opacity 3000ms ease;
     }
-    button {
-      background-color: transparent;
-      border: none;
-      padding: 1rem;
+    h1 {
+      white-space: nowrap;
+      line-height: 1;
+      margin: 0;
+      font-size: 6rem;
+      text-align: center;
+    }
+    .symbols {
+      display: flex;
+      justify-content: center;
+      gap: 6rem;
+      span {
+        line-height: 1;
+        font-size: 4rem;
+      }
     }
   }
 }
+
+//-----------------------------------------------------------
+//---------------------- LOGINPAGE --------------------------
+//-----------------------------------------------------------
+
+.loginPage {
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  .loginPlate {
+    padding: 2rem 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    justify-content: center;
+    align-items: center;
+    color: var.$lightColor;
+    @include mix.glass();
+
+    .loginCta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 3rem;
+      max-width: 450px;
+
+      h2 {
+        margin: 0;
+        display: inline-block;
+      }
+      figure {
+        margin: 0;
+      }
+    }
+
+    form {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 2rem 1rem;
+      max-width: 450px;
+      label {
+        font-size: var.$fs-h6;
+        text-transform: uppercase;
+        flex: 0 0 auto;
+      }
+      input {
+        flex: 1 1 240px;
+        border-radius: var.$smallRadius;
+        padding: 0.7rem;
+        background: transparent;
+        border: 2px solid var.$lightColor;
+        color: var.$lightColor;
+      }
+      input::placeholder {
+        color: var.$lightColor;
+        opacity: 0.7;
+      }
+      button {
+        flex: 0 0 100%;
+        @include mix.button;
+        border: 2px solid var.$lightColor;
+      }
+    }
+  }
+}
+
+//-----------------------------------------------------------
+//-------------------------HEADER---------------------------
+//-----------------------------------------------------------
 
 .gameHeader {
   // Background style
@@ -130,38 +253,6 @@ body {
       transform: scale(1);
     }
   }
-}
-
-//-----------------------------------------------------------
-//-------------------------Dropdown style---------------------
-//-----------------------------------------------------------
-
-.item-dropdown {
-  @include mix.glass();
-  position: fixed;
-  top: 105px;
-  right: 5vw;
-  display: flex;
-  flex-direction: row;
-  gap: 0.5rem;
-  padding: 0.5rem;
-  z-index: 10; // We may change this later
-  opacity: 0;
-  transform: translateY(-5px);
-  transition: opacity 0.25s ease, transform 0.25s ease;
-  pointer-events: none;
-  border: 2px solid var.$lightColor;
-
-  .artifact-slot {
-    width: 40px;
-    height: 40px;
-  }
-}
-
-.item-dropdown.is-open {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
 }
 
 //-----------------------------------------------------------
@@ -428,184 +519,6 @@ body {
       gap: 1rem;
       .btn {
         @include mix.button();
-      }
-    }
-  }
-}
-
-//-----------------------------------------------------------
-//-------------------------kbd styling-----------------------
-//-----------------------------------------------------------
-
-kbd {
-  display: inline-block;
-  @include mix.glass($bg: rgba(9, 49, 52, 0.5), $radius: 4px);
-  padding: 2px 8px;
-  font-family: monospace;
-  font-size: 0.85em;
-  color: var.$lightColor;
-  letter-spacing: 0.03em;
-  font-weight: 500;
-  line-height: 1.6;
-}
-
-//-----------------------------------------------------------
-//-------Background image settings for each room ------------
-//-----------------------------------------------------------
-
-//fade effect for trasitions
-
-.page {
-  opacity: 0;
-  transition: opacity 1200ms ease;
-  pointer-events: none;
-}
-.page.isVisible {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.splashPage,
-.loginPage,
-.welcomePage,
-.room1Wood,
-.room2Fire,
-.room3Earth,
-.room4Metal,
-.room5Water,
-.finalRoom,
-.gameOverRoom,
-.gameWinRoom,
-.highscoreRoom {
-  position: absolute;
-  inset: 0;
-  height: 100vh;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  overflow: hidden;
-}
-
-.welcomePage {
-  z-index: 20;
-}
-/* Temporary menu styling */
-.welcomePage .mainMenu {
-  position: relative;
-  top: 70%;
-  gap: 25px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  button {
-    @include mix.button();
-  }
-}
-//-----------------------------------------------------------
-//---------------------- SplashPage -------------------------
-//-----------------------------------------------------------
-
-.splashPage {
-  z-index: 30;
-  .splashHeading {
-    color: var.$lightColor;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 1rem;
-    text-transform: uppercase;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.55),
-      0 0 30px rgba(0, 180, 255, 0.25);
-    opacity: 0;
-    transition: none;
-    &.isVisible {
-      opacity: 1;
-      transition: opacity 3000ms ease;
-    }
-    h1 {
-      white-space: nowrap;
-      line-height: 1;
-      margin: 0;
-      font-size: 6rem;
-      text-align: center;
-    }
-    .symbols {
-      display: flex;
-      justify-content: center;
-      gap: 6rem;
-      span {
-        line-height: 1;
-        font-size: 4rem;
-      }
-    }
-  }
-}
-
-//-----------------------------------------------------------
-//---------------------- LOGINPAGE --------------------------
-//-----------------------------------------------------------
-.loginPage {
-  z-index: 10;
-  display: grid;
-  place-items: center;
-  .loginPlate {
-    padding: 2rem 3rem;
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    justify-content: center;
-    align-items: center;
-    color: var.$lightColor;
-    @include mix.glass();
-
-    .loginCta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 3rem;
-      max-width: 450px;
-
-      h2 {
-        margin: 0;
-        display: inline-block;
-      }
-      figure {
-        margin: 0;
-      }
-    }
-
-    form {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 2rem 1rem;
-      max-width: 450px;
-      label {
-        font-size: var.$fs-h6;
-        text-transform: uppercase;
-        flex: 0 0 auto;
-      }
-      input {
-        flex: 1 1 240px;
-        border-radius: var.$smallRadius;
-        padding: 0.7rem;
-        background: transparent;
-        border: 2px solid var.$lightColor;
-        color: var.$lightColor;
-      }
-      input::placeholder {
-        color: var.$lightColor;
-        opacity: 0.7;
-      }
-      button {
-        flex: 0 0 100%;
-        @include mix.button;
-        border: 2px solid var.$lightColor;
       }
     }
   }

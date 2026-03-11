@@ -567,11 +567,9 @@ export function room1woodFunc(): void {
       e.key === "ArrowRight"
         ? Math.min(currentKeyIndex + 1, keyBtns.length - 1)
         : Math.max(currentKeyIndex - 1, 0);
+
     if (nextKeyIndex === currentKeyIndex) return;
 
-    // Roving tabindex
-    keyBtns[currentKeyIndex].tabIndex = -1;
-    keyBtns[nextKeyIndex].tabIndex = 0;
     keyBtns[nextKeyIndex].focus();
   }
   // Prevent adding event listeners twice if player re-enters the room
@@ -580,17 +578,9 @@ export function room1woodFunc(): void {
     keypad.addEventListener("keydown", handleKeyDownEvent);
   }
 
-  function initKeypadFocus(): void {
-    // Only one button should be tabbable at a time
-    keyBtns.forEach((btn, i) => {
-      btn.tabIndex = i === 0 ? 0 : -1;
-    });
-  }
-
   //-----------------------------------------------------------
   //--------------------------- INIT --------------------------
   //-----------------------------------------------------------
 
-  initKeypadFocus();
   updateUI();
 }
