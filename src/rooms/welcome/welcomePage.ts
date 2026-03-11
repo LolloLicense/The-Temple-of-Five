@@ -102,7 +102,6 @@ function continueGame(): void {
     case "final":
       goToSection(document.querySelector<HTMLElement>("#finalRoom")!, 1200);
       getUserTotalTime();
-      startTimer(0);
       room6finalFunc();
       break;
   } // switch END
