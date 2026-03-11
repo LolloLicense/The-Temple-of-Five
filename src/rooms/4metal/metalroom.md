@@ -3,9 +3,11 @@
 The Metalroom is a memory challenge inspired by Simon Says, where the player must observe and reproduce a sequence of color signals. The room introduces time pressure, increasing difficulty across three levels, and strict input control to ensure the player cannot interact until each sequence has fully played. Using keyboard navigation, the player selects colors in the correct order to progress, with mistakes tracked and immediate feedback provided. Completing all levels successfully unlocks the next chamber.
 
 A11y - Firefox
+
 ![Firefox](/dokumentation/screenshots/firefoxSnapMetal.png) 
 
-Lighthouse - Chrome
+Lighthouse - Chrome 
+
 ![Lighthouse](/dokumentation/screenshots/LighthouseSnapMetal.png) 
 
 ## Short description of what happens:
