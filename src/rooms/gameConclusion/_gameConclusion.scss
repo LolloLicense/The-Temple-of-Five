@@ -32,16 +32,12 @@
 .gameOverRoom,
 .gameWinRoom {
   display: flex;
-  align-items: center;
-  justify-content: start;
   flex-direction: column;
-  position: relative;
-  overflow: hidden;
   min-height: 100vh;
   .ctaBtnsConc {
-    margin-top: 5rem;
+    margin-block: auto 4rem;
     display: flex;
-    justify-content: end;
+    justify-content: center;
     align-items: center;
     gap: 2.5rem;
     button {
