@@ -567,7 +567,7 @@ function ifRoomFailed(): void {
   });
 
   updateProgressBar();
-  showMsg("Time's up — the final chamber awaits", 2400);
+  showMsg("The final chamber awaits", 2400);
 
   failTimeoutId = window.setTimeout(() => {
     // Ignore if Water is no longer the current room
@@ -651,7 +651,7 @@ function solvePuzzle(): void {
   });
 
   updateProgressBar();
-  showMsg("Well done — the final chamber awaits", 2400);
+  showMsg("The final chamber awaits", 2400);
 
   solveTimeoutId = window.setTimeout(() => {
     // Ignore if Water is no longer the current room
