@@ -424,7 +424,7 @@ export function room2fireFunc(): void {
   renderRoomDesc(fireSection, dataJSON.room2fire.desc); // Render description from helper function, with text and icons from JSON
 
   cacheDomOrThrow(); // Cashe DOM only once or throw error if missing
-  spawnEmbers();  // Spawn ember effect
+  spawnEmbers(); // Spawn ember effect
   initKeypadFocus(); // Init key-controls
   applyKeyFocus(); // Focus on slots or buttons
 
@@ -559,8 +559,7 @@ function setIntroVisualState(isIntro: boolean): void {
 function spawnEmbers(): void {
   if (!fireSection) return;
 
-  const container =
-    fireSection.querySelector<HTMLDivElement>(".fireParticles");
+  const container = fireSection.querySelector<HTMLDivElement>(".fireParticles");
 
   if (!container) return;
 

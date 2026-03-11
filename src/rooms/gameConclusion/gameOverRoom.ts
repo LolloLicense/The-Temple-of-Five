@@ -186,8 +186,9 @@ export function gameOverRoomFunc(): void {
   //----------------- HIGHSCORE BTN EVENT ---------------------
   //-----------------------------------------------------------
 
-  const highscoreBtn =
-    gameOverSection.querySelector<HTMLButtonElement>('[data-action="highscore"]');
+  const highscoreBtn = gameOverSection.querySelector<HTMLButtonElement>(
+    '[data-action="highscore"]',
+  );
 
   if (highscoreBtn && highscoreBtn.dataset.bound !== "true") {
     highscoreBtn.dataset.bound = "true";

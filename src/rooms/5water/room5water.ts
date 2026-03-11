@@ -26,11 +26,11 @@ import { updateProgressBar } from "../../script/helper/progressbar.ts";
 import { renderRoomDesc } from "../../script/helper/roomDesc.ts";
 import { showMsg } from "../../script/helper/showMsg.ts";
 import {
-  setRoomResult,
   clearReplayMode,
   getReplayRoom,
   isReplayMode,
   resetSingleRoomResult,
+  setRoomResult,
 } from "../../script/helper/storage.ts";
 import {
   getCurrentPage,

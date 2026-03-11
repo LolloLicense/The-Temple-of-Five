@@ -4,14 +4,13 @@ import { room3earthFunc } from "../../rooms/3earth/room3earth.ts";
 import { room4metalFunc } from "../../rooms/4metal/room4metal.ts";
 import { room5waterFunc } from "../../rooms/5water/room5water.ts";
 import { room6finalFunc } from "../../rooms/final/room6validate.ts";
-
-import { startTimer, getUserTotalTime } from "../../script/helper/utils.ts";
-import { goToSection } from "../../script/helper/transitions.ts";
 import { highscoreRoomFunc } from "../../rooms/highscore/highscore.ts";
 import {
   getRoomResults,
   resetRunKeepHighscores,
 } from "../../script/helper/storage.ts";
+import { goToSection } from "../../script/helper/transitions.ts";
+import { getUserTotalTime, startTimer } from "../../script/helper/utils.ts";
 
 export function welcomePageFunc(): void {
   /* Event handlers */

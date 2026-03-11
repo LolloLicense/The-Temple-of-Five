@@ -1,9 +1,12 @@
 import * as dataJSON from "../../data.json";
 import { hideGameHeader } from "../../script/helper/gameHeader.ts";
-import { getUserName, resetRunKeepHighscores } from "../../script/helper/storage";
+import {
+  getUserName,
+  resetRunKeepHighscores,
+} from "../../script/helper/storage";
 import { calculateFinalScoreFromStorage } from "../highscore/calculateFinalScore";
-import { pushHighscore } from "../highscore/highscoreStorage";
 import { highscoreRoomFunc } from "../highscore/highscore.ts";
+import { pushHighscore } from "../highscore/highscoreStorage";
 
 export function gameWinFunc(): void {
   const gameWinSection = document.querySelector<HTMLElement>("#gameWinRoom");
@@ -53,8 +56,9 @@ export function gameWinFunc(): void {
 
   console.log("Finished run has been reset.");
   // Go to highscore page
-  const highscoreBtn =
-    document.querySelector<HTMLButtonElement>('[data-action="highscore"]');
+  const highscoreBtn = document.querySelector<HTMLButtonElement>(
+    '[data-action="highscore"]',
+  );
 
   if (highscoreBtn && highscoreBtn.dataset.bound !== "true") {
     highscoreBtn.dataset.bound = "true";
