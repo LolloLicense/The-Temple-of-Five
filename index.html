@@ -1128,51 +1128,77 @@
 
           <!-- Features -->
           <section
-            class="tabsPanel"
+            class="tabsPanel panelFeatures"
             role="tabpanel"
             id="panelFeatures"
             aria-labelledby="tabFeatures"
             hidden
           >
             <div class="tabsPannelScroll">
-              <h3>Game Features</h3>
+              <h3>Temple Mechanics</h3>
 
-              <h4>Gameplay</h4>
-              <p>
-                Five unique puzzle rooms inspired by Wu Xing — the five Chinese
-                elements: Wood, Fire, Earth, Metal and Water. Each room has its
-                own mechanics and challenge. Collect one artifact per room — the
-                correct artifacts unlock the final altar.
-              </p>
+              <div class="featuresGrid">
+                <article class="featureCard">
+                  <h4>The Trials</h4>
+                  <p>
+                    Five unique chambers inspired by Wu Xing — the five Chinese
+                    elements: Wood, Fire, Earth, Metal and Water. Each room has
+                    its own mechanics and challenge. Collect one artifact per
+                    room — the correct artifacts unlock the final altar.
+                  </p>
+                </article>
 
-              <h4>Scoring &amp; Timers</h4>
-              <p>
-                Score is based on how fast you solve each room — the faster, the
-                higher. A per-room timer and a total timer track your full run.
-              </p>
+                <article class="featureCard">
+                  <h4>Visual World</h4>
+                  <p>
+                    The chambers reflect the five elements through a cinematic
+                    temple setting. Reclaimed jungle, atmospheric details, and
+                    visual contrast help shape a world defined by imbalance,
+                    mystery, and the fragile return of harmony.
+                  </p>
+                </article>
 
-              <h4>Progression</h4>
-              <p>
-                A progress bar shows how many rooms you've completed. Progress
-                is saved automatically — close the browser and pick up where you
-                left off. Wrong artifact? Replay just that room without losing
-                progress in the others.
-              </p>
+                <article class="featureCard">
+                  <h4>Speed &amp; Score</h4>
+                  <p>
+                    Score is based on how fast you solve each room — the faster,
+                    the higher. A per-room timer and a total timer track your
+                    full run. When the cycle is completed, your final result can
+                    earn a place on the highscore list. But move with care —
+                    mistakes can break the flow and cost you precious time.
+                  </p>
+                </article>
 
-              <h4>Accessibility</h4>
-              <p>
-                Fully keyboard navigable throughout the entire game. Screen
-                reader support with ARIA labels and live regions. Focus
-                management between all interactive elements.
-              </p>
+                <article class="featureCard">
+                  <h4>Soundscape</h4>
+                  <p>
+                    Immersive background music and sound effects enhance the
+                    atmosphere in each room. In accordance with game rules,
+                    audio is set to off by default to ensure a controlled start.
+                    Sound can be toggled on or off at any time.
+                  </p>
+                </article>
 
-              <h4>Sound &amp; Music</h4>
-              <p>
-                Immersive background music and sound effects enhance the
-                atmosphere in each room. In accordance with game rules, audio is
-                set to off by default to ensure a controlled start. Sound can be
-                toggled on or off at any time.
-              </p>
+                <article class="featureCard">
+                  <h4>Progression</h4>
+                  <p>
+                    A progress bar tracks how far you've come through the
+                    temple. Your run is saved automatically, so you can return
+                    later and continue where you left off. Leave during a
+                    chamber, and you’ll re-enter from the start of that room —
+                    keeping your overall progress, but losing a little momentum.
+                  </p>
+                </article>
+
+                <article class="featureCard">
+                  <h4>Accessibility</h4>
+                  <p>
+                    Fully keyboard navigable throughout the entire game. Screen
+                    reader support with ARIA labels and live regions. Focus
+                    management between all interactive elements.
+                  </p>
+                </article>
+              </div>
             </div>
           </section>
 
@@ -1210,10 +1236,14 @@
 
                 <article class="controlsCard">
                   <h4>3: Earth Chamber</h4>
-                  <p><kbd>↑</kbd> Activates the stone above the empty slot.<br />
+                  <p>
+                    <kbd>↑</kbd> Activates the stone above the empty slot.<br />
                     <kbd>↓</kbd> Activates the stone below the empty slot.<br />
-                    <kbd>←</kbd> Activates the stone to the left of the empty slot.<br />
-                    <kbd>→</kbd> Activates the stone to the right of the empty slot.<br /></p>
+                    <kbd>←</kbd> Activates the stone to the left of the empty
+                    slot.<br />
+                    <kbd>→</kbd> Activates the stone to the right of the empty
+                    slot.<br />
+                  </p>
                 </article>
 
                 <article class="controlsCard">
@@ -1263,126 +1293,110 @@
             hidden
           >
             <div class="tabsPannelScroll">
-              <div class="controlItem">
-                <h3>About Us</h3>
-                <p>
-                  Built by The Pogo Stick Pioneers.
-                  <br />Frontend Development students, class of FED25D,
-                  Medieinstitutet &mdash; Sweden. <br />A collaborative project
-                  focused on game flow, accessibility, and UI polish.
-                </p>
-              </div>
+              <h3>Behind the Temple</h3>
 
-              <div class="controlTeamGrid">
-                <div class="controlItem">
-                  <h3>Tech Stack</h3>
+              <div class="devGrid">
+                <article class="devCard devCardIntro">
+                  <h4>Project</h4>
+                  <p>
+                    Built by The Pogo Stick Pioneers — Frontend Development
+                    students, class of FED25D, Medieinstitutet, Sweden. The
+                    project explores how a browser-based game experience can
+                    combine atmosphere, accessibility, and modular interaction
+                    design within a cohesive visual world inspired by Wu Xing.
+                  </p>
+                </article>
+
+                <article class="devCard">
+                  <h4>Tech Stack</h4>
                   <p>HTML5 · Sass · TypeScript · Vite · npm · Biome · GitHub</p>
-                </div>
+                </article>
 
-                <div class="controlItem">
-                  <h3>Planning &amp; Design</h3>
-                  <ul>
+                <article class="devCard devCardTeam">
+                  <h4>Team</h4>
+                  <!-- For accessibility: All GitHub icons use alt="" as they are decorative -->
+                  <ul class="devTeamList">
                     <li>
+                      <img
+                        src="./icons/github-icon.svg"
+                        alt=""
+                        aria-hidden="true"
+                        width="30"
+                        height="30"
+                      />
                       <a
-                        href="https://miro.com/welcomeonboard/WWQxUmtDQk03bVljYzllZHRWRkQ1OXArZTVOSW9wVUcrY3pweWRBUUhLUGdhZ0t1em95cGZON3AzVHQ4a2xZZFVjZnV2bVMvQTRWY01JVW1mMHRtdnBmeG5VQ1BkalR6MG90Q2NWS2I4MWYyRy8yLzE0NmltYmozd2hNellJSytyVmtkMG5hNDA3dVlncnBvRVB2ZXBnPT0hdjE=?share_link_id=170887747902"
+                        href="https://github.com/AlexJCodes"
                         target="_blank"
                         rel="noopener"
-                        >Miro flow</a
+                        >Alexander Johansson</a
                       >
                     </li>
+
                     <li>
+                      <img
+                        src="./icons/github-icon.svg"
+                        alt=""
+                        aria-hidden="true"
+                        width="30"
+                        height="30"
+                      />
                       <a
-                        href="https://www.figma.com/design/OJgqdjOM1fksuh2Gh2rsAX/The-temple-of-five?node-id=0-1&t=QRSCgQpighrHxX8w-1"
+                        href="https://github.com/AlexandraHenriksson"
                         target="_blank"
                         rel="noopener"
-                        >Figma</a
+                        >Alexandra Henriksson</a
+                      >
+                    </li>
+
+                    <li>
+                      <img
+                        src="./icons/github-icon.svg"
+                        alt=""
+                        aria-hidden="true"
+                        width="30"
+                        height="30"
+                      />
+                      <a
+                        href="https://github.com/elychnell"
+                        target="_blank"
+                        rel="noopener"
+                        >Emil Lychnell</a
+                      >
+                    </li>
+
+                    <li>
+                      <img
+                        src="./icons/github-icon.svg"
+                        alt=""
+                        aria-hidden="true"
+                        width="30"
+                        height="30"
+                      />
+                      <a
+                        href="https://github.com/LolloLicense"
+                        target="_blank"
+                        rel="noopener"
+                        >Louise Sverkström</a
+                      >
+                    </li>
+
+                    <li>
+                      <img
+                        src="./icons/github-icon.svg"
+                        alt=""
+                        aria-hidden="true"
+                        width="30"
+                        height="30"
+                      />
+                      <a
+                        href="https://github.com/minza-42"
+                        target="_blank"
+                        rel="noopener"
+                        >Minai Karlsson</a
                       >
                     </li>
                   </ul>
-                </div>
-              </div>
-
-              <div class="controlItem">
-                <h3>Team</h3>
-                <!-- For accessibility: All GitHub icons use alt="" as they are decorative -->
-                <ul class="devTeamList">
-                  <li>
-                    <img
-                      src="./icons/github-icon.svg"
-                      alt=""
-                      aria-hidden="true"
-                      width="30"
-                      height="30"
-                    />
-                    <a
-                      href="https://github.com/AlexJCodes"
-                      target="_blank"
-                      rel="noopener"
-                      >Alexander Johansson</a
-                    >
-                  </li>
-                  <li>
-                    <img
-                      src="./icons/github-icon.svg"
-                      alt=""
-                      aria-hidden="true"
-                      width="30"
-                      height="30"
-                    />
-                    <a
-                      href="https://github.com/AlexandraHenriksson"
-                      target="_blank"
-                      rel="noopener"
-                      >Alexandra Henriksson</a
-                    >
-                  </li>
-                  <li>
-                    <img
-                      src="./icons/github-icon.svg"
-                      alt=""
-                      aria-hidden="true"
-                      width="30"
-                      height="30"
-                    />
-                    <a
-                      href="https://github.com/elychnell"
-                      target="_blank"
-                      rel="noopener"
-                      >Emil Lychnell</a
-                    >
-                  </li>
-                  <li>
-                    <img
-                      src="./icons/github-icon.svg"
-                      alt=""
-                      aria-hidden="true"
-                      width="30"
-                      height="30"
-                    />
-                    <a
-                      href="https://github.com/LolloLicense"
-                      target="_blank"
-                      rel="noopener"
-                      >Louise Sverkström</a
-                    >
-                  </li>
-                  <li>
-                    <img
-                      src="./icons/github-icon.svg"
-                      alt=""
-                      aria-hidden="true"
-                      width="30"
-                      height="30"
-                    />
-                    <a
-                      href="https://github.com/minza-42"
-                      target="_blank"
-                      rel="noopener"
-                    >
-                      Minai Karlsson</a
-                    >
-                  </li>
-                </ul>
+                </article>
               </div>
             </div>
           </section>
