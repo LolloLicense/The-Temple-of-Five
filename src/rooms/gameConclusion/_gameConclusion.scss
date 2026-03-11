@@ -36,7 +36,7 @@
   flex-direction: column;
   min-height: 100vh;
   .ctaBtnsConc {
-    margin-block: 2rem 4rem;
+    margin-block: auto 4rem;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -44,11 +44,6 @@
     button {
       @include mix.button();
     }
-  }
-}
-.gameWinRoom {
-  .ctaBtnsConc {
-    margin-block: auto 4rem;
   }
 }
 
