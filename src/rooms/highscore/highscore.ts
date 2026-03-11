@@ -5,7 +5,6 @@ import {
   showSection,
 } from "../../script/helper/transitions.ts";
 // import { testSaveFinalScoreFlow } from "./testSaveFinalScoreFlow";
-import { debugScoreBreakdown } from "./debugScoreBreakdown";
 import {
   initHighscoreResetButton,
   initHighscoreSecret,
@@ -72,9 +71,4 @@ export function highscoreRoomFunc(): void {
       });
     }
   }
-
-  debugScoreBreakdown();
-  // testSaveFinalScoreFlow();
-
-  console.log("Hello from the highscore room");
 }

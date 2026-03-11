@@ -1,6 +1,6 @@
 import * as dataJSON from "../../data.json";
 import { hideGameHeader } from "../../script/helper/gameHeader.ts";
-import { getUserName } from "../../script/helper/storage";
+import { getUserName, resetRunKeepHighscores } from "../../script/helper/storage";
 import { calculateFinalScoreFromStorage } from "../highscore/calculateFinalScore";
 import { pushHighscore } from "../highscore/highscoreStorage";
 import { highscoreRoomFunc } from "../highscore/highscore.ts";
@@ -25,6 +25,11 @@ export function gameWinFunc(): void {
   /* ---------------------------------------------------- CALCULATE AND SAVE FINAL SCORE -------------------------------------------------------------- */
   /* -------------------------------------------------------------------------------------------------------------------------------------------------- */
 
+  /**
+   * Calculate final score from LS
+   * Save the score to leaderboard
+   * Clear the finished run so it cannot be continued later
+   */
   const userName = getUserName();
 
   if (!userName) {
@@ -43,6 +48,10 @@ export function gameWinFunc(): void {
 
   console.log("Highscore pushed.");
 
+  // Run is finished, we can now reset state
+  resetRunKeepHighscores();
+
+  console.log("Finished run has been reset.");
   // Go to highscore page
   const highscoreBtn =
     document.querySelector<HTMLButtonElement>('[data-action="highscore"]');
