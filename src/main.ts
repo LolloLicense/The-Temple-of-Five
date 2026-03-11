@@ -1,15 +1,18 @@
 import "./sass/style.scss";
 
 import { initAudio, initSoundToggle } from "./audio";
-import { room1woodFunc } from "./rooms/1wood/room1wood.ts";
-import { room2fireFunc } from "./rooms/2fire/room2fire.ts";
-import { room3earthFunc } from "./rooms/3earth/room3earth.ts";
-import { room4metalFunc } from "./rooms/4metal/room4metal.ts";
-import { room5waterFunc } from "./rooms/5water/room5water.ts";
-import { room6finalFunc } from "./rooms/final/room6validate.ts";
-import { gameOverRoomFunc } from "./rooms/gameConclusion/gameOverRoom.ts";
-import { gameWinFunc } from "./rooms/gameConclusion/gameWin.ts";
-import { highscoreRoomFunc } from "./rooms/highscore/highscore.ts";
+
+//import { room2fireFunc } from "./rooms/2fire/room2fire.ts";
+//import { room3earthFunc } from "./rooms/3earth/room3earth.ts";
+//import { room4metalFunc } from "./rooms/4metal/room4metal.ts";
+//import { room5waterFunc } from "./rooms/5water/room5water.ts";
+//import { room6finalFunc } from "./rooms/final/room6validate.ts";
+//import { gameOverRoomFunc } from "./rooms/gameConclusion/gameOverRoom.ts";
+//import { gameWinFunc } from "./rooms/gameConclusion/gameWin.ts";
+//import { highscoreRoomFunc } from "./rooms/highscore/highscore.ts";
+//import { goToSection } from "./script/helper/transitions.ts";
+//import { startTimer, stopTimer } from "./script/utils.ts";
+
 import { aboutTabs, initAboutDialog } from "./script/helper/aboutDialog.ts";
 // backpack artifacts
 import { initBackpackToggle } from "./script/helper/artifacts";
@@ -21,26 +24,11 @@ import { initExitDialog } from "./script/helper/exitDialog";
 import { initLoginFlow } from "./script/helper/loginFlow";
 //resetBTNs
 import { initResetButtons } from "./script/helper/reset";
-import { goToSection } from "./script/helper/transitions.ts";
-//import { startTimer, stopTimer } from "./script/utils.ts";
-import { startTimer } from "./script/helper/utils.ts";
+// Welcome page
+import { welcomePageFunc } from "./rooms/welcome/welcomePage.ts";
 
 /* Event listeners for temporary menu
-(Remove when menu is to be removed) */
-
-// change name to start new run game
-function handleStartGame(): void {
-  startTimer(0);
-  room1woodFunc();
-}
-
-const woodRoomBtn: HTMLElement | null = document.querySelector("#woodRoomBtn");
-if (woodRoomBtn) {
-  woodRoomBtn.addEventListener("click", handleStartGame);
-}
-
-// Resume button
-
+(Remove when menu is to be removed) 
 // FIRE
 const fireRoomBtn: HTMLElement | null = document.querySelector("#fireRoomBtn");
 
@@ -157,29 +145,12 @@ if (gameWinBtn) {
     goToSection(gameWinSection, 1200);
   });
 }
-
-//HIGHSCORE
-const highScoreBtn: HTMLElement | null =
-  document.querySelector("#openHighScoreBtn");
-
-if (highScoreBtn) {
-  highScoreBtn.addEventListener("click", () => {
-    // 1. Build the highscore room first
-    highscoreRoomFunc();
-
-    // 2. Then show the section from the welcome/test menu
-    const highscoreSection =
-      document.querySelector<HTMLElement>("#highscoreRoom");
-    if (!highscoreSection) return;
-
-    goToSection(highscoreSection, 1200);
-  });
-}
+*/
 
 //-----------------------------------------------------------
 //-------------------------INITS-----------------------------
 //-----------------------------------------------------------
-
+welcomePageFunc();
 initBackpackToggle();
 initLoginFlow();
 initExitDialog();
