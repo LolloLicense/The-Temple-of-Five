@@ -12,9 +12,11 @@
   justify-content: center;
   flex-direction: column;
   position: relative;
+  margin-inline: 2rem;
   z-index: 5;
   gap: 2.5rem;
   h2 {
+    text-align: center;
     font-size: var.$fs-h1;
     text-transform: uppercase;
     margin: 0;
