@@ -7,7 +7,6 @@ import { room6finalFunc } from "../../rooms/final/room6validate.ts";
 import { highscoreRoomFunc } from "../../rooms/highscore/highscore.ts";
 import {
   getRoomResults,
-  hasActiveRun,
   resetRunKeepHighscores,
 } from "../../script/helper/storage.ts";
 import { goToSection } from "../../script/helper/transitions.ts";
