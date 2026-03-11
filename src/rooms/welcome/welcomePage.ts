@@ -7,6 +7,7 @@ import { room6finalFunc } from "../../rooms/final/room6validate.ts";
 import { highscoreRoomFunc } from "../../rooms/highscore/highscore.ts";
 import {
   getRoomResults,
+  hasActiveRun,
   resetRunKeepHighscores,
 } from "../../script/helper/storage.ts";
 import { goToSection } from "../../script/helper/transitions.ts";
@@ -16,25 +17,39 @@ import { getUserTotalTime, startTimer } from "../../script/helper/utils.ts";
 let welcomeBound = false;
 
 export function welcomePageFunc(): void {
-  // animation
-  initWelcomeParticles();
+  console.log("Welcome page initialized");
 
-  // Prevent duplicate event listeners
-  if (welcomeBound) return;
-  welcomeBound = true;
-  /* Event handlers */
-  // Start game button
-  const startGameBtn: HTMLElement | null =
-    document.querySelector("#startGameBtn");
-  if (startGameBtn) {
-    startGameBtn.addEventListener("click", handleStartGame);
-  }
+  const ROOMS = ["wood", "fire", "earth", "metal", "water", "final"] as const;
+  const state = getRoomResults();
+  console.log("Current room states:", state);
 
   // Resume button
   const continueBtn: HTMLElement | null =
     document.querySelector("#continueBtn");
   if (continueBtn) {
     continueBtn.addEventListener("click", continueGame);
+  }
+
+  for (const roomId of ROOMS) {
+    if (state[roomId].status === "completed") {
+      console.log(`Room ${roomId} is completed. Enabling continue button.`);
+      continueBtn?.removeAttribute("disabled");
+    } // IF END
+  } // LOOP END
+
+  // animation
+  initWelcomeParticles();
+
+  // Prevent duplicate event listeners
+  if (welcomeBound) return;
+  welcomeBound = true;
+
+  /* Event handlers */
+  // Start game button
+  const startGameBtn: HTMLElement | null =
+    document.querySelector("#startGameBtn");
+  if (startGameBtn) {
+    startGameBtn.addEventListener("click", handleStartGame);
   }
 
   //HIGHSCORE button
@@ -72,7 +87,7 @@ function continueGame(): void {
   for (const roomId of ROOMS) {
     if (state[roomId].status === "pending") {
       continueRoom = roomId;
-      console.log(`Room ID: ${roomId}, Status: ${state[roomId].status}`);
+      //console.log(`Room ID: ${roomId}, Status: ${state[roomId].status}`);
       break; // Exit the loop once the pending room is found
     } // IF END
   } // LOOP END

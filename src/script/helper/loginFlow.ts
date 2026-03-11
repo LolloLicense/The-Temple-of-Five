@@ -18,6 +18,7 @@ import {
   showSection,
 } from "./transitions";
 import { clearRoomTimerOnLeave, stopTimer } from "./utils";
+import { welcomePageFunc } from "../../rooms/welcome/welcomePage";
 
 //-----------------------------------------------------------
 //------------------------- STATES --------------------------
@@ -147,6 +148,7 @@ function handleLeaveRoom(e: Event): void {
 
   // Otherwise fade to welcome
   goToSection(welcomeSection, 1200);
+  welcomePageFunc();
 }
 
 //-----------------------------------------------------------
