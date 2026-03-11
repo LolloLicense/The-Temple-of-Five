@@ -206,7 +206,14 @@ export function initBackpackToggle(): void {
   });
 
   // Click inside dropdown should not close it
-  itemDropdown.addEventListener("click", (e) => {
-    e.stopPropagation();
+  document.addEventListener("click", (e) => {
+    const target = e.target as Node | null;
+
+    const clickedInsideDropdown = itemDropdown.contains(target);
+    const clickedToggleButton = itemListBtn.contains(target);
+
+    if (!clickedInsideDropdown && !clickedToggleButton) {
+      itemDropdown.classList.remove("is-open");
+    }
   });
 }
