@@ -171,7 +171,7 @@ body {
 }
 
 //-----------------------------------------------------------
-//-------------------------HEADER---------------------------
+//-------------------------HEADER----------------------------
 //-----------------------------------------------------------
 
 .gameHeader {
@@ -256,6 +256,34 @@ body {
       transform: scale(1);
     }
   }
+}
+
+.item-dropdown {
+  @include mix.glass();
+  position: fixed;
+  top: 105px;
+  right: 5vw;
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  z-index: 10;
+  opacity: 0;
+  transform: translateY(-5px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  pointer-events: none;
+  border: 2px solid var.$lightColor;
+
+  .artifact-slot {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+.item-dropdown.is-open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 
 //-----------------------------------------------------------
