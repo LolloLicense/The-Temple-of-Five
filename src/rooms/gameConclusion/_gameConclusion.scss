@@ -6,7 +6,7 @@
 //-----------------------------------------------------------
 
 .conclusionHeading {
-  margin-top: 5rem;
+  margin-top: 3rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14,7 +14,6 @@
   position: relative;
   margin-inline: 2rem;
   z-index: 5;
-  gap: 2.5rem;
   h2 {
     text-align: center;
     font-size: var.$fs-h1;
@@ -23,7 +22,7 @@
     color: var.$lightColor;
   }
   p {
-    font-size: var.$fs-h4;
+    font-size: var.$fs-h5;
     max-width: 1000px;
     text-align: center;
     margin: 0;
@@ -37,7 +36,7 @@
   flex-direction: column;
   min-height: 100vh;
   .ctaBtnsConc {
-    margin-block: auto 4rem;
+    margin-block: 2rem 4rem;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -66,7 +65,7 @@
     justify-content: center;
     align-items: flex-end;
     gap: 1.5rem;
-    margin-top: 3rem;
+    margin-top: 1.5rem;
 
     .replayChamberBtn {
       display: flex;
