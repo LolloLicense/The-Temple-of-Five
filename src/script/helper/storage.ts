@@ -2,13 +2,6 @@
 //----------------------- INTERFACE / TYPES -----------------
 //-----------------------------------------------------------
 
-// // The data we save for user
-// export interface IUserData {
-//   userName: string;
-//   // lastPlayedAt?: string;
-//   //
-// }
-
 // ROOM ID used in the game
 export type TRoomId = "wood" | "fire" | "earth" | "metal" | "water" | "final";
 
