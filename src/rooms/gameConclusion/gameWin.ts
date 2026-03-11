@@ -3,6 +3,7 @@ import { hideGameHeader } from "../../script/helper/gameHeader.ts";
 import { getUserName } from "../../script/helper/storage";
 import { calculateFinalScoreFromStorage } from "../highscore/calculateFinalScore";
 import { pushHighscore } from "../highscore/highscoreStorage";
+import { highscoreRoomFunc } from "../highscore/highscore.ts";
 
 export function gameWinFunc(): void {
   const gameWinSection = document.querySelector<HTMLElement>("#gameWinRoom");
@@ -41,5 +42,16 @@ export function gameWinFunc(): void {
   });
 
   console.log("Highscore pushed.");
-}
 
+  // Go to highscore page
+  const highscoreBtn =
+    document.querySelector<HTMLButtonElement>('[data-action="highscore"]');
+
+  if (highscoreBtn && highscoreBtn.dataset.bound !== "true") {
+    highscoreBtn.dataset.bound = "true";
+
+    highscoreBtn.addEventListener("click", () => {
+      highscoreRoomFunc();
+    });
+  }
+}
