@@ -57,21 +57,6 @@ Each level represents a different stage in the lifecycle of fire.
 
 ---
 
-## Controls
-
-The puzzle supports **keyboard and mouse input**.
-
-Keyboard:
-
-| Key | Action |
-|-----|--------|
-| ← → | Move between keys |
-| Enter / Space | Place element |
-| Backspace | Remove element |
-| A T F E S W | Direct input |
-
----
-
 ## Room Result
 
 When the room finishes, the result is saved:
