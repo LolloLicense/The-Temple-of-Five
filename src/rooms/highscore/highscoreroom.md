@@ -213,6 +213,6 @@ This prevents normal players from accidentally resetting the leaderboard.
 ---
 
 ### Secret code 
-<b>resethigh</b> - Typing this sequence anywhere in the game (outside input fields) will reveal the reset button.
+<b>resethigh</b> - Typing this sequence anywhere in the highscore page will reveal the reset button.
 
 
