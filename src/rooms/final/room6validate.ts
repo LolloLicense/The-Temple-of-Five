@@ -1,4 +1,4 @@
-import { playBgm, stopAll } from "../../audio/index.ts";
+import { playBgm, playSfx, stopAll } from "../../audio/index.ts";
 import * as dataJSON from "../../data.json";
 import { getArtifactIcon } from "../../script/helper/artifacts.ts";
 import { showGameHeader } from "../../script/helper/gameHeader.ts";
@@ -55,6 +55,8 @@ export function room6finalFunc(): void {
   stopAll(); // Stop old music
   const bgmId = dataJSON.room6validate.bgmId; // Play background music
   if (bgmId) void playBgm(bgmId, 650);
+
+  const sfxId = dataJSON.room4metal.sfxId; // Sound effect used when changing slot color
 
   // Make the section focusable so keyboard navigation works
   finalSection.tabIndex = -1;
@@ -238,11 +240,13 @@ export function room6finalFunc(): void {
     if (event.key === "ArrowUp") {
       // If the player presses up → cycle artifact upward in the list
       cycleArtifact(-1);
+      if (sfxId) void playSfx(sfxId); // ljud vid slot förflyttning
     }
 
     if (event.key === "ArrowDown") {
       // If the player presses down → cycle artifact downward in the list
       cycleArtifact(1);
+      if (sfxId) void playSfx(sfxId); // ljud vid slot förflyttning
     }
   };
 
