@@ -36,7 +36,7 @@ Through sound, visuals, and interactive elements, the game creates an immersive 
 
 | Chrome Lighthouse                            | Firefox Rendering                                   |
 | :------------------------------------------- | :-------------------------------------------------- |
-| ![Lighthouse](/public/images/lighthouse.png) | ![Firefox in Wood room](/public/images/firefox.png) |
+| ![Lighthouse](/dokumentation/screenshots/lighthouse.png) | ![Firefox in Wood room](/dokumentation/screenshots/firefox.png) |
 
 | W3C HTML Validation            | W3C CSS/SASS Validation           |
 | :----------------------------- | :-------------------------------- |
