@@ -106,7 +106,7 @@ function clearRoomResultTimeouts(): void {
 //--------------------------------------------------------- Room cleanup ---------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------------------------------
 // Cleans everything that may remain active when the player leaves the metal room
-function cleanupMetalRuntime(): void {
+export function cleanupMetalRuntime(): void {
   // Stop timers that may continue running after the player has left
   clearCountdown();
   clearSequence();

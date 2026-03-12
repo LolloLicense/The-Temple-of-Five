@@ -190,7 +190,7 @@ function stopFocusTimeout(): void {
  * Cleanup Water room async logic so old watchers / timers / delayed callbacks
  * do not continue after leaving the room.
  */
-function cleanupWaterRoom(): void {
+export function cleanupWaterRoom(): void {
   stopInternalTimer();
   stopSharedTimer(5);
   stopTimeUpWatcher();

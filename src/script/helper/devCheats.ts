@@ -40,12 +40,24 @@
  */
 
 import * as dataJSON from "../../data.json";
-import { room1woodFunc } from "../../rooms/1wood/room1wood.ts";
-import { room2fireFunc } from "../../rooms/2fire/room2fire.ts";
-import { room3earthFunc } from "../../rooms/3earth/room3earth.ts";
-import { room4metalFunc } from "../../rooms/4metal/room4metal.ts";
-import { room5waterFunc } from "../../rooms/5water/room5water.ts";
-import { room6finalFunc } from "../../rooms/final/room6validate.ts";
+import { room1woodFunc, cleanupWoodRoom } from "../../rooms/1wood/room1wood.ts";
+import { room2fireFunc, cleanupFireRoom } from "../../rooms/2fire/room2fire.ts";
+import {
+  room3earthFunc,
+  cleanupEarthRoom,
+} from "../../rooms/3earth/room3earth.ts";
+import {
+  room4metalFunc,
+  cleanupMetalRuntime,
+} from "../../rooms/4metal/room4metal.ts";
+import {
+  room5waterFunc,
+  cleanupWaterRoom,
+} from "../../rooms/5water/room5water.ts";
+import {
+  room6finalFunc,
+  cleanupFinalRoom,
+} from "../../rooms/final/room6validate.ts";
 import { updateProgressBar } from "./progressbar.ts";
 import { showMsg } from "./showMsg.ts";
 import type { TArtifactKind, TRoomId, TRoomResult } from "./storage.ts";
@@ -725,6 +737,9 @@ function completeCurrentAndGoNextFullFlow(
   // Show same message as normal room completion
   showMsg("Well done — next chamber awaits", TRANSITION_MS * 2);
 
+  //Run the cleanup of the current room (stop intervals, listeners, etc)
+  cleanup(currentRoomId);
+
   // Run transition to next section
   goToSection(nextSection, TRANSITION_MS);
 
@@ -738,6 +753,29 @@ function completeCurrentAndGoNextFullFlow(
 
   console.log(`[DEV CHEATS] FULL FLOW: ${currentRoomId} -> ${nextRoomId}`);
 }
+
+function cleanup(roomId: TRoomId): void {
+  switch (roomId) {
+    case "wood":
+      cleanupWoodRoom();
+      break;
+    case "fire":
+      cleanupFireRoom();
+      break;
+    case "earth":
+      cleanupEarthRoom();
+      break;
+    case "metal":
+      cleanupMetalRuntime();
+      break;
+    case "water":
+      cleanupWaterRoom();
+      break;
+    case "final":
+      cleanupFinalRoom();
+      break;
+  }
+} // End of cleanup helper
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 /* ---------------------------------------------- GO TO FINAL ROOM ------------------------------------------------------------- */

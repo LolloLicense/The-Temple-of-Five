@@ -17,8 +17,6 @@ let pendingRooms = 0;
 let welcomeBound = false;
 
 export function welcomePageFunc(): void {
-  console.log("Welcome page initialized");
-
   const ROOMS = ["wood", "fire", "earth", "metal", "water", "final"] as const;
   const state = getRoomResults();
   console.log("Current room states:", state);
@@ -36,7 +34,7 @@ export function welcomePageFunc(): void {
     } else if (state[roomId].status === "pending") {
       pendingRooms++;
     }
-    if (pendingRooms < 5) {
+    if (pendingRooms === 6) {
       continueBtn?.setAttribute("disabled", "true");
     } // IF END
   } // LOOP END

@@ -310,7 +310,7 @@ export function room6finalFunc(): void {
       // Stop the final room’s timer before moving on
       stopTimer(6);
       stopAll(); // Stop music
-      playSfx(sfxBoom); 
+      playSfx(sfxBoom);
 
       // Get the win section
       const gameWinSection =
@@ -329,7 +329,7 @@ export function room6finalFunc(): void {
       // Stop the final room’s timer before moving on
       stopTimer(6);
       stopAll(); // Stop music
-      playSfx(sfxBoom); 
+      playSfx(sfxBoom);
 
       // Get the game-over section
       const gameOverSection =

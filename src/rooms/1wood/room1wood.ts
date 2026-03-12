@@ -76,7 +76,7 @@ function stopFailTimeout(): void {
   }
 }
 // Cleanup function for Wood room
-function cleanupWoodRoom(): void {
+export function cleanupWoodRoom(): void {
   stopTimeUpWatcher();
   stopCompleteTimeout();
   stopFailTimeout();

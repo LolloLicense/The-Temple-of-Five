@@ -44,7 +44,8 @@ function shouldReturnToGameOver(): boolean {
  * Cleanup only Earth-specific side effects.
  * We do not touch puzzle logic here, only listeners / intervals owned by Earth.
  */
-function cleanupEarthRoom(): void {
+
+export function cleanupEarthRoom(): void {
   clearInterval(timerCheckInterval);
 
   if (earthKeydownHandler) {

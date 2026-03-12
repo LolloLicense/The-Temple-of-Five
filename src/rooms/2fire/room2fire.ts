@@ -1084,7 +1084,7 @@ export function exitFireRoom(): void {
  * Cleanup Fire room async logic so old timers / watchers
  * do not continue after leaving the room.
  */
-function cleanupFireRoom(): void {
+export function cleanupFireRoom(): void {
   stopTimeUpWatcher();
   stopIntroTimeout();
   stopCompleteTimeout();
