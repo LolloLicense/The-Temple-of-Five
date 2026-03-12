@@ -74,6 +74,12 @@ export function initAudio(): void {
       src: withBaseUrl("/audiofiles/sfx_transition.mp3"),
       kind: "sfx",
     },
+    {
+      id: "sfx_boom",
+      src: withBaseUrl("/audiofiles/sfx_boom.mp3"),
+      kind: "sfx",
+      volume: 0.8, 
+    },
 
     // Fill in your rooms below:
   ];

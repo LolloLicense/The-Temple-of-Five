@@ -56,7 +56,8 @@ export function room6finalFunc(): void {
   const bgmId = dataJSON.room6validate.bgmId; // Play background music
   if (bgmId) void playBgm(bgmId, 650);
 
-  const sfxId = dataJSON.room4metal.sfxId; // Sound effect used when changing slot color
+  const sfxClick = dataJSON.room6validate.sfxClick; // Sound effect used when changing slot color
+  const sfxBoom = dataJSON.room6validate.sfxBoomId; // Sound effect used when changing slot color
 
   // Make the section focusable so keyboard navigation works
   finalSection.tabIndex = -1;
@@ -240,13 +241,13 @@ export function room6finalFunc(): void {
     if (event.key === "ArrowUp") {
       // If the player presses up → cycle artifact upward in the list
       cycleArtifact(-1);
-      if (sfxId) void playSfx(sfxId); // ljud vid slot förflyttning
+      if (sfxClick) void playSfx(sfxClick); // ljud vid slot förflyttning
     }
 
     if (event.key === "ArrowDown") {
       // If the player presses down → cycle artifact downward in the list
       cycleArtifact(1);
-      if (sfxId) void playSfx(sfxId); // ljud vid slot förflyttning
+      if (sfxClick) void playSfx(sfxClick); // ljud vid slot förflyttning
     }
   };
 
@@ -309,6 +310,7 @@ export function room6finalFunc(): void {
       // Stop the final room’s timer before moving on
       stopTimer(6);
       stopAll(); // Stop music
+      playSfx(sfxBoom); 
 
       // Get the win section
       const gameWinSection =
@@ -327,6 +329,7 @@ export function room6finalFunc(): void {
       // Stop the final room’s timer before moving on
       stopTimer(6);
       stopAll(); // Stop music
+      playSfx(sfxBoom); 
 
       // Get the game-over section
       const gameOverSection =
