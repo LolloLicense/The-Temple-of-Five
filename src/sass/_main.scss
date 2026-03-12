@@ -555,6 +555,18 @@ body {
   }
 }
 
+kbd {
+  display: inline-block;
+  @include mix.glass($bg: rgba(9, 49, 52, 0.5), $radius: 4px);
+  padding: 2px 8px;
+  font-family: monospace;
+  font-size: 0.85em;
+  color: var.$lightColor;
+  letter-spacing: 0.03em;
+  font-weight: 500;
+  line-height: 1.6;
+}
+
 //-----------------------------------------------------------
 //---------------------- MEDIA QUERYS -----------------------
 //-----------------------------------------------------------
