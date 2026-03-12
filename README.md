@@ -34,33 +34,23 @@ Through sound, visuals, and interactive elements, the game creates an immersive 
 
 ## Screenshots & Validation
 
-| Chrome Lighthouse                            | Firefox Rendering                                   |
-| :------------------------------------------- | :-------------------------------------------------- |
-| ![Lighthouse](/dokumentation/screenshots/lighthouse.png) | ![Firefox in Wood room](/dokumentation/screenshots/firefox.png) |
+### Chrome Lighthouse
 
-| W3C HTML Validation            | W3C CSS/SASS Validation           |
-| :----------------------------- | :-------------------------------- |
-| ![w3c](/public/images/w3c.png) | ![w3c](/public/images/cssw3c.png) |
+![Chrome Lighthouse](/dokumentation/screenshots/lighthouse.png)
+
+### Firefox Rendering
+
+![Firefox Rendering](/dokumentation/screenshots/firefox.png)
+
+### W3C HTML validation results
+
+![W3C HTML Validation](/dokumentation/screenshots/w3c.png)
+
+### W3C CSS / SASS validation results
+
+![W3C CSS/SASS Validation](/dokumentation/screenshots/cssw3c.png)
 
 ---
-
-## What We Learned
-
-<!-- Add your learning points here -->
-
-- Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-- Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-- Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
-- Duis aute irure dolor in reprehenderit in voluptate velit esse cillum.
-
-## Difficulties / Challenges
-
-<!-- Add your challenges here -->
-
-- Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-- Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-- Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
-- Duis aute irure dolor in reprehenderit in voluptate velit esse cillum.
 
 ## Design & Planning
 
@@ -68,6 +58,30 @@ Through sound, visuals, and interactive elements, the game creates an immersive 
 - **Visual Identity:** [Figma Mockup](https://www.figma.com/proto/OJgqdjOM1fksuh2Gh2rsAX/The-temple-of-five?node-id=4-55&p=f&t=QRSCgQpighrHxX8w-0&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&device-frame=0)
 
 ---
+
+## Team Reflections
+
+### What We Learned
+
+- **Planning and project structure are important.** We learned that building the core systems (game engine, global functions, and LocalStorage handling) earlier would have made development smoother.
+
+- **Team collaboration was a key part of the project.** We gained valuable experience working with GitHub using branches, pull requests, and resolving merge conflicts.
+
+- **State management improved throughout the project.** We structured the game state using LocalStorage with clear states such as _pending_, _completed_, and _failed_.
+
+- **Accessibility and UI feedback improved the user experience.** Keyboard navigation, focus handling, ARIA labels, and small UI details like animations and progress indicators helped make the game feel more polished.
+
+---
+
+### Difficulties / Challenges
+
+- **Connecting all rooms to a shared game state was challenging**, since rooms were developed before a stable core system existed.
+
+- **Timers, intervals, and event listeners sometimes caused bugs**, especially when rooms were re-entered. We solved this by adding cleanup logic and initialization guards.
+
+- **Merge conflicts happened frequently early in the project**, but we improved our workflow and resolved them through teamwork.
+
+- **Replay and reset flows required careful state handling** to avoid edge-case bugs.
 
 ## Credits
 
@@ -88,14 +102,14 @@ Through sound, visuals, and interactive elements, the game creates an immersive 
 
 ### Audio & Sound Effects (via Pixabay)
 
-| Room           | Music                                                                                                             | Sound Effects                                                                                                                                                                                                                                                                                                     |
-| -------------- | ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Wood**       | _Shadowed Whispers_ – [TrenoX8](https://pixabay.com/music/mystery-shadowed-whispers-321103/)                      | Click – [arunangshubanerjee](https://pixabay.com/sound-effects/film-special-effects-cassette-recorder-stop-button-mechanical-click-sound-359987/)                                                                                                                                                                 |
-| **Fire**       | _Ambient Burning Castle_ – [Sound Reality](https://pixabay.com/music/ambient-ambient-burning-castle-320841/)      | —                                                                                                                                                                                                                                                                                                                 |
-| **Earth**      | _Abyssal Echoes_ – [TrenoX8](https://pixabay.com/music/mystery-abyssal-echoes-dark-cinematic-suspenseful-316857/) | Click – [arunangshubanerjee](https://pixabay.com/sound-effects/film-special-effects-cassette-recorder-stop-button-mechanical-click-sound-359987/) <br> Stone Slide – [u_i15wxund59](https://pixabay.com/sound-effects/film-special-effects-stone-slide-sound-effects-322794/)                                     |
-| **Metal**      | _Veil of Darkness_ – [TrenoX8](https://pixabay.com/music/mystery-veil-of-darkness-321167/)                        | Click – [arunangshubanerjee](https://pixabay.com/sound-effects/film-special-effects-cassette-recorder-stop-button-mechanical-click-sound-359987/)                                                                                                                                                                 |
-| **Water**      | _The Cave_ – [Andrea Good](https://pixabay.com/music/ambient-the-cave-220274/)                                    | —                                                                                                                                                                                                                                                                                                                 |
-| **Final**      | _Cursed Forest_ – [TrenoX8](https://pixabay.com/music/mystery-cursed-forest-305207/)                              | —                                                                                                                                                                                                                                                                                                                 |
-| **Validation** | —                                                                                                                 |  _Submority Boom_ – [SUBMORITY](https://pixabay.com/users/submority-30821389/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=123876) ([Pixabay](https://pixabay.com/sound-effects//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=123876)) |
+| Room           | Music                                                                                                             | Sound Effects                                                                                                                                                                                                                                                                                              |
+| -------------- | ----------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Wood**       | _Shadowed Whispers_ – [TrenoX8](https://pixabay.com/music/mystery-shadowed-whispers-321103/)                      | Click – [arunangshubanerjee](https://pixabay.com/sound-effects/film-special-effects-cassette-recorder-stop-button-mechanical-click-sound-359987/)                                                                                                                                                          |
+| **Fire**       | _Ambient Burning Castle_ – [Sound Reality](https://pixabay.com/music/ambient-ambient-burning-castle-320841/)      | —                                                                                                                                                                                                                                                                                                          |
+| **Earth**      | _Abyssal Echoes_ – [TrenoX8](https://pixabay.com/music/mystery-abyssal-echoes-dark-cinematic-suspenseful-316857/) | Click – [arunangshubanerjee](https://pixabay.com/sound-effects/film-special-effects-cassette-recorder-stop-button-mechanical-click-sound-359987/) <br> Stone Slide – [u_i15wxund59](https://pixabay.com/sound-effects/film-special-effects-stone-slide-sound-effects-322794/)                              |
+| **Metal**      | _Veil of Darkness_ – [TrenoX8](https://pixabay.com/music/mystery-veil-of-darkness-321167/)                        | Click – [arunangshubanerjee](https://pixabay.com/sound-effects/film-special-effects-cassette-recorder-stop-button-mechanical-click-sound-359987/)                                                                                                                                                          |
+| **Water**      | _The Cave_ – [Andrea Good](https://pixabay.com/music/ambient-the-cave-220274/)                                    | —                                                                                                                                                                                                                                                                                                          |
+| **Final**      | _Cursed Forest_ – [TrenoX8](https://pixabay.com/music/mystery-cursed-forest-305207/)                              | —                                                                                                                                                                                                                                                                                                          |
+| **Validation** | —                                                                                                                 | _Submority Boom_ – [SUBMORITY](https://pixabay.com/users/submority-30821389/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=123876) ([Pixabay](https://pixabay.com/sound-effects//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=123876)) |
 
 ---
