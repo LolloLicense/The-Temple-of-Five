@@ -98,7 +98,7 @@ export function room3earthFunc(): void {
     timerCheckInterval = window.setInterval(timerCheck, 1000);
     startTimer(3); // Start timer for room 3
     showGameHeader(); // Show game header
-    audioHandler("bgm");
+    audioHandler("bgm"); // begin playing Earth BGM
 
     const gameDiv: HTMLElement | null = document.querySelector("#gameDiv");
     if (gameDiv) {
