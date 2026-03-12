@@ -1,12 +1,14 @@
 # The Temple of Five
 
-![The Temple of Five Startpage](/public/img/startpage.png)
+![The Temple of Five Startpage](/public/images/startpage.png)
 
 Welcome to **The Temple of Five**, an atmospheric puzzle adventure game created by **The Pogo Stick Pioneers**. Journey through five elemental chambers—Wood, Fire, Earth, Metal, and Water—each housing a unique challenge. Solve the puzzles, collect the sacred artifacts, and unlock the temple's final secret.
 
 ## About the Game
 
-The Temple of Five is a browser-based experience built with modern web technologies. Each room is designed to test your logic, observation, and reflexes within a high-immersion environment.
+The Temple of Five is a browser-based game built with modern web technologies. Each chamber features its own puzzle and gameplay mechanic designed to test the player's logic, observation, and reflexes.
+
+Through sound, visuals, and interactive elements, the game creates an immersive temple atmosphere as players progress deeper into the trial.
 
 ### **Core Features**
 
@@ -22,6 +24,7 @@ The Temple of Five is a browser-based experience built with modern web technolog
 2.  **Solve to Advance:** Read the room's unique instructions, interact with the environment, and solve the puzzle to claim the artifact.
 3.  **Master the Elements:** Progress through all five rooms, adapting to different mechanics in each.
 4.  **The Final Challenge:** Complete the final trial to see your total score and escape the temple!
+    ![Gameplay Demo](/public/images/welcomepage.gif)
 
 ## Technologies Used
 
@@ -31,13 +34,13 @@ The Temple of Five is a browser-based experience built with modern web technolog
 
 ## Screenshots & Validation
 
-| Chrome Lighthouse                         | Firefox Rendering                   |
-| :---------------------------------------- | :---------------------------------- |
-| ![Lighthouse](/public/img/lighthouse.png) | ![Firefox](/public/img/firefox.png) |
+| Chrome Lighthouse                            | Firefox Rendering                                   |
+| :------------------------------------------- | :-------------------------------------------------- |
+| ![Lighthouse](/public/images/lighthouse.png) | ![Firefox in Wood room](/public/images/firefox.png) |
 
-| W3C HTML Validation         | W3C CSS/SASS Validation        |
-| :-------------------------- | :----------------------------- |
-| ![w3c](/public/img/w3c.png) | ![w3c](/public/img/cssw3c.png) |
+| W3C HTML Validation            | W3C CSS/SASS Validation           |
+| :----------------------------- | :-------------------------------- |
+| ![w3c](/public/images/w3c.png) | ![w3c](/public/images/cssw3c.png) |
 
 ---
 
