@@ -88,7 +88,6 @@ Kunde inte göras första veckan då vi inte kommit så långt i det skedet.
 
         •	Estimera och ta in tidigt så det inte hamnar som panik på slutet
 
-
 ## V4:
 
 ![Retro-shot](/dokumentation/Retrospektiv/retrospektiv4.jpg)
@@ -115,3 +114,26 @@ Kunde inte göras första veckan då vi inte kommit så långt i det skedet.
 ### Förslag på konkreta actions
 
     • Vi har diskuterat planen för veckan och fördelat arbetsuppgifterna samt diskuterat vad som bör prioriteras
+
+## V5
+
+![Retro-shot](/dokumentation/Retrospektiv/retrospektiv5.png)
+
+### Glad + Vind i seglen
+
+    • Gruppen upplever att vi haft ett bra samarbete
+    • Nivån av teamwork i gruppen
+    • Att vi delade upp de uppgifter som var kvar baserat på vår backlog
+    • Samtliga i gruppen är glada att vi fick alla bitarna på plats till slut.
+
+### Sad/Mad” + Ankare
+
+    • Lite strul med koden och dom sista buggarna
+
+### Isberg
+
+    • Att vi inte gjort tillräckligt
+
+### Förslag på konkreta actions
+
+    • Vi gick igenom kravlistan för att försäkra oss om att vi uppfyllt alla krav
