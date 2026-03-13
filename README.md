@@ -1,102 +1,95 @@
 # The Temple of Five
+**This repository is presented in my personal GitHub as part of my portfolio. The project itself was developed collaboratively as a school group project during the Front-End Developer program at Medieinstitutet 2026.**
 
-![The Temple of Five Startpage](/public/images/startpage.png)
+🔗 **[Play The Temple of Five](https://lollolicense.github.io/The-Temple-of-Five/)**
 
-Welcome to **The Temple of Five**, a digital escape room and atmospheric puzzle adventure game created by **The Pogo Stick Pioneers**. 
+### The Team: The Pogo Stick Pioneers
+
+[![GitHub](https://img.shields.io/badge/GitHub-AlexJCodes-181717?style=for-the-badge&logo=github)](https://github.com/AlexJCodes)
+[![GitHub](https://img.shields.io/badge/GitHub-xAlexCode-181717?style=for-the-badge&logo=github)](https://github.com/xAlexCode)
+[![GitHub](https://img.shields.io/badge/GitHub-elychnell-181717?style=for-the-badge&logo=github)](https://github.com/elychnell)
+[![GitHub](https://img.shields.io/badge/GitHub-LolloLicense-181717?style=for-the-badge&logo=github)](https://github.com/LolloLicense)
+[![GitHub](https://img.shields.io/badge/GitHub-minza--42-181717?style=for-the-badge&logo=github)](https://github.com/minza-42)
+
+## Tech Stack
+![HTML5 badge](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![Sass badge](https://img.shields.io/badge/Sass-CC6699?style=for-the-badge&logo=sass&logoColor=white)
+![TypeScript badge](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Vite badge](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Biome badge](https://img.shields.io/badge/Biome-60A5FA?style=for-the-badge&logo=biome&logoColor=white)
+![Figma badge](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)
+![ChatGPT badge](https://img.shields.io/badge/ChatGPT-74AA9C?style=for-the-badge&logo=openai&logoColor=white)
+![DevTools badge](https://img.shields.io/badge/DevTools-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white)
+![GitHub badge](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)
+![npm badge](https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=white)
+![Miro badge](https://img.shields.io/badge/Miro-050038?style=for-the-badge&logo=miro&logoColor=yellow)
+
+
+![The Temple of Five Startpage](documentation/screenshots/startpage.png)
 
 ## About the Game
 
-In a future where cities collapsed and the jungle reclaimed the world, one structure still breathes with dormant power. The Temple of Five Elements holds ancient survival tech — sealed behind trials of Wood, Fire, Earth, Metal, and Water. Solve the puzzles, collect the sacred artifacts, and unlock the temple's final secret. Each chamber features its own puzzle and gameplay mechanic designed to test the player's logic, observation, and reflexes.
+In a future where cities collapsed and the jungle reclaimed the world, one structure still breathes with dormant power. The Temple of Five Elements holds ancient survival tech — sealed behind trials of Wood, Fire, Earth, Metal, and Water.
+
+These are the **Wu Xing**, the Five Phases: not just elements, but forces in motion — growth, transformation, stability, structure, and flow. To restore balance, you must pass each chamber and retrieve the tool bound to its phase.
+
+But the temple does not reward effort alone. It rewards timing. Move too slowly, and a mechanism misaligns. A seal cracks. An element returns imperfect.
+
+Collect the true five, complete the cycle, and the final altar will open. Fail, and the temple will send you back to the chamber that broke the balance.
+
+**Restore the balance — or leave with nothing.**
 
 ### **Core Features**
 
-- **Five Elemental Trials:** Distinct puzzles for Wood, Fire, Earth, Metal, and Water.
+- **Five Elemental Trials:** Five distinct chambers, each shaped by one of the Wu Xing phases — Wood, Fire, Earth, Metal, and Water.
 - **Immersive Atmosphere:** Dynamic audio, custom CSS animations, and thematic visual effects.
 - **Real-time Scoring:** Progress tracking with a highscore system based on speed and accuracy.
 - **Full Accessibility:** Designed for both mouse and keyboard navigation (ARIA-compliant).
 - **Responsive Design:** Optimized for various screen sizes, from desktop to mobile.
 
-## How to Play
 
-1.  **Enter the Temple:** Begin your adventure in the first elemental chamber.
-2.  **Solve to Advance:** Read the room's unique instructions, interact with the environment, and solve the puzzle to claim the artifact.
-3.  **Master the Elements:** Progress through all five rooms, adapting to different mechanics in each.
-4.  **The Final Challenge:** Complete the final trial to see your total score and escape the temple!
-    ![Gameplay Demo](/public/images/welcomepage.gif)
 
-## Technologies Used
 
-![HTML badge](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white) ![Sass badge](https://img.shields.io/badge/Sass-CC6699?style=flat&logo=sass&logoColor=white) ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white) ![Markdown badge](https://img.shields.io/badge/Markdown-000000?style=flat&logo=markdown&logoColor=white) ![Vite badge](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white) ![Biome](https://img.shields.io/badge/biome-%2360A5FA.svg?style=for-the-badge&logo=biome&logoColor=white)
+## My Contribution
 
----
+My role in the project focused on both visual direction and front-end development.
 
-## Screenshots & Validation
+- creating the visual concept and design direction in **Figma**
+- building the **style tile**, components, and interface structure
+- shaping the game’s **story concept**, atmosphere, and generated visuals
+- developing the **Wood chamber**
+- implementing the **login flow**
+- building the **Game Over** and **Game Win** views
+- contributing to UI polish, structure, and overall front-end experience
 
-### Chrome Lighthouse
 
-![Chrome Lighthouse](/dokumentation/screenshots/lighthouse.png)
+### Wood Chamber
 
-### Firefox Rendering
+The chamber is a number-sequence challenge built around the Fibonacci sequence, chosen because of its strong connection to growth patterns in nature. Since the Wood chamber represents growth, life, and organic balance, the Fibonacci sequence supports the room’s theme in both concept and gameplay.
 
-![Firefox Rendering](/dokumentation/screenshots/firefox.png)
 
-### W3C HTML validation results
+![Wood chamber](documentation/screenshots/WoodRoom.png)
 
-![W3C HTML Validation](/dokumentation/screenshots/w3c.png)
 
-### W3C CSS / SASS validation results
-
-![W3C CSS/SASS Validation](/dokumentation/screenshots/cssw3c.png)
-
----
 
 ## Design & Planning
 
+The visual concept for **The Temple of Five** was created by me in **Figma**, where I developed the style tile, interface direction, component thinking, and the game’s overall visual structure. I also shaped the project’s narrative tone and atmospheric identity.
+
+
 - **Logic & Flow:** [Miro Flowchart](https://miro.com/app/board/uXjVGD_af74=/?share_link_id=396365481063)
-- **Visual Identity:** [Figma Mockup](https://www.figma.com/proto/OJgqdjOM1fksuh2Gh2rsAX/The-temple-of-five?node-id=4-55&p=f&t=QRSCgQpighrHxX8w-0&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&device-frame=0)
+- **Visual Identity & Mockup:** [Figma Prototype](https://www.figma.com/proto/OJgqdjOM1fksuh2Gh2rsAX/The-temple-of-five?node-id=4-55&p=f&t=QRSCgQpighrHxX8w-0&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&device-frame=0)
+
+
+
+## How to Play
+
+1.  **Enter the Temple:** Begin your adventure in the first elemental chamber.
+2.  **Solve to Advance:** Read the room’s unique instructions, interact with the environment, and complete the chamber’s challenge to claim the artifact.
+3.  **Master the Elements:** Progress through all five rooms, adapting to different mechanics in each.
+4.  **The Final Challenge:** Complete the final trial to see your total score and escape the temple!
 
 ---
-
-## Team Reflections
-
-### What We Learned
-
-- **Planning and project structure are important.** We learned that building the core systems (game engine, global functions, and LocalStorage handling) earlier would have made development smoother.
-
-- **Team collaboration was a key part of the project.** We gained valuable experience working with GitHub using branches, pull requests, and resolving merge conflicts.
-
-- **State management improved throughout the project.** We structured the game state using LocalStorage with clear states such as _pending_, _completed_, and _failed_.
-
-- **Accessibility and UI feedback improved the user experience.** Keyboard navigation, focus handling, ARIA labels, and small UI details like animations and progress indicators helped make the game feel more polished.
-
----
-
-### Difficulties / Challenges
-
-- **Connecting all rooms to a shared game state was challenging**, since rooms were developed before a stable core system existed.
-
-- **Timers, intervals, and event listeners sometimes caused bugs**, especially when rooms were re-entered. We solved this by adding cleanup logic and initialization guards.
-
-- **Merge conflicts happened frequently early in the project**, but we improved our workflow and resolved them through teamwork.
-
-- **Replay and reset flows required careful state handling** to avoid edge-case bugs.
-
-## Credits
-
-### The Team: The Pogo Stick Pioneers
-
-| Pioneer                  | Role / Profile                                                                                                                    |
-| :----------------------- | :-------------------------------------------------------------------------------------------------------------------------------- |
-| **Alexander Johansson**  | [![GitHub](https://img.shields.io/badge/GitHub-AlexJCodes-181717?style=flat&logo=github)](https://github.com/AlexJCodes)          |
-| **Alexandra Henriksson** | [![GitHub](https://img.shields.io/badge/GitHub-AlexandraH-181717?style=flat&logo=github)](https://github.com/AlexandraHenriksson) |
-| **Emil Lychnell**        | [![GitHub](https://img.shields.io/badge/GitHub-elychnell-181717?style=flat&logo=github)](https://github.com/elychnell)            |
-| **Louise Sverkström**    | [![GitHub](https://img.shields.io/badge/GitHub-LolloLicense-181717?style=flat&logo=github)](https://github.com/LolloLicense)      |
-| **Minai Karlsson**       | [![GitHub](https://img.shields.io/badge/GitHub-minza--42-181717?style=flat&logo=github)](https://github.com/minza-42)             |
-
-### Visuals
-
-- **Images:** Generated using ChatGPT's image generator.
-- **Icons:** Icons provided by [Iconify](https://iconify.design/) and [Heroicons](https://heroicons.com/). Layout and design work created in [Figma](https://www.figma.com/proto/OJgqdjOM1fksuh2Gh2rsAX/The-temple-of-five?node-id=20-467&p=f&t=QRSCgQpighrHxX8w-0&scaling=min-zoom&content-scaling=fixed&page-id=20%3A467).
 
 ### Audio & Sound Effects (via Pixabay)
 
@@ -110,3 +103,6 @@ In a future where cities collapsed and the jungle reclaimed the world, one struc
 | **Final** | _Cursed Forest_ – [TrenoX8](https://pixabay.com/music/mystery-cursed-forest-305207/)                              | Click – [arunangshubanerjee](https://pixabay.com/sound-effects/film-special-effects-cassette-recorder-stop-button-mechanical-click-sound-359987/) <br> _Submority Boom_ – [SUBMORITY](https://pixabay.com/users/submority-30821389/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=123876) |
 
 ---
+
+
+#### Thanks for visiting this little temple 
