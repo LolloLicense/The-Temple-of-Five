@@ -27,7 +27,7 @@ Kunde inte göras första veckan då vi inte kommit så långt i det skedet.
     • Att vi är positiva till uppgiften
     • Att vi har planerat mycket och ägnat mycket tid åt det
     • Vi är glada hur långt vi kommit hitills
-    • Bra sammanhållning och en bra gruppgi
+    • Bra sammanhållning och en bra gruppdynamik
 
 ### Sad/Mad” + Ankare
 
