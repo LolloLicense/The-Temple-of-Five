@@ -78,7 +78,7 @@ export function initAudio(): void {
       id: "sfx_boom",
       src: withBaseUrl("/audiofiles/sfx_boom.mp3"),
       kind: "sfx",
-      volume: 0.8, 
+      volume: 0.8,
     },
 
     // Fill in your rooms below:

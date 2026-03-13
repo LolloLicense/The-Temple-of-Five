@@ -1,4 +1,5 @@
 import * as dataJSON from "../../data.json";
+import { welcomePageFunc } from "../../rooms/welcome/welcomePage";
 import { hideGameHeader } from "./gameHeader";
 import {
   getUserName,
@@ -18,7 +19,6 @@ import {
   showSection,
 } from "./transitions";
 import { clearRoomTimerOnLeave, stopTimer } from "./utils";
-import { welcomePageFunc } from "../../rooms/welcome/welcomePage";
 
 //-----------------------------------------------------------
 //------------------------- STATES --------------------------

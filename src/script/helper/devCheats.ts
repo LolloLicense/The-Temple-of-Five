@@ -40,23 +40,23 @@
  */
 
 import * as dataJSON from "../../data.json";
-import { room1woodFunc, cleanupWoodRoom } from "../../rooms/1wood/room1wood.ts";
-import { room2fireFunc, cleanupFireRoom } from "../../rooms/2fire/room2fire.ts";
+import { cleanupWoodRoom, room1woodFunc } from "../../rooms/1wood/room1wood.ts";
+import { cleanupFireRoom, room2fireFunc } from "../../rooms/2fire/room2fire.ts";
 import {
-  room3earthFunc,
   cleanupEarthRoom,
+  room3earthFunc,
 } from "../../rooms/3earth/room3earth.ts";
 import {
-  room4metalFunc,
   cleanupMetalRuntime,
+  room4metalFunc,
 } from "../../rooms/4metal/room4metal.ts";
 import {
-  room5waterFunc,
   cleanupWaterRoom,
+  room5waterFunc,
 } from "../../rooms/5water/room5water.ts";
 import {
-  room6finalFunc,
   cleanupFinalRoom,
+  room6finalFunc,
 } from "../../rooms/final/room6validate.ts";
 import { updateProgressBar } from "./progressbar.ts";
 import { showMsg } from "./showMsg.ts";
