@@ -2,13 +2,11 @@
 
 ![The Temple of Five Startpage](/public/images/startpage.png)
 
-Welcome to **The Temple of Five**, a digital escape room and atmospheric puzzle adventure game created by **The Pogo Stick Pioneers**. Journey through five elemental chambers—Wood, Fire, Earth, Metal, and Water—each housing a unique challenge. Solve the puzzles, collect the sacred artifacts, and unlock the temple's final secret.
+Welcome to **The Temple of Five**, a digital escape room and atmospheric puzzle adventure game created by **The Pogo Stick Pioneers**. 
 
 ## About the Game
 
-The Temple of Five is a browser-based digital escape room built with modern web technologies. Each chamber features its own puzzle and gameplay mechanic designed to test the player's logic, observation, and reflexes.
-
-Through sound, visuals, and interactive elements, the game creates an immersive temple atmosphere as players progress deeper into the trial.
+In a future where cities collapsed and the jungle reclaimed the world, one structure still breathes with dormant power. The Temple of Five Elements holds ancient survival tech — sealed behind trials of Wood, Fire, Earth, Metal, and Water. Solve the puzzles, collect the sacred artifacts, and unlock the temple's final secret. Each chamber features its own puzzle and gameplay mechanic designed to test the player's logic, observation, and reflexes.
 
 ### **Core Features**
 
