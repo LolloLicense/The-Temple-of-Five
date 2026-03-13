@@ -78,7 +78,7 @@
     "timeLimitMinutes": 6,
     "timeLimitSeconds": 0,
     "desc": {
-      "text": "Steel remembers every mistake. The universe's mechanisms answer only to rhythm and order. It does not reward errors. Observe the sequence. Repeat it to unlock the element of metal.",
+      "text": "Steel remembers every mistake. The universe's mechanisms answer only to rhythm and order. It does not reward errors. Observe the sequence and give it a guess. Repeat it to unlock the element of metal.",
       "falseSign": "./images/false-metal-glass-icon.png",
       "trueSign": "./images/true-metal-glass-icon.png"
     },
