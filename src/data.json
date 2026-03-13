@@ -12,7 +12,7 @@
     "backgroundImg": "./images/woodroom.jpg",
     "bgmId": "bgm_wood",
     "sfxId": "sfx_click",
-    "timeLimitMinutes": 5,
+    "timeLimitMinutes": 8,
     "timeLimitSeconds": 0,
     "desc": {
       "text": "The jungle didn't reclaim the world by chance. The temple runs on a growth pattern — an algorithm that never lies. Start from zero, let it grow, and keep track of what came before. The next step is always built from the last two. Enter the sequence in time to unlock the element of wood.",
@@ -31,7 +31,7 @@
   "room2fire": {
     "backgroundImg": "./images/fireroom.jpg",
     "bgmId": "bgm_fire",
-    "timeLimitMinutes": 5,
+    "timeLimitMinutes": 8,
     "timeLimitSeconds": 0,
     "desc": {
       "text": "You stand before the flame. It is not your enemy. It is not your servant. Fire answers only to discipline. Learn its laws - or be consumed by your own ignorance,",
@@ -55,7 +55,7 @@
     "sfx3Id": "sfx_midSlide",
     "sfx4Id": "sfx_midSlide2",
     "sfx5Id": "sfx_longSlide",
-    "timeLimitMinutes": 10,
+    "timeLimitMinutes": 15,
     "timeLimitSeconds": 0,
     "desc": {
       "text": "The air inside the Sanctum of Gaea is thick with the scent of damp moss and ancient stone. Beneath a shaft of amber sunlight filtering through the jungle canopy above, a network of massive stone slabs lay before you on the floor of the chamber.",
@@ -75,7 +75,7 @@
     "backgroundImg": "./images/metalroom.jpg",
     "bgmId": "bgm_metal",
     "sfxId": "sfx_click",
-    "timeLimitMinutes": 4,
+    "timeLimitMinutes": 6,
     "timeLimitSeconds": 0,
     "desc": {
       "text": "Steel remembers every mistake. The universe's mechanisms answer only to rhythm and order. It does not reward errors. Observe the sequence. Repeat it to unlock the element of metal.",
@@ -94,7 +94,7 @@
   "room5water": {
     "backgroundImg": "./images/waterroom.jpg",
     "bgmId": "bgm_water",
-    "timeLimitMinutes": 3,
+    "timeLimitMinutes": 4,
     "timeLimitSeconds": 0,
     "desc": {
       "text": "The Water Chamber lies broken. Restore the flow from source to vessel to reveal the ancient symbol. Move with purpose; let the water find its way.",
@@ -115,7 +115,7 @@
     "bgmId": "bgm_final",
     "sfxBoomId": "sfx_boom",
     "sfxClick": "sfx_click",
-    "timeLimitMinutes": 2,
+    "timeLimitMinutes": 4,
     "timeLimitSeconds": 0,
     "desc": {
       "text": "Restore the balance. Have you gathered the right elements? Place theme where they belong. Do you have wrong elements? The gate will stay sealed and the balance is off.",
